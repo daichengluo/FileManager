@@ -1,14 +1,6 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.apk
 
 import android.os.Build
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.compat.longVersionCodeCompat
 import com.android.imagic.files.file.FileItem
@@ -22,6 +14,9 @@ import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.getStringArray
 import com.android.imagic.files.util.isGetPackageArchiveInfoCompatible
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class FilePropertiesApkTabFragment : FilePropertiesTabFragment() {
     private val args by args<Args>()

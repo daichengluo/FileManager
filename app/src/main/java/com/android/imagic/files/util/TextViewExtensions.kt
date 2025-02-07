@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.graphics.Typeface
@@ -63,6 +58,7 @@ fun TextView.setOnEditorConfirmActionListener(listener: (TextView) -> Unit) {
             when (event.keyCode) {
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER,
                 KeyEvent.KEYCODE_NUMPAD_ENTER -> true
+
                 else -> false
             } && event.action == KeyEvent.ACTION_DOWN
         } else {

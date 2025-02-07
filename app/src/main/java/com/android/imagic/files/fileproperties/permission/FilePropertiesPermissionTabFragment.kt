@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import android.os.Bundle
@@ -96,8 +91,8 @@ class FilePropertiesPermissionTabFragment : FilePropertiesTabFragment() {
         fun isAvailable(file: FileItem): Boolean {
             val attributes = file.attributes
             return attributes is PosixFileAttributes && (attributes.owner() != null
-                || attributes.group() != null || attributes.mode() != null
-                || attributes.seLinuxContext() != null)
+                    || attributes.group() != null || attributes.mode() != null
+                    || attributes.seLinuxContext() != null)
         }
     }
 }

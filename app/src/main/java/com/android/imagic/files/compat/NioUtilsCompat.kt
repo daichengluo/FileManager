@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.os.Build
@@ -19,6 +14,7 @@ object NioUtilsCompat {
         "java.nio.NioUtils", "newFileChannel", Closeable::class.java, FileDescriptor::class.java,
         Int::class.java
     )
+
     @RestrictedHiddenApi
     private val fileChannelImplOpenMethod by lazyReflectedMethod(
         "sun.nio.ch.FileChannelImpl", "open", FileDescriptor::class.java, String::class.java,

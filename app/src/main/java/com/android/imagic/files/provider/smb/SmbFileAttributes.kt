@@ -1,21 +1,16 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
 import android.os.Parcelable
-import com.hierynomus.msfscc.FileAttributes
-import java.time.Instant
-import java8.nio.file.attribute.FileTime
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.provider.common.AbstractBasicFileAttributes
 import com.android.imagic.files.provider.common.BasicFileType
 import com.android.imagic.files.provider.common.FileTimeParceler
 import com.android.imagic.files.provider.smb.client.FileInformation
 import com.android.imagic.files.util.hasBits
+import com.hierynomus.msfscc.FileAttributes
+import java8.nio.file.attribute.FileTime
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
+import java.time.Instant
 
 @Parcelize
 internal class SmbFileAttributes(
@@ -43,8 +38,10 @@ internal class SmbFileAttributes(
             val type = when {
                 attributes.hasBits(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT.value) ->
                     BasicFileType.SYMBOLIC_LINK
+
                 attributes.hasBits(FileAttributes.FILE_ATTRIBUTE_DIRECTORY.value) ->
                     BasicFileType.DIRECTORY
+
                 else -> BasicFileType.REGULAR_FILE
             }
             val size = fileInformation.endOfFile

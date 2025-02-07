@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.os.Handler
@@ -30,6 +25,7 @@ class ThrottledRunnable(
                     scheduledUptimeMillis = currentUptimeMillis
                     handler.post(runnable)
                 }
+
                 scheduledUptimeMillis <= currentUptimeMillis -> {
                     scheduledUptimeMillis += intervalMillis
                     handler.postAtTime(runnable, scheduledUptimeMillis)

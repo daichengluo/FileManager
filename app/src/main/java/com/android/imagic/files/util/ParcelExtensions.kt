@@ -1,17 +1,12 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.android.imagic.files.app.appClassLoader
+import com.android.imagic.files.compat.readParcelableListCompat
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import com.android.imagic.files.app.appClassLoader
-import com.android.imagic.files.compat.readParcelableListCompat
 
 @Suppress("DEPRECATION")
 fun <T : Parcelable> Parcel.readParcelable(): T? = readParcelable(appClassLoader)
@@ -25,7 +20,8 @@ fun <E : Parcelable?, L : MutableList<E>> Parcel.readParcelableListCompat(list: 
 fun <T : Parcelable?> Parcel.readParcelableListCompat(): List<T> =
     readParcelableListCompat(mutableListOf())
 
-@Suppress("UNCHECKED_CAST") fun <T> Parcel.readValue(): T? = readValue(appClassLoader) as T?
+@Suppress("UNCHECKED_CAST")
+fun <T> Parcel.readValue(): T? = readValue(appClassLoader) as T?
 
 @OptIn(ExperimentalContracts::class)
 inline fun <R> Parcel.use(block: (Parcel) -> R): R {

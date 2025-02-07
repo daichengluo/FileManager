@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp
 
-import java8.nio.file.StandardOpenOption
 import com.android.imagic.files.provider.common.OpenOptions
 import com.android.imagic.files.util.enumSetOf
+import java8.nio.file.StandardOpenOption
 import net.schmizz.sshj.sftp.OpenMode
 
 internal fun OpenOptions.toSftpFlags(): Set<OpenMode> =

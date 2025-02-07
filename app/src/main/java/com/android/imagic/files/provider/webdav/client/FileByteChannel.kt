@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav.client
 
 import at.bitfire.dav4jvm.DavResource
@@ -49,8 +44,10 @@ class FileByteChannel(
         when (patchSupport) {
             PatchSupport.APACHE ->
                 resource.putRangeCompat(source, position) {}
+
             PatchSupport.SABRE ->
                 resource.patchCompat(source, position) {}
+
             PatchSupport.NONE -> {
                 if (position != nextSequentialWritePosition) {
                     throw IOException("Unsupported non-sequential write")

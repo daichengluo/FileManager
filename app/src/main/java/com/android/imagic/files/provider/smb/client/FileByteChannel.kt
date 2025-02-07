@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb.client
 
 import com.android.imagic.files.provider.common.AbstractFileByteChannel
@@ -43,6 +38,7 @@ class FileByteChannel(
                         NtStatus.STATUS_END_OF_FILE.value -> {
                             return@map ByteBuffer::class.EMPTY
                         }
+
                         NtStatus.STATUS_SUCCESS.value -> {}
                         else -> throw SMBApiException(response.header, "Read failed for $this")
                             .toIOException()
@@ -102,10 +98,12 @@ class FileByteChannel(
                 setClosed()
                 AsynchronousCloseException().apply { initCause(this@toIOException) }
             }
+
             findCauseByClass<InterruptedException>() != null -> {
                 closeSafe()
                 ClosedByInterruptException().apply { initCause(this@toIOException) }
             }
+
             else -> IOException(this)
         }
 
@@ -117,6 +115,7 @@ class FileByteChannel(
             throw when {
                 e.findCauseByClass<InterruptedException>() != null ->
                     InterruptedIOException().apply { initCause(e) }
+
                 else -> IOException(e)
             }
         }

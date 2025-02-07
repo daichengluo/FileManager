@@ -1,19 +1,14 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.root
 
 import android.os.Parcelable
-import java8.nio.file.Path
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.PosixFileAttributeView
 import com.android.imagic.files.provider.common.PosixFileAttributes
 import com.android.imagic.files.provider.common.PosixFileModeBit
 import com.android.imagic.files.provider.common.PosixGroup
 import com.android.imagic.files.provider.common.PosixUser
+import java8.nio.file.Path
+import java8.nio.file.attribute.FileTime
 import java.io.IOException
 
 abstract class RootablePosixFileAttributeView(

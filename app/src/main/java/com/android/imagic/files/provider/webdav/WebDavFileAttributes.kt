@@ -1,16 +1,7 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav
 
 import android.os.Parcelable
 import at.bitfire.dav4jvm.Response
-import java.time.Instant
-import java8.nio.file.attribute.FileTime
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.provider.common.AbstractBasicFileAttributes
 import com.android.imagic.files.provider.common.BasicFileType
 import com.android.imagic.files.provider.common.EPOCH
@@ -20,6 +11,10 @@ import com.android.imagic.files.provider.webdav.client.isDirectory
 import com.android.imagic.files.provider.webdav.client.isSymbolicLink
 import com.android.imagic.files.provider.webdav.client.lastModifiedTime
 import com.android.imagic.files.provider.webdav.client.size
+import java8.nio.file.attribute.FileTime
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
+import java.time.Instant
 
 @Parcelize
 internal data class WebDavFileAttributes(
@@ -49,6 +44,7 @@ internal data class WebDavFileAttributes(
                         lastModifiedTime, lastAccessTime, creationTime, type, size, fileKey
                     )
                 }
+
                 response.isSymbolicLink -> {
                     val lastModifiedTime = FileTime::class.EPOCH
                     val lastAccessTime = lastModifiedTime
@@ -60,7 +56,8 @@ internal data class WebDavFileAttributes(
                         lastModifiedTime, lastAccessTime, creationTime, type, size, fileKey
                     )
                 }
+
                 else -> error(response)
             }
-        }
+    }
 }

@@ -1,10 +1,8 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.root
 
+import com.android.imagic.files.provider.common.PathObservable
+import com.android.imagic.files.provider.common.PathObservableProvider
+import com.android.imagic.files.provider.common.Searchable
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -19,9 +17,6 @@ import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.attribute.FileAttributeView
 import java8.nio.file.spi.FileSystemProvider
-import com.android.imagic.files.provider.common.PathObservable
-import com.android.imagic.files.provider.common.PathObservableProvider
-import com.android.imagic.files.provider.common.Searchable
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -84,7 +79,7 @@ abstract class RootableFileSystemProvider(
 
     @Throws(IOException::class)
     override fun createLink(link: Path, existing: Path) {
-        callRootable(link, existing) {createLink(link, existing) }
+        callRootable(link, existing) { createLink(link, existing) }
     }
 
     @Throws(IOException::class)
@@ -117,7 +112,7 @@ abstract class RootableFileSystemProvider(
 
     @Throws(IOException::class)
     override fun checkAccess(path: Path, vararg modes: AccessMode) {
-        callRootable(path) {checkAccess(path, *modes) }
+        callRootable(path) { checkAccess(path, *modes) }
     }
 
     override fun <V : FileAttributeView> getFileAttributeView(

@@ -31,17 +31,17 @@ fun FTPClient.mlistFileCompat(pathname: String): FTPFile? {
 
 @Throws(IOException::class)
 fun FTPClient.mlistDirCompat(pathname: String): Array<FTPFile>? =
-    // Note that there is no distinct FEAT output for MLSD. The presence of the MLST feature
-    // indicates that both MLST and MLSD are supported.
-    // @see https://datatracker.ietf.org/doc/html/rfc3659#section-7.8
-    // FTPClient silently returns an empty array even when server returns an error for unknown
+// Note that there is no distinct FEAT output for MLSD. The presence of the MLST feature
+// indicates that both MLST and MLSD are supported.
+// @see https://datatracker.ietf.org/doc/html/rfc3659#section-7.8
+// FTPClient silently returns an empty array even when server returns an error for unknown
     // command, so we have to rely on checking the feature.
     if (hasFeature(FTPCmd.MLST)) mlistDir(pathname) else listFiles(pathname)
 
 @Throws(IOException::class)
 fun FTPClient.setModificationTimeCompat(pathname: String, timeval: String): Boolean =
-    // @see https://www.ietf.org/archive/id/draft-somers-ftp-mfxx-04.txt
-    // This is frequently called during file operations, so in order to avoid wasting network
+// @see https://www.ietf.org/archive/id/draft-somers-ftp-mfxx-04.txt
+// This is frequently called during file operations, so in order to avoid wasting network
     // requests, we check the feature first which is cached locally.
     if (hasFeature(FTPCmd.MFMT)) {
         setModificationTime(pathname, timeval)

@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
-import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.android.imagic.files.R
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.ui.MaterialPreferenceDialogFragmentCompat
+import com.takisoft.preferencex.PreferenceFragmentCompat
 import rikka.preference.SimpleMenuPreference
 
 class RootStrategyPreference : SimpleMenuPreference {

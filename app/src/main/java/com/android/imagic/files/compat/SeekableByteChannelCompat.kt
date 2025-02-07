@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.os.Build
@@ -14,7 +9,7 @@ import java.nio.channels.SeekableByteChannel as JavaSeekableByteChannel
 
 @RequiresApi(Build.VERSION_CODES.N)
 fun SeekableByteChannel.toJavaSeekableByteChannel(): JavaSeekableByteChannel =
-    // java8.nio.channels.FileChannel extends from java.nio.channels.FileChannel, so in that case
+// java8.nio.channels.FileChannel extends from java.nio.channels.FileChannel, so in that case
     // the current object may already be implementing java.nio.channels.SeekableByteChannel.
     this as? JavaSeekableByteChannel ?: DelegateJavaSeekableByteChannel(this)
 

@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
-import com.hierynomus.msfscc.fileinformation.FileBasicInformation
-import java8.nio.file.attribute.BasicFileAttributeView
-import java8.nio.file.attribute.BasicFileAttributes
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.smb.client.Client
 import com.android.imagic.files.provider.smb.client.ClientException
 import com.android.imagic.files.provider.smb.client.FileInformation
 import com.android.imagic.files.provider.smb.client.ShareInformation
+import com.hierynomus.msfscc.fileinformation.FileBasicInformation
+import java8.nio.file.attribute.BasicFileAttributeView
+import java8.nio.file.attribute.BasicFileAttributes
+import java8.nio.file.attribute.FileTime
 import java.io.IOException
 import com.hierynomus.msdtyp.FileTime as SmbFileTime
 

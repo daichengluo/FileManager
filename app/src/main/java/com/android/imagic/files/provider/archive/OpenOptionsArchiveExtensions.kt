@@ -1,12 +1,7 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.archive
 
-import java8.nio.file.StandardOpenOption
 import com.android.imagic.files.provider.common.OpenOptions
+import java8.nio.file.StandardOpenOption
 
 internal fun OpenOptions.checkForArchive() {
     if (write) {

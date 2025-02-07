@@ -1,16 +1,11 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.navigation
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
-import java8.nio.file.Path
 import com.android.imagic.files.compat.getDrawableCompat
+import java8.nio.file.Path
 
 abstract class NavigationItem {
     abstract val id: Long

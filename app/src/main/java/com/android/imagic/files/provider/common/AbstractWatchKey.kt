@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java8.nio.file.Path
@@ -35,7 +30,8 @@ abstract class AbstractWatchKey<K : AbstractWatchKey<K, P>, P : Path>(
             if (events.isNotEmpty()) {
                 val lastEvent = events.last()
                 if (lastEvent.kind() == StandardWatchEventKinds.OVERFLOW
-                    || (lastEvent.kind() == kind && lastEvent.context() == context)) {
+                    || (lastEvent.kind() == kind && lastEvent.context() == context)
+                ) {
                     lastEvent.repeat()
                     return
                 }

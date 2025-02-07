@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.apk
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import java8.nio.file.Path
 import com.android.imagic.files.util.Stateful
+import java8.nio.file.Path
 
 class FilePropertiesApkTabViewModel(path: Path) : ViewModel() {
     private val _apkInfoLiveData = ApkInfoLiveData(path)

@@ -1,16 +1,11 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
-import java8.nio.file.attribute.BasicFileAttributes
-import java8.nio.file.spi.FileSystemProvider
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
 import com.android.imagic.files.util.RemoteCallback
 import com.android.imagic.files.util.toBundle
+import java8.nio.file.attribute.BasicFileAttributes
+import java8.nio.file.spi.FileSystemProvider
 import java.util.concurrent.Executors
 
 class RemoteFileSystemProviderInterface(

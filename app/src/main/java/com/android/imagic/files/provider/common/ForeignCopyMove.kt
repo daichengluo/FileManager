@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java8.nio.file.AtomicMoveNotSupportedException
@@ -32,7 +27,8 @@ internal object ForeignCopyMove {
         }
         val sourceAttributes = source.readAttributes(BasicFileAttributes::class.java, *linkOptions)
         if (!(sourceAttributes.isRegularFile || sourceAttributes.isDirectory
-                || sourceAttributes.isSymbolicLink)) {
+                    || sourceAttributes.isSymbolicLink)
+        ) {
             throw IOException("Cannot copy special file to foreign provider")
         }
         if (!copyOptions.replaceExisting && target.exists(LinkOption.NOFOLLOW_LINKS)) {
@@ -76,6 +72,7 @@ internal object ForeignCopyMove {
                     }
                 }
             }
+
             sourceAttributes.isDirectory -> {
                 if (copyOptions.replaceExisting) {
                     target.deleteIfExists()
@@ -83,6 +80,7 @@ internal object ForeignCopyMove {
                 target.createDirectory()
                 copyOptions.progressListener?.invoke(sourceAttributes.size())
             }
+
             sourceAttributes.isSymbolicLink -> {
                 val sourceTarget = source.readSymbolicLink()
                 try {
@@ -97,6 +95,7 @@ internal object ForeignCopyMove {
                 }
                 copyOptions.progressListener?.invoke(sourceAttributes.size())
             }
+
             else -> throw AssertionError()
         }
         // We don't take error when copying attribute fatal, so errors will only be logged from

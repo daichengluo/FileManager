@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import com.android.imagic.files.R
@@ -210,11 +205,11 @@ private val mimeTypeToIconMap = mapOf(
     "application/vnd.openxmlformats-officedocument.spreadsheetml.template" to MimeTypeIcon.EXCEL,
     "application/vnd.ms-powerpoint" to MimeTypeIcon.POWERPOINT,
     "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-        to MimeTypeIcon.POWERPOINT,
+            to MimeTypeIcon.POWERPOINT,
     "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
-        to MimeTypeIcon.POWERPOINT,
+            to MimeTypeIcon.POWERPOINT,
     "application/vnd.openxmlformats-officedocument.presentationml.template"
-        to MimeTypeIcon.POWERPOINT
+            to MimeTypeIcon.POWERPOINT
 ).mapKeys { it.key.asMimeType() }
 
 private val typeToIconMap = mapOf(

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java8.nio.file.LinkOption
@@ -52,6 +47,7 @@ fun Set<OpenOption>.toOpenOptions(): OpenOptions {
                 StandardOpenOption.DSYNC -> dsync = true
                 else -> throw UnsupportedOperationException(option.toString())
             }
+
             LinkOption.NOFOLLOW_LINKS -> noFollowLinks = true
             else -> throw UnsupportedOperationException(option.toString())
         }

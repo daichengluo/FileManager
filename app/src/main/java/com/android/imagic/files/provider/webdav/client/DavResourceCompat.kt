@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav.client
 
 import at.bitfire.dav4jvm.DavResource
@@ -125,7 +120,7 @@ fun DavResource.getPatchSupport(): PatchSupport {
     options { davCapabilities, response ->
         patchSupport = when {
             response.headers["Server"]?.contains("Apache") == true &&
-                "<http://apache.org/dav/propset/fs/1>" in davCapabilities ->
+                    "<http://apache.org/dav/propset/fs/1>" in davCapabilities ->
                 PatchSupport.APACHE
 
             "sabredav-partialupdate" in davCapabilities -> PatchSupport.SABRE

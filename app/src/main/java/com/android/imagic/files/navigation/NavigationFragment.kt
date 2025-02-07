@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.navigation
 
 import android.content.Intent
@@ -13,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import java8.nio.file.Path
 import com.android.imagic.files.databinding.NavigationFragmentBinding
 import com.android.imagic.files.util.startActivitySafe
+import java8.nio.file.Path
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private lateinit var binding: NavigationFragmentBinding

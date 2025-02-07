@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.navigation
 
 import android.annotation.SuppressLint
@@ -20,8 +15,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.android.imagic.files.R
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.obtainStyledAttributesCompat
@@ -33,6 +26,8 @@ import com.android.imagic.files.ui.AutoMirrorDrawable
 import com.android.imagic.files.ui.SimpleAdapter
 import com.android.imagic.files.util.getColorStateListByAttr
 import com.android.imagic.files.util.layoutInflater
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 
 class NavigationListAdapter(
     private val listener: NavigationItem.Listener,
@@ -197,6 +192,7 @@ class NavigationListAdapter(
                     )
                     binding.subtitleText.setTextColor(viewAttributes.itemSubtitleTextColor)
                 }
+
             ViewType.DIVIDER ->
                 DividerHolder(
                     NavigationDividerItemBinding.inflate(
@@ -236,6 +232,7 @@ class NavigationListAdapter(
                 binding.titleText.text = item.getTitle(binding.titleText.context)
                 binding.subtitleText.text = item.getSubtitle(binding.subtitleText.context)
             }
+
             ViewType.DIVIDER -> {}
         }
     }

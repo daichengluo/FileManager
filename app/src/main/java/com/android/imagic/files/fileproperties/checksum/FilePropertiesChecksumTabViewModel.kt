@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.checksum
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import java8.nio.file.Path
 import com.android.imagic.files.util.Stateful
+import java8.nio.file.Path
 
 class FilePropertiesChecksumTabViewModel(path: Path) : ViewModel() {
     private val _checksumInfoLiveData = ChecksumInfoLiveData(path)

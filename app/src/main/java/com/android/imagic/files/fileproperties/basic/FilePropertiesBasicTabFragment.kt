@@ -1,23 +1,7 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.basic
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import java8.nio.file.FileVisitResult
-import java8.nio.file.FileVisitor
-import java8.nio.file.Files
-import java8.nio.file.Path
-import java8.nio.file.attribute.BasicFileAttributes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.asFileSize
@@ -34,6 +18,17 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.FileVisitResult
+import java8.nio.file.FileVisitor
+import java8.nio.file.Files
+import java8.nio.file.Path
+import java8.nio.file.attribute.BasicFileAttributes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class FilePropertiesBasicTabFragment : FilePropertiesTabFragment() {
@@ -97,7 +92,8 @@ class FilePropertiesBasicTabFragment : FilePropertiesTabFragment() {
 
     private fun getTypeText(file: FileItem): String {
         val typeFormatRes = if (file.attributesNoFollowLinks.isSymbolicLink
-            && !file.isSymbolicLinkBroken) {
+            && !file.isSymbolicLinkBroken
+        ) {
             R.string.file_properties_basic_type_symbolic_link_format
         } else {
             R.string.file_properties_basic_type_format

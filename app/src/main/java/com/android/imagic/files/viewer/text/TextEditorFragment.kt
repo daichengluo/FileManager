@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.text
 
 import android.content.Intent
@@ -20,9 +15,6 @@ import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import java8.nio.file.Path
-import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.TextEditorFragmentBinding
 import com.android.imagic.files.ui.ThemedFastScroller
@@ -37,6 +29,9 @@ import com.android.imagic.files.util.fadeOutUnsafe
 import com.android.imagic.files.util.isReady
 import com.android.imagic.files.util.showToast
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import java.nio.charset.Charset
 
 class TextEditorFragment : Fragment(), ConfirmReloadDialogFragment.Listener,
@@ -153,14 +148,17 @@ class TextEditorFragment : Fragment(), ConfirmReloadDialogFragment.Listener,
                 save()
                 true
             }
+
             R.id.action_reload -> {
                 onReload()
                 true
             }
+
             Menu.FIRST -> {
                 viewModel.encoding.value = Charset.forName(item.titleCondensed!!.toString())
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -198,6 +196,7 @@ class TextEditorFragment : Fragment(), ConfirmReloadDialogFragment.Listener,
                 binding.errorText.fadeOutUnsafe()
                 binding.textEdit.fadeOutUnsafe()
             }
+
             is DataState.Success -> {
                 binding.progress.fadeOutUnsafe()
                 binding.errorText.fadeOutUnsafe()
@@ -206,6 +205,7 @@ class TextEditorFragment : Fragment(), ConfirmReloadDialogFragment.Listener,
                     setText(state.data)
                 }
             }
+
             is DataState.Error -> {
                 state.throwable.printStackTrace()
                 binding.progress.fadeOutUnsafe()

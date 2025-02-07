@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux.media
 
 import android.media.MediaScannerConnection
@@ -12,13 +7,13 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import java8.nio.channels.FileChannel
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.contentResolver
 import com.android.imagic.files.hiddenapi.RestrictedHiddenApi
 import com.android.imagic.files.provider.common.DelegateFileChannel
 import com.android.imagic.files.provider.root.isRunningAsRoot
 import com.android.imagic.files.util.lazyReflectedMethod
+import java8.nio.channels.FileChannel
 import java.io.File
 import java.io.IOException
 
@@ -79,9 +74,11 @@ object MediaScanner {
             .appendQueryParameter("includePending", "1")
             .appendQueryParameter("deletedata", "false")
             .build()
+
         @Suppress("DEPRECATION")
         val where = "ifnull(format, ${MtpConstants.FORMAT_UNDEFINED}) != ${
-            MtpConstants.FORMAT_ABSTRACT_AV_PLAYLIST} AND ${MediaStore.Files.FileColumns.DATA} = ?"
+            MtpConstants.FORMAT_ABSTRACT_AV_PLAYLIST
+        } AND ${MediaStore.Files.FileColumns.DATA} = ?"
         val selectionArgs = arrayOf(file.absolutePath)
         contentResolver.delete(uri, where, selectionArgs)
     }

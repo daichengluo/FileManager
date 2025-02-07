@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.nonfree
 
 import android.annotation.SuppressLint
@@ -40,7 +35,7 @@ object CrashlyticsInitializer {
         ) ?: return false
         val signatures = packageInfo.signatures ?: return false
         return signatures.size == 1 &&
-            computeCertificateFingerprint(signatures[0]) == "87:3B:9B:60:C7:7C:F7:F3:CD:5F:AE:66" +
+                computeCertificateFingerprint(signatures[0]) == "87:3B:9B:60:C7:7C:F7:F3:CD:5F:AE:66" +
                 ":D0:FE:11:2C:4A:86:97:3E:11:8E:E8:A2:9C:34:6C:4C:67:3C:97:F0"
     }
 

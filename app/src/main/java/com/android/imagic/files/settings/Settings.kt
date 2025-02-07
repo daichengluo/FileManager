@@ -1,14 +1,7 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.os.Environment
 import android.text.TextUtils
-import java8.nio.file.Path
-import java8.nio.file.Paths
 import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.compat.EnvironmentCompat2
@@ -23,6 +16,8 @@ import com.android.imagic.files.storage.PrimaryStorageVolume
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.theme.custom.ThemeColor
 import com.android.imagic.files.theme.night.NightMode
+import java8.nio.file.Path
+import java8.nio.file.Paths
 import java.io.File
 
 object Settings {

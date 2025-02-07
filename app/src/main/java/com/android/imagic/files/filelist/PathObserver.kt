@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.MainThread
-import java8.nio.file.Path
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.observe
 import com.android.imagic.files.util.closeSafe
+import java8.nio.file.Path
 import java.io.Closeable
 import java.io.IOException
 

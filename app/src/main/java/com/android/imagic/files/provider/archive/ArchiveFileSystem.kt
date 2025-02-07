@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.archive
 
 import android.os.Parcel
@@ -232,7 +227,7 @@ internal class ArchiveFileSystem(
         val CREATOR = object : Parcelable.Creator<ArchiveFileSystem> {
             override fun createFromParcel(source: Parcel): ArchiveFileSystem {
                 val archiveFile = source.readParcelable<Parcelable>(Path::class.java.classLoader)
-                    as Path
+                        as Path
                 return ArchiveFileSystemProvider.getOrNewFileSystem(archiveFile)
             }
 

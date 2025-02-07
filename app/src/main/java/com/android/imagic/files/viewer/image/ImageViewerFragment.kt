@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.image
 
 import android.content.Intent
@@ -19,10 +14,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.viewpager2.widget.ViewPager2
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.ImageViewerFragmentBinding
 import com.android.imagic.files.file.fileProviderUri
@@ -42,6 +33,10 @@ import com.android.imagic.files.util.putState
 import com.android.imagic.files.util.showToast
 import com.android.imagic.files.util.startActivitySafe
 import com.android.imagic.files.util.withChooser
+import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import me.zhanghai.android.systemuihelper.SystemUiHelper
 import java.io.IOException
 
@@ -149,10 +144,12 @@ class ImageViewerFragment : Fragment(), ConfirmDeleteDialogFragment.Listener {
                 confirmDelete()
                 true
             }
+
             R.id.action_share -> {
                 share()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 

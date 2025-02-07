@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import com.android.imagic.files.util.closeSafe
@@ -162,7 +157,8 @@ abstract class AbstractFileByteChannel(
     }
 
     @Throws(IOException::class)
-    protected open fun onForce(metaData: Boolean) {}
+    protected open fun onForce(metaData: Boolean) {
+    }
 
     @Throws(ClosedChannelException::class)
     private fun ensureOpen() {
@@ -196,7 +192,8 @@ abstract class AbstractFileByteChannel(
     }
 
     @Throws(IOException::class)
-    protected open fun onClose() {}
+    protected open fun onClose() {
+    }
 
     private inner class ReadBuffer : Closeable {
         private val buffer = ByteBuffer.allocate(BUFFER_SIZE).apply { limit(0) }

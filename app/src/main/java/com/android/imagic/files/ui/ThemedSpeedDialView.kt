@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.animation.Animator
@@ -25,10 +20,6 @@ import androidx.annotation.AttrRes
 import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.leinardi.android.speeddial.FabWithLabelView
-import com.leinardi.android.speeddial.SpeedDialActionItem
-import com.leinardi.android.speeddial.SpeedDialView
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.compat.createCompat
 import com.android.imagic.files.compat.setTextAppearanceCompat
 import com.android.imagic.files.util.ParcelableState
@@ -40,6 +31,10 @@ import com.android.imagic.files.util.getResourceIdByAttr
 import com.android.imagic.files.util.isMaterial3Theme
 import com.android.imagic.files.util.shortAnimTime
 import com.android.imagic.files.util.withModulatedAlpha
+import com.leinardi.android.speeddial.FabWithLabelView
+import com.leinardi.android.speeddial.SpeedDialActionItem
+import com.leinardi.android.speeddial.SpeedDialView
+import kotlinx.parcelize.Parcelize
 
 class ThemedSpeedDialView : SpeedDialView {
     private var onChangeListener: OnChangeListener? = null

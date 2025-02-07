@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.app.Dialog
@@ -42,35 +37,37 @@ class AddStorageDialogFragment : AppCompatDialogFragment() {
         private val STORAGE_TYPES = listOfNotNull(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 R.string.storage_add_storage_android_data to
-                    AddExternalStorageShortcutActivity ::class.createIntent().putArgs(
-                        AddExternalStorageShortcutFragment.Args(
-                            R.string.storage_add_storage_android_data,
-                            ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_DATA
-                                .asExternalStorageUri()
+                        AddExternalStorageShortcutActivity::class.createIntent().putArgs(
+                            AddExternalStorageShortcutFragment.Args(
+                                R.string.storage_add_storage_android_data,
+                                ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_DATA
+                                    .asExternalStorageUri()
+                            )
                         )
-                    )
             } else null,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 R.string.storage_add_storage_android_obb to
-                    AddExternalStorageShortcutActivity ::class.createIntent().putArgs(
-                        AddExternalStorageShortcutFragment.Args(
-                            R.string.storage_add_storage_android_obb,
-                            ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_OBB
-                                .asExternalStorageUri()
+                        AddExternalStorageShortcutActivity::class.createIntent().putArgs(
+                            AddExternalStorageShortcutFragment.Args(
+                                R.string.storage_add_storage_android_obb,
+                                ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_OBB
+                                    .asExternalStorageUri()
+                            )
                         )
-                    )
             } else null,
             R.string.storage_add_storage_document_tree to
-                AddDocumentTreeActivity::class.createIntent(),
+                    AddDocumentTreeActivity::class.createIntent(),
             R.string.storage_add_storage_ftp_server to
-                EditFtpServerActivity::class.createIntent().putArgs(EditFtpServerFragment.Args()),
+                    EditFtpServerActivity::class.createIntent()
+                        .putArgs(EditFtpServerFragment.Args()),
             R.string.storage_add_storage_sftp_server to
-                EditSftpServerActivity::class.createIntent().putArgs(EditSftpServerFragment.Args()),
+                    EditSftpServerActivity::class.createIntent()
+                        .putArgs(EditSftpServerFragment.Args()),
             R.string.storage_add_storage_smb_server to
-                AddLanSmbServerActivity::class.createIntent(),
+                    AddLanSmbServerActivity::class.createIntent(),
             R.string.storage_add_storage_webdav_server to
-                EditWebDavServerActivity::class.createIntent()
-                    .putArgs(EditWebDavServerFragment.Args()),
+                    EditWebDavServerActivity::class.createIntent()
+                        .putArgs(EditWebDavServerFragment.Args()),
         )
     }
 }

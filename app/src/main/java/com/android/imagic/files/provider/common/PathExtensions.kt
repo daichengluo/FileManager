@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java8.nio.channels.SeekableByteChannel
@@ -184,10 +179,10 @@ private class InterruptedIOExceptionInputStream(
 
     @Throws(IOException::class)
     override fun skip(n: Long): Long = try {
-            super.skip(n)
-        } catch (e: ClosedByInterruptException) {
-            throw e.toInterruptedIOException()
-        }
+        super.skip(n)
+    } catch (e: ClosedByInterruptException) {
+        throw e.toInterruptedIOException()
+    }
 
     @Throws(IOException::class)
     override fun available(): Int =
@@ -322,7 +317,8 @@ fun Path.resolveForeign(other: Path): Path {
     asByteStringListPath()
     other.asByteStringListPath()
     if (javaClass == other.javaClass && provider == other.provider
-        && fileSystem == other.fileSystem) {
+        && fileSystem == other.fileSystem
+    ) {
         return resolve(other)
     }
     if (other.isAbsolute) {

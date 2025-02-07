@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.content.Context
@@ -12,12 +7,12 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.commit
-import java8.nio.file.Path
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.putArgs
+import java8.nio.file.Path
 
 class FileListActivity : AppActivity() {
     private lateinit var fragment: FileListFragment
@@ -32,7 +27,7 @@ class FileListActivity : AppActivity() {
             supportFragmentManager.commit { add(android.R.id.content, fragment) }
         } else {
             fragment = supportFragmentManager.findFragmentById(android.R.id.content)
-                as FileListFragment
+                    as FileListFragment
         }
     }
 

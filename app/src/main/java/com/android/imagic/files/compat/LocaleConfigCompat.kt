@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.app.LocaleConfig
@@ -171,7 +166,8 @@ class LocaleConfigCompat(context: Context) {
             do {
                 type = next()
             } while (type != XmlPullParser.END_DOCUMENT &&
-                (type != XmlPullParser.END_TAG || depth > outerDepth))
+                (type != XmlPullParser.END_TAG || depth > outerDepth)
+            )
         }
 
         companion object {

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.app.Dialog
@@ -10,10 +5,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeType
@@ -26,6 +17,10 @@ import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.startActivitySafe
 import com.android.imagic.files.util.withChooser
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class OpenFileAsDialogFragment : AppCompatDialogFragment() {
     private val args by args<Args>()

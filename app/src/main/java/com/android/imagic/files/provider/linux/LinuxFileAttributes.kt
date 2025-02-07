@@ -1,15 +1,6 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.os.Parcelable
-import java.time.Instant
-import java8.nio.file.attribute.FileTime
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.provider.common.AbstractPosixFileAttributes
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.FileTimeParceler
@@ -19,6 +10,10 @@ import com.android.imagic.files.provider.common.PosixFileType
 import com.android.imagic.files.provider.common.PosixGroup
 import com.android.imagic.files.provider.common.PosixUser
 import com.android.imagic.files.provider.linux.syscall.StructStat
+import java8.nio.file.attribute.FileTime
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
+import java.time.Instant
 
 @Parcelize
 internal class LinuxFileAttributes(

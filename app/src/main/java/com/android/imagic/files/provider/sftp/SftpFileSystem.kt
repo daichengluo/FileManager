@@ -1,19 +1,7 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp
 
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.FileStore
-import java8.nio.file.FileSystem
-import java8.nio.file.Path
-import java8.nio.file.PathMatcher
-import java8.nio.file.WatchService
-import java8.nio.file.attribute.UserPrincipalLookupService
-import java8.nio.file.spi.FileSystemProvider
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringBuilder
 import com.android.imagic.files.provider.common.ByteStringListPathCreator
@@ -21,6 +9,13 @@ import com.android.imagic.files.provider.common.LocalWatchService
 import com.android.imagic.files.provider.common.toByteString
 import com.android.imagic.files.provider.sftp.client.Authority
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.FileStore
+import java8.nio.file.FileSystem
+import java8.nio.file.Path
+import java8.nio.file.PathMatcher
+import java8.nio.file.WatchService
+import java8.nio.file.attribute.UserPrincipalLookupService
+import java8.nio.file.spi.FileSystemProvider
 import java.io.IOException
 
 internal class SftpFileSystem(

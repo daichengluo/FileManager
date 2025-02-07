@@ -6,11 +6,11 @@
 package com.android.imagic.files.filelist
 
 import android.net.Uri
-import java8.nio.file.Path
-import java8.nio.file.Paths
 import com.android.imagic.files.R
 import com.android.imagic.files.storage.createOrLog
 import com.android.imagic.files.util.asPathNameOrNull
+import java8.nio.file.Path
+import java8.nio.file.Paths
 import java.net.URI
 
 abstract class PathDialogFragment : NameDialogFragment() {
@@ -35,7 +35,7 @@ abstract class PathDialogFragment : NameDialogFragment() {
 
     private fun String.toPathOrNull(): Path? {
         val uri = URI::class.createOrLog(toString())
-            // Also try to accept decoded path.
+        // Also try to accept decoded path.
             ?: Uri.parse(this).let {
                 URI::class.createOrLog(
                     it.scheme, it.userInfo, it.host, it.port, it.path, it.query, it.fragment

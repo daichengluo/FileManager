@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.app.Dialog
@@ -19,13 +14,13 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.preference.DialogPreference
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.util.ParcelableState
 import com.android.imagic.files.util.getState
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.putState
 import com.android.imagic.files.util.toBitmapDrawable
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.parcelize.Parcelize
 
 /**
  * @see androidx.preference.PreferenceDialogFragmentCompat
@@ -46,6 +41,7 @@ abstract class MaterialPreferenceDialogFragmentCompat : AppCompatDialogFragment(
     private var positiveButtonText: CharSequence? = null
     private var negativeButtonText: CharSequence? = null
     private var dialogMessage: CharSequence? = null
+
     @LayoutRes
     private var dialogLayoutRes: Int = 0
     private var dialogIcon: BitmapDrawable? = null

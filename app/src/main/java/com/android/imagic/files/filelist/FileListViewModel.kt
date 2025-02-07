@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.Parcelable
@@ -11,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import java8.nio.file.Path
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.filelist.FileSortOptions.By
 import com.android.imagic.files.filelist.FileSortOptions.Order
@@ -20,6 +14,7 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.CloseableLiveData
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
 import java.io.Closeable
 
 // TODO: Use SavedStateHandle to save state.

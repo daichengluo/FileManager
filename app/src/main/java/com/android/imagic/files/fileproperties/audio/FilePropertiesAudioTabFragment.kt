@@ -1,13 +1,5 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.audio
 
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.format
@@ -19,6 +11,9 @@ import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.isMediaMetadataRetrieverCompatible
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class FilePropertiesAudioTabFragment : FilePropertiesTabFragment() {
     private val args by args<Args>()

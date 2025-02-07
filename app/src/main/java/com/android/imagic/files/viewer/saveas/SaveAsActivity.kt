@@ -1,14 +1,7 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.saveas
 
 import android.os.Bundle
 import android.os.Environment
-import java8.nio.file.Path
-import java8.nio.file.Paths
 import com.android.imagic.files.R
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.file.MimeType
@@ -17,6 +10,8 @@ import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.util.saveAsPath
 import com.android.imagic.files.util.showToast
+import java8.nio.file.Path
+import java8.nio.file.Paths
 
 class SaveAsActivity : AppActivity() {
     private val createFileLauncher =

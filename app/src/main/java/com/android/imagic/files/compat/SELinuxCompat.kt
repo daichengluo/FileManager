@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.os.Build
@@ -24,10 +19,12 @@ object SELinuxCompat {
     private val seLinuxClass by lazyReflectedClass("android.os.SELinux")
     private val isSELinuxEnabledMethod by lazyReflectedMethod(seLinuxClass, "isSELinuxEnabled")
     private val isSELinuxEnforcedMethod by lazyReflectedMethod(seLinuxClass, "isSELinuxEnforced")
+
     @RestrictedHiddenApi
     private val setFSCreateContextMethod by lazyReflectedMethod(
         seLinuxClass, "setFSCreateContext", String::class.java
     )
+
     @RestrictedHiddenApi
     private val setFileContextMethod by lazyReflectedMethod(
         seLinuxClass, "setFileContext", String::class.java, String::class.java
@@ -35,10 +32,12 @@ object SELinuxCompat {
     private val getFileContextStringMethod by lazyReflectedMethod(
         seLinuxClass, "getFileContext", String::class.java
     )
+
     @RestrictedHiddenApi
     private val getPeerContextMethod by lazyReflectedMethod(
         seLinuxClass, "getPeerContext", FileDescriptor::class.java
     )
+
     @get:RequiresApi(Build.VERSION_CODES.Q)
     @RestrictedHiddenApi
     private val getFileContextFileDescriptorMethod by lazyReflectedMethod(
@@ -52,14 +51,17 @@ object SELinuxCompat {
         seLinuxClass, "checkSELinuxAccess", String::class.java, String::class.java,
         String::class.java, String::class.java
     )
+
     @RestrictedHiddenApi
     private val nativeRestoreconMethod by lazyReflectedMethod(
         seLinuxClass, "native_restorecon", String::class.java, Int::class.java
     )
+
     @RestrictedHiddenApi
     private val restoreconStringMethod by lazyReflectedMethod(
         seLinuxClass, "restorecon", String::class.java
     )
+
     @RestrictedHiddenApi
     private val restoreconFileMethod by lazyReflectedMethod(
         seLinuxClass, "restorecon", File::class.java

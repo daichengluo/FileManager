@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.annotation.SuppressLint
@@ -38,7 +33,8 @@ fun PackageManager.getPackageArchiveInfoCompat(archiveFilePath: String, flags: I
                         signatures = emptyArray()
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                        && flags.hasBits(PackageManager.GET_SIGNING_CERTIFICATES)) {
+                        && flags.hasBits(PackageManager.GET_SIGNING_CERTIFICATES)
+                    ) {
                         signingInfo = SigningInfo()
                     }
                 }

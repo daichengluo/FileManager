@@ -5,11 +5,11 @@
 
 package com.android.imagic.files.provider.common
 
+import com.android.imagic.files.provider.FileSystemProviders
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.Path
 import java8.nio.file.StandardWatchEventKinds
 import java8.nio.file.WatchEvent
-import com.android.imagic.files.provider.FileSystemProviders
 import java.io.IOException
 import java.io.OutputStream
 import java.nio.ByteBuffer
@@ -106,7 +106,7 @@ class LocalWatchService : AbstractWatchService<LocalWatchKey>() {
 fun NotifyEntryModifiedSeekableByteChannel(
     channel: SeekableByteChannel,
     path: Path
-) : SeekableByteChannel =
+): SeekableByteChannel =
     if (channel is ForceableChannel) {
         NotifyEntryModifiedForceableSeekableByteChannel(channel, path)
     } else {

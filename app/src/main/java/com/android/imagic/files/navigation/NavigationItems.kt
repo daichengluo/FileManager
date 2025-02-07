@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.navigation
 
 import android.content.Context
@@ -13,8 +8,6 @@ import android.os.storage.StorageVolume
 import androidx.annotation.DrawableRes
 import androidx.annotation.Size
 import androidx.annotation.StringRes
-import java8.nio.file.Path
-import java8.nio.file.Paths
 import com.android.imagic.files.R
 import com.android.imagic.files.about.AboutActivity
 import com.android.imagic.files.compat.getDescriptionCompat
@@ -35,6 +28,8 @@ import com.android.imagic.files.util.isMounted
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.supportsExternalStorageManager
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
+import java8.nio.file.Paths
 
 val navigationItems: List<NavigationItem?>
     get() =
@@ -174,6 +169,7 @@ private fun getStorageSubtitle(linuxPath: String, context: Context): String? {
             totalSpace = JavaFile.getTotalSpace(systemPath)
             freeSpace = JavaFile.getFreeSpace(systemPath)
         }
+
         else -> freeSpace = 0
     }
     if (totalSpace == 0L) {
@@ -260,6 +256,7 @@ private val defaultStandardDirectories: List<StandardDirectory>
                         null
                     }
                 }
+
                 else -> it
             }
         }
@@ -276,7 +273,8 @@ private val DEFAULT_STANDARD_DIRECTORIES = listOf(
     ),
     StandardDirectory(
         R.drawable.document_icon_white_24dp, R.string.navigation_standard_directory_documents,
-        Environment.DIRECTORY_DOCUMENTS, false),
+        Environment.DIRECTORY_DOCUMENTS, false
+    ),
     StandardDirectory(
         R.drawable.download_icon_white_24dp, R.string.navigation_standard_directory_downloads,
         Environment.DIRECTORY_DOWNLOADS, true

@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import android.system.OsConstants
-import java8.nio.file.attribute.FileAttribute
-import java8.nio.file.attribute.PosixFilePermission
 import com.android.imagic.files.util.enumSetOf
 import com.android.imagic.files.util.hasBits
+import java8.nio.file.attribute.FileAttribute
+import java8.nio.file.attribute.PosixFilePermission
 
 enum class PosixFileModeBit {
     SET_USER_ID,
@@ -33,12 +28,12 @@ object PosixFileMode {
 
     val CREATE_FILE_DEFAULT = fromInt(
         OsConstants.S_IRUSR or OsConstants.S_IWUSR or OsConstants.S_IRGRP or OsConstants.S_IWGRP or
-            OsConstants.S_IROTH or OsConstants.S_IWOTH
+                OsConstants.S_IROTH or OsConstants.S_IWOTH
     )
 
     val DIRECTORY_DEFAULT = fromInt(
         OsConstants.S_IRWXU or OsConstants.S_IRGRP or OsConstants.S_IXGRP or
-            OsConstants.S_IROTH or OsConstants.S_IXOTH
+                OsConstants.S_IROTH or OsConstants.S_IXOTH
     )
 
     val FILE_DEFAULT = fromInt(
@@ -143,17 +138,17 @@ private class PosixFileModeAttribute(
 
 fun Set<PosixFileModeBit>.toInt(): Int =
     ((if (contains(PosixFileModeBit.SET_USER_ID)) OsConstants.S_ISUID else 0)
-        or (if (contains(PosixFileModeBit.SET_GROUP_ID)) OsConstants.S_ISGID else 0)
-        or (if (contains(PosixFileModeBit.STICKY)) OsConstants.S_ISVTX else 0)
-        or (if (contains(PosixFileModeBit.OWNER_READ)) OsConstants.S_IRUSR else 0)
-        or (if (contains(PosixFileModeBit.OWNER_WRITE)) OsConstants.S_IWUSR else 0)
-        or (if (contains(PosixFileModeBit.OWNER_EXECUTE)) OsConstants.S_IXUSR else 0)
-        or (if (contains(PosixFileModeBit.GROUP_READ)) OsConstants.S_IRGRP else 0)
-        or (if (contains(PosixFileModeBit.GROUP_WRITE)) OsConstants.S_IWGRP else 0)
-        or (if (contains(PosixFileModeBit.GROUP_EXECUTE)) OsConstants.S_IXGRP else 0)
-        or (if (contains(PosixFileModeBit.OTHERS_READ)) OsConstants.S_IROTH else 0)
-        or (if (contains(PosixFileModeBit.OTHERS_WRITE)) OsConstants.S_IWOTH else 0)
-        or (if (contains(PosixFileModeBit.OTHERS_EXECUTE)) OsConstants.S_IXOTH else 0))
+            or (if (contains(PosixFileModeBit.SET_GROUP_ID)) OsConstants.S_ISGID else 0)
+            or (if (contains(PosixFileModeBit.STICKY)) OsConstants.S_ISVTX else 0)
+            or (if (contains(PosixFileModeBit.OWNER_READ)) OsConstants.S_IRUSR else 0)
+            or (if (contains(PosixFileModeBit.OWNER_WRITE)) OsConstants.S_IWUSR else 0)
+            or (if (contains(PosixFileModeBit.OWNER_EXECUTE)) OsConstants.S_IXUSR else 0)
+            or (if (contains(PosixFileModeBit.GROUP_READ)) OsConstants.S_IRGRP else 0)
+            or (if (contains(PosixFileModeBit.GROUP_WRITE)) OsConstants.S_IWGRP else 0)
+            or (if (contains(PosixFileModeBit.GROUP_EXECUTE)) OsConstants.S_IXGRP else 0)
+            or (if (contains(PosixFileModeBit.OTHERS_READ)) OsConstants.S_IROTH else 0)
+            or (if (contains(PosixFileModeBit.OTHERS_WRITE)) OsConstants.S_IWOTH else 0)
+            or (if (contains(PosixFileModeBit.OTHERS_EXECUTE)) OsConstants.S_IXOTH else 0))
 
 fun Set<PosixFileModeBit>.toPermissions(): Set<PosixFilePermission> =
     enumSetOf<PosixFilePermission>().apply {

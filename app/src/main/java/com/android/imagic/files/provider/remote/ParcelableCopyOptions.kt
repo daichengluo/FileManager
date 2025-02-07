@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.android.imagic.files.compat.readSerializableCompat
 import java8.nio.file.CopyOption
 import java8.nio.file.LinkOption
-import com.android.imagic.files.compat.readSerializableCompat
 import java.io.Serializable
 
 class ParcelableCopyOptions(val value: Array<out CopyOption>) : Parcelable {
@@ -18,7 +13,8 @@ class ParcelableCopyOptions(val value: Array<out CopyOption>) : Parcelable {
             when (val type = source.readInt()) {
                 0 ->
                     source.readParcelable<Parcelable>(CopyOption::class.java.classLoader)!!
-                        as CopyOption
+                            as CopyOption
+
                 1 -> source.readSerializableCompat()!!
                 else -> throw AssertionError(type)
             }
@@ -35,10 +31,12 @@ class ParcelableCopyOptions(val value: Array<out CopyOption>) : Parcelable {
                     dest.writeInt(0)
                     dest.writeParcelable(option as Parcelable, flags)
                 }
+
                 is Serializable -> {
                     dest.writeInt(1)
                     dest.writeSerializable(option as Serializable)
                 }
+
                 else -> throw UnsupportedOperationException(option.toString())
             }
         }

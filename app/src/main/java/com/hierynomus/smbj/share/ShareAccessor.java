@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.hierynomus.smbj.share;
 
 import androidx.annotation.NonNull;
@@ -15,7 +10,8 @@ import com.hierynomus.smbj.io.ByteChunkProvider;
 import java.util.concurrent.Future;
 
 public class ShareAccessor {
-    private ShareAccessor() {}
+    private ShareAccessor() {
+    }
 
     /**
      * This ioctl() variant allows passing in the {@param statusHandler}.

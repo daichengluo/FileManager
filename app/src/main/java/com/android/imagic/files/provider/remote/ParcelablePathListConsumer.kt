@@ -1,22 +1,17 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.ParcelableListParceler
 import com.android.imagic.files.util.RemoteCallback
 import com.android.imagic.files.util.getArgs
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class ParcelablePathListConsumer(val value: (List<Path>) -> Unit) : Parcelable {
     private constructor(source: Parcel) : this(

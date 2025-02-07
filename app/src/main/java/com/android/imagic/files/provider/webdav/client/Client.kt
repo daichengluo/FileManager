@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav.client
 
 import at.bitfire.dav4jvm.DavCollection
@@ -270,8 +265,7 @@ object Client {
         private fun getAuthenticatorInterceptor(): AuthenticatorInterceptor {
             val authentication = authenticator.getAuthentication(authority)
                 ?: throw IOException("No authentication found for $authority")
-            authenticatorInterceptorCache?.let {
-                (cachedAuthentication, cachedAuthenticatorInterceptor) ->
+            authenticatorInterceptorCache?.let { (cachedAuthentication, cachedAuthenticatorInterceptor) ->
                 if (cachedAuthentication == authentication) {
                     return cachedAuthenticatorInterceptor
                 }

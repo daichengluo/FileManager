@@ -6,6 +6,25 @@
 package com.android.imagic.files.provider.ftp
 
 import android.net.Uri
+import com.android.imagic.files.provider.common.ByteStringPath
+import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
+import com.android.imagic.files.provider.common.PathListDirectoryStream
+import com.android.imagic.files.provider.common.PathObservable
+import com.android.imagic.files.provider.common.PathObservableProvider
+import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeSearchable
+import com.android.imagic.files.provider.common.WatchServicePathObservable
+import com.android.imagic.files.provider.common.decodedPathByteString
+import com.android.imagic.files.provider.common.decodedQueryByteString
+import com.android.imagic.files.provider.common.toAccessModes
+import com.android.imagic.files.provider.common.toByteString
+import com.android.imagic.files.provider.common.toCopyOptions
+import com.android.imagic.files.provider.common.toLinkOptions
+import com.android.imagic.files.provider.common.toOpenOptions
+import com.android.imagic.files.provider.ftp.client.Authority
+import com.android.imagic.files.provider.ftp.client.Client
+import com.android.imagic.files.provider.ftp.client.Mode
+import com.android.imagic.files.provider.ftp.client.Protocol
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -28,25 +47,6 @@ import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.attribute.FileAttributeView
 import java8.nio.file.spi.FileSystemProvider
-import com.android.imagic.files.provider.common.ByteStringPath
-import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
-import com.android.imagic.files.provider.common.PathListDirectoryStream
-import com.android.imagic.files.provider.common.PathObservable
-import com.android.imagic.files.provider.common.PathObservableProvider
-import com.android.imagic.files.provider.common.Searchable
-import com.android.imagic.files.provider.common.WalkFileTreeSearchable
-import com.android.imagic.files.provider.common.WatchServicePathObservable
-import com.android.imagic.files.provider.common.decodedPathByteString
-import com.android.imagic.files.provider.common.decodedQueryByteString
-import com.android.imagic.files.provider.common.toAccessModes
-import com.android.imagic.files.provider.common.toByteString
-import com.android.imagic.files.provider.common.toCopyOptions
-import com.android.imagic.files.provider.common.toLinkOptions
-import com.android.imagic.files.provider.common.toOpenOptions
-import com.android.imagic.files.provider.ftp.client.Authority
-import com.android.imagic.files.provider.ftp.client.Client
-import com.android.imagic.files.provider.ftp.client.Mode
-import com.android.imagic.files.provider.ftp.client.Protocol
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -222,7 +222,8 @@ object FtpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
             throw UnsupportedOperationException("Missing ${StandardOpenOption.TRUNCATE_EXISTING}")
         }
         if (openOptions.write || openOptions.create || openOptions.createNew ||
-            openOptions.noFollowLinks) {
+            openOptions.noFollowLinks
+        ) {
             val fileFile = try {
                 Client.listFileOrNull(file, true)
             } catch (e: IOException) {

@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav
 
 import at.bitfire.dav4jvm.exception.DavException
+import com.android.imagic.files.provider.webdav.client.Client
 import java8.nio.file.LinkOption
 import java8.nio.file.attribute.BasicFileAttributeView
 import java8.nio.file.attribute.FileTime
-import com.android.imagic.files.provider.webdav.client.Client
 import java.io.IOException
 
 internal class WebDavFileAttributeView(

@@ -1,21 +1,16 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.media.MediaDataSource
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java8.nio.channels.SeekableByteChannel
-import java8.nio.file.Path
 import com.android.imagic.files.provider.common.newByteChannel
 import com.android.imagic.files.provider.document.isDocumentPath
 import com.android.imagic.files.provider.document.resolver.DocumentResolver
 import com.android.imagic.files.provider.ftp.isFtpPath
 import com.android.imagic.files.provider.linux.isLinuxPath
+import java8.nio.channels.SeekableByteChannel
+import java8.nio.file.Path
 import java.io.IOException
 import java.nio.ByteBuffer
 
@@ -32,6 +27,7 @@ fun MediaMetadataRetriever.setDataSource(path: Path) {
         path.isDocumentPath ->
             DocumentResolver.openParcelFileDescriptor(path as DocumentResolver.Path, "r")
                 .use { pfd -> setDataSource(pfd.fileDescriptor) }
+
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
             val channel = try {
                 path.newByteChannel()
@@ -40,6 +36,7 @@ fun MediaMetadataRetriever.setDataSource(path: Path) {
             }
             setDataSource(PathMediaDataSource(channel))
         }
+
         else -> throw IllegalArgumentException(path.toString())
     }
 }

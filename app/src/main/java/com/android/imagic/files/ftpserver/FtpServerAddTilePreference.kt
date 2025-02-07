@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ftpserver
 
 import android.app.StatusBarManager
@@ -48,10 +43,13 @@ class FtpServerAddTilePreference : Preference {
             val resultRes = when (result) {
                 StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_NOT_ADDED ->
                     return@requestAddTileService
+
                 StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED ->
                     R.string.ftp_server_add_tile_result_already_added
+
                 StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ADDED ->
                     R.string.ftp_server_add_tile_result_added
+
                 else -> R.string.ftp_server_add_tile_result_error
             }
             context.showToast(resultRes)

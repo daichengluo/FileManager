@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java.net.URI
@@ -91,6 +86,7 @@ private fun decode(encoded: String): ByteString {
                 builder.append(byte)
                 index += 3
             }
+
             else -> {
                 builder.append(byte)
                 ++index
@@ -111,8 +107,10 @@ private fun decodeHexCharacter(hexCharacter: Byte): Byte =
         in '0'.code.toByte()..'9'.code.toByte() -> (hexCharacter.toInt().toChar() - '0').toByte()
         in 'A'.code.toByte()..'F'.code.toByte() ->
             (10 + (hexCharacter.toInt().toChar() - 'A')).toByte()
+
         in 'a'.code.toByte()..'f'.code.toByte() ->
             (10 + (hexCharacter.toInt().toChar() - 'a')).toByte()
+
         else ->
             throw IllegalArgumentException(
                 "Non-hex-character ${hexCharacter.toInt().toChar()} for percent-encoding in URI"

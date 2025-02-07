@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.document
 
 import android.net.Uri
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
 import com.android.imagic.files.provider.content.resolver.ResolverException
 import com.android.imagic.files.provider.document.resolver.DocumentResolver
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
 import java.io.IOException
 
 val Path.documentUri: Uri

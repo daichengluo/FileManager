@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 sealed class ActionState<A, R> {
@@ -34,4 +29,7 @@ val ActionState<*, *>.isRunning: Boolean
     get() = this is ActionState.Running
 
 val ActionState<*, *>.isFinished: Boolean
-    get() = when (this) { is ActionState.Success, is ActionState.Error -> true else -> false }
+    get() = when (this) {
+        is ActionState.Success, is ActionState.Error -> true
+        else -> false
+    }

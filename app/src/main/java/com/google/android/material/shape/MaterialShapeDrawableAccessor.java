@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.google.android.material.shape;
 
 import android.annotation.SuppressLint;
@@ -13,7 +8,8 @@ import androidx.annotation.Nullable;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 public class MaterialShapeDrawableAccessor {
-    private MaterialShapeDrawableAccessor() {}
+    private MaterialShapeDrawableAccessor() {
+    }
 
     @SuppressLint("RestrictedApi")
     public static ElevationOverlayProvider getElevationOverlayProvider(

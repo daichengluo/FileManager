@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import android.os.Parcelable
@@ -47,8 +42,8 @@ value class MimeType(val value: String) : Parcelable {
 
     fun match(mimeType: MimeType): Boolean =
         type.let { it == "*" || mimeType.type == it }
-            && subtype.let { it == "*" || mimeType.subtype == it }
-            && parameters.let { it == null || mimeType.parameters == it }
+                && subtype.let { it == "*" || mimeType.subtype == it }
+                && parameters.let { it == null || mimeType.parameters == it }
 
     companion object {
         val ANY = "*/*".asMimeType()
@@ -88,7 +83,8 @@ private val String.isValidMimeType: Boolean
         val indexOfPlus = indexOf('+')
         if (indexOfPlus != -1 && !(indexOfSemicolon != -1 && indexOfPlus > indexOfSemicolon)) {
             if (indexOfPlus !in indexOfSlash + 2..<
-                if (indexOfSemicolon != -1) indexOfSemicolon - 1 else length) {
+                if (indexOfSemicolon != -1) indexOfSemicolon - 1 else length
+            ) {
                 return false
             }
         }

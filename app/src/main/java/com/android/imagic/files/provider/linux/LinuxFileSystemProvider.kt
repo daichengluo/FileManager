@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
-import java8.nio.file.attribute.FileAttributeView
 import com.android.imagic.files.provider.root.RootFileSystemProvider
 import com.android.imagic.files.provider.root.RootableFileSystemProvider
+import java8.nio.file.attribute.FileAttributeView
 
 object LinuxFileSystemProvider : RootableFileSystemProvider(
     { LocalLinuxFileSystemProvider(it as LinuxFileSystemProvider) },

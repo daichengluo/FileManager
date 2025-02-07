@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import java8.nio.file.CopyOption
@@ -54,11 +49,13 @@ fun Array<out CopyOption>.toCopyOptions(): CopyOptions {
                     StandardCopyOption.ATOMIC_MOVE -> atomicMove = true
                     else -> throw UnsupportedOperationException(option.toString())
                 }
+
             option === LinkOption.NOFOLLOW_LINKS -> noFollowLinks = true
             option is ProgressCopyOption -> {
                 progressIntervalMillis = option.intervalMillis
                 progressListener = option.listener
             }
+
             else -> {
                 throw UnsupportedOperationException(option.toString())
             }

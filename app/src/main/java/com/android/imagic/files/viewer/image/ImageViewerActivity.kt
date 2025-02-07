@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.image
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.commit
-import java8.nio.file.Path
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.util.extraPathList
 import com.android.imagic.files.util.putArgs
+import java8.nio.file.Path
 
 class ImageViewerActivity : AppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

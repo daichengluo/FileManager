@@ -1,11 +1,5 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.PosixFileAttributeView
 import com.android.imagic.files.provider.common.PosixFileAttributes
@@ -13,6 +7,7 @@ import com.android.imagic.files.provider.common.PosixFileModeBit
 import com.android.imagic.files.provider.common.PosixGroup
 import com.android.imagic.files.provider.common.PosixUser
 import com.android.imagic.files.provider.common.toParcelable
+import java8.nio.file.attribute.FileTime
 import java.io.IOException
 
 abstract class RemotePosixFileAttributeView(

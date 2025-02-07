@@ -1,18 +1,12 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
-import java8.nio.file.Path
-import java8.nio.file.Paths
-import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.compat.DocumentsContractCompat
 import com.android.imagic.files.storage.createOrLog
+import java8.nio.file.Path
+import java8.nio.file.Paths
 import java.io.Serializable
 import java.net.URI
 
@@ -54,11 +48,12 @@ private fun Uri.toPathOrNull(): Path? =
         ContentResolver.SCHEME_FILE, null -> path?.takeIfNotEmpty()?.let { Paths.get(it) }
         ContentResolver.SCHEME_CONTENT -> {
             val uri = URI::class.createOrLog(toString())
-                // Some people use Uri.parse() without encoding their path. Let's try saving
-                // them by calling the other URI constructor that encodes everything.
+            // Some people use Uri.parse() without encoding their path. Let's try saving
+            // them by calling the other URI constructor that encodes everything.
                 ?: URI::class.createOrLog(scheme, userInfo, host, port, path, query, fragment)
             uri?.let { Paths.get(it) }
         }
+
         else -> null
     }
 

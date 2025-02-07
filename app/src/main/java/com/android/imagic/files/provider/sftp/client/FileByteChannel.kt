@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp.client
 
 import com.android.imagic.files.provider.common.AbstractFileByteChannel
@@ -42,9 +37,11 @@ class FileByteChannel(
                             response.ensureStatusIs(Response.StatusCode.EOF)
                             return@map ByteBuffer::class.EMPTY
                         }
+
                         PacketType.DATA -> {
                             dataLength = response.readUInt32AsInt()
                         }
+
                         else -> throw SFTPException("Unexpected packet type ${response.type}")
                     }
                     if (dataLength == 0) {
@@ -83,7 +80,7 @@ class FileByteChannel(
 
     @Throws(IOException::class)
     override fun onSize(): Long =
-        try{
+        try {
             file.length()
         } catch (e: IOException) {
             throw e.maybeToSpecificException()
@@ -95,10 +92,12 @@ class FileByteChannel(
                 setClosed()
                 AsynchronousCloseException().apply { initCause(this@maybeToSpecificException) }
             }
+
             findCauseByClass<InterruptedException>() != null -> {
                 closeSafe()
                 ClosedByInterruptException().apply { initCause(this@maybeToSpecificException) }
             }
+
             else -> this
         }
 

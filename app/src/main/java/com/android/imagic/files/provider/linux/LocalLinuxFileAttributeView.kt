@@ -1,12 +1,6 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.PosixFileAttributeView
 import com.android.imagic.files.provider.common.PosixFileModeBit
@@ -17,6 +11,7 @@ import com.android.imagic.files.provider.linux.syscall.Constants
 import com.android.imagic.files.provider.linux.syscall.StructTimespec
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
+import java8.nio.file.attribute.FileTime
 import java.io.IOException
 
 internal class LocalLinuxFileAttributeView(

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.text
 
 import android.os.Bundle
@@ -24,7 +19,7 @@ class TextEditorActivity : AppActivity() {
             supportFragmentManager.commit { add(android.R.id.content, fragment) }
         } else {
             fragment = supportFragmentManager.findFragmentById(android.R.id.content)
-                as TextEditorFragment
+                    as TextEditorFragment
         }
     }
 

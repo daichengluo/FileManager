@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import android.net.Uri
@@ -49,8 +44,8 @@ fun Uri.asExternalStorageUri(): ExternalStorageUri {
 private val Uri.isExternalStorageUri: Boolean
     get() =
         DocumentsContractCompat.isDocumentUri(this) &&
-            authority == DocumentsContractCompat.EXTERNAL_STORAGE_PROVIDER_AUTHORITY &&
-            pathSegments.size == 4
+                authority == DocumentsContractCompat.EXTERNAL_STORAGE_PROVIDER_AUTHORITY &&
+                pathSegments.size == 4
 
 val ExternalStorageUri.displayName: String
     get() = path.takeLastWhile { it != '/' }.takeIfNotEmpty() ?: "/"

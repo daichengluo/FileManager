@@ -1,13 +1,5 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider
 
-import java8.nio.file.Files
-import java8.nio.file.ProviderNotFoundException
-import java8.nio.file.spi.FileSystemProvider
 import com.android.imagic.files.provider.archive.ArchiveFileSystemProvider
 import com.android.imagic.files.provider.common.AndroidFileTypeDetector
 import com.android.imagic.files.provider.content.ContentFileSystemProvider
@@ -21,6 +13,9 @@ import com.android.imagic.files.provider.sftp.SftpFileSystemProvider
 import com.android.imagic.files.provider.smb.SmbFileSystemProvider
 import com.android.imagic.files.provider.webdav.WebDavFileSystemProvider
 import com.android.imagic.files.provider.webdav.WebDavsFileSystemProvider
+import java8.nio.file.Files
+import java8.nio.file.ProviderNotFoundException
+import java8.nio.file.spi.FileSystemProvider
 
 object FileSystemProviders {
     /**

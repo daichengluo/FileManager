@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
 import android.os.Parcel
@@ -101,7 +96,8 @@ internal class SmbPath : ByteStringListPath<SmbPath>, Client.Path {
             // as a WebDAV path.
             check(authority.port == Authority.DEFAULT_PORT) {
                 "Path is absolute but uses port ${authority.port} instead of the default port ${
-                Authority.DEFAULT_PORT}"
+                    Authority.DEFAULT_PORT
+                }"
             }
             StringBuilder()
                 .append("\\\\")

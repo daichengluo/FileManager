@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.content.ContentResolver
@@ -59,7 +54,8 @@ object DocumentsContractCompat {
             3 -> pathSegments[0] == PATH_DOCUMENT && pathSegments[2] == PATH_CHILDREN
             5 ->
                 pathSegments[0] == PATH_TREE && pathSegments[2] == PATH_DOCUMENT
-                    && pathSegments[4] == PATH_CHILDREN
+                        && pathSegments[4] == PATH_CHILDREN
+
             else -> false
         }
     }

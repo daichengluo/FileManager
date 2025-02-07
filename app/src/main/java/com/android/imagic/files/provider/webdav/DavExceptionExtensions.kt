@@ -18,8 +18,10 @@ fun DavException.toFileSystemException(
     return when (this) {
         is DavIOException ->
             return FileSystemException(file, other, message).apply { initCause(cause) }
+
         is UnauthorizedException, is ForbiddenException ->
             AccessDeniedException(file, other, message)
+
         is NotFoundException -> NoSuchFileException(file, other, message)
         is ConflictException -> FileAlreadyExistsException(file, other, message)
         else -> FileSystemException(file, other, message)

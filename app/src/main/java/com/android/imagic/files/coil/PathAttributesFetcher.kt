@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.coil
 
 import android.content.Context
@@ -19,8 +14,6 @@ import coil.fetch.SourceResult
 import coil.key.Keyer
 import coil.request.Options
 import coil.size.Dimension
-import java8.nio.file.Path
-import java8.nio.file.attribute.BasicFileAttributes
 import com.android.imagic.files.R
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeType
@@ -46,6 +39,8 @@ import com.android.imagic.files.util.isGetPackageArchiveInfoCompatible
 import com.android.imagic.files.util.isMediaMetadataRetrieverCompatible
 import com.android.imagic.files.util.runWithCancellationSignal
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
+import java8.nio.file.attribute.BasicFileAttributes
 import okio.buffer
 import okio.source
 import java.io.Closeable
@@ -72,7 +67,7 @@ class PathAttributesFetcher(
         val (width, height) = options.size
         // @see android.provider.MediaStore.ThumbnailConstants.MINI_SIZE
         val isThumbnail = width is Dimension.Pixels && width.px <= 512
-            && height is Dimension.Pixels && height.px <= 384
+                && height is Dimension.Pixels && height.px <= 384
         if (isThumbnail) {
             width as Dimension.Pixels
             height as Dimension.Pixels
@@ -96,7 +91,7 @@ class PathAttributesFetcher(
             if (path.isRemotePath) {
                 // FTP doesn't support random access and requires one connection per parallel read.
                 val shouldReadRemotePath = !path.isFtpPath
-                    && Settings.READ_REMOTE_FILES_FOR_THUMBNAIL.valueCompat
+                        && Settings.READ_REMOTE_FILES_FOR_THUMBNAIL.valueCompat
                 if (!shouldReadRemotePath) {
                     error("Cannot read $path for thumbnail")
                 }
@@ -111,6 +106,7 @@ class PathAttributesFetcher(
                     e.printStackTrace()
                 }
             }
+
             mimeType.isImage || mimeType == MimeType.GENERIC -> {
                 val inputStream = path.newInputStream()
                 return SourceResult(
@@ -118,6 +114,7 @@ class PathAttributesFetcher(
                     if (mimeType != MimeType.GENERIC) mimeType.value else null, path.dataSource
                 )
             }
+
             mimeType.isMedia && path.isMediaMetadataRetrieverCompatible -> {
                 val embeddedPicture = try {
                     MediaMetadataRetriever().use { retriever ->
@@ -143,6 +140,7 @@ class PathAttributesFetcher(
                     }
                 }
             }
+
             mimeType.isPdf && (path.isLinuxPath || path.isDocumentPath) -> {
                 try {
                     return pdfPageFetcherFactory.create(path, options, imageLoader).fetch()
@@ -181,9 +179,17 @@ class PathAttributesFetcher(
             override fun openParcelFileDescriptor(data: Path): ParcelFileDescriptor =
                 when {
                     data.isLinuxPath ->
-                        ParcelFileDescriptor.open(data.toFile(), ParcelFileDescriptor.MODE_READ_ONLY)
+                        ParcelFileDescriptor.open(
+                            data.toFile(),
+                            ParcelFileDescriptor.MODE_READ_ONLY
+                        )
+
                     data.isDocumentPath ->
-                        DocumentResolver.openParcelFileDescriptor(data as DocumentResolver.Path, "r")
+                        DocumentResolver.openParcelFileDescriptor(
+                            data as DocumentResolver.Path,
+                            "r"
+                        )
+
                     else -> throw IllegalArgumentException(data.toString())
                 }
         }

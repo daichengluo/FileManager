@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.app.Activity
@@ -101,7 +96,7 @@ class EditWebDavServerFragment : Fragment() {
             UnfilteredArrayAdapter(
                 binding.authenticationTypeEdit.context, R.layout.dropdown_item,
                 objects =
-                    getTextArray(R.array.storage_edit_webdav_server_authentication_type_entries)
+                getTextArray(R.array.storage_edit_webdav_server_authentication_type_entries)
             )
         )
         authenticationType = AuthenticationType.PASSWORD
@@ -152,10 +147,12 @@ class EditWebDavServerFragment : Fragment() {
                         binding.usernameEdit.setText(authority.username)
                         binding.passwordEdit.setText(authentication.password)
                     }
+
                     is AccessTokenAuthentication -> {
                         authenticationType = AuthenticationType.ACCESS_TOKEN
                         binding.accessTokenEdit.setText(authentication.accessToken)
                     }
+
                     is NoneAuthentication -> authenticationType = AuthenticationType.NONE
                 }
                 binding.pathEdit.setText(server.relativePath)
@@ -250,11 +247,13 @@ class EditWebDavServerFragment : Fragment() {
                 binding.saveOrConnectAndAddButton.isEnabled = !isConnecting
                 binding.removeOrAddButton.isEnabled = !isConnecting
             }
+
             is ActionState.Success -> {
                 Storages.addOrReplace(state.argument)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
+
             is ActionState.Error -> {
                 val throwable = state.throwable
                 throwable.printStackTrace()
@@ -275,7 +274,8 @@ class EditWebDavServerFragment : Fragment() {
         val host = binding.hostEdit.text.toString().takeIfNotEmpty()
             ?.let { URI::class.canonicalizeHost(it) }
         if (host == null) {
-            binding.hostLayout.error = getString(R.string.storage_edit_webdav_server_host_error_empty)
+            binding.hostLayout.error =
+                getString(R.string.storage_edit_webdav_server_host_error_empty)
             if (errorEdit == null) {
                 errorEdit = binding.hostEdit
             }
@@ -310,6 +310,7 @@ class EditWebDavServerFragment : Fragment() {
                 val password = binding.passwordEdit.text.toString()
                 username to PasswordAuthentication(password)
             }
+
             AuthenticationType.ACCESS_TOKEN -> {
                 val accessToken = binding.accessTokenEdit.text.toString().takeIfNotEmpty()
                 if (accessToken == null) {
@@ -321,6 +322,7 @@ class EditWebDavServerFragment : Fragment() {
                 }
                 "" to accessToken?.let { AccessTokenAuthentication(it) }
             }
+
             AuthenticationType.NONE -> "" to NoneAuthentication
         }
         if (errorEdit != null) {

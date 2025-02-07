@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.apk
 
 import android.content.pm.PackageManager
@@ -36,7 +31,7 @@ class ApkInfoLiveData(path: Path) : PathObserverLiveData<Stateful<ApkInfo>>(path
                 // PackageParser.collectCertificates().
                 @Suppress("DEPRECATION")
                 var packageInfoFlags = (PackageManager.GET_PERMISSIONS
-                    or PackageManager.GET_SIGNATURES)
+                        or PackageManager.GET_SIGNATURES)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     packageInfoFlags = packageInfoFlags or PackageManager.GET_SIGNING_CERTIFICATES
                 }

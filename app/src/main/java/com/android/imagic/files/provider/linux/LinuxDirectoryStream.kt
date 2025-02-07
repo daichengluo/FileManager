@@ -1,16 +1,11 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
-import java8.nio.file.DirectoryIteratorException
-import java8.nio.file.DirectoryStream
-import java8.nio.file.Path
 import com.android.imagic.files.provider.common.toByteString
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
+import java8.nio.file.DirectoryIteratorException
+import java8.nio.file.DirectoryStream
+import java8.nio.file.Path
 import java.io.IOException
 
 internal class LinuxDirectoryStream(
@@ -76,33 +71,33 @@ internal class LinuxDirectoryStream(
         }
 
         private fun getNextPathLocked(): Path? {
-                while (true) {
-                    if (isClosed) {
-                        return null
-                    }
-                    val dirent = try {
-                        Syscall.readdir(dir)
-                    } catch (e: SyscallException) {
-                        throw DirectoryIteratorException(
-                            e.toFileSystemException(directory.toString())
-                        )
-                    } ?: return null
-                    val name = dirent.d_name
-                    if (name == BYTE_STRING_DOT || name == BYTE_STRING_DOT_DOT) {
-                        continue
-                    }
-                    val path = directory.resolve(dirent.d_name)
-                    val accepted = try {
-                        filter.accept(path)
-                    } catch (e: IOException) {
-                        throw DirectoryIteratorException(e)
-                    }
-                    if (!accepted) {
-                        continue
-                    }
-                    return path
+            while (true) {
+                if (isClosed) {
+                    return null
                 }
+                val dirent = try {
+                    Syscall.readdir(dir)
+                } catch (e: SyscallException) {
+                    throw DirectoryIteratorException(
+                        e.toFileSystemException(directory.toString())
+                    )
+                } ?: return null
+                val name = dirent.d_name
+                if (name == BYTE_STRING_DOT || name == BYTE_STRING_DOT_DOT) {
+                    continue
+                }
+                val path = directory.resolve(dirent.d_name)
+                val accepted = try {
+                    filter.accept(path)
+                } catch (e: IOException) {
+                    throw DirectoryIteratorException(e)
+                }
+                if (!accepted) {
+                    continue
+                }
+                return path
             }
+        }
 
         override fun next(): Path {
             synchronized(lock) {

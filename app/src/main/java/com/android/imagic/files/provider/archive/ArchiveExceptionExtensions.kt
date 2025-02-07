@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.archive
 
 import android.system.OsConstants
@@ -23,8 +18,9 @@ fun ArchiveException.toFileSystemOrInterruptedIOException(file: Path): IOExcepti
         code == OsConstants.EINTR -> InterruptedIOException(message)
         // See also libarchive/archive_read_support_format_zip.c .
         code == ARCHIVE_ERRNO_MISC && (
-            message == "Incorrect passphrase" || message == "Passphrase required for this entry"
-        ) -> ArchivePasswordRequiredException(file, message)
+                message == "Incorrect passphrase" || message == "Passphrase required for this entry"
+                ) -> ArchivePasswordRequiredException(file, message)
+
         else -> FileSystemException(file.toString(), null, message)
     }.apply { initCause(this@toFileSystemOrInterruptedIOException) }
 

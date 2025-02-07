@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.annotation.SuppressLint
@@ -15,8 +10,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.theme.custom.CustomThemeHelper.OnThemeChangedListener
 import com.android.imagic.files.theme.night.NightModeHelper.OnNightModeChangedListener
@@ -26,6 +19,8 @@ import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.getArgsOrNull
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class SettingsActivity : AppActivity(), OnThemeChangedListener, OnNightModeChangedListener {
     private var isRestarting = false

@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import com.android.imagic.files.util.ParcelableState
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.ImageViewState
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import kotlinx.parcelize.Parcelize
-import com.android.imagic.files.util.ParcelableState
 
 class SaveStateSubsamplingScaleImageView : SubsamplingScaleImageView {
     private var pendingState: ImageViewState? = null

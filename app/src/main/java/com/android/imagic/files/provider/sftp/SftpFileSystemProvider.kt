@@ -1,27 +1,5 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp
 
-import java8.nio.channels.FileChannel
-import java8.nio.channels.SeekableByteChannel
-import java8.nio.file.AccessMode
-import java8.nio.file.CopyOption
-import java8.nio.file.DirectoryStream
-import java8.nio.file.FileStore
-import java8.nio.file.FileSystem
-import java8.nio.file.FileSystemAlreadyExistsException
-import java8.nio.file.FileSystemNotFoundException
-import java8.nio.file.LinkOption
-import java8.nio.file.OpenOption
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
-import java8.nio.file.attribute.BasicFileAttributes
-import java8.nio.file.attribute.FileAttribute
-import java8.nio.file.attribute.FileAttributeView
-import java8.nio.file.spi.FileSystemProvider
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
@@ -41,6 +19,23 @@ import com.android.imagic.files.provider.sftp.client.Client
 import com.android.imagic.files.provider.sftp.client.ClientException
 import com.android.imagic.files.provider.sftp.client.SecurityProviderHelper
 import com.android.imagic.files.util.enumSetOf
+import java8.nio.channels.FileChannel
+import java8.nio.channels.SeekableByteChannel
+import java8.nio.file.AccessMode
+import java8.nio.file.CopyOption
+import java8.nio.file.DirectoryStream
+import java8.nio.file.FileStore
+import java8.nio.file.FileSystem
+import java8.nio.file.FileSystemAlreadyExistsException
+import java8.nio.file.FileSystemNotFoundException
+import java8.nio.file.LinkOption
+import java8.nio.file.OpenOption
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
+import java8.nio.file.attribute.BasicFileAttributes
+import java8.nio.file.attribute.FileAttribute
+import java8.nio.file.attribute.FileAttributeView
+import java8.nio.file.spi.FileSystemProvider
 import net.schmizz.sshj.sftp.OpenMode
 import java.io.IOException
 import java.net.URI
@@ -292,7 +287,10 @@ object SftpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Se
         return getFileAttributeView(path, *options).readAttributes() as A
     }
 
-    private fun getFileAttributeView(path: Path, vararg options: LinkOption): SftpFileAttributeView {
+    private fun getFileAttributeView(
+        path: Path,
+        vararg options: LinkOption
+    ): SftpFileAttributeView {
         path as? SftpPath ?: throw ProviderMismatchException(path.toString())
         val linkOptions = options.toLinkOptions()
         return SftpFileAttributeView(path, linkOptions.noFollowLinks)

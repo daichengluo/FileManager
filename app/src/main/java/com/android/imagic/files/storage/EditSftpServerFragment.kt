@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.os.Bundle
@@ -153,6 +148,7 @@ class EditSftpServerFragment : Fragment() {
                         authenticationType = AuthenticationType.PASSWORD
                         binding.passwordEdit.setText(authentication.password)
                     }
+
                     is PublicKeyAuthentication -> {
                         authenticationType = AuthenticationType.PUBLIC_KEY
                         binding.privateKeyEdit.setText(authentication.privateKey)
@@ -222,10 +218,12 @@ class EditSftpServerFragment : Fragment() {
                     binding.privateKeyEdit.text = null
                 }
             }
+
             is ActionState.Success -> {
                 binding.privateKeyEdit.setText(state.result)
                 viewModel.finishReadingPrivateKeyFile()
             }
+
             is ActionState.Error -> {
                 val throwable = state.throwable
                 throwable.printStackTrace()
@@ -258,10 +256,12 @@ class EditSftpServerFragment : Fragment() {
                 binding.saveOrConnectAndAddButton.isEnabled = !isConnecting
                 binding.removeOrAddButton.isEnabled = !isConnecting
             }
+
             is ActionState.Success -> {
                 Storages.addOrReplace(state.argument)
                 finish()
             }
+
             is ActionState.Error -> {
                 val throwable = state.throwable
                 throwable.printStackTrace()
@@ -296,7 +296,8 @@ class EditSftpServerFragment : Fragment() {
         val port = binding.portEdit.text.toString().takeIfNotEmpty()
             .let { if (it != null) it.toIntOrNull() else Authority.DEFAULT_PORT }
         if (port == null) {
-            binding.portLayout.error = getString(R.string.storage_edit_sftp_server_port_error_invalid)
+            binding.portLayout.error =
+                getString(R.string.storage_edit_sftp_server_port_error_invalid)
             if (errorEdit == null) {
                 errorEdit = binding.portEdit
             }
@@ -316,6 +317,7 @@ class EditSftpServerFragment : Fragment() {
                 val password = binding.passwordEdit.text.toString()
                 PasswordAuthentication(password)
             }
+
             AuthenticationType.PUBLIC_KEY -> {
                 val privateKey = binding.privateKeyEdit.text.toString().takeIfNotEmpty()
                 val privateKeyPassword =

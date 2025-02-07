@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
@@ -14,9 +9,9 @@ import android.text.method.MovementMethod
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
+import com.android.imagic.files.util.getColorStateListByAttr
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textfield.TextInputEditText
-import com.android.imagic.files.util.getColorStateListByAttr
 
 class ReadOnlyTextInputEditText : TextInputEditText {
     constructor(context: Context) : super(context)

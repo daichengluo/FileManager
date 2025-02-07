@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filejob
 
 import android.app.PendingIntent
@@ -331,7 +326,8 @@ private class ScanInfo {
     fun shouldPostNotification(): Boolean {
         val currentTimeMillis = System.currentTimeMillis()
         return if (fileCount % 100 == 0
-            || lastNotificationTimeMillis + NOTIFICATION_INTERVAL_MILLIS < currentTimeMillis) {
+            || lastNotificationTimeMillis + NOTIFICATION_INTERVAL_MILLIS < currentTimeMillis
+        ) {
             lastNotificationTimeMillis = currentTimeMillis
             true
         } else {
@@ -721,6 +717,7 @@ private fun FileJob.archive(
         when (result.action) {
             FileJobErrorAction.NEGATIVE, FileJobErrorAction.CANCELED ->
                 throw InterruptedIOException()
+
             else -> throw AssertionError(result.action)
         }
     }
@@ -935,8 +932,10 @@ private fun FileJob.create(path: Path, createDirectory: Boolean) {
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE, FileJobErrorAction.CANCELED ->
                     throw InterruptedIOException()
+
                 else -> throw AssertionError(result.action)
             }
         }
@@ -1037,6 +1036,7 @@ private fun FileJob.delete(path: Path, transferInfo: TransferInfo?, actionAllInf
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipDeleteError = true
@@ -1047,6 +1047,7 @@ private fun FileJob.delete(path: Path, transferInfo: TransferInfo?, actionAllInf
                     }
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     if (transferInfo != null) {
                         transferInfo.skipFileIgnoringSize()
@@ -1054,6 +1055,7 @@ private fun FileJob.delete(path: Path, transferInfo: TransferInfo?, actionAllInf
                     }
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -1225,11 +1227,13 @@ private fun FileJob.copyOrMove(
                 postCopyMoveNotification(transferInfo, source, type)
                 false
             }
+
             FileJobErrorAction.CANCELED -> {
                 transferInfo.skipFile(source)
                 postCopyMoveNotification(transferInfo, source, type)
                 false
             }
+
             FileJobErrorAction.NEGATIVE -> throw InterruptedIOException()
             else -> throw AssertionError(result.action)
         }
@@ -1265,11 +1269,13 @@ private fun FileJob.copyOrMove(
                 postCopyMoveNotification(transferInfo, source, type)
                 false
             }
+
             FileJobErrorAction.CANCELED -> {
                 transferInfo.skipFile(source)
                 postCopyMoveNotification(transferInfo, source, type)
                 false
             }
+
             FileJobErrorAction.NEGATIVE -> throw InterruptedIOException()
             else -> throw AssertionError(result.action)
         }
@@ -1320,7 +1326,8 @@ private fun FileJob.copyOrMove(
                 retry = true
                 continue
             } else if ((isMerge && actionAllInfo.skipMerge)
-                || (!isMerge && actionAllInfo.skipReplace)) {
+                || (!isMerge && actionAllInfo.skipReplace)
+            ) {
                 transferInfo.skipFile(source)
                 postCopyMoveNotification(transferInfo, source, type)
                 return false
@@ -1345,11 +1352,13 @@ private fun FileJob.copyOrMove(
                         continue
                     }
                 }
+
                 FileJobConflictAction.RENAME -> {
                     target = target.resolveSibling(result.name)
                     retry = true
                     continue
                 }
+
                 FileJobConflictAction.SKIP -> {
                     if (result.isAll) {
                         if (isMerge) {
@@ -1362,11 +1371,13 @@ private fun FileJob.copyOrMove(
                     postCopyMoveNotification(transferInfo, source, type)
                     false
                 }
+
                 FileJobConflictAction.CANCELED -> {
                     transferInfo.skipFile(source)
                     postCopyMoveNotification(transferInfo, source, type)
                     false
                 }
+
                 FileJobConflictAction.CANCEL -> throw InterruptedIOException()
             }
         } catch (e: InvalidFileNameException) {
@@ -1418,6 +1429,7 @@ private fun FileJob.copyOrMove(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipCopyMoveError = true
@@ -1426,11 +1438,13 @@ private fun FileJob.copyOrMove(
                     postCopyMoveNotification(transferInfo, source, type)
                     false
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFile(source)
                     postCopyMoveNotification(transferInfo, source, type)
                     false
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
             }
         }
@@ -1580,8 +1594,10 @@ private fun FileJob.rename(path: Path, newPath: Path) {
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE, FileJobErrorAction.CANCELED ->
                     throw InterruptedIOException()
+
                 else -> throw AssertionError(result.action)
             }
         }
@@ -1680,6 +1696,7 @@ private fun FileJob.restoreSeLinuxContext(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipRestoreSeLinuxContextError = true
@@ -1688,11 +1705,13 @@ private fun FileJob.restoreSeLinuxContext(
                     postRestoreSeLinuxContextNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFileIgnoringSize()
                     postRestoreSeLinuxContextNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -1825,6 +1844,7 @@ private fun FileJob.setGroup(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipSetGroupError = true
@@ -1833,11 +1853,13 @@ private fun FileJob.setGroup(
                     postSetGroupNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFileIgnoringSize()
                     postSetGroupNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -1971,6 +1993,7 @@ private fun FileJob.setMode(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipSetModeError = true
@@ -1979,11 +2002,13 @@ private fun FileJob.setMode(
                     postSetModeNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFileIgnoringSize()
                     postSetModeNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -2091,6 +2116,7 @@ private fun FileJob.setOwner(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipSetOwnerError = true
@@ -2099,11 +2125,13 @@ private fun FileJob.setOwner(
                     postSetOwnerNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFileIgnoringSize()
                     postSetOwnerNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -2221,6 +2249,7 @@ private fun FileJob.setSeLinuxContext(
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE -> {
                     if (result.isAll) {
                         actionAllInfo.skipSetSeLinuxContextError = true
@@ -2229,11 +2258,13 @@ private fun FileJob.setSeLinuxContext(
                     postSetSeLinuxContextNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.CANCELED -> {
                     transferInfo.skipFileIgnoringSize()
                     postSetSeLinuxContextNotification(transferInfo, path)
                     return
                 }
+
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
                 else -> throw AssertionError(result.action)
             }
@@ -2309,6 +2340,7 @@ private fun FileJob.write(file: Path, content: ByteArray): Boolean {
                     retry = true
                     continue
                 }
+
                 FileJobErrorAction.NEGATIVE, FileJobErrorAction.CANCELED -> false
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
             }

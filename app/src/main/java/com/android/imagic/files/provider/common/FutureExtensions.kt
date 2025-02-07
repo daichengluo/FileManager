@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import kotlinx.coroutines.Deferred
@@ -52,7 +47,7 @@ fun <T, R> Future<T>.map(
                 }
                 check(
                     exception is ExecutionException || exception is InterruptedException ||
-                        exception is TimeoutException
+                            exception is TimeoutException
                 )
                 throw exception
             }
@@ -130,6 +125,7 @@ fun <T> Promise<T, *>.asFuture(): Future<T> =
                         Thread.interrupted()
                         throw cause
                     }
+
                     is TimeoutException -> throw cause
                     else -> throw ExecutionException(e)
                 }

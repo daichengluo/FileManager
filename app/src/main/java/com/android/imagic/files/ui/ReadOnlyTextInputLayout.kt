@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
@@ -11,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.AttrRes
-import com.google.android.material.textfield.TextInputLayout
 import com.android.imagic.files.compat.getDrawableCompat
+import com.google.android.material.textfield.TextInputLayout
 
 class ReadOnlyTextInputLayout : TextInputLayout {
     constructor(context: Context) : super(context)

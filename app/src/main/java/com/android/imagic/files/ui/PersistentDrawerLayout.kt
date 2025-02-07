@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
@@ -73,7 +68,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
             if (isDrawerView(child)) {
                 val childLayoutParams = child.layoutParams as LayoutParams
                 val childRange = (childLayoutParams.leftMargin + child.measuredWidth
-                    + childLayoutParams.rightMargin)
+                        + childLayoutParams.rightMargin)
                 val childConsumedInset = (childRange * childLayoutParams.offset).toInt()
                 contentInsets = if (isLeftDrawerView(child)) {
                     contentInsets.replaceSystemWindowInsets(
@@ -159,7 +154,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
                 child.measure(childWidthSpec, childHeightSpec)
             } else check(isContentView(child)) {
                 ("Child $child does not have a valid layout_gravity - must be Gravity.LEFT,"
-                    + " Gravity.RIGHT, Gravity.NO_GRAVITY or Gravity.FILL")
+                        + " Gravity.RIGHT, Gravity.NO_GRAVITY or Gravity.FILL")
             }
         }
         updateContentViewsWindowInsets()
@@ -176,7 +171,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
             if (isDrawerView(child)) {
                 val childLayoutParams = child.layoutParams as LayoutParams
                 val childRange = (childLayoutParams.leftMargin + child.measuredWidth
-                    + childLayoutParams.rightMargin)
+                        + childLayoutParams.rightMargin)
                 contentWidth -= (childRange * childLayoutParams.offset).toInt()
             }
         }
@@ -210,13 +205,14 @@ class PersistentDrawerLayout @JvmOverloads constructor(
                 val childLayoutParams = child.layoutParams as LayoutParams
                 val childLeft = computeDrawerViewLeft(child)
                 val childVerticalGravity = (childLayoutParams.gravity
-                    and Gravity.VERTICAL_GRAVITY_MASK)
+                        and Gravity.VERTICAL_GRAVITY_MASK)
                 val height = bottom - top
                 when (childVerticalGravity) {
                     Gravity.TOP -> child.layout(
                         childLeft, childLayoutParams.topMargin, childLeft + childWidth,
                         childLayoutParams.topMargin + childHeight
                     )
+
                     Gravity.BOTTOM -> {
                         val childBottom = height - childLayoutParams.bottomMargin
                         child.layout(
@@ -224,13 +220,15 @@ class PersistentDrawerLayout @JvmOverloads constructor(
                             childBottom
                         )
                     }
+
                     Gravity.CENTER_VERTICAL -> {
                         val childTop = ((height - childHeight) / 2 + childLayoutParams.topMargin
-                            - childLayoutParams.bottomMargin)
+                                - childLayoutParams.bottomMargin)
                         child.layout(
                             childLeft, childTop, childLeft + childWidth, childTop + childHeight
                         )
                     }
+
                     else -> child.layout(
                         childLeft, childLayoutParams.topMargin, childLeft + childWidth,
                         childLayoutParams.topMargin + childHeight
@@ -252,13 +250,13 @@ class PersistentDrawerLayout @JvmOverloads constructor(
     private fun computeDrawerViewLeft(drawerView: View): Int {
         val childLayoutParams = drawerView.layoutParams as LayoutParams
         val childRange = (childLayoutParams.leftMargin + drawerView.measuredWidth
-            + childLayoutParams.rightMargin)
+                + childLayoutParams.rightMargin)
         return if (isLeftDrawerView(drawerView)) {
             (-childRange + (childRange * childLayoutParams.offset).toInt()
-                + childLayoutParams.leftMargin)
+                    + childLayoutParams.leftMargin)
         } else {
             (measuredWidth - (childRange * childLayoutParams.offset).toInt()
-                + childLayoutParams.leftMargin)
+                    + childLayoutParams.leftMargin)
         }
     }
 
@@ -414,7 +412,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
 
     private fun findDrawerView(gravity: Int): View? {
         val horizontalGravity = (Gravity.getAbsoluteGravity(gravity, layoutDirection)
-            and Gravity.HORIZONTAL_GRAVITY_MASK)
+                and Gravity.HORIZONTAL_GRAVITY_MASK)
         for (child in children) {
             val childHorizontalGravity = getChildAbsoluteHorizontalGravity(child)
             if (childHorizontalGravity == horizontalGravity) {
@@ -448,7 +446,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
 
     private fun getChildAbsoluteHorizontalGravity(child: View): Int {
         return (Gravity.getAbsoluteGravity(getChildGravity(child), layoutDirection)
-            and Gravity.HORIZONTAL_GRAVITY_MASK)
+                and Gravity.HORIZONTAL_GRAVITY_MASK)
     }
 
     private inner class ViewDragCallback(private val gravity: Int) : ViewDragHelper.Callback() {
@@ -465,7 +463,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
             } else {
                 val width = width
                 childLayoutParams.offset = ((childLayoutParams.leftMargin + width - left).toFloat()
-                    / childRange)
+                        / childRange)
             }
             changedView.isInvisible = childLayoutParams.offset <= 0
             updateContentViewsWindowInsets()

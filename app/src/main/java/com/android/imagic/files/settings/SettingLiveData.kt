@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.content.SharedPreferences
@@ -39,7 +34,8 @@ abstract class SettingLiveData<T>(
         if (nameSuffix == null) {
             defaultSharedPreferences
         } else {
-            val name = "${PreferenceManagerCompat.getDefaultSharedPreferencesName(application)
+            val name = "${
+                PreferenceManagerCompat.getDefaultSharedPreferencesName(application)
             }_$nameSuffix"
             val mode = PreferenceManagerCompat.defaultSharedPreferencesMode
             application.getSharedPreferences(name, mode)

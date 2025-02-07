@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav.client
 
 enum class Protocol(val scheme: String, val httpScheme: String, val defaultPort: Int) {

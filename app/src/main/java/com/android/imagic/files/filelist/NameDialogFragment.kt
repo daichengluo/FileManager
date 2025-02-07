@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.app.Dialog
@@ -14,13 +9,13 @@ import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
 import com.android.imagic.files.databinding.NameDialogBinding
 import com.android.imagic.files.databinding.NameDialogNameIncludeBinding
 import com.android.imagic.files.util.hideTextInputLayoutErrorOnTextChange
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 
 abstract class NameDialogFragment : AppCompatDialogFragment() {
     private lateinit var _binding: Binding

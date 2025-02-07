@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.annotation.SuppressLint
@@ -45,7 +40,8 @@ data class DocumentTree(
         get() =
             // We are using MANAGE_EXTERNAL_STORAGE to access all storage volumes when supported.
             if (!Environment::class.supportsExternalStorageManager()
-                && uri.storageVolume.let { it != null && !it.isPrimaryCompat }) {
+                && uri.storageVolume.let { it != null && !it.isPrimaryCompat }
+            ) {
                 R.drawable.sd_card_icon_white_24dp
             } else {
                 super.iconRes
@@ -53,7 +49,7 @@ data class DocumentTree(
 
     override fun getDefaultName(context: Context): String =
         uri.storageVolume?.getDescriptionCompat(context) ?: uri.displayName
-            ?: uri.value.lastPathSegment ?: uri.value.toString()
+        ?: uri.value.lastPathSegment ?: uri.value.toString()
 
     override val description: String
         get() = uri.value.toString()

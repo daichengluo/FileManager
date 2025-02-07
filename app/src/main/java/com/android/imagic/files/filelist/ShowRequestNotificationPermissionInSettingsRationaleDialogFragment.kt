@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.app.Dialog
@@ -10,11 +5,12 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.android.imagic.files.R
 import com.android.imagic.files.util.show
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class ShowRequestNotificationPermissionInSettingsRationaleDialogFragment : AppCompatDialogFragment() {
+class ShowRequestNotificationPermissionInSettingsRationaleDialogFragment :
+    AppCompatDialogFragment() {
     private val listener: Listener
         get() = requireParentFragment() as Listener
 

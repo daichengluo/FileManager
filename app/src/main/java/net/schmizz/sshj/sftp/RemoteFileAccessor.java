@@ -1,15 +1,12 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
+
 
 package net.schmizz.sshj.sftp;
+
+import androidx.annotation.NonNull;
 
 import net.schmizz.concurrent.Promise;
 
 import java.io.IOException;
-
-import androidx.annotation.NonNull;
 
 public class RemoteFileAccessor {
     private RemoteFileAccessor() {}

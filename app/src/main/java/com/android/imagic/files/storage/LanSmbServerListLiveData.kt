@@ -1,11 +1,14 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.os.AsyncTask
+import com.android.imagic.files.util.CloseableLiveData
+import com.android.imagic.files.util.Failure
+import com.android.imagic.files.util.Loading
+import com.android.imagic.files.util.Stateful
+import com.android.imagic.files.util.Success
+import com.android.imagic.files.util.getLocalAddress
+import com.android.imagic.files.util.toLinkedSet
+import com.android.imagic.files.util.valueCompat
 import jcifs.context.SingletonContext
 import jcifs.smb.SmbException
 import jcifs.smb.SmbFile
@@ -16,14 +19,6 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import com.android.imagic.files.util.CloseableLiveData
-import com.android.imagic.files.util.Failure
-import com.android.imagic.files.util.Loading
-import com.android.imagic.files.util.Stateful
-import com.android.imagic.files.util.Success
-import com.android.imagic.files.util.getLocalAddress
-import com.android.imagic.files.util.toLinkedSet
-import com.android.imagic.files.util.valueCompat
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.UnknownHostException

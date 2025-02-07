@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.archive.archiver
 
-import java8.nio.channels.SeekableByteChannel
-import java8.nio.charset.StandardCharsets
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.common.PosixFileModeBit
 import com.android.imagic.files.provider.common.PosixFileType
 import com.android.imagic.files.provider.common.PosixGroup
 import com.android.imagic.files.provider.common.PosixUser
 import com.android.imagic.files.provider.common.toInt
+import java8.nio.channels.SeekableByteChannel
+import java8.nio.charset.StandardCharsets
+import java8.nio.file.attribute.FileTime
 import me.zhanghai.android.libarchive.Archive
 import me.zhanghai.android.libarchive.ArchiveEntry
 import me.zhanghai.android.libarchive.ArchiveException

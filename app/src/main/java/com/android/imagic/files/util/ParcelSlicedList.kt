@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.os.Binder
@@ -65,6 +60,7 @@ class ParcelSlicedList<out T> : Parcelable {
                             }
                             true
                         }
+
                         else -> super.onTransact(code, data, reply, flags)
                     }
             })

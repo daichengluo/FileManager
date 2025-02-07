@@ -1,19 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
 import android.system.StructPollfd
-import java8.nio.file.ClosedWatchServiceException
-import java8.nio.file.LinkOption
-import java8.nio.file.Path
-import java8.nio.file.StandardWatchEventKinds
-import java8.nio.file.WatchEvent
-import java8.nio.file.attribute.BasicFileAttributes
-import kotlinx.coroutines.runBlocking
 import com.android.imagic.files.provider.FileSystemProviders
 import com.android.imagic.files.provider.common.AbstractWatchService
 import com.android.imagic.files.provider.common.readAttributes
@@ -21,6 +9,13 @@ import com.android.imagic.files.provider.linux.syscall.Constants
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
 import com.android.imagic.files.util.hasBits
+import java8.nio.file.ClosedWatchServiceException
+import java8.nio.file.LinkOption
+import java8.nio.file.Path
+import java8.nio.file.StandardWatchEventKinds
+import java8.nio.file.WatchEvent
+import java8.nio.file.attribute.BasicFileAttributes
+import kotlinx.coroutines.runBlocking
 import java.io.Closeable
 import java.io.FileDescriptor
 import java.io.IOException
@@ -328,12 +323,14 @@ internal class LocalLinuxWatchService : AbstractWatchService<LocalLinuxWatchKey>
                 when (kind) {
                     StandardWatchEventKinds.ENTRY_CREATE ->
                         mask = mask or (Constants.IN_CREATE or Constants.IN_MOVED_TO)
+
                     StandardWatchEventKinds.ENTRY_DELETE ->
                         mask = mask or (Constants.IN_DELETE_SELF or Constants.IN_DELETE
-                            or Constants.IN_MOVED_FROM)
+                                or Constants.IN_MOVED_FROM)
+
                     StandardWatchEventKinds.ENTRY_MODIFY ->
                         mask = mask or (Constants.IN_MOVE_SELF or Constants.IN_MODIFY
-                            or Constants.IN_ATTRIB)
+                                or Constants.IN_ATTRIB)
                 }
             }
             return mask
@@ -343,11 +340,14 @@ internal class LocalLinuxWatchService : AbstractWatchService<LocalLinuxWatchKey>
             when {
                 mask.hasBits(Constants.IN_CREATE) || mask.hasBits(Constants.IN_MOVED_TO) ->
                     StandardWatchEventKinds.ENTRY_CREATE
+
                 mask.hasBits(Constants.IN_DELETE_SELF) || mask.hasBits(Constants.IN_DELETE)
-                    || mask.hasBits(Constants.IN_MOVED_FROM) ->
+                        || mask.hasBits(Constants.IN_MOVED_FROM) ->
                     StandardWatchEventKinds.ENTRY_DELETE
+
                 mask.hasBits(Constants.IN_MOVE_SELF) || mask.hasBits(Constants.IN_MODIFY)
-                    || mask.hasBits(Constants.IN_ATTRIB) -> StandardWatchEventKinds.ENTRY_MODIFY
+                        || mask.hasBits(Constants.IN_ATTRIB) -> StandardWatchEventKinds.ENTRY_MODIFY
+
                 else -> throw AssertionError(mask)
             }
 

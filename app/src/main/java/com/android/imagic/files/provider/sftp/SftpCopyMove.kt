@@ -1,16 +1,5 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp
 
-import java.io.IOException
-import java.time.Instant
-import java8.nio.file.FileAlreadyExistsException
-import java8.nio.file.FileSystemException
-import java8.nio.file.NoSuchFileException
-import java8.nio.file.StandardCopyOption
 import com.android.imagic.files.provider.common.CopyOptions
 import com.android.imagic.files.provider.common.copyTo
 import com.android.imagic.files.provider.common.newInputStream
@@ -18,9 +7,15 @@ import com.android.imagic.files.provider.common.newOutputStream
 import com.android.imagic.files.provider.sftp.client.Client
 import com.android.imagic.files.provider.sftp.client.ClientException
 import com.android.imagic.files.util.enumSetOf
+import java8.nio.file.FileAlreadyExistsException
+import java8.nio.file.FileSystemException
+import java8.nio.file.NoSuchFileException
+import java8.nio.file.StandardCopyOption
 import net.schmizz.sshj.sftp.FileAttributes
 import net.schmizz.sshj.sftp.FileMode
 import net.schmizz.sshj.sftp.OpenMode
+import java.io.IOException
+import java.time.Instant
 
 internal object SftpCopyMove {
     @Throws(IOException::class)
@@ -128,6 +123,7 @@ internal object SftpCopyMove {
                     }
                 }
             }
+
             FileMode.Type.DIRECTORY -> {
                 if (targetAttributes != null) {
                     try {
@@ -146,6 +142,7 @@ internal object SftpCopyMove {
                 }
                 copyOptions.progressListener?.invoke(sourceSize)
             }
+
             FileMode.Type.SYMLINK -> {
                 val sourceTarget = try {
                     Client.readlink(source)
@@ -161,7 +158,8 @@ internal object SftpCopyMove {
                             Client.remove(target)
                         } catch (e2: ClientException) {
                             if (e2.toFileSystemException(target.toString())
-                                    !is NoSuchFileException) {
+                                        !is NoSuchFileException
+                            ) {
                                 e2.addSuppressed(exception)
                                 throw e2.toFileSystemException(target.toString())
                             }
@@ -177,6 +175,7 @@ internal object SftpCopyMove {
                 }
                 copyOptions.progressListener?.invoke(sourceSize)
             }
+
             else -> throw FileSystemException(source.toString(), null, "type $sourceType")
         }
         // We don't take error when copying attribute fatal, so errors will only be logged from now
@@ -185,11 +184,13 @@ internal object SftpCopyMove {
             val attributes = FileAttributes.Builder()
                 .apply {
                     if (copyOptions.copyAttributes
-                        && sourceAttributes.has(FileAttributes.Flag.UIDGID)) {
+                        && sourceAttributes.has(FileAttributes.Flag.UIDGID)
+                    ) {
                         withUIDGID(sourceAttributes.uid, sourceAttributes.gid)
                     }
                     if (sourceAttributes.type != FileMode.Type.SYMLINK
-                        && sourceAttributes.has(FileAttributes.Flag.MODE)) {
+                        && sourceAttributes.has(FileAttributes.Flag.MODE)
+                    ) {
                         withPermissions(sourceAttributes.mode.mask)
                     }
                     if (sourceAttributes.has(FileAttributes.Flag.ACMODTIME)) {

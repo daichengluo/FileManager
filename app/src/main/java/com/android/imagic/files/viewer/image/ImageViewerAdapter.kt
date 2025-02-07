@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.image
 
 import android.graphics.BitmapFactory
@@ -15,14 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.dispose
 import coil.load
 import coil.size.Size
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.DefaultOnImageEventListener
-import java8.nio.file.Path
-import java8.nio.file.attribute.BasicFileAttributes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import com.android.imagic.files.coil.fadeIn
 import com.android.imagic.files.databinding.ImageViewerItemBinding
 import com.android.imagic.files.file.MimeType
@@ -37,6 +24,14 @@ import com.android.imagic.files.util.fadeInUnsafe
 import com.android.imagic.files.util.fadeOutUnsafe
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.shortAnimTime
+import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.DefaultOnImageEventListener
+import java8.nio.file.Path
+import java8.nio.file.attribute.BasicFileAttributes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.max
 
 class ImageViewerAdapter(
@@ -164,7 +159,7 @@ class ImageViewerAdapter(
             val viewHeight = (height - paddingTop - paddingBottom)
             val orientation = appliedOrientation
             val rotated90Or270 = orientation == SubsamplingScaleImageView.ORIENTATION_90
-                || orientation == SubsamplingScaleImageView.ORIENTATION_270
+                    || orientation == SubsamplingScaleImageView.ORIENTATION_270
             val imageWidth = if (rotated90Or270) sHeight else sWidth
             val imageHeight = if (rotated90Or270) sWidth else sHeight
             return max(viewWidth.toFloat() / imageWidth, viewHeight.toFloat() / imageHeight)

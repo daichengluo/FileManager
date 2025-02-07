@@ -1,7 +1,4 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
+
 
 package androidx.swiperefreshlayout.widget;
 
@@ -15,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
 
-import com.android.imagic.files.R;
 import com.android.imagic.files.compat.ContextCompatKt;
 import com.android.imagic.files.util.ContextExtensionsKt;
 

@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.content.Intent
 import android.os.Bundle
-import java8.nio.file.Path
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.app.application
 import com.android.imagic.files.file.MimeType
@@ -18,6 +12,7 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.createViewIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.startActivitySafe
+import java8.nio.file.Path
 
 class OpenFileActivity : AppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

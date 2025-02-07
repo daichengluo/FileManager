@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Binder
@@ -29,7 +24,7 @@ fun <T : IInterface, R> T.call(block: T.(ParcelableException) -> R): R {
 
 @OptIn(ExperimentalContracts::class)
 fun <T, R> T.tryRun(exception: ParcelableException, block: T.() -> R): R?
-    where T : IInterface, T : Binder {
+        where T : IInterface, T : Binder {
     contract {
         callsInPlace(block, InvocationKind.EXACTLY_ONCE)
     }

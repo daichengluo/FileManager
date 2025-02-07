@@ -1,15 +1,9 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.os.Parcel
 import android.os.Parcelable
 import android.system.OsConstants
 import android.system.StructStatVfs
-import java8.nio.file.attribute.FileAttributeView
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringBuilder
 import com.android.imagic.files.provider.common.FileStoreNotFoundException
@@ -23,6 +17,7 @@ import com.android.imagic.files.provider.linux.syscall.SyscallException
 import com.android.imagic.files.util.andInv
 import com.android.imagic.files.util.hasBits
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.attribute.FileAttributeView
 import java.io.IOException
 
 internal class LocalLinuxFileStore : PosixFileStore, Parcelable {
@@ -197,6 +192,7 @@ internal class LocalLinuxFileStore : PosixFileStore, Parcelable {
 
         private val OPTIONS_DELIMITER = ",".toByteString()
         private val OPTION_RO = "ro".toByteString()
+
         // @see https://android.googlesource.com/platform/system/core/+/master/fs_mgr/fs_mgr_fstab.cpp
         //      kMountFlagsList
         // @see https://github.com/mmalecki/util-linux/blob/master/mount-deprecated/mount.c opt_map

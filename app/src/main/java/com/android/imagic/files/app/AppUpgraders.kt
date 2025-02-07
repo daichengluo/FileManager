@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.app
 
 import android.content.SharedPreferences
@@ -222,6 +217,7 @@ private fun migratePath1_1_0(oldParcel: Parcel, newParcel: Parcel) {
             newParcel.writeString(LinuxFileSystem::class.java.name)
             newParcel.writeBooleanCompat(oldParcel.readByte() != 0.toByte())
         }
+
         else -> throw IllegalStateException(className)
     }
 }
@@ -240,12 +236,12 @@ internal fun upgradeAppTo1_2_0() {
 private fun migrateStoragesSetting1_2_0() {
     val key = application.getString(R.string.pref_key_storages)
     val storages = (listOf(FileSystemRoot(null, true), PrimaryStorageVolume(null, true))
-        + DocumentTreeUri.persistedUris.map {
-            DocumentTree(
-                null, it.storageVolume?.getDescriptionCompat(application) ?: it.displayName
-                    ?: it.value.toString(), it
-            )
-        })
+            + DocumentTreeUri.persistedUris.map {
+        DocumentTree(
+            null, it.storageVolume?.getDescriptionCompat(application) ?: it.displayName
+            ?: it.value.toString(), it
+        )
+    })
     val bytes = Parcel.obtain().use { parcel ->
         parcel.writeValue(storages)
         parcel.marshall()
@@ -404,6 +400,7 @@ private fun migratePath1_4_0(oldParcel: Parcel, newParcel: Parcel) {
 
         "com.android.imagic.files.provider.smb.SmbPath" ->
             newParcel.writeParcelable(oldParcel.readParcelable<SmbFileSystem>(), 0)
+
         else -> throw IllegalStateException(className)
     }
 }
@@ -444,6 +441,7 @@ private fun migrateSftpServersSetting1_4_0() {
                             val relativePath = oldParcel.readString()
                             newParcel.writeString(relativePath)
                         }
+
                         else -> {
                             oldParcel.setDataPosition(oldPosition)
                             val storage = oldParcel.readValue(appClassLoader)
@@ -510,12 +508,14 @@ private fun migrateSftpServersSetting1_5_0() {
                             val authenticationPasswordOrPrivateKey = oldParcel.readString()
                             newParcel.writeString(authenticationPasswordOrPrivateKey)
                             if (authenticationClassName == "com.android.imagic.files.provider.sftp"
-                                + ".client.PublicKeyAuthentication") {
+                                + ".client.PublicKeyAuthentication"
+                            ) {
                                 newParcel.writeString(null)
                             }
                             val relativePath = oldParcel.readString()
                             newParcel.writeString(relativePath)
                         }
+
                         else -> {
                             oldParcel.setDataPosition(oldPosition)
                             val storage = oldParcel.readValue(appClassLoader)
@@ -588,7 +588,7 @@ private fun migrateDocumentManagerShortcutSetting1_7_2() {
                                         oldParcel.readString()
                                         newParcel.writeString(
                                             "com.android.imagic.files.storage" +
-                                                ".ExternalStorageShortcut"
+                                                    ".ExternalStorageShortcut"
                                         )
                                         val id = oldParcel.readLong()
                                         newParcel.writeLong(id)
@@ -604,6 +604,7 @@ private fun migrateDocumentManagerShortcutSetting1_7_2() {
                                         with(StableUriParceler) { uri.write(newParcel, 0) }
                                     }
                                 }
+
                                 else -> {
                                     val storage = oldParcel.readValue(appClassLoader)
                                     newParcel.writeValue(storage)

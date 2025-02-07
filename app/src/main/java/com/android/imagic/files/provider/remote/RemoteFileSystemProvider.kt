@@ -1,13 +1,14 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
+import com.android.imagic.files.provider.common.PathObservable
+import com.android.imagic.files.provider.common.PathObservableProvider
+import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.util.ParcelableArgs
+import com.android.imagic.files.util.RemoteCallback
+import com.android.imagic.files.util.getArgs
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -22,12 +23,6 @@ import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.spi.FileSystemProvider
 import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
-import com.android.imagic.files.provider.common.PathObservable
-import com.android.imagic.files.provider.common.PathObservableProvider
-import com.android.imagic.files.provider.common.Searchable
-import com.android.imagic.files.util.ParcelableArgs
-import com.android.imagic.files.util.RemoteCallback
-import com.android.imagic.files.util.getArgs
 import java.io.IOException
 import java.io.InputStream
 import java.io.InterruptedIOException
@@ -188,8 +183,8 @@ abstract class RemoteFileSystemProvider(
 
     @Throws(IOException::class)
     override fun getFileStore(path: Path): FileStore =
-        remoteInterface.get().call {
-            exception -> getFileStore(path.toParcelable(), exception)
+        remoteInterface.get().call { exception ->
+            getFileStore(path.toParcelable(), exception)
         }.value()
 
     @Throws(IOException::class)

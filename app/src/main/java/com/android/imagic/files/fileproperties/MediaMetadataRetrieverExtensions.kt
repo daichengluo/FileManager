@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties
 
 import android.media.MediaMetadataRetriever
+import com.android.imagic.files.util.takeIfNotBlank
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.max
-import com.android.imagic.files.util.takeIfNotBlank
 
 fun MediaMetadataRetriever.extractMetadataNotBlank(keyCode: Int): String? =
     extractMetadata(keyCode)?.takeIfNotBlank()

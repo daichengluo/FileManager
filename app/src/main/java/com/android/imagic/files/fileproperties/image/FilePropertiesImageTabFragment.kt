@@ -1,19 +1,8 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.image
 
 import android.content.Intent
 import android.location.Geocoder
 import androidx.lifecycle.lifecycleScope
-import java8.nio.file.Path
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
@@ -31,6 +20,12 @@ import com.android.imagic.files.util.isGeocoderPresent
 import com.android.imagic.files.util.startActivitySafe
 import com.android.imagic.files.util.userFriendlyString
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -173,6 +168,7 @@ class FilePropertiesImageTabFragment : FilePropertiesTabFragment() {
                     getString(R.string.file_properties_image_equipment_format, make, model)
                 }
             }
+
             make != null -> make
             model != null -> model
             else -> null

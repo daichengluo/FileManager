@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.theme.custom
 
 import android.content.Context
@@ -11,10 +6,10 @@ import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
-import com.takisoft.preferencex.PreferenceFragmentCompat
 import com.android.imagic.files.colorpicker.BaseColorPreference
 import com.android.imagic.files.colorpicker.ColorPreferenceDialogFragment
 import com.android.imagic.files.compat.getColorCompat
+import com.takisoft.preferencex.PreferenceFragmentCompat
 
 class ThemeColorPreference : BaseColorPreference {
     private lateinit var _stringValue: String

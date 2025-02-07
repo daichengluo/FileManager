@@ -1,9 +1,9 @@
 package com.android.imagic.files.provider.ftp.client
 
+import com.android.imagic.files.provider.common.InvalidFileNameException
 import java8.nio.file.AccessDeniedException
 import java8.nio.file.FileSystemException
 import java8.nio.file.NoSuchFileException
-import com.android.imagic.files.provider.common.InvalidFileNameException
 import org.apache.commons.net.ftp.FTPClient
 import org.apache.commons.net.ftp.FTPReply
 import java.io.IOException
@@ -16,6 +16,7 @@ class NegativeReplyCodeException(
         when (replyCode) {
             FTPReply.NOT_LOGGED_IN, FTPReply.NEED_ACCOUNT_FOR_STORING_FILES ->
                 AccessDeniedException(file, other, message)
+
             FTPReply.FILE_UNAVAILABLE -> NoSuchFileException(file, other, message)
             FTPReply.FILE_NAME_NOT_ALLOWED -> InvalidFileNameException(file, other, message)
             else -> FileSystemException(file, other, message)

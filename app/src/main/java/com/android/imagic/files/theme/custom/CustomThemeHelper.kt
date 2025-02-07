@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.theme.custom
 
 import android.app.Activity
@@ -51,7 +46,8 @@ object CustomThemeHelper {
             if (currentThemeRes != customThemeRes) {
                 // Ignore ".Black" theme changes when not in night mode.
                 if (!NightModeHelper.isInNightMode(activity as AppCompatActivity)
-                    && isBlackThemeChange(currentThemeRes, customThemeRes, activity)) {
+                    && isBlackThemeChange(currentThemeRes, customThemeRes, activity)
+                ) {
                     continue
                 }
                 if (activity is OnThemeChangedListener) {

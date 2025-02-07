@@ -1,16 +1,11 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.Parceler
 import com.android.imagic.files.app.appClassLoader
 import com.android.imagic.files.compat.writeParcelableListCompat
+import kotlinx.parcelize.Parceler
 
 object BundleParceler : Parceler<Bundle?> {
     override fun create(parcel: Parcel): Bundle? = parcel.readBundle(appClassLoader)

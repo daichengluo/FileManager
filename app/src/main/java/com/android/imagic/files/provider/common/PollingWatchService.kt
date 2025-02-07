@@ -1,18 +1,12 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
+import com.android.imagic.files.provider.FileSystemProviders
 import java8.nio.file.DirectoryIteratorException
 import java8.nio.file.LinkOption
 import java8.nio.file.Path
 import java8.nio.file.StandardWatchEventKinds
 import java8.nio.file.WatchEvent
 import java8.nio.file.attribute.BasicFileAttributes
-import com.android.imagic.files.BuildConfig
-import com.android.imagic.files.provider.FileSystemProviders
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.util.concurrent.atomic.AtomicInteger
@@ -122,6 +116,7 @@ class PollingWatchService : AbstractWatchService<PollingWatchKey>() {
                                 newAttributes == null -> StandardWatchEventKinds.ENTRY_DELETE
                                 newAttributes != oldAttributes ->
                                     StandardWatchEventKinds.ENTRY_MODIFY
+
                                 else -> continue
                             }
                             if (kind !in kinds) {
@@ -184,7 +179,7 @@ class PollingWatchService : AbstractWatchService<PollingWatchKey>() {
                     val attributes = it.values.firstOrNull() ?: return@also
                     check(
                         attributes::class.java.getMethod("equals", Object::class.java)
-                            != Object::class.java.getMethod("equals", Object::class.java)
+                                != Object::class.java.getMethod("equals", Object::class.java)
                     )
                 }
             }

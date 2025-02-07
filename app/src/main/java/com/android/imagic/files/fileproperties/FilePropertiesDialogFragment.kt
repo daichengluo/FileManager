@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties
 
 import android.app.Dialog
@@ -13,8 +8,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.FilePropertiesDialogBinding
 import com.android.imagic.files.file.FileItem
@@ -33,6 +26,8 @@ import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.show
 import com.android.imagic.files.util.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.parcelize.Parcelize
 
 class FilePropertiesDialogFragment : AppCompatDialogFragment() {
     private val args by args<Args>()
@@ -69,7 +64,7 @@ class FilePropertiesDialogFragment : AppCompatDialogFragment() {
                 if (FilePropertiesPermissionTabFragment.isAvailable(args.file)) {
                     add(
                         R.string.file_properties_permission
-                            to { FilePropertiesPermissionTabFragment() }
+                                to { FilePropertiesPermissionTabFragment() }
                     )
                 }
                 if (FilePropertiesImageTabFragment.isAvailable(args.file)) {
@@ -143,5 +138,5 @@ class FilePropertiesDialogFragment : AppCompatDialogFragment() {
     }
 
     @Parcelize
-    class Args(val file: FileItem): ParcelableArgs
+    class Args(val file: FileItem) : ParcelableArgs
 }

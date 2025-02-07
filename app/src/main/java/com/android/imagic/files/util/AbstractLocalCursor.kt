@@ -27,10 +27,12 @@ abstract class AbstractLocalCursor : Cursor {
                 _position = count
                 false
             }
+
             position < 0 -> {
                 _position = -1
                 false
             }
+
             else -> {
                 _position = position
                 true
@@ -79,7 +81,8 @@ abstract class AbstractLocalCursor : Cursor {
         getColumnIndex(columnName).also {
             require(it != -1) {
                 "Column '$columnName' does not exist, available columns: ${
-                    columnNames.contentToString()}"
+                    columnNames.contentToString()
+                }"
             }
         }
 

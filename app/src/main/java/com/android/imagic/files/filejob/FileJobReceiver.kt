@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filejob
 
 import android.content.BroadcastReceiver
@@ -17,6 +12,7 @@ class FileJobReceiver : BroadcastReceiver() {
                 val jobId = intent.getIntExtra(EXTRA_JOB_ID, 0)
                 FileJobService.cancelJob(jobId)
             }
+
             else -> throw IllegalArgumentException(action)
         }
     }

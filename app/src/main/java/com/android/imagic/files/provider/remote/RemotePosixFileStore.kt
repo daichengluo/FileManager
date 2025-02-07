@@ -1,12 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
-import java8.nio.file.attribute.FileAttributeView
 import com.android.imagic.files.provider.common.PosixFileStore
+import java8.nio.file.attribute.FileAttributeView
 import java.io.IOException
 
 abstract class RemotePosixFileStore(

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.content.Intent
@@ -23,6 +18,7 @@ fun KClass<Environment>.supportsExternalStorageManager(): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> true
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ->
             isManageAppAllFilesAccessPermissionIntentResolved
+
         else -> false
     }
 
@@ -35,7 +31,7 @@ fun KClass<Environment>.createManageAppAllFilesAccessPermissionIntent(packageNam
 
 @delegate:RequiresApi(Build.VERSION_CODES.R)
 private val isManageAppAllFilesAccessPermissionIntentResolved: Boolean
-    by lazy(LazyThreadSafetyMode.NONE) {
-        Environment::class.createManageAppAllFilesAccessPermissionIntent(application.packageName)
-            .resolveActivity(packageManager) != null
-    }
+        by lazy(LazyThreadSafetyMode.NONE) {
+            Environment::class.createManageAppAllFilesAccessPermissionIntent(application.packageName)
+                .resolveActivity(packageManager) != null
+        }

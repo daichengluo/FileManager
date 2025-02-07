@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.content.Context
@@ -40,11 +35,11 @@ val FileItem.extension: String
     get() = if (attributes.isDirectory) "" else name.asFileName().extensions
 
 fun FileItem.getMimeTypeName(context: Context): String {
-        if (attributesNoFollowLinks.isSymbolicLink && isSymbolicLinkBroken) {
-            return MimeType.getBrokenSymbolicLinkName(context)
-        }
-        return mimeType.getName(extension, context)
+    if (attributesNoFollowLinks.isSymbolicLink && isSymbolicLinkBroken) {
+        return MimeType.getBrokenSymbolicLinkName(context)
     }
+    return mimeType.getName(extension, context)
+}
 
 val FileItem.isArchiveFile: Boolean
     get() = path.isArchiveFile(mimeType)
@@ -63,7 +58,7 @@ val FileItem.supportsThumbnail: Boolean
         }
         if (path.isRemotePath) {
             val shouldReadRemotePath = !path.isFtpPath
-                && Settings.READ_REMOTE_FILES_FOR_THUMBNAIL.valueCompat
+                    && Settings.READ_REMOTE_FILES_FOR_THUMBNAIL.valueCompat
             if (!shouldReadRemotePath) {
                 return false
             }
@@ -74,7 +69,8 @@ val FileItem.supportsThumbnail: Boolean
             mimeType.isMedia && path.isMediaMetadataRetrieverCompatible -> true
             mimeType.isPdf && (path.isLinuxPath || path.isDocumentPath) ->
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                    || Settings.SHOW_PDF_THUMBNAIL_PRE_28.valueCompat
+                        || Settings.SHOW_PDF_THUMBNAIL_PRE_28.valueCompat
+
             else -> false
         }
     }
@@ -87,7 +83,7 @@ private const val PACKAGE_NAME_PATTERN =
     "$PACKAGE_NAME_COMPONENT_PATTERN(?:\\.$PACKAGE_NAME_COMPONENT_PATTERN)+"
 private const val BASE64_URL_SAFE_CHARACTER_CLASS = "[0-9A-Za-z\\-_]"
 private const val BASE64_URL_SAFE_PATTERN = ("(?:$BASE64_URL_SAFE_CHARACTER_CLASS{4})*"
-    + "(?:$BASE64_URL_SAFE_CHARACTER_CLASS{3}=|$BASE64_URL_SAFE_CHARACTER_CLASS{2}==)?")
+        + "(?:$BASE64_URL_SAFE_CHARACTER_CLASS{3}=|$BASE64_URL_SAFE_CHARACTER_CLASS{2}==)?")
 private val APP_DIRECTORY_REGEX =
     Regex("($PACKAGE_NAME_PATTERN)(?:-$BASE64_URL_SAFE_PATTERN)?")
 

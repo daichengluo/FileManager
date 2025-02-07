@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav.client
 
 import android.os.Parcelable
@@ -67,7 +62,7 @@ data class AccessTokenAuthentication(
                     Log.w(
                         LOG_TAG,
                         "Not authenticating against $requestHost because it doesn't belong to " +
-                            domain
+                                domain
                     )
                     return chain.proceed(request)
                 }

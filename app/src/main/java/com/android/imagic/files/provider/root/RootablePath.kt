@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.root
 
-import java8.nio.file.Path
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
 import java.io.IOException
 
 interface RootablePath {
@@ -33,6 +28,7 @@ fun <T, R> callRootable(
             } else {
                 localObject.block()
             }
+
         RootStrategy.ALWAYS -> rootObject.block()
     }
 }
@@ -51,13 +47,16 @@ fun <T, R> callRootable(
     return when (rootStrategy) {
         RootStrategy.NEVER ->
             localObject.block()
+
         RootStrategy.AUTOMATIC ->
             if (path1.isRootRequired(isAttributeAccess)
-                || path2.isRootRequired(isAttributeAccess)) {
+                || path2.isRootRequired(isAttributeAccess)
+            ) {
                 rootObject.block()
             } else {
                 localObject.block()
             }
+
         RootStrategy.ALWAYS ->
             rootObject.block()
     }

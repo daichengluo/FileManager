@@ -1,14 +1,6 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav
 
 import at.bitfire.dav4jvm.exception.DavException
-import java8.nio.file.FileAlreadyExistsException
-import java8.nio.file.NoSuchFileException
-import java8.nio.file.StandardCopyOption
 import com.android.imagic.files.provider.common.CopyOptions
 import com.android.imagic.files.provider.common.copyTo
 import com.android.imagic.files.provider.webdav.client.Client
@@ -16,6 +8,9 @@ import com.android.imagic.files.provider.webdav.client.isDirectory
 import com.android.imagic.files.provider.webdav.client.isSymbolicLink
 import com.android.imagic.files.provider.webdav.client.lastModifiedTime
 import com.android.imagic.files.provider.webdav.client.size
+import java8.nio.file.FileAlreadyExistsException
+import java8.nio.file.NoSuchFileException
+import java8.nio.file.StandardCopyOption
 import java.io.IOException
 
 internal object WebDavCopyMove {
@@ -58,8 +53,10 @@ internal object WebDavCopyMove {
                 }
                 copyOptions.progressListener?.invoke(sourceSize)
             }
+
             sourceResponse.isSymbolicLink ->
                 throw UnsupportedOperationException("Cannot copy symbolic links")
+
             else -> {
                 val sourceInputStream = try {
                     Client.get(source)

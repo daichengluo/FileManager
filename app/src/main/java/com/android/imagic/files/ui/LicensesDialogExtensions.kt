@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
@@ -16,12 +11,12 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
-import de.psdev.licensesdialog.model.Notices
 import com.android.imagic.files.compat.scrollIndicatorsCompat
 import com.android.imagic.files.util.createViewIntent
 import com.android.imagic.files.util.getColorByAttr
 import com.android.imagic.files.util.getDimensionPixelSize
 import com.android.imagic.files.util.startActivitySafe
+import de.psdev.licensesdialog.model.Notices
 import java.nio.charset.StandardCharsets
 import kotlin.math.roundToInt
 
@@ -118,7 +113,7 @@ private fun Int.toCssColor(): String =
 private fun createView(html: String, context: Context): View {
     val webView = WebView(context).apply {
         scrollIndicatorsCompat = (ViewCompat.SCROLL_INDICATOR_TOP
-            or ViewCompat.SCROLL_INDICATOR_BOTTOM)
+                or ViewCompat.SCROLL_INDICATOR_BOTTOM)
         setBackgroundColor(Color.TRANSPARENT)
         settings.setSupportMultipleWindows(true)
         webChromeClient = object : WebChromeClient() {

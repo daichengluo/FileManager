@@ -1,20 +1,15 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.CopyOption
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.RemoteCallback
 import com.android.imagic.files.util.getArgs
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.CopyOption
+import kotlinx.parcelize.Parcelize
 
 class ProgressCopyOption(
     val intervalMillis: Long,

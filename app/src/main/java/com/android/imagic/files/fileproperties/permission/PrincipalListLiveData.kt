@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import android.content.pm.ApplicationInfo
@@ -59,16 +54,22 @@ abstract class PrincipalListLiveData : MutableLiveData<Stateful<List<PrincipalIt
     companion object {
         @JvmStatic
         protected val AID_USER_OFFSET = 100000
+
         @JvmStatic
         protected val AID_APP_START = 10000
+
         @JvmStatic
         protected val AID_CACHE_GID_START = 20000
+
         @JvmStatic
         protected val AID_CACHE_GID_END = 29999
+
         @JvmStatic
         protected val AID_SHARED_GID_START = 50000
+
         @JvmStatic
         protected val AID_SHARED_GID_END = 59999
+
         @JvmStatic
         protected val AID_ISOLATED_START = 99000
     }

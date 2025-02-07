@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filejob
 
 import android.app.Dialog
@@ -223,16 +218,19 @@ class FileJobConflictDialogFragment : AppCompatDialogFragment() {
                     name = null
                     all = binding.allCheck.isChecked
                 }
+
             DialogInterface.BUTTON_NEGATIVE -> {
                 action = FileJobConflictAction.SKIP
                 name = null
                 all = binding.allCheck.isChecked
             }
+
             DialogInterface.BUTTON_NEUTRAL -> {
                 action = FileJobConflictAction.CANCEL
                 name = null
                 all = false
             }
+
             else -> throw AssertionError(which)
         }
         notifyListenerOnce(action, name, all)
@@ -320,7 +318,7 @@ class FileJobConflictDialogFragment : AppCompatDialogFragment() {
         val targetFile: FileItem,
         val type: CopyMoveType,
         val listener: @WriteWith<ListenerParceler>()
-        (FileJobConflictAction, String?, Boolean) -> Unit
+            (FileJobConflictAction, String?, Boolean) -> Unit
     ) : ParcelableArgs {
         object ListenerParceler : Parceler<(FileJobConflictAction, String?, Boolean) -> Unit> {
             override fun create(parcel: Parcel): (FileJobConflictAction, String?, Boolean) -> Unit =

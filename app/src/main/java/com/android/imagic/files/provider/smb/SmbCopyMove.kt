@@ -1,10 +1,11 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
+import com.android.imagic.files.provider.common.CopyOptions
+import com.android.imagic.files.provider.smb.client.Client
+import com.android.imagic.files.provider.smb.client.ClientException
+import com.android.imagic.files.provider.smb.client.FileInformation
+import com.android.imagic.files.util.enumSetOf
+import com.android.imagic.files.util.hasBits
 import com.hierynomus.msdtyp.FileTime
 import com.hierynomus.msfscc.FileAttributes
 import com.hierynomus.msfscc.fileinformation.FileBasicInformation
@@ -13,12 +14,6 @@ import java8.nio.file.FileAlreadyExistsException
 import java8.nio.file.FileSystemException
 import java8.nio.file.NoSuchFileException
 import java8.nio.file.StandardCopyOption
-import com.android.imagic.files.provider.common.CopyOptions
-import com.android.imagic.files.provider.smb.client.Client
-import com.android.imagic.files.provider.smb.client.ClientException
-import com.android.imagic.files.provider.smb.client.FileInformation
-import com.android.imagic.files.util.enumSetOf
-import com.android.imagic.files.util.hasBits
 import java.io.IOException
 import java.io.InterruptedIOException
 
@@ -49,7 +44,8 @@ internal object SmbCopyMove {
             targetInformation as? FileInformation
                 ?: throw FileSystemException(target.toString(), null, "Cannot copy shares")
             if (SmbFileKey(source, sourceInformation.fileId)
-                == SmbFileKey(target, targetInformation.fileId)) {
+                == SmbFileKey(target, targetInformation.fileId)
+            ) {
                 copyOptions.progressListener?.invoke(sourceInformation.endOfFile)
                 return
             }
@@ -61,7 +57,7 @@ internal object SmbCopyMove {
         val sourceIsReparsePoint = sourceInformation.fileAttributes
             .hasBits(FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT.value)
         val sourceIsDirectory = !sourceIsReparsePoint &&
-            sourceInformation.fileAttributes.hasBits(FileAttributes.FILE_ATTRIBUTE_DIRECTORY.value)
+                sourceInformation.fileAttributes.hasBits(FileAttributes.FILE_ATTRIBUTE_DIRECTORY.value)
         val sourceIsRegularFile = !sourceIsDirectory && !sourceIsReparsePoint
         val attributesToCopy = if (copyOptions.copyAttributes) {
             EnumWithValue.EnumUtils.toEnumSet(
@@ -183,7 +179,8 @@ internal object SmbCopyMove {
             targetInformation as? FileInformation
                 ?: throw FileSystemException(target.toString(), null, "Cannot move shares")
             if (SmbFileKey(source, sourceInformation.fileId)
-                == SmbFileKey(target, targetInformation.fileId)) {
+                == SmbFileKey(target, targetInformation.fileId)
+            ) {
                 copyOptions.progressListener?.invoke(sourceInformation.endOfFile)
                 return
             }

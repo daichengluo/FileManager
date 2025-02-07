@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ftpserver
 
 import android.os.Build
@@ -33,6 +28,7 @@ class FtpServerTileService : TileService() {
         when (state) {
             FtpServerService.State.STARTING,
             FtpServerService.State.RUNNING -> tile.state = Tile.STATE_ACTIVE
+
             FtpServerService.State.STOPPING -> tile.state = Tile.STATE_UNAVAILABLE
             FtpServerService.State.STOPPED -> tile.state = Tile.STATE_INACTIVE
         }

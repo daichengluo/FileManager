@@ -8,10 +8,10 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.util.ParcelableState
 import com.android.imagic.files.util.getState
 import com.android.imagic.files.util.putState
+import kotlinx.parcelize.Parcelize
 
 class MaterialListPreferenceDialogFragmentCompat : MaterialPreferenceDialogFragmentCompat() {
     override val preference: ListPreference

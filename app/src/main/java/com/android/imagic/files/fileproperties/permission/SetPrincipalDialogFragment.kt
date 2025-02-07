@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import android.app.Dialog
@@ -13,9 +8,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.databinding.SetPrincipalDialogBinding
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.provider.common.PosixFileAttributes
@@ -32,6 +24,9 @@ import com.android.imagic.files.util.fadeOutUnsafe
 import com.android.imagic.files.util.fadeToVisibilityUnsafe
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
 
 abstract class SetPrincipalDialogFragment : AppCompatDialogFragment() {
     private val args by args<Args>()
@@ -87,6 +82,7 @@ abstract class SetPrincipalDialogFragment : AppCompatDialogFragment() {
                 binding.emptyView.fadeOutUnsafe()
                 adapter.clear()
             }
+
             is Failure -> {
                 binding.progress.fadeOutUnsafe()
                 binding.errorText.fadeInUnsafe()
@@ -94,6 +90,7 @@ abstract class SetPrincipalDialogFragment : AppCompatDialogFragment() {
                 binding.emptyView.fadeOutUnsafe()
                 adapter.clear()
             }
+
             is Success -> {
                 binding.progress.fadeOutUnsafe()
                 binding.errorText.fadeOutUnsafe()

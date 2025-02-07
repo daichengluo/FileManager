@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.archive.archiver
 
 import androidx.preference.PreferenceManager
@@ -102,7 +97,11 @@ object ArchiveReader {
     }
 
     @Throws(IOException::class)
-    fun newInputStream(file: Path, passwords: List<String>, entry: ReadArchive.Entry): InputStream? {
+    fun newInputStream(
+        file: Path,
+        passwords: List<String>,
+        entry: ReadArchive.Entry
+    ): InputStream? {
         val charset = archiveFileNameCharset
         val (archive, closeable) = openArchive(file, passwords)
         var successful = false

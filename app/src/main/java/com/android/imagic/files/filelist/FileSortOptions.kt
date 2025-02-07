@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.compat.reversedCompat
 import com.android.imagic.files.file.FileItem
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FileSortOptions(
@@ -27,6 +22,7 @@ data class FileSortOptions(
                 comparator = compareBy<FileItem, String>(String.CASE_INSENSITIVE_ORDER) {
                     it.extension
                 }.then(comparator)
+
             By.SIZE -> comparator = compareBy<FileItem> { it.attributes.size() }.then(comparator)
             By.LAST_MODIFIED ->
                 comparator = compareBy<FileItem> { it.attributes.lastModifiedTime() }

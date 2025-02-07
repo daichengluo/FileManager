@@ -1,19 +1,8 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.LinkOption
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
-import java8.nio.file.WatchEvent
-import java8.nio.file.WatchKey
-import java8.nio.file.WatchService
 import com.android.imagic.files.app.application
 import com.android.imagic.files.compat.isPrimaryCompat
 import com.android.imagic.files.compat.pathFileCompat
@@ -23,6 +12,12 @@ import com.android.imagic.files.provider.root.RootablePath
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.util.readParcelable
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.LinkOption
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
+import java8.nio.file.WatchEvent
+import java8.nio.file.WatchKey
+import java8.nio.file.WatchService
 import java.io.File
 import java.io.IOException
 

@@ -1,19 +1,15 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.hierynomus.smbj.share;
+
+import androidx.annotation.NonNull;
 
 import com.hierynomus.mssmb2.messages.SMB2ReadResponse;
 import com.hierynomus.smbj.common.SMBRuntimeException;
 
 import java.util.concurrent.Future;
 
-import androidx.annotation.NonNull;
-
 public class FileAccessor {
-    private FileAccessor() {}
+    private FileAccessor() {
+    }
 
     /**
      * @see File#readAsync(long, int)

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux.syscall
 
 import android.os.Build
@@ -36,8 +31,8 @@ object Constants {
     const val IN_ISDIR = 0x40000000
     const val IN_ONESHOT = 0x80000000.toInt()
     const val IN_ALL_EVENTS = (IN_ACCESS or IN_MODIFY or IN_ATTRIB or IN_CLOSE_WRITE
-        or IN_CLOSE_NOWRITE or IN_OPEN or IN_MOVED_FROM or IN_MOVED_TO or IN_DELETE or IN_CREATE
-        or IN_DELETE_SELF or IN_MOVE_SELF)
+            or IN_CLOSE_NOWRITE or IN_OPEN or IN_MOVED_FROM or IN_MOVED_TO or IN_DELETE or IN_CREATE
+            or IN_DELETE_SELF or IN_MOVE_SELF)
 
     const val MS_RDONLY = 1L
     const val MS_NOSUID = 2L
@@ -71,7 +66,7 @@ object Constants {
     const val MS_ACTIVE = 1L shl 30
     const val MS_NOUSER = 1L shl 31
     const val MS_RMT_MASK = (MS_RDONLY or MS_SYNCHRONOUS or MS_MANDLOCK or MS_I_VERSION
-        or MS_LAZYTIME)
+            or MS_LAZYTIME)
     const val MS_MGC_VAL = 0xC0ED0000L
     const val MS_MGC_MSK = 0xffff0000L
 
@@ -80,12 +75,16 @@ object Constants {
 
     /* @see android.os.SELinux#SELINUX_ANDROID_RESTORECON_NOCHANGE */
     const val SELINUX_ANDROID_RESTORECON_NOCHANGE = 1
+
     /* @see android.os.SELinux#SELINUX_ANDROID_RESTORECON_VERBOSE */
     const val SELINUX_ANDROID_RESTORECON_VERBOSE = 2
+
     /* @see android.os.SELinux#SELINUX_ANDROID_RESTORECON_RECURSE */
     const val SELINUX_ANDROID_RESTORECON_RECURSE = 4
+
     /* @see android.os.SELinux#SELINUX_ANDROID_RESTORECON_FORCE */
     const val SELINUX_ANDROID_RESTORECON_FORCE = 8
+
     /* @see android.os.SELinux#SELINUX_ANDROID_RESTORECON_DATADATA */
     const val SELINUX_ANDROID_RESTORECON_DATADATA = 16
 

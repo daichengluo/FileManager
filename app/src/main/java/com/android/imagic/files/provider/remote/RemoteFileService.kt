@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
-import java8.nio.file.FileSystem
 import com.android.imagic.files.provider.common.PosixFileAttributeView
 import com.android.imagic.files.provider.common.PosixFileStore
+import java8.nio.file.FileSystem
 
 abstract class RemoteFileService(private val remoteInterface: RemoteInterface<com.android.imagic.files.provider.remote.IRemoteFileService>) {
     @Throws(RemoteFileSystemException::class)

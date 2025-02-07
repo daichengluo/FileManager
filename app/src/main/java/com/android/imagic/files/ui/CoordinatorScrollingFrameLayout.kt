@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.annotation.SuppressLint
@@ -122,11 +117,12 @@ class CoordinatorScrollingFrameLayout : FrameLayout, AttachedBehavior {
             heightUsed: Int
         ): Boolean {
             var parentHeightMeasureSpec = parentHeightMeasureSpec
+
             @SuppressLint("RestrictedApi")
             val parentInsets = parent.lastWindowInsets
             if (parentInsets != null) {
                 val parentHeightSize = (MeasureSpec.getSize(parentHeightMeasureSpec)
-                    - parentInsets.systemWindowInsetTop - parentInsets.systemWindowInsetBottom)
+                        - parentInsets.systemWindowInsetTop - parentInsets.systemWindowInsetBottom)
                 val parentHeightMode = MeasureSpec.getMode(parentHeightMeasureSpec)
                 parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
                     parentHeightSize, parentHeightMode

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb.client
 
 import com.android.imagic.files.provider.common.CloseableIterator
@@ -106,8 +101,9 @@ object Client {
             }
             val sharePaths = netShareInfos.mapNotNull {
                 if (!(it.type.hasBits(ShareTypes.STYPE_PRINTQ.value)
-                        || it.type.hasBits(ShareTypes.STYPE_DEVICE.value)
-                        || it.type.hasBits(ShareTypes.STYPE_IPC.value))) {
+                            || it.type.hasBits(ShareTypes.STYPE_DEVICE.value)
+                            || it.type.hasBits(ShareTypes.STYPE_IPC.value))
+                ) {
                     path.resolve(it.netName)
                 } else {
                     null
@@ -360,9 +356,9 @@ object Client {
                 val targetFile = try {
                     targetShare.openFile(
                         targetSharePath.path, enumSetOf(
-                        AccessMask.FILE_WRITE_DATA, AccessMask.FILE_WRITE_ATTRIBUTES,
-                        AccessMask.FILE_WRITE_EA, AccessMask.DELETE
-                    ), attributesToCopy, SMB2ShareAccess.ALL,
+                            AccessMask.FILE_WRITE_DATA, AccessMask.FILE_WRITE_ATTRIBUTES,
+                            AccessMask.FILE_WRITE_EA, AccessMask.DELETE
+                        ), attributesToCopy, SMB2ShareAccess.ALL,
                         SMB2CreateDisposition.FILE_CREATE,
                         enumSetOf(SMB2CreateOptions.FILE_OPEN_REPARSE_POINT)
                     )
@@ -467,9 +463,11 @@ object Client {
                     // in use shortly. All shares are automatically closed when the session is
                     // closed anyway.
                 }
+
                 is PipeShare -> ShareInformation(ShareType.PIPE, null).also { share.closeSafe() }
                 is PrinterShare -> ShareInformation(ShareType.PRINTER, null)
                     .also { share.closeSafe() }
+
                 else -> throw AssertionError(share)
             }
         } else {
@@ -477,7 +475,8 @@ object Client {
                 directoryFileInformationCache[path]?.let {
                     if (openReparsePoint || !it.fileAttributes.hasBits(
                             FileAttributes.FILE_ATTRIBUTE_REPARSE_POINT.value
-                        )) {
+                        )
+                    ) {
                         return it.also { directoryFileInformationCache -= path }
                     }
                 }
@@ -620,9 +619,9 @@ object Client {
                 // will receive an exception about no available credits.
                 connection.closeSafe()
                 throw ClientException(e)
-            // TODO: kotlinc: Type mismatch: inferred type is Session? but TypeVariable(V) was
-            //  expected
-            //}
+                // TODO: kotlinc: Type mismatch: inferred type is Session? but TypeVariable(V) was
+                //  expected
+                //}
             }!!
             sessions[authority] = session
             return session

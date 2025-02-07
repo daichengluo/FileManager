@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.document.resolver
 
 import android.database.Cursor
@@ -34,7 +29,8 @@ object ExternalStorageProviderHacks {
     fun transformQueryResult(uri: Uri, cursor: Cursor): Cursor {
         if (uri.authority == DocumentsContractCompat.EXTERNAL_STORAGE_PROVIDER_AUTHORITY
             && DocumentsContractCompat.isChildDocumentsUri(uri)
-            && DocumentsContract.getDocumentId(uri) == DOCUMENT_ID_PRIMARY_ANDROID) {
+            && DocumentsContract.getDocumentId(uri) == DOCUMENT_ID_PRIMARY_ANDROID
+        ) {
             var hasDataRow = false
             var hasObbRow = false
             try {

@@ -1,14 +1,5 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ftpserver
 
-import java8.nio.file.Path
-import java8.nio.file.StandardOpenOption
-import java8.nio.file.attribute.FileTime
-import java8.nio.file.attribute.PosixFileAttributeView
 import com.android.imagic.files.provider.common.createDirectory
 import com.android.imagic.files.provider.common.delete
 import com.android.imagic.files.provider.common.exists
@@ -26,6 +17,10 @@ import com.android.imagic.files.provider.common.newInputStream
 import com.android.imagic.files.provider.common.newOutputStream
 import com.android.imagic.files.provider.common.setLastModifiedTime
 import com.android.imagic.files.provider.common.size
+import java8.nio.file.Path
+import java8.nio.file.StandardOpenOption
+import java8.nio.file.attribute.FileTime
+import java8.nio.file.attribute.PosixFileAttributeView
 import org.apache.ftpserver.ftplet.FtpFile
 import org.apache.ftpserver.ftplet.User
 import org.apache.ftpserver.usermanager.impl.WriteRequest

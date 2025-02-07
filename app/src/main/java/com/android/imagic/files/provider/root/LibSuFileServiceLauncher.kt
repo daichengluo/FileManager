@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.root
 
 import android.content.ComponentName
@@ -10,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.android.imagic.files.provider.remote.RemoteFileServiceInterface
+import com.android.imagic.files.provider.remote.RemoteFileSystemException
+import com.android.imagic.files.util.createIntent
 import com.topjohnwu.superuser.NoShellException
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ipc.RootService
@@ -19,10 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
-import com.android.imagic.files.provider.remote.IRemoteFileService
-import com.android.imagic.files.provider.remote.RemoteFileServiceInterface
-import com.android.imagic.files.provider.remote.RemoteFileSystemException
-import com.android.imagic.files.util.createIntent
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume

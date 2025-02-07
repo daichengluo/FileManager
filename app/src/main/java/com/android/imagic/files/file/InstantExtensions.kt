@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import android.content.Context
@@ -20,11 +15,11 @@ fun Instant.formatShort(context: Context): String {
     val then = Time().apply { set(time) }
     val now = Time().apply { setToNow() }
     val flags = DateUtils.FORMAT_NO_NOON or DateUtils.FORMAT_NO_MIDNIGHT or
-        DateUtils.FORMAT_ABBREV_ALL or when {
-            then.year != now.year -> DateUtils.FORMAT_SHOW_YEAR or DateUtils.FORMAT_SHOW_DATE
-            then.yearDay != now.yearDay -> DateUtils.FORMAT_SHOW_DATE
-            else -> DateUtils.FORMAT_SHOW_TIME
-        }
+            DateUtils.FORMAT_ABBREV_ALL or when {
+        then.year != now.year -> DateUtils.FORMAT_SHOW_YEAR or DateUtils.FORMAT_SHOW_DATE
+        then.yearDay != now.yearDay -> DateUtils.FORMAT_SHOW_DATE
+        else -> DateUtils.FORMAT_SHOW_TIME
+    }
     return DateUtils.formatDateTime(context, time, flags)
 }
 

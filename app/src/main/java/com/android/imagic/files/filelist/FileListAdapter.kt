@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.text.TextUtils
@@ -17,8 +12,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.dispose
 import coil.load
-import java8.nio.file.Path
-import me.zhanghai.android.fastscroll.PopupTextProvider
 import com.android.imagic.files.R
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.foregroundCompat
@@ -40,6 +33,8 @@ import com.android.imagic.files.ui.CheckableItemBackground
 import com.android.imagic.files.util.isMaterial3Theme
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
+import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.util.Locale
 
 class FileListAdapter(
@@ -137,7 +132,8 @@ class FileListAdapter(
         return when (pickOptions.mode) {
             PickOptions.Mode.OPEN_FILE, PickOptions.Mode.CREATE_FILE ->
                 !file.attributes.isDirectory &&
-                    pickOptions.mimeTypes.any { it.match(file.mimeType) }
+                        pickOptions.mimeTypes.any { it.match(file.mimeType) }
+
             PickOptions.Mode.OPEN_DIRECTORY -> file.attributes.isDirectory
         }
     }
@@ -262,7 +258,7 @@ class FileListAdapter(
         holder.thumbnailOutlineView?.isVisible = !isDirectory
         val supportsThumbnail = file.supportsThumbnail
         val shouldLoadThumbnailIcon = supportsThumbnail && holder.thumbnailIconImage != null &&
-            file.mimeType.isApk
+                file.mimeType.isApk
         val attributes = file.attributes
         holder.thumbnailIconImage?.apply {
             dispose()
@@ -341,50 +337,62 @@ class FileListAdapter(
                     listener.openFileWith(file)
                     true
                 }
+
                 R.id.action_cut -> {
                     listener.cutFile(file)
                     true
                 }
+
                 R.id.action_copy -> {
                     listener.copyFile(file)
                     true
                 }
+
                 R.id.action_delete -> {
                     listener.confirmDeleteFile(file)
                     true
                 }
+
                 R.id.action_rename -> {
                     listener.showRenameFileDialog(file)
                     true
                 }
+
                 R.id.action_extract -> {
                     listener.extractFile(file)
                     true
                 }
+
                 R.id.action_archive -> {
                     listener.showCreateArchiveDialog(file)
                     true
                 }
+
                 R.id.action_share -> {
                     listener.shareFile(file)
                     true
                 }
+
                 R.id.action_copy_path -> {
                     listener.copyPath(file)
                     true
                 }
+
                 R.id.action_add_bookmark -> {
                     listener.addBookmark(file)
                     true
                 }
+
                 R.id.action_create_shortcut -> {
                     listener.createShortcut(file)
                     true
                 }
+
                 R.id.action_properties -> {
                     listener.showPropertiesDialog(file)
                     true
                 }
+
                 else -> false
             }
         }

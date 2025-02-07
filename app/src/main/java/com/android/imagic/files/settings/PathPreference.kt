@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.annotation.SuppressLint
@@ -14,14 +9,14 @@ import androidx.annotation.StyleRes
 import androidx.core.content.res.TypedArrayUtils
 import androidx.core.content.res.use
 import androidx.preference.Preference
-import com.takisoft.preferencex.PreferenceActivityResultListener
-import com.takisoft.preferencex.PreferenceFragmentCompat
-import java8.nio.file.Path
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.toUserFriendlyString
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.util.startActivityForResultSafe
 import com.android.imagic.files.util.valueCompat
+import com.takisoft.preferencex.PreferenceActivityResultListener
+import com.takisoft.preferencex.PreferenceFragmentCompat
+import java8.nio.file.Path
 
 abstract class PathPreference : Preference, PreferenceActivityResultListener {
     private val openPathContract = FileListActivity.OpenDirectoryContract()
@@ -66,9 +61,12 @@ abstract class PathPreference : Preference, PreferenceActivityResultListener {
             attrs, androidx.preference.R.styleable.EditTextPreference, defStyleAttr, defStyleRes
         ).use {
             if (TypedArrayUtils.getBoolean(
-                it, androidx.preference.R.styleable.EditTextPreference_useSimpleSummaryProvider,
-                androidx.preference.R.styleable.EditTextPreference_useSimpleSummaryProvider, false
-            )) {
+                    it,
+                    androidx.preference.R.styleable.EditTextPreference_useSimpleSummaryProvider,
+                    androidx.preference.R.styleable.EditTextPreference_useSimpleSummaryProvider,
+                    false
+                )
+            ) {
                 summaryProvider = SimpleSummaryProvider
             }
         }

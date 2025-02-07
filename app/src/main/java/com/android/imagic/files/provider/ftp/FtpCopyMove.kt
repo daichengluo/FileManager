@@ -5,12 +5,12 @@
 
 package com.android.imagic.files.provider.ftp
 
-import java8.nio.file.FileAlreadyExistsException
-import java8.nio.file.NoSuchFileException
-import java8.nio.file.StandardCopyOption
 import com.android.imagic.files.provider.common.CopyOptions
 import com.android.imagic.files.provider.common.copyTo
 import com.android.imagic.files.provider.ftp.client.Client
+import java8.nio.file.FileAlreadyExistsException
+import java8.nio.file.NoSuchFileException
+import java8.nio.file.StandardCopyOption
 import java.io.IOException
 
 internal object FtpCopyMove {
@@ -53,8 +53,10 @@ internal object FtpCopyMove {
                 }
                 copyOptions.progressListener?.invoke(sourceSize)
             }
+
             sourceFile.isSymbolicLink ->
                 throw UnsupportedOperationException("Cannot copy symbolic links")
+
             else -> {
                 val sourceInputStream = try {
                     Client.retrieveFile(source)

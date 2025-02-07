@@ -1,12 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ftpserver
 
-import java8.nio.file.Paths
 import com.android.imagic.files.provider.archive.isArchivePath
+import java8.nio.file.Paths
 import org.apache.ftpserver.ftplet.FileSystemView
 import org.apache.ftpserver.ftplet.User
 import java.net.URI

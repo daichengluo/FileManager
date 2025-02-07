@@ -1,12 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.document
 
-import java8.nio.file.StandardOpenOption
 import com.android.imagic.files.provider.common.OpenOptions
+import java8.nio.file.StandardOpenOption
 
 internal fun OpenOptions.toDocumentMode(): String =
     StringBuilder().apply {
@@ -25,7 +20,8 @@ internal fun OpenOptions.toDocumentMode(): String =
         }
         if (create || createNew) {
             throw AssertionError(
-                "${StandardOpenOption.CREATE} and ${StandardOpenOption.CREATE_NEW
+                "${StandardOpenOption.CREATE} and ${
+                    StandardOpenOption.CREATE_NEW
                 } should have been handled before calling OpenOptions.toDocumentMode()"
             )
         }

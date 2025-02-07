@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.app.Activity
@@ -136,10 +131,12 @@ class EditSmbServerFragment : Fragment() {
                         authority.username == it.username && authority.domain == it.domain
                                 && server.password == it.password.concatToString()
                     } -> authenticationType = AuthenticationType.GUEST
+
                     AuthenticationContext.anonymous().let {
                         authority.username == it.username && authority.domain == it.domain
                                 && server.password == it.password.concatToString()
                     } -> authenticationType = AuthenticationType.ANONYMOUS
+
                     else -> {
                         authenticationType = AuthenticationType.PASSWORD
                         binding.usernameEdit.setText(authority.username)
@@ -170,12 +167,14 @@ class EditSmbServerFragment : Fragment() {
                 username = binding.usernameEdit.text.toString()
                 domain = binding.domainEdit.text.toString().takeIfNotEmpty()
             }
+
             AuthenticationType.GUEST -> {
                 AuthenticationContext.guest().let {
                     username = it.username
                     domain = it.domain
                 }
             }
+
             AuthenticationType.ANONYMOUS -> {
                 AuthenticationContext.anonymous().let {
                     username = it.username
@@ -235,11 +234,13 @@ class EditSmbServerFragment : Fragment() {
                 binding.saveOrConnectAndAddButton.isEnabled = !isConnecting
                 binding.removeOrAddButton.isEnabled = !isConnecting
             }
+
             is ActionState.Success -> {
                 Storages.addOrReplace(state.argument)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
+
             is ActionState.Error -> {
                 val throwable = state.throwable
                 throwable.printStackTrace()
@@ -298,6 +299,7 @@ class EditSmbServerFragment : Fragment() {
                 domain = binding.domainEdit.text.toString().takeIfNotEmpty()
                 password = binding.passwordEdit.text.toString()
             }
+
             AuthenticationType.GUEST -> {
                 AuthenticationContext.guest().let {
                     username = it.username
@@ -305,6 +307,7 @@ class EditSmbServerFragment : Fragment() {
                     password = it.password.concatToString()
                 }
             }
+
             AuthenticationType.ANONYMOUS -> {
                 AuthenticationContext.anonymous().let {
                     username = it.username

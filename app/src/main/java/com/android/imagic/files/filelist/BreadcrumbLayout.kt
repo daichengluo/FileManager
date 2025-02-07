@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.content.Context
@@ -26,6 +21,7 @@ import java8.nio.file.Path
 
 class BreadcrumbLayout : HorizontalScrollView {
     private val tabLayoutHeight = context.getDimensionPixelSize(R.dimen.tab_layout_height)
+
     // Using a color state list resource somehow results in red color in dark mode on API 21.
     // Run `git revert 5bb2fd1` once we no longer support API 21.
     private val itemColor =
@@ -194,10 +190,12 @@ class BreadcrumbLayout : HorizontalScrollView {
                         listener.copyPath(path)
                         true
                     }
+
                     R.id.action_open_in_new_task -> {
                         listener.openInNewTask(path)
                         true
                     }
+
                     else -> false
                 }
             }

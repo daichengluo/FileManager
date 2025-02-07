@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.net.Uri
@@ -69,6 +64,7 @@ object StableUriParceler : Parceler<Uri?> {
                     }
                 }
             }
+
             HIERARCHICAL_URI_TYPE_ID -> {
                 // Uri.HierarchicalUri.readFrom()
                 // Scheme can be null for HierarchicalUri.
@@ -79,7 +75,7 @@ object StableUriParceler : Parceler<Uri?> {
                 } else {
                     val encodedAuthority = readEncodedPart(parcel)
                     val hasSchemeOrAuthority = !scheme.isNullOrEmpty() ||
-                        !encodedAuthority.isNullOrEmpty()
+                            !encodedAuthority.isNullOrEmpty()
                     val encodedPath = readEncodedPathPart(hasSchemeOrAuthority, parcel)
                     val encodedQuery = readEncodedPart(parcel)
                     val encodedFragment = readEncodedPart(parcel)
@@ -107,6 +103,7 @@ object StableUriParceler : Parceler<Uri?> {
                     }
                 }
             }
+
             else -> error("Unknown type ID $typeId")
         }
         return Uri.parse(uriString)

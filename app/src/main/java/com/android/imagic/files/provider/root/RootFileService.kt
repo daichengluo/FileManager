@@ -1,15 +1,9 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.root
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Process
 import android.util.Log
-import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.provider.FileSystemProviders
 import com.android.imagic.files.provider.remote.RemoteFileService
 import com.android.imagic.files.provider.remote.RemoteInterface
@@ -38,6 +32,7 @@ object RootFileService : RemoteFileService(
     private val activityThreadCurrentActivityThreadMethod by lazyReflectedMethod(
         "android.app.ActivityThread", "currentActivityThread"
     )
+
     //@RestrictedHiddenApi
     private val activityThreadGetSystemContextMethod by lazyReflectedMethod(
         "android.app.ActivityThread", "getSystemContext"

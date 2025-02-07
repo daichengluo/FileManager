@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.util.hash
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal class SmbFileKey(
@@ -24,8 +19,8 @@ internal class SmbFileKey(
         other as SmbFileKey
         return if (fileId != 0L || other.fileId != 0L) {
             path.authority == other.path.authority
-                && path.sharePath!!.name == other.path.sharePath!!.name
-                && fileId == other.fileId
+                    && path.sharePath!!.name == other.path.sharePath!!.name
+                    && fileId == other.fileId
         } else {
             path == other.path
         }

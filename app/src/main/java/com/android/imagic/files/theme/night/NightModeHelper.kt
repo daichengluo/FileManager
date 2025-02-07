@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.theme.night
 
 import android.app.Activity
@@ -26,14 +21,14 @@ object NightModeHelper {
 
     fun initialize(application: Application) {
         application.registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks {
-                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    check(activity in activities) { "Activity must extend AppActivity: $activity" }
-                }
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                check(activity in activities) { "Activity must extend AppActivity: $activity" }
+            }
 
-                override fun onActivityDestroyed(activity: Activity) {
-                    activities -= activity as AppCompatActivity
-                }
-            })
+            override fun onActivityDestroyed(activity: Activity) {
+                activities -= activity as AppCompatActivity
+            }
+        })
     }
 
     fun apply(activity: AppCompatActivity) {
@@ -46,7 +41,8 @@ object NightModeHelper {
             val nightMode = nightMode
             if (activity is OnNightModeChangedListener) {
                 if (getUiModeNight(activity.delegate.localNightMode, activity)
-                    != getUiModeNight(nightMode, activity)) {
+                    != getUiModeNight(nightMode, activity)
+                ) {
                     activity.onNightModeChangedFromHelper(nightMode)
                 }
             } else {
@@ -67,12 +63,12 @@ object NightModeHelper {
             AppCompatDelegate.MODE_NIGHT_NO -> Configuration.UI_MODE_NIGHT_NO
             else ->
                 (activity.applicationContext.resources.configuration.uiMode
-                    and Configuration.UI_MODE_NIGHT_MASK)
+                        and Configuration.UI_MODE_NIGHT_MASK)
         }
 
     fun isInNightMode(activity: AppCompatActivity): Boolean =
         (getUiModeNight(activity.delegate.localNightMode, activity)
-            == Configuration.UI_MODE_NIGHT_YES)
+                == Configuration.UI_MODE_NIGHT_YES)
 
     interface OnNightModeChangedListener {
         fun onNightModeChangedFromHelper(nightMode: Int)

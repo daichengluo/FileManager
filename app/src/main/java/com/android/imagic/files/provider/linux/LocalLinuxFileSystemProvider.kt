@@ -1,28 +1,6 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
-import java8.nio.channels.FileChannel
-import java8.nio.channels.SeekableByteChannel
-import java8.nio.file.AccessDeniedException
-import java8.nio.file.AccessMode
-import java8.nio.file.CopyOption
-import java8.nio.file.DirectoryStream
-import java8.nio.file.FileStore
-import java8.nio.file.FileSystem
-import java8.nio.file.FileSystemAlreadyExistsException
-import java8.nio.file.LinkOption
-import java8.nio.file.OpenOption
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
-import java8.nio.file.attribute.BasicFileAttributes
-import java8.nio.file.attribute.FileAttribute
-import java8.nio.file.attribute.FileAttributeView
-import java8.nio.file.spi.FileSystemProvider
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
@@ -42,6 +20,23 @@ import com.android.imagic.files.provider.linux.media.MediaScanner
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
 import com.android.imagic.files.util.hasBits
+import java8.nio.channels.FileChannel
+import java8.nio.channels.SeekableByteChannel
+import java8.nio.file.AccessDeniedException
+import java8.nio.file.AccessMode
+import java8.nio.file.CopyOption
+import java8.nio.file.DirectoryStream
+import java8.nio.file.FileStore
+import java8.nio.file.FileSystem
+import java8.nio.file.FileSystemAlreadyExistsException
+import java8.nio.file.LinkOption
+import java8.nio.file.OpenOption
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
+import java8.nio.file.attribute.BasicFileAttributes
+import java8.nio.file.attribute.FileAttribute
+import java8.nio.file.attribute.FileAttributeView
+import java8.nio.file.spi.FileSystemProvider
 import java.io.IOException
 import java.net.URI
 

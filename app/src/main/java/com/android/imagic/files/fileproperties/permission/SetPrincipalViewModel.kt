@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import androidx.lifecycle.LiveData
@@ -56,7 +51,7 @@ abstract class SetPrincipalViewModel(
 
         private fun PrincipalItem.applyFilter(filter: String): Boolean =
             (filter in id.toString() || (name != null && filter in name)
-                || applicationInfos.any { filter in it.packageName }
-                || applicationLabels.any { filter in it })
+                    || applicationInfos.any { filter in it.packageName }
+                    || applicationLabels.any { filter in it })
     }
 }

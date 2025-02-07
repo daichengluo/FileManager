@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb.client
 
 import com.android.imagic.files.provider.common.InvalidFileNameException
@@ -55,8 +50,10 @@ class ClientException : Exception {
             NtStatus.STATUS_LOGON_TYPE_NOT_GRANTED, NtStatus.STATUS_USER_SESSION_DELETED,
             NtStatus.STATUS_FILE_ENCRYPTED, NtStatus.STATUS_NETWORK_SESSION_EXPIRED ->
                 AccessDeniedException(file, other, message)
+
             NtStatus.STATUS_OBJECT_NAME_COLLISION ->
                 FileAlreadyExistsException(file, other, message)
+
             NtStatus.STATUS_FILE_IS_A_DIRECTORY -> IsDirectoryException(file, other, message)
             NtStatus.STATUS_NOT_A_DIRECTORY -> NotDirectoryException(file)
             NtStatus.STATUS_DIRECTORY_NOT_EMPTY -> DirectoryNotEmptyException(file)
@@ -65,11 +62,13 @@ class ClientException : Exception {
             NtStatus.STATUS_BAD_NETWORK_PATH, NtStatus.STATUS_NETWORK_NAME_DELETED,
             NtStatus.STATUS_BAD_NETWORK_NAME, NtStatus.STATUS_NOT_FOUND ->
                 NoSuchFileException(file, other, message)
+
             else -> when (statusCode) {
                 NtStatuses.STATUS_NOT_A_REPARSE_POINT, NtStatuses.STATUS_IO_REPARSE_TAG_INVALID,
                 NtStatuses.STATUS_IO_REPARSE_TAG_MISMATCH,
                 NtStatus.STATUS_IO_REPARSE_TAG_NOT_HANDLED.value ->
                     NotLinkException(file, other, message)
+
                 else -> FileSystemException(file, other, message)
             }
         }.apply { initCause(this@ClientException) }

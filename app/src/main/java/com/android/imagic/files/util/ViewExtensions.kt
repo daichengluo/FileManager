@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.annotation.SuppressLint
@@ -15,10 +10,10 @@ import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.android.imagic.files.app.inputMethodManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.android.imagic.files.app.inputMethodManager
 
 fun View.doOnGlobalLayout(block: () -> Unit): OneShotGlobalLayoutListener =
     OneShotGlobalLayoutListener.add(this, block)
@@ -85,7 +80,7 @@ var View.layoutInStatusBar: Boolean
     set(value) {
         systemUiVisibility = if (value) {
             systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         } else {
             systemUiVisibility andInv View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         }
@@ -96,7 +91,7 @@ var View.layoutInNavigation: Boolean
     set(value) {
         systemUiVisibility = if (value) {
             systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         } else {
             systemUiVisibility andInv View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }

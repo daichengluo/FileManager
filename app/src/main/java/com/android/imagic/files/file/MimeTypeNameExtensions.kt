@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import android.content.Context
@@ -42,6 +37,7 @@ private fun MimeTypeIcon.getNameRes(mimeType: MimeType, hasExtension: Boolean): 
         MimeTypeIcon.GENERIC -> {
             if (!hasExtension) R.string.file_type_name_unknown else R.string.file_type_name_generic
         }
+
         MimeTypeIcon.IMAGE -> R.string.file_type_name_image
         MimeTypeIcon.PDF -> R.string.file_type_name_pdf
         MimeTypeIcon.PRESENTATION -> R.string.file_type_name_presentation
@@ -52,6 +48,7 @@ private fun MimeTypeIcon.getNameRes(mimeType: MimeType, hasExtension: Boolean): 
             } else {
                 R.string.file_type_name_text
             }
+
         MimeTypeIcon.VIDEO -> R.string.file_type_name_video
         MimeTypeIcon.WORD -> R.string.file_type_name_word
         MimeTypeIcon.EXCEL -> R.string.file_type_name_excel

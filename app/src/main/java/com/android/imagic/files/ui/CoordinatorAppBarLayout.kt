@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.content.Context
@@ -39,7 +34,8 @@ class CoordinatorAppBarLayout : FitsSystemWindowsAppBarLayout {
             val window = context.activity!!.window
             val statusBarColor = window.statusBarColor
             if (defaultBackgroundColor == statusBarColor
-                || defaultBackgroundColor == ColorUtils.setAlphaComponent(statusBarColor, 0xFF)) {
+                || defaultBackgroundColor == ColorUtils.setAlphaComponent(statusBarColor, 0xFF)
+            ) {
                 window.statusBarColor = Color.TRANSPARENT
             }
         }

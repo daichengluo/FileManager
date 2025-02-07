@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import android.app.Dialog
@@ -10,8 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.R
 import com.android.imagic.files.compat.ListFormatterCompat
 import com.android.imagic.files.databinding.SetModeDialogBinding
@@ -26,6 +19,8 @@ import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.show
 import com.android.imagic.files.util.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.parcelize.Parcelize
 
 class SetModeDialogFragment : AppCompatDialogFragment() {
     private val args by args<Args>()

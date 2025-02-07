@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.channels.SeekableByteChannel
 import com.android.imagic.files.provider.common.ForceableChannel
 import com.android.imagic.files.provider.common.force
+import java8.nio.channels.SeekableByteChannel
 import java.io.IOException
 import java.nio.ByteBuffer
 

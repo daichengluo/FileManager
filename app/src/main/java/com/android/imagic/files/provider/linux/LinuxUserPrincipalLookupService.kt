@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
-import java8.nio.file.attribute.UserPrincipalLookupService
-import java8.nio.file.attribute.UserPrincipalNotFoundException
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.PosixGroup
 import com.android.imagic.files.provider.common.PosixUser
 import com.android.imagic.files.provider.common.toByteString
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
+import java8.nio.file.attribute.UserPrincipalLookupService
+import java8.nio.file.attribute.UserPrincipalNotFoundException
 import java.io.IOException
 
 internal object LinuxUserPrincipalLookupService : UserPrincipalLookupService() {

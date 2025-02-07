@@ -1,18 +1,13 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.attribute.FileAttribute
 import com.android.imagic.files.compat.readSerializableCompat
 import com.android.imagic.files.provider.common.PosixFileMode
 import com.android.imagic.files.provider.common.PosixFileModeBit
 import com.android.imagic.files.provider.common.toAttribute
 import com.android.imagic.files.util.toEnumSet
+import java8.nio.file.attribute.FileAttribute
 import java.io.Serializable
 
 class ParcelableFileAttributes(val value: Array<out FileAttribute<*>>) : Parcelable {

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
 import com.hierynomus.msdtyp.AccessMask
@@ -191,20 +186,24 @@ object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
         val isRelative: Boolean
         when (target) {
             is SmbPath -> {
-                if(target.isAbsolute && target.authority.port != Authority.DEFAULT_PORT) {
+                if (target.isAbsolute && target.authority.port != Authority.DEFAULT_PORT) {
                     throw InvalidFileNameException(
                         target.toString(), null, "Path is absolute but uses port ${
-                        target.authority.port} instead of the default port ${
-                        Authority.DEFAULT_PORT}"
+                            target.authority.port
+                        } instead of the default port ${
+                            Authority.DEFAULT_PORT
+                        }"
                     )
                 }
                 targetString = target.toWindowsPath()
                 isRelative = !target.isAbsolute
             }
+
             is ByteStringPath -> {
                 targetString = target.toString()
                 isRelative = true
             }
+
             else -> throw ProviderMismatchException(target.toString())
         }.toString()
         if (attributes.isNotEmpty()) {
@@ -281,7 +280,8 @@ object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
         val sharePath = path.sharePath
         val sharePath2 = path2.sharePath
         if (sharePath == null || sharePath2 == null || sharePath.name != sharePath2.name
-            || sharePath.path.isEmpty() || sharePath2.path.isEmpty()) {
+            || sharePath.path.isEmpty() || sharePath2.path.isEmpty()
+        ) {
             return false
         }
         val pathInformation = try {
@@ -295,7 +295,7 @@ object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
             throw e.toFileSystemException(path2.toString())
         } as FileInformation
         return (SmbFileKey(path, pathInformation.fileId)
-            == SmbFileKey(path2, path2Information.fileId))
+                == SmbFileKey(path2, path2Information.fileId))
     }
 
     override fun isHidden(path: Path): Boolean {

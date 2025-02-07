@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ui
 
 import android.os.Bundle
@@ -24,7 +19,8 @@ abstract class PreferenceFragmentCompat : TakisoftPreferenceFragmentCompat() {
 
     override fun onDisplayPreferenceDialog(preference: Preference) {
         if (parentFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null
-            && preference is ListPreference) {
+            && preference is ListPreference
+        ) {
             displayPreferenceDialog(MaterialListPreferenceDialogFragmentCompat(), preference.key)
         } else {
             super.onDisplayPreferenceDialog(preference)

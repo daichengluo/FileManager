@@ -1,11 +1,25 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav
 
 import at.bitfire.dav4jvm.exception.DavException
+import com.android.imagic.files.provider.common.ByteString
+import com.android.imagic.files.provider.common.ByteStringPath
+import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
+import com.android.imagic.files.provider.common.PathListDirectoryStream
+import com.android.imagic.files.provider.common.PathObservable
+import com.android.imagic.files.provider.common.PathObservableProvider
+import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeSearchable
+import com.android.imagic.files.provider.common.WatchServicePathObservable
+import com.android.imagic.files.provider.common.decodedPathByteString
+import com.android.imagic.files.provider.common.toAccessModes
+import com.android.imagic.files.provider.common.toByteString
+import com.android.imagic.files.provider.common.toCopyOptions
+import com.android.imagic.files.provider.common.toLinkOptions
+import com.android.imagic.files.provider.common.toOpenOptions
+import com.android.imagic.files.provider.webdav.client.Authority
+import com.android.imagic.files.provider.webdav.client.Client
+import com.android.imagic.files.provider.webdav.client.Protocol
+import com.android.imagic.files.provider.webdav.client.isSymbolicLink
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -28,25 +42,6 @@ import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.attribute.FileAttributeView
 import java8.nio.file.spi.FileSystemProvider
-import com.android.imagic.files.provider.common.ByteString
-import com.android.imagic.files.provider.common.ByteStringPath
-import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
-import com.android.imagic.files.provider.common.PathListDirectoryStream
-import com.android.imagic.files.provider.common.PathObservable
-import com.android.imagic.files.provider.common.PathObservableProvider
-import com.android.imagic.files.provider.common.Searchable
-import com.android.imagic.files.provider.common.WalkFileTreeSearchable
-import com.android.imagic.files.provider.common.WatchServicePathObservable
-import com.android.imagic.files.provider.common.decodedPathByteString
-import com.android.imagic.files.provider.common.toAccessModes
-import com.android.imagic.files.provider.common.toByteString
-import com.android.imagic.files.provider.common.toCopyOptions
-import com.android.imagic.files.provider.common.toLinkOptions
-import com.android.imagic.files.provider.common.toOpenOptions
-import com.android.imagic.files.provider.webdav.client.Authority
-import com.android.imagic.files.provider.webdav.client.Client
-import com.android.imagic.files.provider.webdav.client.Protocol
-import com.android.imagic.files.provider.webdav.client.isSymbolicLink
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -216,7 +211,8 @@ object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, 
             throw UnsupportedOperationException("Missing ${StandardOpenOption.TRUNCATE_EXISTING}")
         }
         if (openOptions.write || openOptions.create || openOptions.createNew ||
-            openOptions.noFollowLinks) {
+            openOptions.noFollowLinks
+        ) {
             val fileResponse = try {
                 Client.findPropertiesOrNull(file, true)
             } catch (e: DavException) {
@@ -398,7 +394,10 @@ object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, 
         return getFileAttributeView(path, *options).readAttributes() as A
     }
 
-    private fun getFileAttributeView(path: Path, vararg options: LinkOption): WebDavFileAttributeView {
+    private fun getFileAttributeView(
+        path: Path,
+        vararg options: LinkOption
+    ): WebDavFileAttributeView {
         path as? WebDavPath ?: throw ProviderMismatchException(path.toString())
         val linkOptions = options.toLinkOptions()
         return WebDavFileAttributeView(path, linkOptions.noFollowLinks)

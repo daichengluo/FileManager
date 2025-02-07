@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.smb
 
 import com.hierynomus.mserref.NtStatus
@@ -127,6 +122,7 @@ internal class SmbWatchService : AbstractWatchService<SmbWatchKey>() {
                     when (response.header.statusCode) {
                         NtStatus.STATUS_NOTIFY_ENUM_DIR.value ->
                             key.addEvent(StandardWatchEventKinds.OVERFLOW, null)
+
                         NtStatus.STATUS_SUCCESS.value -> {
                             if (FileSystemProviders.overflowWatchEvents) {
                                 key.addEvent(StandardWatchEventKinds.OVERFLOW, null)
@@ -142,6 +138,7 @@ internal class SmbWatchService : AbstractWatchService<SmbWatchKey>() {
                                 }
                             }
                         }
+
                         else ->
                             throw SMBApiException(
                                 response.header, "Change notify failed for ${key.watchable()}"
@@ -170,9 +167,11 @@ internal class SmbWatchService : AbstractWatchService<SmbWatchKey>() {
             when (this) {
                 FileNotifyAction.FILE_ACTION_ADDED, FileNotifyAction.FILE_ACTION_RENAMED_NEW_NAME ->
                     StandardWatchEventKinds.ENTRY_CREATE
+
                 FileNotifyAction.FILE_ACTION_REMOVED,
                 FileNotifyAction.FILE_ACTION_RENAMED_OLD_NAME ->
                     StandardWatchEventKinds.ENTRY_DELETE
+
                 FileNotifyAction.FILE_ACTION_MODIFIED -> StandardWatchEventKinds.ENTRY_MODIFY
                 else -> throw AssertionError(this)
             }

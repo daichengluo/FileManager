@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.navigation
 
 import android.content.Context
@@ -58,8 +53,10 @@ class NavigationRecyclerView : RecyclerView {
                 width = width.coerceAtMost(MeasureSpec.getSize(widthSpec))
                 widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY)
             }
+
             MeasureSpec.UNSPECIFIED ->
                 widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY)
+
             MeasureSpec.EXACTLY -> {}
         }
         super.onMeasure(widthSpec, heightSpec)

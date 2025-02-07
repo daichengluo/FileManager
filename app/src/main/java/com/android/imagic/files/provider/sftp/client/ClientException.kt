@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp.client
 
 import com.android.imagic.files.provider.common.InvalidFileNameException
@@ -33,10 +28,13 @@ class ClientException : Exception {
         when (statusCode) {
             Response.StatusCode.NO_SUCH_FILE, Response.StatusCode.NO_SUCH_PATH,
             Response.StatusCode.DELETE_PENDING -> NoSuchFileException(file, other, message)
+
             Response.StatusCode.PERMISSION_DENIED, Response.StatusCode.CANNOT_DELETE ->
                 AccessDeniedException(file, other, message)
+
             Response.StatusCode.FILE_ALREADY_EXISTS ->
                 FileAlreadyExistsException(file, other, message)
+
             Response.StatusCode.WRITE_PROTECT -> ReadOnlyFileSystemException(file, other, message)
             Response.StatusCode.DIR_NOT_EMPTY -> DirectoryNotEmptyException(file)
             Response.StatusCode.NOT_A_DIRECTORY -> NotDirectoryException(file)

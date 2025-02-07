@@ -1,21 +1,16 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.storage
 
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.R
 import com.android.imagic.files.provider.sftp.client.Authentication
 import com.android.imagic.files.provider.sftp.client.Authority
 import com.android.imagic.files.provider.sftp.createSftpRootPath
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
 import kotlin.random.Random
 
 @Parcelize

@@ -1,14 +1,6 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.checksum
 
 import androidx.core.widget.doAfterTextChanged
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.FilePropertiesChecksumCompareItemBinding
 import com.android.imagic.files.file.FileItem
@@ -19,6 +11,9 @@ import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class FilePropertiesChecksumTabFragment : FilePropertiesTabFragment() {
     private val args by args<Args>()

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.file
 
 import android.content.ContentProvider
@@ -25,16 +20,6 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.system.ErrnoException
 import android.system.OsConstants
-import java8.nio.channels.SeekableByteChannel
-import java8.nio.file.AccessDeniedException
-import java8.nio.file.FileSystemException
-import java8.nio.file.FileSystemLoopException
-import java8.nio.file.NoSuchFileException
-import java8.nio.file.OpenOption
-import java8.nio.file.Path
-import java8.nio.file.Paths
-import java8.nio.file.StandardOpenOption
-import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.storageManager
 import com.android.imagic.files.compat.ProxyFileDescriptorCallbackCompat
 import com.android.imagic.files.compat.openProxyFileDescriptorCompat
@@ -51,6 +36,15 @@ import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.provider.linux.syscall.SyscallException
 import com.android.imagic.files.util.hasBits
 import com.android.imagic.files.util.withoutPenaltyDeathOnNetwork
+import java8.nio.channels.SeekableByteChannel
+import java8.nio.file.AccessDeniedException
+import java8.nio.file.FileSystemException
+import java8.nio.file.FileSystemLoopException
+import java8.nio.file.NoSuchFileException
+import java8.nio.file.OpenOption
+import java8.nio.file.Path
+import java8.nio.file.Paths
+import java8.nio.file.StandardOpenOption
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InterruptedIOException
@@ -103,6 +97,7 @@ class FileProvider : ContentProvider() {
                     columns += column
                     values += path.fileName.toString()
                 }
+
                 OpenableColumns.SIZE -> {
                     val size = try {
                         path.size()
@@ -113,6 +108,7 @@ class FileProvider : ContentProvider() {
                     columns += column
                     values += size
                 }
+
                 MediaStore.MediaColumns.DATA -> {
                     val file = try {
                         path.toFile()
@@ -128,6 +124,7 @@ class FileProvider : ContentProvider() {
                     columns += column
                     values += MimeType.guessFromPath(path.toString()).value
                 }
+
                 DocumentsContract.Document.COLUMN_LAST_MODIFIED -> {
                     val lastModified = try {
                         path.getLastModifiedTime().toMillis()
@@ -147,7 +144,8 @@ class FileProvider : ContentProvider() {
 
     private fun getDefaultProjection(): Array<String> =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-            && Binder.getCallingUid() == Process.SYSTEM_UID) {
+            && Binder.getCallingUid() == Process.SYSTEM_UID
+        ) {
             // com.android.internal.app.ChooserActivity.queryResolver() in Q queries with a null
             // projection (meaning all columns) on main thread but only actually needs the display
             // name (and document flags). However if we do return all the columns, we may perform
@@ -230,11 +228,13 @@ class FileProvider : ContentProvider() {
             // read and write access that truncates any existing file.
             require(!hasBits(ParcelFileDescriptor.MODE_APPEND)) { "mode ${this@toOpenOptions}" }
             if (hasBits(ParcelFileDescriptor.MODE_READ_ONLY)
-                || hasBits(ParcelFileDescriptor.MODE_READ_WRITE)) {
+                || hasBits(ParcelFileDescriptor.MODE_READ_WRITE)
+            ) {
                 this += StandardOpenOption.READ
             }
             if (hasBits(ParcelFileDescriptor.MODE_WRITE_ONLY)
-                || hasBits(ParcelFileDescriptor.MODE_READ_WRITE)) {
+                || hasBits(ParcelFileDescriptor.MODE_READ_WRITE)
+            ) {
                 this += StandardOpenOption.WRITE
             }
             if (hasBits(ParcelFileDescriptor.MODE_CREATE)) {

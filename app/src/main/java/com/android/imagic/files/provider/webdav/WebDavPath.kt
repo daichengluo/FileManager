@@ -1,19 +1,7 @@
-/*
- * Copyright (c) 2024 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.webdav
 
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.FileSystem
-import java8.nio.file.LinkOption
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
-import java8.nio.file.WatchEvent
-import java8.nio.file.WatchKey
-import java8.nio.file.WatchService
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringListPath
 import com.android.imagic.files.provider.common.LocalWatchService
@@ -21,6 +9,13 @@ import com.android.imagic.files.provider.common.UriAuthority
 import com.android.imagic.files.provider.webdav.client.Authority
 import com.android.imagic.files.provider.webdav.client.Client
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.FileSystem
+import java8.nio.file.LinkOption
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
+import java8.nio.file.WatchEvent
+import java8.nio.file.WatchKey
+import java8.nio.file.WatchService
 import okhttp3.HttpUrl
 import java.io.File
 import java.io.IOException

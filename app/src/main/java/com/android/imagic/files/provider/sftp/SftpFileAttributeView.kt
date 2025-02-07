@@ -1,12 +1,5 @@
-/*
- * Copyright (c) 2021 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.sftp
 
-import java8.nio.file.LinkOption
-import java8.nio.file.attribute.FileTime
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.PosixFileAttributeView
 import com.android.imagic.files.provider.common.PosixFileModeBit
@@ -15,6 +8,8 @@ import com.android.imagic.files.provider.common.PosixUser
 import com.android.imagic.files.provider.common.toInt
 import com.android.imagic.files.provider.sftp.client.Client
 import com.android.imagic.files.provider.sftp.client.ClientException
+import java8.nio.file.LinkOption
+import java8.nio.file.attribute.FileTime
 import net.schmizz.sshj.sftp.FileAttributes
 import java.io.IOException
 

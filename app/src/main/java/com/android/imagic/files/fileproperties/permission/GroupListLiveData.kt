@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import com.android.imagic.files.provider.linux.syscall.Syscall.endgrent
@@ -41,8 +36,10 @@ class GroupListLiveData : PrincipalListLiveData() {
             appId > AID_ISOLATED_START -> "u${userId}_i${appId - AID_ISOLATED_START}"
             userId == 0 && appId in AID_SHARED_GID_START..AID_SHARED_GID_END ->
                 "all_a${appId - AID_SHARED_GID_START}"
+
             appId in AID_CACHE_GID_START..AID_CACHE_GID_END ->
                 "u${userId}_a${appId - AID_CACHE_GID_START}_cache"
+
             else -> "u${userId}_a${appId - AID_APP_START}"
         }
     }

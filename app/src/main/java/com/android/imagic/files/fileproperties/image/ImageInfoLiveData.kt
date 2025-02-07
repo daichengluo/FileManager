@@ -1,16 +1,9 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.image
 
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Size
 import androidx.exifinterface.media.ExifInterface
-import com.caverock.androidsvg.SVG
-import java8.nio.file.Path
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.fileproperties.PathObserverLiveData
 import com.android.imagic.files.provider.common.getLastModifiedTime
@@ -20,6 +13,8 @@ import com.android.imagic.files.util.Loading
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
+import com.caverock.androidsvg.SVG
+import java8.nio.file.Path
 import okio.buffer
 import okio.source
 import kotlin.math.roundToInt
@@ -61,6 +56,7 @@ class ImageInfoLiveData(
                         }
                         ImageInfo(dimensions, null)
                     }
+
                     else -> {
                         val bitmapOptions = BitmapFactory.Options()
                             .apply { inJustDecodeBounds = true }

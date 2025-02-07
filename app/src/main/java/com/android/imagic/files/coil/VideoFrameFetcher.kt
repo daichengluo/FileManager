@@ -47,6 +47,7 @@ class VideoFrameFetcher(
                         retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
                             ?.toIntOrNull() ?: 0
                 }
+
                 else -> {
                     srcWidth =
                         retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
@@ -73,7 +74,8 @@ class VideoFrameFetcher(
                 null
             }
             val outBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
-                && srcWidth > 0 && srcHeight > 0) {
+                && srcWidth > 0 && srcHeight > 0
+            ) {
                 val dstWidth = options.size.widthPx(options.scale) { srcWidth }
                 val dstHeight = options.size.heightPx(options.scale) { srcHeight }
                 val rawScale = DecodeUtils.computeSizeMultiplier(

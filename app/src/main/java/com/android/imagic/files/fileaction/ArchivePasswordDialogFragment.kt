@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileaction
 
 import android.app.Dialog
@@ -143,7 +138,7 @@ class ArchivePasswordDialogFragment : AppCompatDialogFragment() {
     class Args(
         val path: @WriteWith<ParcelableParceler> Path,
         val listener: @WriteWith<ListenerParceler>()
-        (Boolean) -> Unit
+            (Boolean) -> Unit
     ) : ParcelableArgs {
         object ListenerParceler : Parceler<(Boolean) -> Unit> {
             override fun create(parcel: Parcel): (Boolean) -> Unit =

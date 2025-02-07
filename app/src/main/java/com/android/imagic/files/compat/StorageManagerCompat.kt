@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.compat
 
 import android.os.Build
@@ -10,8 +5,8 @@ import android.os.Handler
 import android.os.ParcelFileDescriptor
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
-import kotlinx.coroutines.runBlocking
 import com.android.imagic.files.util.lazyReflectedMethod
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume

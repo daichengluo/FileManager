@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.text.NoCopySpan.Concrete
@@ -57,7 +52,8 @@ object ClickableArrowKeyMovementMethod : ArrowKeyMovementMethod() {
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 if (KeyEvent.metaStateHasNoModifiers(movementMetaState)) {
                     if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0
-                        && action(CLICK, view, text)) {
+                        && action(CLICK, view, text)
+                    ) {
                         return true
                     }
                 }
@@ -131,6 +127,7 @@ object ClickableArrowKeyMovementMethod : ArrowKeyMovementMethod() {
                     .singleOrNull() ?: return false
                 span.onClick(view)
             }
+
             UP -> {
                 var bestStart = -1
                 var bestEnd = -1
@@ -148,6 +145,7 @@ object ClickableArrowKeyMovementMethod : ArrowKeyMovementMethod() {
                     return true
                 }
             }
+
             DOWN -> {
                 var bestStart = Int.MAX_VALUE
                 var bestEnd = Int.MAX_VALUE

@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties.permission
 
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import java8.nio.file.Path
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.filejob.FileJobService
@@ -18,6 +12,7 @@ import com.android.imagic.files.util.SelectionLiveData
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.show
 import com.android.imagic.files.util.viewModels
+import java8.nio.file.Path
 
 class SetGroupDialogFragment : SetPrincipalDialogFragment() {
     override val viewModel: SetPrincipalViewModel by viewModels { { SetGroupViewModel() } }

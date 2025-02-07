@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.fileproperties
 
-import java8.nio.file.Path
 import com.android.imagic.files.filelist.PathObserver
 import com.android.imagic.files.util.CloseableLiveData
+import java8.nio.file.Path
 
 abstract class PathObserverLiveData<T>(protected val path: Path) : CloseableLiveData<T>() {
     private lateinit var observer: PathObserver

@@ -1,14 +1,6 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
-import java8.nio.file.FileAlreadyExistsException
-import java8.nio.file.FileSystemException
-import java8.nio.file.StandardCopyOption
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.CopyOptions
 import com.android.imagic.files.provider.common.toByteString
@@ -16,6 +8,9 @@ import com.android.imagic.files.provider.linux.syscall.Constants
 import com.android.imagic.files.provider.linux.syscall.StructTimespec
 import com.android.imagic.files.provider.linux.syscall.Syscall
 import com.android.imagic.files.provider.linux.syscall.SyscallException
+import java8.nio.file.FileAlreadyExistsException
+import java8.nio.file.FileSystemException
+import java8.nio.file.StandardCopyOption
 import java.io.IOException
 import java.io.InterruptedIOException
 
@@ -70,7 +65,7 @@ internal object LinuxCopyMove {
             }
             try {
                 var targetFlags = (OsConstants.O_WRONLY or OsConstants.O_TRUNC
-                    or OsConstants.O_CREAT)
+                        or OsConstants.O_CREAT)
                 if (!copyOptions.replaceExisting) {
                     targetFlags = targetFlags or OsConstants.O_EXCL
                 }
@@ -99,7 +94,8 @@ internal object LinuxCopyMove {
                         throwIfInterrupted()
                         val currentTimeMillis = System.currentTimeMillis()
                         if (progressListener != null
-                            && currentTimeMillis >= lastProgressMillis + progressIntervalMillis) {
+                            && currentTimeMillis >= lastProgressMillis + progressIntervalMillis
+                        ) {
                             progressListener(copiedSize)
                             lastProgressMillis = currentTimeMillis
                             copiedSize = 0

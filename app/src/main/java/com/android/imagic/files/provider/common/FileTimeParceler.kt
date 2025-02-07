@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import android.os.Parcel
-import java.time.Instant
+import com.android.imagic.files.compat.readSerializableCompat
 import java8.nio.file.attribute.FileTime
 import kotlinx.parcelize.Parceler
-import com.android.imagic.files.compat.readSerializableCompat
+import java.time.Instant
 
 object FileTimeParceler : Parceler<FileTime?> {
     override fun create(parcel: Parcel): FileTime? =

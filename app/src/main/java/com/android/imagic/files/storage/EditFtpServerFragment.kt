@@ -159,8 +159,9 @@ class EditFtpServerFragment : Fragment() {
                 }
                 when {
                     authority.username == Authority.ANONYMOUS_USERNAME
-                        && server.password == Authority.ANONYMOUS_PASSWORD ->
+                            && server.password == Authority.ANONYMOUS_PASSWORD ->
                         authenticationType = AuthenticationType.ANONYMOUS
+
                     else -> {
                         authenticationType = AuthenticationType.PASSWORD
                         binding.usernameEdit.setText(authority.username)
@@ -260,7 +261,7 @@ class EditFtpServerFragment : Fragment() {
         set(value) {
             val adapter = binding.encodingEdit.adapter
             val item = adapter.getItem(viewModel.charsets.indexOfFirst { it.name() == value })
-                as CharSequence
+                    as CharSequence
             binding.encodingEdit.setText(item, false)
         }
 
@@ -288,11 +289,13 @@ class EditFtpServerFragment : Fragment() {
                 binding.saveOrConnectAndAddButton.isEnabled = !isConnecting
                 binding.removeOrAddButton.isEnabled = !isConnecting
             }
+
             is ActionState.Success -> {
                 Storages.addOrReplace(state.argument)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
+
             is ActionState.Error -> {
                 val throwable = state.throwable
                 throwable.printStackTrace()
@@ -349,6 +352,7 @@ class EditFtpServerFragment : Fragment() {
                 }
                 password = binding.passwordEdit.text.toString()
             }
+
             AuthenticationType.ANONYMOUS -> {
                 username = Authority.ANONYMOUS_USERNAME
                 password = Authority.ANONYMOUS_PASSWORD

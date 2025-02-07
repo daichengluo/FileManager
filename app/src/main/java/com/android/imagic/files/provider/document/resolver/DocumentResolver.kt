@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.document.resolver
 
 import android.database.ContentObserver
@@ -40,6 +35,7 @@ import kotlin.coroutines.resume
 object DocumentResolver {
     // @see com.android.shell.BugreportStorageProvider#AUTHORITY
     private const val BUGREPORT_STORAGE_PROVIDER_AUTHORITY = "com.android.shell.documents"
+
     // @see com.android.mtp.MtpDocumentsProvider#AUTHORITY
     private const val MTP_DOCUMENTS_PROVIDER_AUTHORITY = "com.android.mtp.documents"
 
@@ -82,7 +78,8 @@ object DocumentResolver {
         listener: ((Long) -> Unit)?
     ): Uri {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-            && sourcePath.hasSameAuthority(targetPath) && !sourcePath.isCopyUnsupported) {
+            && sourcePath.hasSameAuthority(targetPath) && !sourcePath.isCopyUnsupported
+        ) {
             copyApi24(sourcePath, targetPath, intervalMillis, listener)
         } else {
             copyManually(sourcePath, targetPath, intervalMillis, listener)
@@ -277,7 +274,8 @@ object DocumentResolver {
             return rename(sourcePath, targetPath.displayName!!)
         }
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-            && sourcePath.hasSameAuthority(targetPath) && !sourcePath.isMoveUnsupported) {
+            && sourcePath.hasSameAuthority(targetPath) && !sourcePath.isMoveUnsupported
+        ) {
             moveApi24(sourcePath, targetPath, moveOnly, intervalMillis, listener)
         } else {
             if (moveOnly) {
@@ -598,9 +596,10 @@ object DocumentResolver {
                     continuation.invokeOnCancellation {
                         try {
                             unregisterContentObserver(observer)
-                        // This may be invoked when continuation is resumed but still cancelled
-                        // while waiting to be dispatched.
-                        } catch (ignored: IllegalStateException) {}
+                            // This may be invoked when continuation is resumed but still cancelled
+                            // while waiting to be dispatched.
+                        } catch (ignored: IllegalStateException) {
+                        }
                     }
                 }
             }

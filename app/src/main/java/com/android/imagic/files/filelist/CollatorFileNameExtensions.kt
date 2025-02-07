@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.Parcelable
@@ -33,6 +28,7 @@ fun Collator.getCollationKeyForFileName(source: String): CollationKey {
                 result.append(COLLATION_SENTINEL).append(1)
                 previousIndex = index + 1
             }
+
             source[index].isAsciiDigit() -> {
                 if (previousIndex != index) {
                     val collationKey = getCollationKey(source.substring(previousIndex, index))
@@ -74,6 +70,7 @@ fun Collator.getCollationKeyForFileName(source: String): CollationKey {
                 previousIndex = index
                 --index
             }
+
             else -> {}
         }
         ++index

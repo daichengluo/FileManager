@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.ftpserver
 
 import android.content.Context
@@ -56,9 +51,9 @@ class FtpServerStatePreference : SwitchPreferenceCompat {
         }
         summary = context.getString(summaryRes)
         isChecked = state == FtpServerService.State.STARTING
-            || state == FtpServerService.State.RUNNING
+                || state == FtpServerService.State.RUNNING
         isEnabled = !(state == FtpServerService.State.STARTING
-            || state == FtpServerService.State.STOPPING)
+                || state == FtpServerService.State.STOPPING)
     }
 
     override fun onClick() {

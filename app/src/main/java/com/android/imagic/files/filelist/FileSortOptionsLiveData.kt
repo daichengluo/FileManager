@@ -1,19 +1,14 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import java8.nio.file.Path
 import com.android.imagic.files.filelist.FileSortOptions.By
 import com.android.imagic.files.filelist.FileSortOptions.Order
 import com.android.imagic.files.settings.PathSettings
 import com.android.imagic.files.settings.SettingLiveData
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
 
 class FileSortOptionsLiveData(pathLiveData: LiveData<Path>) : MediatorLiveData<FileSortOptions>() {
     private lateinit var pathSortOptionsLiveData: SettingLiveData<FileSortOptions?>

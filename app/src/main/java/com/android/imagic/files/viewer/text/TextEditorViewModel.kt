@@ -1,14 +1,18 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.viewer.text
 
 import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.imagic.files.filejob.FileJobService
+import com.android.imagic.files.provider.common.readAllBytes
+import com.android.imagic.files.provider.common.size
+import com.android.imagic.files.util.ActionState
+import com.android.imagic.files.util.DataState
+import com.android.imagic.files.util.isFinished
+import com.android.imagic.files.util.isReady
+import com.android.imagic.files.util.toError
+import com.android.imagic.files.util.toLoading
 import java8.nio.file.Path
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -23,15 +27,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
-import com.android.imagic.files.filejob.FileJobService
-import com.android.imagic.files.provider.common.readAllBytes
-import com.android.imagic.files.provider.common.size
-import com.android.imagic.files.util.ActionState
-import com.android.imagic.files.util.DataState
-import com.android.imagic.files.util.isFinished
-import com.android.imagic.files.util.isReady
-import com.android.imagic.files.util.toError
-import com.android.imagic.files.util.toLoading
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
@@ -116,6 +111,7 @@ class TextEditorViewModel(file: Path) : ViewModel() {
                                 _textState.value = _textState.value.toError(e)
                             }
                         }
+
                         is DataState.Error ->
                             _textState.value = _textState.value.toError(bytesState.throwable)
                     }

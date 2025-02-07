@@ -1,12 +1,6 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.AsyncTask
-import java8.nio.file.Path
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.loadFileItem
 import com.android.imagic.files.provider.common.search
@@ -16,6 +10,7 @@ import com.android.imagic.files.util.Loading
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Path
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future

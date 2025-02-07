@@ -1,19 +1,14 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.remote
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.io.IOException
-import java8.nio.file.DirectoryIteratorException
-import java8.nio.file.DirectoryStream
-import java8.nio.file.Path
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.util.ParcelSlicedList
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.DirectoryIteratorException
+import java8.nio.file.DirectoryStream
+import java8.nio.file.Path
+import java.io.IOException
 
 class ParcelableDirectoryStream : Parcelable {
     private val paths: List<Path>

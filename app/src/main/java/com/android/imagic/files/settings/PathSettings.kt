@@ -1,15 +1,10 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import androidx.core.content.res.ResourcesCompat
-import java8.nio.file.Path
 import com.android.imagic.files.R
 import com.android.imagic.files.filelist.FileSortOptions
 import com.android.imagic.files.filelist.FileViewType
+import java8.nio.file.Path
 
 object PathSettings {
     private const val NAME_SUFFIX = "path"

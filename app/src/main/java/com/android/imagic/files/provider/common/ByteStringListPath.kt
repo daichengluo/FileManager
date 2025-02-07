@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.common
 
 import android.os.Parcel
@@ -96,7 +91,8 @@ abstract class ByteStringListPath<T : ByteStringListPath<T>> : AbstractPath<T>, 
             return true
         }
         if (javaClass != other.javaClass || provider != other.provider
-            || fileSystem != other.fileSystem) {
+            || fileSystem != other.fileSystem
+        ) {
             return false
         }
         other as ByteStringListPath<*>
@@ -110,7 +106,8 @@ abstract class ByteStringListPath<T : ByteStringListPath<T>> : AbstractPath<T>, 
             return true
         }
         if (javaClass != other.javaClass || provider != other.provider
-            || fileSystem != other.fileSystem) {
+            || fileSystem != other.fileSystem
+        ) {
             return false
         }
         other as ByteStringListPath<*>
@@ -196,7 +193,8 @@ abstract class ByteStringListPath<T : ByteStringListPath<T>> : AbstractPath<T>, 
         val minSegmentsSize = min(segmentsSize, otherSegmentsSize)
         var commonSegmentsSize = 0
         while (commonSegmentsSize < minSegmentsSize
-            && segments[commonSegmentsSize] == other.segments[commonSegmentsSize]) {
+            && segments[commonSegmentsSize] == other.segments[commonSegmentsSize]
+        ) {
             ++commonSegmentsSize
         }
         val relativeSegments = mutableListOf<ByteString>()
@@ -254,9 +252,9 @@ abstract class ByteStringListPath<T : ByteStringListPath<T>> : AbstractPath<T>, 
         }
         other as ByteStringListPath<*>
         return separator == other.separator
-            && segments == other.segments
-            && isAbsolute == other.isAbsolute
-            && fileSystem == other.fileSystem
+                && segments == other.segments
+                && isAbsolute == other.isAbsolute
+                && fileSystem == other.fileSystem
     }
 
     override fun hashCode(): Int = hash(separator, segments, isAbsolute, fileSystem)

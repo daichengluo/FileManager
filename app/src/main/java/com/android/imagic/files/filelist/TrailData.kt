@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.filelist
 
 import android.os.Parcelable
-import java8.nio.file.Path
 import com.android.imagic.files.provider.archive.archiveFile
 import com.android.imagic.files.provider.archive.isArchivePath
+import java8.nio.file.Path
 
 class TrailData private constructor(
     val trail: List<Path>,

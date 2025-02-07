@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.settings
 
 import android.content.Context
@@ -12,10 +7,10 @@ import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.preference.EditTextPreference.OnBindEditTextListener
-import com.takisoft.preferencex.EditTextPreference
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.compat.DigitsKeyListenerCompat
 import com.android.imagic.files.util.ParcelableState
+import com.takisoft.preferencex.EditTextPreference
+import kotlinx.parcelize.Parcelize
 
 class NonNegativeIntegerPreference : EditTextPreference {
     private var isIntegerSet = false

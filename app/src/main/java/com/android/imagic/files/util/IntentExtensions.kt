@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.util
 
 import android.content.Context
@@ -24,7 +19,7 @@ import kotlin.reflect.KClass
 fun <T : Context> KClass<T>.createIntent(): Intent = Intent(application, java)
 
 fun CharSequence.createSendTextIntent(htmlText: String? = null): Intent =
-    // The context parameter here is only used for passing calling activity information and starting
+// The context parameter here is only used for passing calling activity information and starting
     // chooser activity, neither of which we care about.
     ShareCompat.IntentBuilder(application)
         .setType(MimeType.TEXT_PLAIN.value)
@@ -139,10 +134,10 @@ fun Uri.createSendStreamIntent(mimeType: MimeType): Intent =
     listOf(this).createSendStreamIntent(listOf(mimeType))
 
 fun Collection<Uri>.createSendStreamIntent(mimeTypes: Collection<MimeType>): Intent =
-    // Use ShareCompat.IntentBuilder for its migrateExtraStreamToClipData() because
-    // Intent.migrateExtraStreamToClipData() won't promote child ClipData and flags to the chooser
-    // intent, breaking third party share sheets.
-    // The context parameter here is only used for passing calling activity information and starting
+// Use ShareCompat.IntentBuilder for its migrateExtraStreamToClipData() because
+// Intent.migrateExtraStreamToClipData() won't promote child ClipData and flags to the chooser
+// intent, breaking third party share sheets.
+// The context parameter here is only used for passing calling activity information and starting
     // chooser activity, neither of which we care about.
     ShareCompat.IntentBuilder(application)
         .setType(mimeTypes.intentType)
