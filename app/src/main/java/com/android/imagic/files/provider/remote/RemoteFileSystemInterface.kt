@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * All Rights Reserved.
+ */
+
+package com.android.imagic.files.provider.remote
+
+import java8.nio.file.FileSystem
+
+class RemoteFileSystemInterface(private val fileSystem: FileSystem) :
+    com.android.imagic.files.provider.remote.IRemoteFileSystem.Stub() {
+    override fun close(exception: ParcelableException) {
+        tryRun(exception) { fileSystem.close() }
+    }
+}

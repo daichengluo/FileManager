@@ -25,12 +25,12 @@ apply plugin: 'com.google.firebase.crashlytics'
 //#endif
 
 android {
-    namespace 'me.zhanghai.android.files'
+    namespace 'com.android.imagic.files'
     buildToolsVersion = '35.0.1'
     compileSdk 35
     ndkVersion '27.2.12479018'
     defaultConfig {
-        applicationId 'me.zhanghai.android.files'
+        applicationId 'com.android.imagic.files'
         minSdk 21
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
