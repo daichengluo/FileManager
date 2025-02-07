@@ -24,7 +24,6 @@ import com.android.imagic.files.provider.smb.client.Client as SmbClient
 import com.android.imagic.files.provider.webdav.client.Client as WebDavClient
 
 val appInitializers = listOf(
-    ::initializeCrashlytics,
     ::disableHiddenApiChecks,
     ::initializeWebViewDebugging,
     ::initializeCoil,
@@ -37,9 +36,9 @@ val appInitializers = listOf(
 )
 
 private fun initializeCrashlytics() {
-//#ifdef NONFREE
+    //#ifdef NONFREE
     com.android.imagic.files.nonfree.CrashlyticsInitializer.initialize()
-//#endif
+    //#endif
 }
 
 private fun disableHiddenApiChecks() {
