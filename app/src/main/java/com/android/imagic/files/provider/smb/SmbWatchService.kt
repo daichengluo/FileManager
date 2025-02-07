@@ -1,5 +1,10 @@
 package com.android.imagic.files.provider.smb
 
+import com.android.imagic.files.provider.FileSystemProviders
+import com.android.imagic.files.provider.common.AbstractWatchService
+import com.android.imagic.files.provider.smb.client.Client
+import com.android.imagic.files.provider.smb.client.ClientException
+import com.android.imagic.files.util.closeSafe
 import com.hierynomus.mserref.NtStatus
 import com.hierynomus.msfscc.FileNotifyAction
 import com.hierynomus.mssmb2.SMB2CompletionFilter
@@ -9,11 +14,6 @@ import com.hierynomus.smbj.share.Directory
 import java8.nio.file.Path
 import java8.nio.file.StandardWatchEventKinds
 import java8.nio.file.WatchEvent
-import com.android.imagic.files.provider.FileSystemProviders
-import com.android.imagic.files.provider.common.AbstractWatchService
-import com.android.imagic.files.provider.smb.client.Client
-import com.android.imagic.files.provider.smb.client.ClientException
-import com.android.imagic.files.util.closeSafe
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.util.concurrent.Future

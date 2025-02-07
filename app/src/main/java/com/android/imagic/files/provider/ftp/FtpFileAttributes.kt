@@ -6,14 +6,14 @@
 package com.android.imagic.files.provider.ftp
 
 import android.os.Parcelable
-import java.time.Instant
-import java8.nio.file.attribute.FileTime
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.provider.common.AbstractBasicFileAttributes
 import com.android.imagic.files.provider.common.BasicFileType
 import com.android.imagic.files.provider.common.FileTimeParceler
+import java8.nio.file.attribute.FileTime
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import org.apache.commons.net.ftp.FTPFile
+import java.time.Instant
 
 @Parcelize
 internal data class FtpFileAttributes(

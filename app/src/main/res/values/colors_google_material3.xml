@@ -6,9 +6,7 @@
   -->
 
 <!-- @see https://chromium.googlesource.com/chromium/src/+/HEAD/ui/android/java/res/values/color_palette.xml -->
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="PrivateResource">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
 
     <color name="m3_ref_palette_neutral0">#000000</color>
     <color name="m3_ref_palette_neutral4">#0E0E0F</color>

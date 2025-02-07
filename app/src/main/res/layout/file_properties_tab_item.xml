@@ -5,8 +5,7 @@
   ~ All Rights Reserved.
   -->
 
-<com.android.imagic.files.ui.ReadOnlyTextInputLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.imagic.files.ui.ReadOnlyTextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/textInputLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

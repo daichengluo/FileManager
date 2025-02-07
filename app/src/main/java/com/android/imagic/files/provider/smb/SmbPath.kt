@@ -2,6 +2,12 @@ package com.android.imagic.files.provider.smb
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.android.imagic.files.provider.common.ByteString
+import com.android.imagic.files.provider.common.ByteStringListPath
+import com.android.imagic.files.provider.common.UriAuthority
+import com.android.imagic.files.provider.smb.client.Authority
+import com.android.imagic.files.provider.smb.client.Client
+import com.android.imagic.files.util.readParcelable
 import java8.nio.file.FileSystem
 import java8.nio.file.LinkOption
 import java8.nio.file.Path
@@ -9,12 +15,6 @@ import java8.nio.file.ProviderMismatchException
 import java8.nio.file.WatchEvent
 import java8.nio.file.WatchKey
 import java8.nio.file.WatchService
-import com.android.imagic.files.provider.common.ByteString
-import com.android.imagic.files.provider.common.ByteStringListPath
-import com.android.imagic.files.provider.common.UriAuthority
-import com.android.imagic.files.provider.smb.client.Authority
-import com.android.imagic.files.provider.smb.client.Client
-import com.android.imagic.files.util.readParcelable
 import java.io.File
 import java.io.IOException
 

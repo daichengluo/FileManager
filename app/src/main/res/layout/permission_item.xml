@@ -5,19 +5,18 @@
   ~ All Rights Reserved.
   -->
 
-<me.zhanghai.android.foregroundcompat.ForegroundLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<me.zhanghai.android.foregroundcompat.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?listPreferredItemHeightSmall"
-    android:paddingStart="?dialogPreferredPadding"
-    android:paddingEnd="?dialogPreferredPadding"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
     android:foreground="?selectableItemBackground"
     android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:minHeight="?listPreferredItemHeightSmall"
+    android:orientation="vertical"
+    android:paddingStart="?dialogPreferredPadding"
+    android:paddingTop="8dp"
+    android:paddingEnd="?dialogPreferredPadding"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/labelText"

@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="?dialogPreferredPadding"
-        android:layout_marginEnd="?dialogPreferredPadding"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="?dialogPreferredPadding">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameEdit"
@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
             android:inputType="text">
-            <requestFocus />
+
+        <requestFocus />
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 </merge>

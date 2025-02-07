@@ -1,7 +1,7 @@
 package com.android.imagic.files.provider.ftp
 
-import java8.nio.file.FileSystemException
 import com.android.imagic.files.provider.ftp.client.NegativeReplyCodeException
+import java8.nio.file.FileSystemException
 import java.io.IOException
 
 fun IOException.toFileSystemExceptionForFtp(

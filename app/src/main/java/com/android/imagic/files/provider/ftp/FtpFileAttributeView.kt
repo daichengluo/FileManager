@@ -5,10 +5,10 @@
 
 package com.android.imagic.files.provider.ftp
 
+import com.android.imagic.files.provider.ftp.client.Client
 import java8.nio.file.LinkOption
 import java8.nio.file.attribute.BasicFileAttributeView
 import java8.nio.file.attribute.FileTime
-import com.android.imagic.files.provider.ftp.client.Client
 import java.io.IOException
 
 internal class FtpFileAttributeView(

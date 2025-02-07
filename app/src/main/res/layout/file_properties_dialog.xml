@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/abc_dialog_title_divider_material"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/abc_dialog_title_divider_material">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="scrollable"
-            app:tabPaddingStart="?dialogPreferredPadding"
-            app:tabPaddingEnd="?dialogPreferredPadding" />
+            app:tabPaddingEnd="?dialogPreferredPadding"
+            app:tabPaddingStart="?dialogPreferredPadding" />
     </FrameLayout>
 
     <com.android.imagic.files.ui.WrapFirstPageContentViewPager

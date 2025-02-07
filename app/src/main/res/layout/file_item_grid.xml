@@ -5,8 +5,7 @@
   ~ All Rights Reserved.
   -->
 
-<com.android.imagic.files.ui.CheckableForegroundLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.imagic.files.ui.CheckableForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemLayout"
     android:layout_width="match_parent"
@@ -19,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/screen_edge_margin"
-        android:layout_marginEnd="@dimen/screen_edge_margin"
         android:layout_marginTop="@dimen/screen_edge_margin"
+        android:layout_marginEnd="@dimen/screen_edge_margin"
         android:duplicateParentState="true"
         app:aspectRatio="1.78">
 
@@ -90,8 +89,8 @@
                 android:layout_height="@dimen/badge_size_plus_1dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginStart="-0.5dp"
-                android:layout_marginEnd="-0.5dp"
                 android:layout_marginTop="-0.5dp"
+                android:layout_marginEnd="-0.5dp"
                 android:layout_marginBottom="-0.5dp"
                 android:duplicateParentState="true" />
 
@@ -132,9 +131,9 @@
             android:layout_width="@dimen/touch_target_size"
             android:layout_height="@dimen/touch_target_size"
             android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp"
-            android:padding="@dimen/touch_target_icon_padding"
             android:background="@null"
             android:foreground="@drawable/selectable_item_background_oval"
+            android:padding="@dimen/touch_target_icon_padding"
             android:src="@drawable/more_vertical_icon_white_24dp"
             app:tint="?colorControlNormal" />
     </LinearLayout>

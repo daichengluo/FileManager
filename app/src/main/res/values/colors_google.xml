@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
 <!-- @see https://chromium.googlesource.com/chromium/src/+/master/ui/webui/resources/cr_elements/shared_vars_css.html -->
 <resources>

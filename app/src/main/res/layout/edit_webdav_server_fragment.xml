@@ -5,8 +5,7 @@
   ~ All Rights Reserved.
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,18 +46,18 @@
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:scrollIndicators="bottom">
+                android:scrollIndicators="bottom"
+                android:scrollbars="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/screen_edge_margin"
-                    android:paddingEnd="@dimen/screen_edge_margin"
-                    android:paddingTop="@dimen/screen_edge_margin"
-                    android:paddingBottom="@dimen/screen_edge_margin_minus_16dp"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/screen_edge_margin"
+                    android:paddingTop="@dimen/screen_edge_margin"
+                    android:paddingEnd="@dimen/screen_edge_margin"
+                    android:paddingBottom="@dimen/screen_edge_margin_minus_16dp">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/hostLayout"
@@ -72,6 +71,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textUri">
+
                             <requestFocus />
                         </com.google.android.material.textfield.TextInputEditText>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -126,12 +126,12 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/protocolLayout"
+                        style="?textInputOutlinedExposedDropdownMenuStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/storage_edit_webdav_server_protocol"
                         app:errorEnabled="true"
-                        app:expandedHintEnabled="false"
-                        style="?textInputOutlinedExposedDropdownMenuStyle">
+                        app:expandedHintEnabled="false">
 
                         <AutoCompleteTextView
                             android:id="@+id/protocolEdit"
@@ -142,12 +142,12 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/authenticationTypeLayout"
+                        style="?textInputOutlinedExposedDropdownMenuStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/storage_edit_webdav_server_authentication_type"
                         app:errorEnabled="true"
-                        app:expandedHintEnabled="false"
-                        style="?textInputOutlinedExposedDropdownMenuStyle">
+                        app:expandedHintEnabled="false">
 
                         <AutoCompleteTextView
                             android:id="@+id/authenticationTypeEdit"
@@ -213,19 +213,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:orientation="horizontal"
             android:paddingStart="@dimen/screen_edge_margin_minus_8dp"
-            android:paddingEnd="@dimen/screen_edge_margin_minus_8dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:orientation="horizontal">
+            android:paddingEnd="@dimen/screen_edge_margin_minus_8dp"
+            android:paddingBottom="4dp">
 
             <Button
                 android:id="@+id/removeOrAddButton"
+                style="?buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
-                android:text="@string/save"
-                style="?buttonBarButtonStyle" />
+                android:text="@string/save" />
 
             <Space
                 android:layout_width="0dp"
@@ -234,17 +234,17 @@
 
             <Button
                 android:id="@+id/cancelButton"
+                style="?buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                style="?buttonBarButtonStyle" />
+                android:text="@android:string/cancel" />
 
             <Button
                 android:id="@+id/saveOrConnectAndAddButton"
+                style="?buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/save"
-                style="?buttonBarButtonStyle" />
+                android:text="@string/save" />
         </LinearLayout>
     </com.android.imagic.files.ui.CoordinatorScrollingLinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- app:statusBarBackground is broken when scrolling. -->
@@ -30,8 +25,8 @@
                 android:layout_height="?actionBarSize"
                 android:paddingStart="@dimen/file_list_toolbar_padding_start"
                 android:paddingEnd="@dimen/file_list_toolbar_padding_end_with_overflow"
-                app:navigationIcon="@drawable/menu_icon_control_normal_24dp"
                 app:navigationContentDescription="@string/open_navigation_drawer"
+                app:navigationIcon="@drawable/menu_icon_control_normal_24dp"
                 app:popupTheme="?actionBarPopupTheme"
                 app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Small" />
 
@@ -39,9 +34,9 @@
                 android:id="@+id/overlayToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:background="?colorAppBarSurface"
                 android:paddingStart="@dimen/file_list_toolbar_padding_start"
                 android:paddingEnd="@dimen/file_list_toolbar_padding_end_with_overflow"
-                android:background="?colorAppBarSurface"
                 android:visibility="gone"
                 app:navigationIcon="@drawable/close_icon_control_normal_24dp"
                 app:popupTheme="?actionBarPopupTheme" />

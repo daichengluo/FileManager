@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.android.imagic.files.ui.BottomBarLayout
@@ -25,8 +20,8 @@
             android:layout_height="?actionBarSize"
             android:paddingStart="@dimen/file_list_toolbar_padding_start"
             android:paddingEnd="@dimen/file_list_toolbar_padding_end_no_overflow"
-            app:navigationIcon="@drawable/close_icon_control_normal_24dp"
             app:navigationContentDescription="@string/close"
+            app:navigationIcon="@drawable/close_icon_control_normal_24dp"
             app:popupTheme="?actionBarPopupTheme">
 
             <EditText

@@ -1,14 +1,14 @@
 package com.android.imagic.files.storage
 
 import android.view.ViewGroup
-import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
-import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.isTransformedTouchPointInViewCompat
 import com.android.imagic.files.databinding.StorageItemBinding
 import com.android.imagic.files.ui.SimpleAdapter
 import com.android.imagic.files.util.layoutInflater
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
+import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder
 
 class StorageListAdapter(
     private val listener: Listener

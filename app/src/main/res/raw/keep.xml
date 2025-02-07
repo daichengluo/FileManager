@@ -5,6 +5,5 @@
   ~ All Rights Reserved.
   -->
 
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
+<resources xmlns:tools="http://schemas.android.com/tools"
     tools:keep="@style/Theme.MaterialFiles*" />

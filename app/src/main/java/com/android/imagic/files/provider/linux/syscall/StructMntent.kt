@@ -1,8 +1,8 @@
 package com.android.imagic.files.provider.linux.syscall
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.android.imagic.files.provider.common.ByteString
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class StructMntent(

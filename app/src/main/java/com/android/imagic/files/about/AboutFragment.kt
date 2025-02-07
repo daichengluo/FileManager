@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.android.imagic.files.databinding.AboutFragmentBinding
 import com.android.imagic.files.ui.LicensesDialogFragment
@@ -33,12 +32,12 @@ class AboutFragment : Fragment() {
         activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         binding.gitHubLayout.setOnClickListener { startActivitySafe(GITHUB_URI.createViewIntent()) }
         binding.licensesLayout.setOnClickListener { LicensesDialogFragment.show(this) }
-//#ifdef NONFREE
-        binding.privacyPolicyLayout.isVisible = true
+        //#ifdef NONFREE
+        //binding.privacyPolicyLayout.isVisible = true
         binding.privacyPolicyLayout.setOnClickListener {
             startActivitySafe(PRIVACY_POLICY_URI.createViewIntent())
         }
-//#endif
+        //#endif
         binding.authorNameLayout.setOnClickListener {
             startActivitySafe(AUTHOR_RESUME_URI.createViewIntent())
         }

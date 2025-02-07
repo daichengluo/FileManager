@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
-<com.android.imagic.files.ui.CheckableForegroundLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.imagic.files.ui.CheckableForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/itemLayout"
     android:layout_width="match_parent"
     android:layout_height="?listPreferredItemHeightSmall"
@@ -23,8 +18,8 @@
     <LinearLayout
         android:id="@+id/textLayout"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:duplicateParentState="true"
         android:orientation="vertical">
 

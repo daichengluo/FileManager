@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,11 +10,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/two_line_list_item_height"
-        android:paddingStart="?dialogPreferredPadding"
-        android:paddingEnd="?dialogPreferredPadding"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="?dialogPreferredPadding"
+        android:paddingEnd="?dialogPreferredPadding">
 
         <FrameLayout
             android:layout_width="@dimen/touch_target_size"
@@ -48,8 +43,8 @@
                 android:layout_height="@dimen/badge_size_plus_1dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginStart="-0.5dp"
-                android:layout_marginEnd="-0.5dp"
                 android:layout_marginTop="-0.5dp"
+                android:layout_marginEnd="-0.5dp"
                 android:layout_marginBottom="-0.5dp"
                 android:duplicateParentState="true" />
 
@@ -91,19 +86,19 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/two_line_list_item_height"
         android:layout_marginTop="-8dp"
-        android:paddingStart="?dialogPreferredPadding"
-        android:paddingEnd="?dialogPreferredPadding"
         android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="?dialogPreferredPadding"
+        android:paddingEnd="?dialogPreferredPadding">
 
         <FrameLayout
             android:layout_width="@dimen/touch_target_size"
             android:layout_height="@dimen/touch_target_size"
             android:layout_marginStart="-4dp"
             android:layout_marginEnd="12dp"
-            android:padding="@dimen/touch_target_large_icon_padding"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:padding="@dimen/touch_target_large_icon_padding">
 
             <ImageView
                 android:id="@+id/sourceIconImage"
@@ -124,8 +119,8 @@
                 android:layout_height="@dimen/badge_size_plus_1dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginStart="-0.5dp"
-                android:layout_marginEnd="-0.5dp"
                 android:layout_marginTop="-0.5dp"
+                android:layout_marginEnd="-0.5dp"
                 android:layout_marginBottom="-0.5dp"
                 android:duplicateParentState="true" />
 
@@ -173,13 +168,13 @@
             android:id="@+id/showNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="?dialogPreferredPadding"
-            android:paddingEnd="?dialogPreferredPadding"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
             android:foreground="?selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="?dialogPreferredPadding"
+            android:paddingTop="8dp"
+            android:paddingEnd="?dialogPreferredPadding"
+            android:paddingBottom="8dp">
 
             <!-- NOTE: Somehow android:layout_margin="-3dp" doesn't work. -->
             <ImageView
@@ -187,8 +182,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="-3dp"
-                android:layout_marginEnd="-3dp"
                 android:layout_marginTop="-3dp"
+                android:layout_marginEnd="-3dp"
                 android:layout_marginBottom="-3dp"
                 android:src="@drawable/arrow_end_icon_white_24dp"
                 app:tint="?colorControlNormal" />
@@ -206,13 +201,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="?dialogPreferredPadding"
-            android:layout_marginEnd="?dialogPreferredPadding"
             android:layout_marginTop="3dp"
+            android:layout_marginEnd="?dialogPreferredPadding"
             android:layout_marginBottom="8dp"
             android:visibility="gone"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/reset_icon_white_24dp"
             app:endIconContentDescription="@string/reset"
+            app:endIconDrawable="@drawable/reset_icon_white_24dp"
+            app:endIconMode="custom"
             app:expandedHintEnabled="false"
             app:placeholderText="@string/file_job_conflict_name_hint">
 

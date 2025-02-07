@@ -7,15 +7,15 @@ package com.android.imagic.files.filelist
 
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import java8.nio.file.Path
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.R
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.ParcelableParceler
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.show
+import java8.nio.file.Path
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class NavigateToPathDialogFragment : PathDialogFragment() {
     private val args by args<Args>()

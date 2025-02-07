@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
 <resources>
     <dimen name="screen_edge_margin">16dp</dimen>
@@ -15,7 +11,8 @@
     <dimen name="content_start_margin">72dp</dimen>
     <dimen name="content_start_margin_minus_12dp">60dp</dimen>
     <dimen name="content_start_from_screen_edge_margin_minus_24dp">32dp</dimen>
-    <dimen name="content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp">16dp</dimen>
+    <dimen name="content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp">16dp
+    </dimen>
     <dimen name="content_start_from_screen_edge_margin_minus_40dp">16dp</dimen>
     <dimen name="content_start_from_screen_edge_margin_minus_44dp">12dp</dimen>
     <dimen name="dialog_padding">24dp</dimen>

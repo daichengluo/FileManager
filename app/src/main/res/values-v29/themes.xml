@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-  ~ Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
-  ~ All Rights Reserved.
-  -->
 
 <resources>
 
@@ -12,6 +8,7 @@
 
         <item name="colorPrimaryDark">@android:color/transparent</item>
     </style>
+
     <style name="Platform.Theme.MaterialFiles" parent="Platform.V29.Theme.MaterialFiles" />
 
     <style name="Platform.V29.Theme.MaterialFiles.Immersive" parent="Platform.V27.Theme.MaterialFiles.Immersive">
@@ -19,5 +16,6 @@
 
         <item name="colorPrimaryDark">@android:color/transparent</item>
     </style>
+
     <style name="Platform.Theme.MaterialFiles.Immersive" parent="Platform.V29.Theme.MaterialFiles.Immersive" />
 </resources>

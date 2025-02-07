@@ -5,8 +5,8 @@
 
 package com.android.imagic.files.provider.ftp
 
-import java8.nio.file.StandardOpenOption
 import com.android.imagic.files.provider.common.OpenOptions
+import java8.nio.file.StandardOpenOption
 
 internal fun OpenOptions.checkForFtp() {
     if (deleteOnClose) {

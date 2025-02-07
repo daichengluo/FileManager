@@ -9,9 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
-import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils
 import com.android.imagic.files.databinding.StorageListFragmentBinding
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.ui.ScrollingViewOnApplyWindowInsetsListener
@@ -19,6 +16,9 @@ import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.fadeToVisibilityUnsafe
 import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.startActivitySafe
+import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
+import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils
 
 class StorageListFragment : Fragment(), StorageListAdapter.Listener {
     private lateinit var binding: StorageListFragmentBinding

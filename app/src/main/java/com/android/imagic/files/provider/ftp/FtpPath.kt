@@ -8,13 +8,6 @@ package com.android.imagic.files.provider.ftp
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
-import java8.nio.file.FileSystem
-import java8.nio.file.LinkOption
-import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
-import java8.nio.file.WatchEvent
-import java8.nio.file.WatchKey
-import java8.nio.file.WatchService
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringListPath
 import com.android.imagic.files.provider.common.LocalWatchService
@@ -23,6 +16,13 @@ import com.android.imagic.files.provider.common.toByteString
 import com.android.imagic.files.provider.ftp.client.Authority
 import com.android.imagic.files.provider.ftp.client.Client
 import com.android.imagic.files.util.readParcelable
+import java8.nio.file.FileSystem
+import java8.nio.file.LinkOption
+import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
+import java8.nio.file.WatchEvent
+import java8.nio.file.WatchKey
+import java8.nio.file.WatchService
 import java.io.File
 import java.io.IOException
 

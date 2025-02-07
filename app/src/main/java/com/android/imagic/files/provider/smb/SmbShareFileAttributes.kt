@@ -1,15 +1,15 @@
 package com.android.imagic.files.provider.smb
 
 import android.os.Parcelable
-import java8.nio.file.attribute.FileTime
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import com.android.imagic.files.provider.common.AbstractBasicFileAttributes
 import com.android.imagic.files.provider.common.BasicFileType
 import com.android.imagic.files.provider.common.EPOCH
 import com.android.imagic.files.provider.common.FileTimeParceler
 import com.android.imagic.files.provider.smb.client.ShareInformation
 import com.android.imagic.files.provider.smb.client.ShareType
+import java8.nio.file.attribute.FileTime
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 @Parcelize
 internal class SmbShareFileAttributes(

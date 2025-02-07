@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import java8.nio.file.Path
 import com.android.imagic.files.R
 import com.android.imagic.files.util.takeIfNotEmpty
+import java8.nio.file.Path
 
 abstract class Storage : Parcelable {
     abstract val id: Long

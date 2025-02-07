@@ -4,8 +4,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Parcel
 import androidx.annotation.RequiresApi
-import kotlinx.parcelize.Parceler
 import com.android.imagic.files.hiddenapi.RestrictedHiddenApi
+import kotlinx.parcelize.Parceler
 
 // The built-in parceling of Uri isn't guaranteed to be stable and has changed 2 times, so we should
 // always use our own parceling for persistence.
