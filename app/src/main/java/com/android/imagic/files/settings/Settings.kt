@@ -11,7 +11,6 @@ import com.android.imagic.files.filelist.OpenApkDefaultAction
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.StandardDirectorySettings
 import com.android.imagic.files.provider.root.RootStrategy
-import com.android.imagic.files.storage.FileSystemRoot
 import com.android.imagic.files.storage.PrimaryStorageVolume
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.theme.custom.ThemeColor
@@ -24,7 +23,7 @@ object Settings {
     val STORAGES: SettingLiveData<List<Storage>> =
         ParcelValueSettingLiveData(
             R.string.pref_key_storages,
-            listOf(FileSystemRoot(null, true), PrimaryStorageVolume(null, true))
+            listOf(/*FileSystemRoot(null, false), */PrimaryStorageVolume(null, true))
         )
 
     val FILE_LIST_DEFAULT_DIRECTORY: SettingLiveData<Path> =
