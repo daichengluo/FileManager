@@ -35,12 +35,6 @@ val appInitializers = listOf(
     ::createNotificationChannels
 )
 
-private fun initializeCrashlytics() {
-    //#ifdef NONFREE
-    com.android.imagic.files.nonfree.CrashlyticsInitializer.initialize()
-    //#endif
-}
-
 private fun disableHiddenApiChecks() {
     HiddenApi.disableHiddenApiChecks()
 }
