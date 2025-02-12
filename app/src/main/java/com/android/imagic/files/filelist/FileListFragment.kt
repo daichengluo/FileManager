@@ -799,7 +799,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun openInNewTask(path: Path) {
         val intent = FileListActivity.createViewIntent(path)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            .addFlags(
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+                        or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                        or Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT
+            )
         startActivitySafe(intent)
     }
 
