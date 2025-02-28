@@ -13,6 +13,6 @@
     android:paddingStart="@dimen/screen_edge_margin"
     android:paddingEnd="@dimen/screen_edge_margin"
     android:text="@string/storage_add_lan_smb_server_add"
-    android:textAppearance="@style/textAppearanceListItemSecondary"
+    android:textAppearance="@style/TextAppearanceListItemSecondary"
     app:drawableStartCompat="@drawable/add_icon_white_24dp"
     app:drawableTint="?colorControlNormal" />

@@ -15,5 +15,5 @@
         android:focusable="false"
         android:minHeight="?listPreferredItemHeightSmall"
         android:paddingStart="5dp"
-        android:textAppearance="@style/textAppearanceListItem" />
+        android:textAppearance="@style/TextAppearanceListItem" />
 </FrameLayout>

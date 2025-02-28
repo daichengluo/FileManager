@@ -13,7 +13,6 @@ import androidx.core.view.isVisible
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.BreadcrumbItemBinding
 import com.android.imagic.files.util.getDimensionPixelSize
-import com.android.imagic.files.util.getResourceIdByAttr
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.withTheme
 import java8.nio.file.Path
@@ -23,17 +22,14 @@ class BreadcrumbLayout : HorizontalScrollView {
 
     // Using a color state list resource somehow results in red color in dark mode on API 21.
     // Run `git revert 5bb2fd1` once we no longer support API 21.
-    private val itemColor =
-        ColorStateList(
-            arrayOf(intArrayOf(android.R.attr.state_activated), intArrayOf()),
-            intArrayOf(
-                0xFF262626.toInt(),
-                0x80262626.toInt()
-            )
+    private val itemColor = ColorStateList(
+        arrayOf(intArrayOf(android.R.attr.state_activated), intArrayOf()),
+        intArrayOf(
+            0xFF262626.toInt(),
+            0x80262626.toInt()
         )
-    private val popupContext = context.withTheme(
-        context.getResourceIdByAttr(androidx.appcompat.R.attr.actionBarPopupTheme)
     )
+    private val popupContext = context.withTheme(R.style.ActionBarPopupTheme)
 
     private val itemsLayout: LinearLayout
 
@@ -156,10 +152,10 @@ class BreadcrumbLayout : HorizontalScrollView {
             val binding = BreadcrumbItemBinding.inflate(context.layoutInflater, itemsLayout, false)
             val menu = PopupMenu(popupContext, binding.root)
                 .apply { inflate(R.menu.file_list_breadcrumb) }
-            /*binding.root.setOnLongClickListener {
+            binding.root.setOnLongClickListener {
                 menu.show()
                 true
-            }*/
+            }
             binding.text.setTextColor(itemColor)
             binding.arrowImage.imageTintList = itemColor
             binding.root.tag = binding to menu

@@ -125,7 +125,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:textAppearance="@style/textAppearanceListItemSecondary" />
+            android:textAppearance="@style/TextAppearanceListItemSecondary" />
 
         <FrameLayout
             android:layout_width="wrap_content"

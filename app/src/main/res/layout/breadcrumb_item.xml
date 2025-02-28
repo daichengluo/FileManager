@@ -2,7 +2,6 @@
 
 <me.zhanghai.android.foregroundcompat.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
@@ -15,18 +14,17 @@
         android:duplicateParentState="true"
         android:ellipsize="end"
         android:foreground="@drawable/breadcrumb_item_foreground"
-        android:lineHeight="22dp"
         android:maxLines="1"
-        android:padding="8dp"
+        android:paddingHorizontal="11dp"
+        android:paddingVertical="6dp"
         android:textSize="16sp"
-        app:textAllCaps="false"
-        tools:ignore="UnusedAttribute" />
+        app:textAllCaps="false" />
 
     <ImageView
         android:id="@+id/arrowImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="4dp"
         android:duplicateParentState="true"
         android:src="@drawable/file_path_separator_icon" />
 </me.zhanghai.android.foregroundcompat.ForegroundLinearLayout>

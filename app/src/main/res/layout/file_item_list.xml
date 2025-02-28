@@ -77,7 +77,7 @@
             android:duplicateParentState="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:textAppearance="@style/textAppearanceListItem" />
+            android:textAppearance="@style/TextAppearanceListItem" />
 
         <com.android.imagic.files.ui.AutoGoneTextView
             android:id="@+id/descriptionText"
@@ -86,7 +86,7 @@
             android:duplicateParentState="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/textAppearanceListItemSecondary" />
+            android:textAppearance="@style/TextAppearanceListItemSecondary" />
     </LinearLayout>
 
     <!--
@@ -102,24 +102,20 @@
 
         <me.zhanghai.android.foregroundcompat.ForegroundImageButton
             android:id="@+id/menuButton"
-            android:layout_width="@dimen/touch_target_size"
-            android:layout_height="@dimen/touch_target_size"
-            android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
-            android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:layout_marginHorizontal="4dp"
             android:background="@null"
+            android:padding="8dp"
             android:foreground="@drawable/selectable_item_background_oval"
-            android:padding="@dimen/touch_target_icon_padding"
-            android:src="@drawable/item_action_normal_24dp"
-            app:tint="?colorControlNormal" />
+            android:src="@drawable/file_item_action_icon" />
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/checkImage"
-            android:layout_width="@dimen/touch_target_size"
-            android:layout_height="@dimen/touch_target_size"
-            android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
-            android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:duplicateParentState="true"
-            android:padding="@dimen/touch_target_icon_padding"
             android:src="@drawable/checkable_badge" />
     </FrameLayout>
 

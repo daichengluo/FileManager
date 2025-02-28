@@ -98,7 +98,7 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/file_properties_permission_recursive"
-                android:textAppearance="@style/textAppearanceListItem" />
+                android:textAppearance="@style/TextAppearanceListItem" />
 
             <CheckBox
                 android:id="@+id/uppercaseXCheck"
@@ -109,7 +109,7 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/file_properties_permission_set_mode_uppercase_x"
-                android:textAppearance="@style/textAppearanceListItem" />
+                android:textAppearance="@style/TextAppearanceListItem" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

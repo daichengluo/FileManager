@@ -30,13 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="11dp" />
 
-        <EditText
+        <com.android.imagic.files.ui.FixQueryChangeSearchView
             android:id="@+id/searchBarEdit"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:background="@drawable/search_bar_background"
             android:clipToOutline="true"
-            android:hint="搜索文件"
             android:inputType="text"
             android:lineHeight="19dp"
             android:paddingHorizontal="16dp"

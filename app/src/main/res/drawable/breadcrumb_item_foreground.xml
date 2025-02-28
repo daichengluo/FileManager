@@ -9,7 +9,7 @@
         android:bottom="4dp"
         android:top="4dp">
         <shape>
-            <corners android:radius="11dp" />
+            <corners android:radius="8dp" />
             <solid android:color="@android:color/white" />
         </shape>
     </item>

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:textAppearance="@style/textAppearanceListItem"
+            android:textAppearance="@style/TextAppearanceListItem"
             android:visibility="gone" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/empty"
-            android:textAppearance="@style/textAppearanceListItem"
+            android:textAppearance="@style/TextAppearanceListItem"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView

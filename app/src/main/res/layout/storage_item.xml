@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/textAppearanceListItem"
+            android:textAppearance="@style/TextAppearanceListItem"
             android:textColor="@color/storage_name" />
 
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/textAppearanceListItemSecondary"
+            android:textAppearance="@style/TextAppearanceListItemSecondary"
             android:textColor="?android:textColorSecondary" />
     </LinearLayout>
 

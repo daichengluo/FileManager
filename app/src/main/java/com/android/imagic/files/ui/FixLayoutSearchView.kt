@@ -10,7 +10,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
 import com.android.imagic.files.R
 import com.android.imagic.files.compat.requireViewByIdCompat
-import com.android.imagic.files.util.dpToDimensionPixelSize
 
 open class FixLayoutSearchView : SearchView {
     constructor(context: Context) : super(context)
@@ -33,10 +32,10 @@ open class FixLayoutSearchView : SearchView {
         val searchSrcText = requireViewByIdCompat<View>(androidx.appcompat.R.id.search_src_text)
         searchSrcText.updatePaddingRelative(start = 0, end = 0)
         val searchCloseBtn = requireViewByIdCompat<View>(androidx.appcompat.R.id.search_close_btn)
-        val searchCloseBtnPaddingHorizontal = searchCloseBtn.context.dpToDimensionPixelSize(12)
+        /*val searchCloseBtnPaddingHorizontal = searchCloseBtn.context.dpToDimensionPixelSize(12)
         searchCloseBtn.updatePaddingRelative(
             start = searchCloseBtnPaddingHorizontal, end = searchCloseBtnPaddingHorizontal
-        )
+        )*/
         searchCloseBtn.background =
             AppCompatResources.getDrawable(context, R.drawable.action_bar_back_icon)
     }
