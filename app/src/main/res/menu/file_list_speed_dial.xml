@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_create_directory"
-        android:icon="@drawable/directory_icon_white_24dp"
+        android:icon="@drawable/nav_file_type_directory"
         android:title="@string/file_list_action_create_directory" />
 
     <item

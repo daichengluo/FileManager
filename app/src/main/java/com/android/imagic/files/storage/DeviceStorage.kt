@@ -71,7 +71,7 @@ data class PrimaryStorageVolume(
 
     override val iconRes: Int
         @DrawableRes
-        get() = R.drawable.sd_card_icon_white_24dp
+        get() = R.drawable.nav_storage_internal
 
     override fun getDefaultName(context: Context): String =
         storageVolume.getDescriptionCompat(context)

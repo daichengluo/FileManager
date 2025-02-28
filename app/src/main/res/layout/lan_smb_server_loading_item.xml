@@ -11,5 +11,5 @@
     android:paddingStart="@dimen/content_start_margin"
     android:paddingEnd="@dimen/screen_edge_margin"
     android:text="@string/storage_add_lan_smb_server_loading"
-    android:textAppearance="?textAppearanceListItemSecondary"
+    android:textAppearance="@style/textAppearanceListItemSecondary"
     android:textColor="?android:textColorSecondary" />

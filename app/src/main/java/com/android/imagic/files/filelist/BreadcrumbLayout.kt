@@ -12,7 +12,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.BreadcrumbItemBinding
-import com.android.imagic.files.util.getColorByAttr
 import com.android.imagic.files.util.getDimensionPixelSize
 import com.android.imagic.files.util.getResourceIdByAttr
 import com.android.imagic.files.util.layoutInflater
@@ -28,8 +27,8 @@ class BreadcrumbLayout : HorizontalScrollView {
         ColorStateList(
             arrayOf(intArrayOf(android.R.attr.state_activated), intArrayOf()),
             intArrayOf(
-                context.getColorByAttr(android.R.attr.textColorPrimary),
-                context.getColorByAttr(android.R.attr.textColorSecondary)
+                0xFF262626.toInt(),
+                0x80262626.toInt()
             )
         )
     private val popupContext = context.withTheme(
@@ -174,8 +173,10 @@ class BreadcrumbLayout : HorizontalScrollView {
             val tag = itemsLayout.getChildAt(index).tag as Pair<BreadcrumbItemBinding, PopupMenu>
             val (binding, menu) = tag
             binding.text.text = data.nameProducers[index](binding.text.context)
-            binding.arrowImage.isVisible = index != data.paths.size - 1
+            binding.arrowImage.isVisible = index < data.selectedIndex
             binding.root.isActivated = index == data.selectedIndex
+            binding.root.isEnabled = index != data.selectedIndex
+            binding.root.isVisible = index <= data.selectedIndex
             val path = data.paths[index]
             binding.root.setOnClickListener {
                 if (data.selectedIndex == index) {

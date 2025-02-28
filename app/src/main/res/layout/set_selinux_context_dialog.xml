@@ -46,7 +46,7 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/file_properties_permission_recursive"
-                android:textAppearance="?textAppearanceListItem" />
+                android:textAppearance="@style/textAppearanceListItem" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

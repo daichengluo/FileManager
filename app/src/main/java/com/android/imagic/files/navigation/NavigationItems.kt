@@ -31,6 +31,32 @@ import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
 import java8.nio.file.Paths
 
+val navigationStorageItems: List<NavigationItem?>
+    get() =
+        mutableListOf<NavigationItem?>().apply {
+            addAll(storageItems)
+            if (Environment::class.supportsExternalStorageManager()) {
+                // Starting with R, we can get read/write access to non-primary storage volumes with
+                // MANAGE_EXTERNAL_STORAGE. However before R, we only have read-only access to them
+                // and need to use the Storage Access Framework instead, so hide them in this case
+                // to avoid confusion.
+                addAll(storageVolumeItems)
+            }
+        }
+
+val navigationClassShortcutItems: List<NavigationItem?>
+    get() =
+        mutableListOf<NavigationItem?>().apply {
+            val standardDirectoryItems = standardDirectoryItems
+            if (standardDirectoryItems.isNotEmpty()) {
+                addAll(standardDirectoryItems)
+            }
+            val bookmarkDirectoryItems = bookmarkDirectoryItems
+            if (bookmarkDirectoryItems.isNotEmpty()) {
+                addAll(bookmarkDirectoryItems)
+            }
+        }
+
 val navigationItems: List<NavigationItem?>
     get() =
         mutableListOf<NavigationItem?>().apply {
@@ -145,7 +171,10 @@ private class StorageVolumeItem(
 
     override val iconRes: Int
         @DrawableRes
-        get() = R.drawable.sd_card_icon_white_24dp
+        get() = if (storageVolume.isRemovable)
+            R.drawable.nav_storage_usb_device
+        else
+            R.drawable.nav_storage_internal
 
     override fun getTitle(context: Context): String = storageVolume.getDescriptionCompat(context)
 
@@ -186,7 +215,7 @@ private class AddStorageItem : NavigationItem() {
     override val id: Long = R.string.navigation_add_storage.toLong()
 
     @DrawableRes
-    override val iconRes: Int = R.drawable.add_icon_white_24dp
+    override val iconRes: Int = R.drawable.nav_storage_add
 
     override fun getTitle(context: Context): String =
         context.getString(R.string.navigation_add_storage)
@@ -202,6 +231,20 @@ private val standardDirectoryItems: List<NavigationItem>
         StandardDirectoriesLiveData.valueCompat
             .filter { it.isEnabled }
             .map { StandardDirectoryItem(it) }
+
+private class AddClassShortcutItem : NavigationItem() {
+    override val id: Long = R.string.navigation_add_shortcut.toLong()
+
+    @DrawableRes
+    override val iconRes: Int = R.drawable.nav_storage_add
+
+    override fun getTitle(context: Context): String =
+        context.getString(R.string.navigation_add_shortcut)
+
+    override fun onClick(listener: Listener) {
+        listener.launchIntent(AddStorageDialogActivity::class.createIntent())
+    }
+}
 
 private class StandardDirectoryItem(
     private val standardDirectory: StandardDirectory
@@ -269,22 +312,22 @@ private val DEFAULT_STANDARD_DIRECTORIES = listOf(
     ),
     StandardDirectory(
         R.drawable.camera_icon_white_24dp, R.string.navigation_standard_directory_dcim,
-        Environment.DIRECTORY_DCIM, true
+        Environment.DIRECTORY_DCIM, false
     ),
     StandardDirectory(
-        R.drawable.document_icon_white_24dp, R.string.navigation_standard_directory_documents,
+        R.drawable.nav_file_type_document, R.string.navigation_standard_directory_documents,
         Environment.DIRECTORY_DOCUMENTS, false
     ),
     StandardDirectory(
-        R.drawable.download_icon_white_24dp, R.string.navigation_standard_directory_downloads,
+        R.drawable.nav_file_type_download, R.string.navigation_standard_directory_downloads,
         Environment.DIRECTORY_DOWNLOADS, true
     ),
     StandardDirectory(
-        R.drawable.video_icon_white_24dp, R.string.navigation_standard_directory_movies,
+        R.drawable.nav_file_type_video, R.string.navigation_standard_directory_movies,
         Environment.DIRECTORY_MOVIES, true
     ),
     StandardDirectory(
-        R.drawable.audio_icon_white_24dp, R.string.navigation_standard_directory_music,
+        R.drawable.nav_file_type_audio, R.string.navigation_standard_directory_music,
         Environment.DIRECTORY_MUSIC, true
     ),
     StandardDirectory(
@@ -293,7 +336,7 @@ private val DEFAULT_STANDARD_DIRECTORIES = listOf(
         false
     ),
     StandardDirectory(
-        R.drawable.image_icon_white_24dp, R.string.navigation_standard_directory_pictures,
+        R.drawable.nav_file_type_picture, R.string.navigation_standard_directory_pictures,
         Environment.DIRECTORY_PICTURES, true
     ),
     StandardDirectory(
@@ -307,17 +350,17 @@ private val DEFAULT_STANDARD_DIRECTORIES = listOf(
     StandardDirectory(
         R.drawable.qq_icon_white_24dp, R.string.navigation_standard_directory_qq,
         listOf("Android/data/com.tencent.mobileqq/Tencent/QQfile_recv", "Tencent/QQfile_recv")
-            .joinToString(relativePathSeparator), true
+            .joinToString(relativePathSeparator), false
     ),
     StandardDirectory(
         R.drawable.tim_icon_white_24dp, R.string.navigation_standard_directory_tim,
         listOf("Android/data/com.tencent.tim/Tencent/TIMfile_recv", "Tencent/TIMfile_recv")
-            .joinToString(relativePathSeparator), true
+            .joinToString(relativePathSeparator), false
     ),
     StandardDirectory(
         R.drawable.wechat_icon_white_24dp, R.string.navigation_standard_directory_wechat,
         listOf("Android/data/com.tencent.mm/MicroMsg/Download", "Tencent/MicroMsg/Download")
-            .joinToString(relativePathSeparator), true
+            .joinToString(relativePathSeparator), false
     )
 )
 
@@ -338,7 +381,7 @@ private class BookmarkDirectoryItem(
         get() = bookmarkDirectory.id
 
     @DrawableRes
-    override val iconRes: Int = R.drawable.directory_icon_white_24dp
+    override val iconRes: Int = R.drawable.nav_file_type_directory
 
     override fun getTitle(context: Context): String = bookmarkDirectory.name
 
@@ -355,7 +398,7 @@ private val menuItems: List<NavigationItem>
     @Size(3)
     get() = listOf(
         IntentMenuItem(
-            R.drawable.shared_directory_icon_white_24dp, R.string.navigation_ftp_server,
+            R.drawable.nav_file_type_directory, R.string.navigation_ftp_server,
             FtpServerActivity::class.createIntent()
         ),
         IntentMenuItem(

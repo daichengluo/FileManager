@@ -4,12 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
+import com.android.imagic.files.R
 import com.android.imagic.files.compat.requireViewByIdCompat
 import com.android.imagic.files.util.dpToDimensionPixelSize
-import com.android.imagic.files.util.getDrawableByAttr
 
 open class FixLayoutSearchView : SearchView {
     constructor(context: Context) : super(context)
@@ -36,7 +37,7 @@ open class FixLayoutSearchView : SearchView {
         searchCloseBtn.updatePaddingRelative(
             start = searchCloseBtnPaddingHorizontal, end = searchCloseBtnPaddingHorizontal
         )
-        searchCloseBtn.background = searchCloseBtn.context
-            .getDrawableByAttr(androidx.appcompat.R.attr.actionBarItemBackground)
+        searchCloseBtn.background =
+            AppCompatResources.getDrawable(context, R.drawable.action_bar_back_icon)
     }
 }

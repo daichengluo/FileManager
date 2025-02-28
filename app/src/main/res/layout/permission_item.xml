@@ -18,19 +18,19 @@
         android:id="@+id/labelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceListItemSecondary" />
+        android:textAppearance="@style/textAppearanceListItemSecondary" />
 
     <TextView
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceListItemSecondary"
+        android:textAppearance="@style/textAppearanceListItemSecondary"
         android:textColor="?android:textColorSecondary" />
 
     <com.android.imagic.files.ui.AutoGoneTextView
         android:id="@+id/descriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceListItemSecondary"
+        android:textAppearance="@style/textAppearanceListItemSecondary"
         android:textColor="?android:textColorSecondary" />
 </me.zhanghai.android.foregroundcompat.ForegroundLinearLayout>

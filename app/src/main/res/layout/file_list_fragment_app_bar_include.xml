@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -9,7 +7,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorAppBarSurface"
+        android:background="@android:color/transparent"
         android:theme="?actionBarTheme"
         app:liftOnScroll="true"
         app:liftOnScrollTargetViewId="@id/recyclerView">
@@ -23,20 +21,16 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:paddingStart="@dimen/file_list_toolbar_padding_start"
-                android:paddingEnd="@dimen/file_list_toolbar_padding_end_with_overflow"
-                app:navigationContentDescription="@string/open_navigation_drawer"
-                app:navigationIcon="@drawable/menu_icon_control_normal_24dp"
+                app:navigationContentDescription="@string/file_list_action_navigate_up"
+                app:navigationIcon="@drawable/action_bar_back_icon"
                 app:popupTheme="?actionBarPopupTheme"
-                app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Small" />
+                app:titleTextAppearance="@style/TitleTextStorageAppearance" />
 
             <com.android.imagic.files.ui.OverlayToolbar
                 android:id="@+id/overlayToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="?colorAppBarSurface"
-                android:paddingStart="@dimen/file_list_toolbar_padding_start"
-                android:paddingEnd="@dimen/file_list_toolbar_padding_end_with_overflow"
+                android:background="@drawable/surface_background"
                 android:visibility="gone"
                 app:navigationIcon="@drawable/close_icon_control_normal_24dp"
                 app:popupTheme="?actionBarPopupTheme" />
@@ -46,7 +40,6 @@
             android:id="@+id/breadcrumbLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/content_start_margin_minus_12dp"
-            android:paddingEnd="@dimen/screen_edge_margin_minus_12dp" />
+            android:paddingHorizontal="11dp" />
     </com.android.imagic.files.ui.CoordinatorAppBarLayout>
 </merge>

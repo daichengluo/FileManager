@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?textAppearanceListItemSecondary" />
+            android:textAppearance="@style/textAppearanceListItemSecondary" />
 
         <com.android.imagic.files.ui.AutoGoneTextView
             android:id="@+id/labelText"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?textAppearanceListItemSecondary"
+            android:textAppearance="@style/textAppearanceListItemSecondary"
             android:textColor="?android:textColorSecondary" />
     </LinearLayout>
 

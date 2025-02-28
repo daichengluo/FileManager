@@ -20,6 +20,7 @@ import com.android.imagic.files.util.asFileName
 import com.android.imagic.files.util.isGetPackageArchiveInfoCompatible
 import com.android.imagic.files.util.isMediaMetadataRetrieverCompatible
 import com.android.imagic.files.util.valueCompat
+import java8.nio.file.Files
 import java8.nio.file.Path
 import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileTime
@@ -100,6 +101,39 @@ fun FileItem.createDummyArchiveRoot(): FileItem =
         path.createArchiveRootPath(), DummyCollationKey(), DummyArchiveRootBasicFileAttributes(),
         null, null, false, MimeType.DIRECTORY
     )
+
+fun FileItem.getFileAndFolderCount(): Pair<Int, Int> {
+    if (!attributes.isDirectory) {
+        return Pair(0, 0)
+    }
+    var fileCount = 0
+    var directoryCount = 0
+    try {
+        Files.list(path).forEach { item ->
+            if (Files.isDirectory(item)) {
+                directoryCount++
+            } else if (Files.isRegularFile(item)) {
+                fileCount++
+            }
+        }
+    } catch (_: Exception) {
+    }
+    return Pair(fileCount, directoryCount)
+}
+
+fun FileItem.getFileCount(): Int {
+    if (!Files.isDirectory(path)) {
+        return 0
+    }
+    return try {
+        Files.list(path)
+            .filter { Files.isRegularFile(it) }
+            .count()
+            .toInt()
+    } catch (_: Exception) {
+        0
+    }
+}
 
 // Dummy collation key only to be added to the selection set, which may be used to determine file
 // type when confirming deletion.

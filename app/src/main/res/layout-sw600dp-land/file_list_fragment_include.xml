@@ -8,30 +8,30 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <com.android.imagic.files.ui.PersistentDrawerLayout
+            android:id="@+id/persistentDrawerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical">
+            android:layout_weight="1">
 
-            <include layout="@layout/file_list_fragment_app_bar_include" />
+            <com.android.imagic.files.ui.NavigationFrameLayout
+                android:id="@+id/navigationFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start" />
 
-            <com.android.imagic.files.ui.PersistentDrawerLayout
-                android:id="@+id/persistentDrawerLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="13dp"
+                android:background="@drawable/surface_background"
+                android:orientation="vertical">
 
-                <com.android.imagic.files.ui.NavigationFrameLayout
-                    android:id="@+id/navigationFragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:background="?colorSurface" />
+                <include layout="@layout/file_list_fragment_app_bar_include" />
 
                 <include layout="@layout/file_list_fragment_content_include" />
-            </com.android.imagic.files.ui.PersistentDrawerLayout>
-        </LinearLayout>
+            </LinearLayout>
+        </com.android.imagic.files.ui.PersistentDrawerLayout>
 
         <include layout="@layout/file_list_fragment_bottom_bar_include" />
 

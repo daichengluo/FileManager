@@ -30,6 +30,7 @@ import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.ui.AnimatedListAdapter
 import com.android.imagic.files.ui.CheckableForegroundLinearLayout
 import com.android.imagic.files.ui.CheckableItemBackground
+import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.isMaterial3Theme
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
@@ -104,6 +105,10 @@ class FileListAdapter(
         }
     }
 
+    fun clearSelectedFiles() {
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+    }
+
     private fun selectFile(file: FileItem) {
         if (!isFileSelectable(file)) {
             return
@@ -114,6 +119,7 @@ class FileListAdapter(
             listener.clearSelectedFiles()
         }
         listener.selectFile(file, !selected)
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
     }
 
     fun selectAllFiles() {
@@ -178,14 +184,15 @@ class FileListAdapter(
             itemLayout.apply {
                 val context = context
                 val isMaterial3Theme = context.isMaterial3Theme
-                if (viewType == FileViewType.GRID && isMaterial3Theme) {
-                    foregroundCompat =
-                        context.getDrawableCompat(R.drawable.file_item_grid_foreground_material3)
+                foregroundCompat = if (viewType == FileViewType.GRID && isMaterial3Theme) {
+                    context.getDrawableCompat(R.drawable.file_item_grid_foreground_material3)
+                } else {
+                    context.getDrawableCompat(R.drawable.file_item_list_foreground)
                 }
                 background = if (viewType == FileViewType.GRID && isMaterial3Theme) {
                     CheckableItemBackground.create(4f, 12f, context)
                 } else {
-                    CheckableItemBackground.create(0f, 0f, context)
+                    CheckableItemBackground.create(0f, 8f, context)
                 }
             }
             thumbnailOutlineView?.apply {
@@ -212,6 +219,8 @@ class FileListAdapter(
         val isEnabled = isFileSelectable(file) || isDirectory
         holder.itemLayout.isEnabled = isEnabled
         holder.menuButton.isEnabled = isEnabled
+        holder.menuButton.isVisible = selectedFiles.isEmpty()
+        holder.checkImage.isVisible = selectedFiles.isNotEmpty()
         val menu = holder.popupMenu.menu
         val path = file.path
         val hasPickOptions = pickOptions != null
@@ -248,7 +257,11 @@ class FileListAdapter(
                 true
             }
         }
-        holder.iconLayout.setOnClickListener { selectFile(file) }
+        holder.iconLayout.setOnClickListener {
+            selectFile(file)
+            holder.menuButton.isVisible = selectedFiles.isEmpty()
+            holder.checkImage.isVisible = selectedFiles.isNotEmpty()
+        }
         val iconRes = file.mimeType.iconRes
         holder.iconImage.apply {
             isVisible = true
@@ -314,7 +327,15 @@ class FileListAdapter(
         }
         holder.nameText.text = file.name
         holder.descriptionText?.text = if (isDirectory) {
-            null
+            val context = holder.descriptionText!!.context
+            val lastModificationTime = attributes.lastModifiedTime().toInstant()
+                .formatShort(context)
+            val fileCount = file.getFileCount()
+            val fileCountText = context.getQuantityString(
+                R.plurals.file_item_file_count_format, fileCount, fileCount
+            )
+            val descriptionSeparator = context.getString(R.string.file_item_description_separator)
+            listOf(lastModificationTime, fileCountText).joinToString(descriptionSeparator)
         } else {
             val context = holder.descriptionText!!.context
             val lastModificationTime = attributes.lastModifiedTime().toInstant()
@@ -437,7 +458,8 @@ class FileListAdapter(
         val badgeImage: ImageView,
         val nameText: TextView,
         val descriptionText: TextView?,
-        val menuButton: ImageButton
+        val menuButton: ImageButton,
+        val checkImage: ImageView
     ) : RecyclerView.ViewHolder(root) {
         constructor(binding: FileItemListBinding) : this(
             binding.root,
@@ -452,7 +474,8 @@ class FileListAdapter(
             binding.badgeImage,
             binding.nameText,
             binding.descriptionText,
-            binding.menuButton
+            binding.menuButton,
+            binding.checkImage
         )
 
         constructor(binding: FileItemGridBinding) : this(
@@ -468,7 +491,8 @@ class FileListAdapter(
             binding.badgeImage,
             binding.nameText,
             null,
-            binding.menuButton
+            binding.menuButton,
+            binding.checkImage
         )
 
         lateinit var popupMenu: PopupMenu

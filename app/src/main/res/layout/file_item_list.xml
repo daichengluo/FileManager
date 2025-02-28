@@ -1,50 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <com.android.imagic.files.ui.CheckableForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemLayout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/two_line_list_item_height"
-    android:foreground="?selectableItemBackground"
+    android:layout_height="59dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/iconLayout"
-        android:layout_width="@dimen/touch_target_size"
-        android:layout_height="@dimen/touch_target_size"
-        android:layout_marginStart="@dimen/screen_edge_margin_minus_4dp"
-        android:layout_marginEnd="@dimen/content_start_from_screen_edge_margin_minus_44dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:duplicateParentState="true"
-        android:padding="@dimen/touch_target_large_icon_padding">
+        android:padding="11dp">
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/iconImage"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
             android:layout_gravity="center"
             android:duplicateParentState="true"
             android:scaleType="centerCrop" />
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/thumbnailImage"
-            android:layout_width="@dimen/large_icon_size"
-            android:layout_height="@dimen/large_icon_size"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_gravity="center"
             android:duplicateParentState="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/appIconBadgeImage"
-            android:layout_width="@dimen/badge_size_plus_1dp"
-            android:layout_height="@dimen/badge_size_plus_1dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
             android:layout_gravity="end|bottom"
             android:layout_marginStart="-0.5dp"
             android:layout_marginTop="-0.5dp"
             android:layout_marginEnd="-0.5dp"
             android:layout_marginBottom="-0.5dp"
-            android:duplicateParentState="true" />
+            android:duplicateParentState="true"
+            app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/badgeImage"
@@ -59,7 +58,8 @@
             android:layout_height="@dimen/badge_size"
             android:layout_gravity="end|bottom"
             android:duplicateParentState="true"
-            android:src="@drawable/checkable_badge_18dp" />
+            android:src="@drawable/checkable_badge"
+            android:visibility="gone" />
     </FrameLayout>
 
     <LinearLayout
@@ -77,7 +77,7 @@
             android:duplicateParentState="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:textAppearance="?textAppearanceListItem" />
+            android:textAppearance="@style/textAppearanceListItem" />
 
         <com.android.imagic.files.ui.AutoGoneTextView
             android:id="@+id/descriptionText"
@@ -86,8 +86,7 @@
             android:duplicateParentState="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?textAppearanceListItemSecondary"
-            android:textColor="?android:textColorSecondary" />
+            android:textAppearance="@style/textAppearanceListItemSecondary" />
     </LinearLayout>
 
     <!--
@@ -95,15 +94,33 @@
       ~ pressed state, etc. Necessary states will be duplicated manually in the adapter
       ~ implementation.
       -->
-    <me.zhanghai.android.foregroundcompat.ForegroundImageButton
-        android:id="@+id/menuButton"
-        android:layout_width="@dimen/touch_target_size"
-        android:layout_height="@dimen/touch_target_size"
-        android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
-        android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
-        android:background="@null"
-        android:foreground="@drawable/selectable_item_background_oval"
-        android:padding="@dimen/touch_target_icon_padding"
-        android:src="@drawable/more_vertical_icon_white_24dp"
-        app:tint="?colorControlNormal" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:duplicateParentState="true">
+
+        <me.zhanghai.android.foregroundcompat.ForegroundImageButton
+            android:id="@+id/menuButton"
+            android:layout_width="@dimen/touch_target_size"
+            android:layout_height="@dimen/touch_target_size"
+            android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
+            android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
+            android:background="@null"
+            android:foreground="@drawable/selectable_item_background_oval"
+            android:padding="@dimen/touch_target_icon_padding"
+            android:src="@drawable/item_action_normal_24dp"
+            app:tint="?colorControlNormal" />
+
+        <com.android.imagic.files.ui.DisabledAlphaImageView
+            android:id="@+id/checkImage"
+            android:layout_width="@dimen/touch_target_size"
+            android:layout_height="@dimen/touch_target_size"
+            android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
+            android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
+            android:duplicateParentState="true"
+            android:padding="@dimen/touch_target_icon_padding"
+            android:src="@drawable/checkable_badge" />
+    </FrameLayout>
+
 </com.android.imagic.files.ui.CheckableForegroundLinearLayout>

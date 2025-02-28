@@ -12,6 +12,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -108,6 +109,7 @@ import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.extraPathList
 import com.android.imagic.files.util.fadeToVisibilityUnsafe
 import com.android.imagic.files.util.getDimensionDp
+import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
 import com.android.imagic.files.util.isOrientationLandscape
@@ -216,7 +218,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         navigationFragment.listener = this
         val activity = requireActivity() as AppCompatActivity
-        activity.setTitle(R.string.file_list_title)
+        activity.setTitle(R.string.app_name)
         activity.setSupportActionBar(binding.toolbar)
         overlayActionMode = OverlayToolbarActionMode(binding.overlayToolbar)
         bottomActionMode = PersistentBarLayoutToolbarActionMode(
@@ -345,7 +347,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             onSearchViewExpandedChanged(it)
         }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
+            Log.d("chengluo", "breadcrumbData paths: ${it.paths}")
             binding.breadcrumbLayout.setData(it)
+            val currentStorageName = it.nameProducers[0](requireContext())
+            if (!activity.title.equals(currentStorageName)) {
+                activity.setTitle(currentStorageName)
+            }
         }
         viewModel.viewTypeLiveData.observe(viewLifecycleOwner) { onViewTypeChanged(it) }
         // Live data only calls observeForever() on its sources when it is active, so we have to
@@ -387,6 +394,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         menuBinding = MenuBinding.inflate(menu, inflater)
         menuBinding.viewSortItem.subMenu!!.setGroupDividerEnabledCompat(true)
         setUpSearchView()
+        menuBinding.viewTypeItem.setOnMenuItemClickListener {
+            viewModel.toggleViewType()
+            true
+        }
     }
 
     private fun setUpSearchView() {
@@ -446,12 +457,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                binding.drawerLayout?.openDrawer(GravityCompat.START)
+                /*binding.drawerLayout?.openDrawer(GravityCompat.START)
                 if (binding.persistentDrawerLayout != null) {
                     Settings.FILE_LIST_PERSISTENT_DRAWER_OPEN.putValue(
                         !Settings.FILE_LIST_PERSISTENT_DRAWER_OPEN.valueCompat
                     )
-                }
+                }*/
+                navigateUp()
                 true
             }
 
@@ -610,11 +622,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     private fun onFileListChanged(stateful: Stateful<List<FileItem>>) {
         val files = stateful.value
         val isSearching = viewModel.searchState.isSearching
-        when {
+        /*when {
             stateful is Failure -> binding.toolbar.setSubtitle(R.string.error)
             stateful is Loading && !isSearching -> binding.toolbar.setSubtitle(R.string.loading)
             else -> binding.toolbar.subtitle = getSubtitle(files!!)
-        }
+        }*/
         val hasFiles = !files.isNullOrEmpty()
         binding.swipeRefreshLayout.isRefreshing = stateful is Loading && (hasFiles || isSearching)
         binding.progress.fadeToVisibilityUnsafe(stateful is Loading && !(hasFiles || isSearching))
@@ -713,6 +725,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val checkedViewTypeItem = when (viewType) {
             FileViewType.LIST -> menuBinding.viewListItem
             FileViewType.GRID -> menuBinding.viewGridItem
+        }
+        menuBinding.viewTypeItem.icon = when (viewType) {
+            FileViewType.LIST -> getDrawable(R.drawable.view_type_grid_icon)
+            FileViewType.GRID -> getDrawable(R.drawable.view_type_list_icon)
+        }
+        menuBinding.viewTypeItem.title = when (viewType) {
+            FileViewType.LIST -> getString(R.string.file_list_action_view_grid)
+            FileViewType.GRID -> getString(R.string.file_list_action_view_list)
         }
         checkedViewTypeItem.isChecked = true
         val sortOptions = viewModel.sortOptions
@@ -992,6 +1012,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun onOverlayActionModeFinished() {
         viewModel.clearSelectedFiles()
+        adapter.clearSelectedFiles()
     }
 
     private fun confirmReplaceFile(file: FileItem, setFileName: Boolean = true) {
@@ -1752,6 +1773,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val menu: Menu,
         val searchItem: MenuItem,
         val viewSortItem: MenuItem,
+        val viewTypeItem: MenuItem,
         val viewListItem: MenuItem,
         val viewGridItem: MenuItem,
         val sortByNameItem: MenuItem,
@@ -1768,8 +1790,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             fun inflate(menu: Menu, inflater: MenuInflater): MenuBinding {
                 inflater.inflate(R.menu.file_list, menu)
                 return MenuBinding(
-                    menu, menu.findItem(R.id.action_search), menu.findItem(R.id.action_view_sort),
-                    menu.findItem(R.id.action_view_list), menu.findItem(R.id.action_view_grid),
+                    menu, menu.findItem(R.id.action_search),
+                    menu.findItem(R.id.action_view_sort),
+                    menu.findItem(R.id.action_view_type),
+                    menu.findItem(R.id.action_view_list),
+                    menu.findItem(R.id.action_view_grid),
                     menu.findItem(R.id.action_sort_by_name),
                     menu.findItem(R.id.action_sort_by_type),
                     menu.findItem(R.id.action_sort_by_size),

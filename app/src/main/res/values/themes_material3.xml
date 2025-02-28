@@ -31,7 +31,7 @@
         </item>
         <item name="textAppearanceListItem">@style/TextAppearance.MaterialFiles.Material3.ListItem
         </item>
-        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
+        <item name="android:textAppearanceListItem">@style/textAppearanceListItem</item>
         <item name="textAppearanceListItemSmall">
             @style/TextAppearance.MaterialFiles.Material3.ListItemSmall
         </item>
@@ -105,7 +105,7 @@
         </item>
         <item name="textAppearanceListItem">@style/TextAppearance.MaterialFiles.Material3.ListItem
         </item>
-        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
+        <item name="android:textAppearanceListItem">@style/textAppearanceListItem</item>
         <item name="textAppearanceListItemSmall">
             @style/TextAppearance.MaterialFiles.Material3.ListItemSmall
         </item>

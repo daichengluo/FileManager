@@ -16,7 +16,7 @@
         android:layout_marginStart="@dimen/screen_edge_margin"
         android:layout_marginEnd="@dimen/content_start_from_screen_edge_margin_minus_24dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/directory_icon_white_24dp"
+        android:src="@drawable/nav_file_type_directory"
         app:tint="?colorControlNormal" />
 
     <LinearLayout
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?textAppearanceListItem" />
+            android:textAppearance="@style/textAppearanceListItem" />
 
         <TextView
             android:id="@+id/pathText"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?textAppearanceListItemSecondary"
+            android:textAppearance="@style/textAppearanceListItemSecondary"
             android:textColor="?android:textColorSecondary" />
     </LinearLayout>
 

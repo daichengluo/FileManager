@@ -42,7 +42,7 @@ data class DocumentTree(
             if (!Environment::class.supportsExternalStorageManager()
                 && uri.storageVolume.let { it != null && !it.isPrimaryCompat }
             ) {
-                R.drawable.sd_card_icon_white_24dp
+                R.drawable.nav_storage_internal
             } else {
                 super.iconRes
             }
