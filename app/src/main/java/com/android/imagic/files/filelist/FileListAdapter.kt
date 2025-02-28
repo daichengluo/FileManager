@@ -219,7 +219,7 @@ class FileListAdapter(
         val isEnabled = isFileSelectable(file) || isDirectory
         holder.itemLayout.isEnabled = isEnabled
         holder.menuButton.isEnabled = isEnabled
-        holder.menuButton.isVisible = selectedFiles.isEmpty()
+        holder.menuButton.isVisible = selectedFiles.isEmpty() && _viewType == FileViewType.LIST
         holder.checkImage.isVisible = selectedFiles.isNotEmpty()
         val menu = holder.popupMenu.menu
         val path = file.path
@@ -267,15 +267,15 @@ class FileListAdapter(
             isVisible = true
             setImageResource(iconRes)
         }
-        holder.directoryThumbnailImage?.isVisible = isDirectory
-        holder.thumbnailOutlineView?.isVisible = !isDirectory
+        //holder.directoryThumbnailImage?.isVisible = isDirectory
+        //holder.thumbnailOutlineView?.isVisible = !isDirectory
         val supportsThumbnail = file.supportsThumbnail
         val shouldLoadThumbnailIcon = supportsThumbnail && holder.thumbnailIconImage != null &&
                 file.mimeType.isApk
         val attributes = file.attributes
         holder.thumbnailIconImage?.apply {
             dispose()
-            isVisible = !isDirectory
+            //isVisible = !isDirectory
             setImageResource(iconRes)
             if (shouldLoadThumbnailIcon) {
                 load(path to attributes)

@@ -156,10 +156,10 @@ class BreadcrumbLayout : HorizontalScrollView {
             val binding = BreadcrumbItemBinding.inflate(context.layoutInflater, itemsLayout, false)
             val menu = PopupMenu(popupContext, binding.root)
                 .apply { inflate(R.menu.file_list_breadcrumb) }
-            binding.root.setOnLongClickListener {
+            /*binding.root.setOnLongClickListener {
                 menu.show()
                 true
-            }
+            }*/
             binding.text.setTextColor(itemColor)
             binding.arrowImage.imageTintList = itemColor
             binding.root.tag = binding to menu

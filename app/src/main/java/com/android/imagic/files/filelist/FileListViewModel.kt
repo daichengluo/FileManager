@@ -103,15 +103,6 @@ class FileListViewModel : ViewModel() {
             _viewTypeLiveData.putValue(value)
         }
 
-    fun toggleViewType() {
-        val viewType = _viewTypeLiveData.valueCompat!!
-        val toggleViewType = when (viewType) {
-            FileViewType.LIST -> FileViewType.GRID
-            FileViewType.GRID -> FileViewType.LIST
-        }
-        _viewTypeLiveData.value = toggleViewType
-    }
-
     private val _sortOptionsLiveData = FileSortOptionsLiveData(currentPathLiveData)
     val sortOptionsLiveData: LiveData<FileSortOptions> = _sortOptionsLiveData
     val sortOptions: FileSortOptions

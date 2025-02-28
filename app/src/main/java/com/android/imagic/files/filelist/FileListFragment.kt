@@ -395,7 +395,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         menuBinding.viewSortItem.subMenu!!.setGroupDividerEnabledCompat(true)
         setUpSearchView()
         menuBinding.viewTypeItem.setOnMenuItemClickListener {
-            viewModel.toggleViewType()
+            viewModel.viewType = when (viewModel.viewType) {
+                FileViewType.LIST -> FileViewType.GRID
+                FileViewType.GRID -> FileViewType.LIST
+            }
             true
         }
     }
@@ -457,12 +460,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                /*binding.drawerLayout?.openDrawer(GravityCompat.START)
-                if (binding.persistentDrawerLayout != null) {
-                    Settings.FILE_LIST_PERSISTENT_DRAWER_OPEN.putValue(
-                        !Settings.FILE_LIST_PERSISTENT_DRAWER_OPEN.valueCompat
-                    )
-                }*/
                 navigateUp()
                 true
             }

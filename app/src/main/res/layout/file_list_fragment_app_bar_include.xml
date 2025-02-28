@@ -10,12 +10,13 @@
         android:background="@android:color/transparent"
         android:theme="?actionBarTheme"
         app:liftOnScroll="true"
+        app:liftOnScrollColor="@android:color/transparent"
         app:liftOnScrollTargetViewId="@id/recyclerView">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="@integer/file_list_toolbar_scroll_flags">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <com.android.imagic.files.ui.CrossfadeSubtitleToolbar
                 android:id="@+id/toolbar"
@@ -32,8 +33,7 @@
                 android:layout_height="?actionBarSize"
                 android:background="@drawable/surface_background"
                 android:visibility="gone"
-                app:navigationIcon="@drawable/close_icon_control_normal_24dp"
-                app:popupTheme="?actionBarPopupTheme" />
+                app:navigationIcon="@drawable/close_icon_control_normal_24dp" />
         </FrameLayout>
 
         <com.android.imagic.files.filelist.BreadcrumbLayout
