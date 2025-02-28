@@ -638,7 +638,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             if (hasFiles) {
                 showToast(error)
             } else {
-                binding.errorText.text = error
+                //binding.errorText.text = error
             }
         }
         binding.emptyView.fadeToVisibilityUnsafe(stateful is Success && !hasFiles)
