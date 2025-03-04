@@ -18,16 +18,16 @@
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/iconImage"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:duplicateParentState="true"
             android:scaleType="centerCrop" />
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/thumbnailImage"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:duplicateParentState="true"
             android:scaleType="centerCrop"
@@ -35,8 +35,8 @@
 
         <com.android.imagic.files.ui.DisabledAlphaImageView
             android:id="@+id/appIconBadgeImage"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="end|bottom"
             android:layout_marginStart="-0.5dp"
             android:layout_marginTop="-0.5dp"
