@@ -238,6 +238,11 @@
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
+            android:name="com.android.imagic.files.navigation.AddBookmarkDirectoryDialogActivity"
+            android:label="@string/navigation_edit_bookmark_directory_title"
+            android:theme="@style/Theme.MaterialFiles.Translucent" />
+
+        <activity
             android:name="com.android.imagic.files.ftpserver.FtpServerActivity"
             android:exported="true"
             android:label="@string/ftp_server_title"

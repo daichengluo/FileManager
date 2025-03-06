@@ -73,8 +73,14 @@
     <style name="TitleTextStorageAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">19sp</item>
         <item name="android:textColor">#FF262626</item>
+        <item name="titleMarginStart">0dp</item>
         <item name="android:fontWeight" tools:ignore="NewApi">700</item>
         <item name="android:lineHeight" tools:ignore="NewApi">27dp</item>
+    </style>
+
+    <style name="SubtitleTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_height">0dp</item>
     </style>
 
     <style name="ShapeAppearance.Navigation.StorageItem.RoundedCorner" parent="ShapeAppearance.MaterialComponents.SmallComponent">

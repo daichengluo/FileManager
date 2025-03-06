@@ -16,13 +16,12 @@ import kotlin.coroutines.suspendCoroutine
 private val getVolumeListMethod by lazyReflectedMethod(StorageManager::class.java, "getVolumeList")
 
 val StorageManager.storageVolumesCompat: List<StorageVolume>
-    get() =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            storageVolumes
-        } else {
-            @Suppress("UNCHECKED_CAST")
-            (getVolumeListMethod.invoke(this) as Array<StorageVolume>).toList()
-        }
+    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        storageVolumes
+    } else {
+        @Suppress("UNCHECKED_CAST")
+        (getVolumeListMethod.invoke(this) as Array<StorageVolume>).toList()
+    }
 
 // Thanks to fython for https://gist.github.com/fython/924f8d9019bca75d22de116bb69a54a1
 @Throws(IOException::class)
@@ -85,18 +84,17 @@ private suspend fun ProxyFileDescriptorCallbackCompat.awaitOnRead(
     size: Int,
     data: ByteArray,
     handler: Handler
-): Int =
-    suspendCoroutine { continuation ->
-        handler.post {
-            val readSize = try {
-                onRead(offset, size, data)
-            } catch (t: Throwable) {
-                continuation.resumeWithException(t)
-                return@post
-            }
-            continuation.resume(readSize)
+): Int = suspendCoroutine { continuation ->
+    handler.post {
+        val readSize = try {
+            onRead(offset, size, data)
+        } catch (t: Throwable) {
+            continuation.resumeWithException(t)
+            return@post
         }
+        continuation.resume(readSize)
     }
+}
 
 private suspend fun ProxyFileDescriptorCallbackCompat.awaitOnRelease(handler: Handler) {
     suspendCoroutine<Unit> { continuation ->

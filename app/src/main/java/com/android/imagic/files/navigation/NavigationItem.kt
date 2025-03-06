@@ -31,5 +31,6 @@ abstract class NavigationItem {
         fun navigateToRoot(path: Path)
         fun launchIntent(intent: Intent)
         fun closeNavigationDrawer()
+        fun addBookmark()
     }
 }

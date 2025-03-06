@@ -26,5 +26,5 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:duplicateParentState="true"
-        android:src="@drawable/file_path_separator_icon" />
+        android:src="@drawable/arrow_end_icon_white_24dp" />
 </me.zhanghai.android.foregroundcompat.ForegroundLinearLayout>

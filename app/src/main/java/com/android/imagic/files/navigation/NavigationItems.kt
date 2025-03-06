@@ -32,63 +32,65 @@ import java8.nio.file.Path
 import java8.nio.file.Paths
 
 val navigationStorageItems: List<NavigationItem?>
-    get() =
-        mutableListOf<NavigationItem?>().apply {
-            addAll(storageItems)
-            if (Environment::class.supportsExternalStorageManager()) {
-                // Starting with R, we can get read/write access to non-primary storage volumes with
-                // MANAGE_EXTERNAL_STORAGE. However before R, we only have read-only access to them
-                // and need to use the Storage Access Framework instead, so hide them in this case
-                // to avoid confusion.
-                addAll(storageVolumeItems)
-            }
+    get() = mutableListOf<NavigationItem?>().apply {
+        addAll(storageItems)
+        if (Environment::class.supportsExternalStorageManager()) {
+            // Starting with R, we can get read/write access to non-primary storage volumes with
+            // MANAGE_EXTERNAL_STORAGE. However before R, we only have read-only access to them
+            // and need to use the Storage Access Framework instead, so hide them in this case
+            // to avoid confusion.
+            addAll(storageVolumeItems)
         }
+        add(AddStorageItem())
+    }
 
 val navigationClassShortcutItems: List<NavigationItem?>
-    get() =
-        mutableListOf<NavigationItem?>().apply {
-            val standardDirectoryItems = standardDirectoryItems
-            if (standardDirectoryItems.isNotEmpty()) {
-                addAll(standardDirectoryItems)
-            }
-            val bookmarkDirectoryItems = bookmarkDirectoryItems
-            if (bookmarkDirectoryItems.isNotEmpty()) {
-                addAll(bookmarkDirectoryItems)
-            }
+    get() = mutableListOf<NavigationItem?>().apply {
+        val standardDirectoryItems = standardDirectoryItems
+        if (standardDirectoryItems.isNotEmpty()) {
+            addAll(standardDirectoryItems)
         }
+    }
+
+val navigationBookmarkItems: List<NavigationItem?>
+    get() = mutableListOf<NavigationItem?>().apply {
+        val bookmarkDirectoryItems = bookmarkDirectoryItems
+        if (bookmarkDirectoryItems.isNotEmpty()) {
+            addAll(bookmarkDirectoryItems)
+        }
+        add(AddBookmarkItem())
+    }
 
 val navigationItems: List<NavigationItem?>
-    get() =
-        mutableListOf<NavigationItem?>().apply {
-            addAll(storageItems)
-            if (Environment::class.supportsExternalStorageManager()) {
-                // Starting with R, we can get read/write access to non-primary storage volumes with
-                // MANAGE_EXTERNAL_STORAGE. However before R, we only have read-only access to them
-                // and need to use the Storage Access Framework instead, so hide them in this case
-                // to avoid confusion.
-                addAll(storageVolumeItems)
-            }
-            add(AddStorageItem())
-            val standardDirectoryItems = standardDirectoryItems
-            if (standardDirectoryItems.isNotEmpty()) {
-                add(null)
-                addAll(standardDirectoryItems)
-            }
-            val bookmarkDirectoryItems = bookmarkDirectoryItems
-            if (bookmarkDirectoryItems.isNotEmpty()) {
-                add(null)
-                addAll(bookmarkDirectoryItems)
-            }
-            add(null)
-            addAll(menuItems)
+    get() = mutableListOf<NavigationItem?>().apply {
+        addAll(storageItems)
+        if (Environment::class.supportsExternalStorageManager()) {
+            // Starting with R, we can get read/write access to non-primary storage volumes with
+            // MANAGE_EXTERNAL_STORAGE. However before R, we only have read-only access to them
+            // and need to use the Storage Access Framework instead, so hide them in this case
+            // to avoid confusion.
+            addAll(storageVolumeItems)
         }
+        add(AddStorageItem())
+        val standardDirectoryItems = standardDirectoryItems
+        if (standardDirectoryItems.isNotEmpty()) {
+            add(null)
+            addAll(standardDirectoryItems)
+        }
+        val bookmarkDirectoryItems = bookmarkDirectoryItems
+        if (bookmarkDirectoryItems.isNotEmpty()) {
+            add(null)
+            addAll(bookmarkDirectoryItems)
+        }
+        add(null)
+        addAll(menuItems)
+    }
 
 private val storageItems: List<NavigationItem>
     @Size(min = 0)
-    get() =
-        Settings.STORAGES.valueCompat.filter { it.isVisible }.map {
-            if (it.path != null) PathStorageItem(it) else IntentStorageItem(it)
-        }
+    get() = Settings.STORAGES.valueCompat.filter { it.isVisible }.map {
+        if (it.path != null) PathStorageItem(it) else IntentStorageItem(it)
+    }
 
 private abstract class PathItem(val path: Path) : NavigationItem() {
     override fun isChecked(listener: Listener): Boolean = listener.currentPath == path
@@ -159,9 +161,8 @@ private class IntentStorageItem(
 
 private val storageVolumeItems: List<NavigationItem>
     @Size(min = 0)
-    get() =
-        StorageVolumeListLiveData.valueCompat.filter { !it.isPrimaryCompat && it.isMounted }
-            .map { StorageVolumeItem(it) }
+    get() = StorageVolumeListLiveData.valueCompat.filter { !it.isPrimaryCompat && it.isMounted }
+        .map { StorageVolumeItem(it) }
 
 private class StorageVolumeItem(
     private val storageVolume: StorageVolume
@@ -227,22 +228,21 @@ private class AddStorageItem : NavigationItem() {
 
 private val standardDirectoryItems: List<NavigationItem>
     @Size(min = 0)
-    get() =
-        StandardDirectoriesLiveData.valueCompat
-            .filter { it.isEnabled }
-            .map { StandardDirectoryItem(it) }
+    get() = StandardDirectoriesLiveData.valueCompat
+        .filter { it.isEnabled }
+        .map { StandardDirectoryItem(it) }
 
-private class AddClassShortcutItem : NavigationItem() {
-    override val id: Long = R.string.navigation_add_shortcut.toLong()
+private class AddBookmarkItem : NavigationItem() {
+    override val id: Long = R.string.file_list_action_add_bookmark.toLong()
 
     @DrawableRes
-    override val iconRes: Int = R.drawable.nav_storage_add
+    override val iconRes: Int = R.drawable.nav_add_bookmark
 
     override fun getTitle(context: Context): String =
-        context.getString(R.string.navigation_add_shortcut)
+        context.getString(R.string.file_list_action_add_bookmark)
 
     override fun onClick(listener: Listener) {
-        listener.launchIntent(AddStorageDialogActivity::class.createIntent())
+        listener.addBookmark()
     }
 }
 
@@ -281,86 +281,49 @@ private const val relativePathSeparator = ":"
 
 private val defaultStandardDirectories: List<StandardDirectory>
     // HACK: Show QQ, TIM and WeChat standard directories based on whether the directory exists.
-    get() =
-        DEFAULT_STANDARD_DIRECTORIES.mapNotNull {
-            when (it.iconRes) {
-                R.drawable.qq_icon_white_24dp, R.drawable.tim_icon_white_24dp,
-                R.drawable.wechat_icon_white_24dp -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        // Direct access to Android/data is blocked since Android 11.
-                        null
-                    } else {
-                        for (relativePath in it.relativePath.split(relativePathSeparator)) {
-                            val path = getExternalStorageDirectory(relativePath)
-                            if (JavaFile.isDirectory(path)) {
-                                return@mapNotNull it.copy(relativePath = relativePath)
-                            }
+    get() = DEFAULT_STANDARD_DIRECTORIES.mapNotNull {
+        when (it.iconRes) {
+            R.drawable.qq_icon_white_24dp, R.drawable.tim_icon_white_24dp,
+            R.drawable.wechat_icon_white_24dp -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    // Direct access to Android/data is blocked since Android 11.
+                    null
+                } else {
+                    for (relativePath in it.relativePath.split(relativePathSeparator)) {
+                        val path = getExternalStorageDirectory(relativePath)
+                        if (JavaFile.isDirectory(path)) {
+                            return@mapNotNull it.copy(relativePath = relativePath)
                         }
-                        null
                     }
+                    null
                 }
-
-                else -> it
             }
+
+            else -> it
         }
+    }
 
 // @see android.os.Environment#STANDARD_DIRECTORIES
 private val DEFAULT_STANDARD_DIRECTORIES = listOf(
-    StandardDirectory(
-        R.drawable.alarm_icon_white_24dp, R.string.navigation_standard_directory_alarms,
-        Environment.DIRECTORY_ALARMS, false
-    ),
-    StandardDirectory(
-        R.drawable.camera_icon_white_24dp, R.string.navigation_standard_directory_dcim,
-        Environment.DIRECTORY_DCIM, false
-    ),
-    StandardDirectory(
-        R.drawable.nav_file_type_document, R.string.navigation_standard_directory_documents,
-        Environment.DIRECTORY_DOCUMENTS, false
-    ),
     StandardDirectory(
         R.drawable.nav_file_type_download, R.string.navigation_standard_directory_downloads,
         Environment.DIRECTORY_DOWNLOADS, true
     ),
     StandardDirectory(
-        R.drawable.nav_file_type_video, R.string.navigation_standard_directory_movies,
-        Environment.DIRECTORY_MOVIES, true
-    ),
-    StandardDirectory(
-        R.drawable.nav_file_type_audio, R.string.navigation_standard_directory_music,
-        Environment.DIRECTORY_MUSIC, true
-    ),
-    StandardDirectory(
-        R.drawable.notification_icon_white_24dp,
-        R.string.navigation_standard_directory_notifications, Environment.DIRECTORY_NOTIFICATIONS,
-        false
-    ),
-    StandardDirectory(
-        R.drawable.nav_file_type_picture, R.string.navigation_standard_directory_pictures,
+        R.drawable.nav_file_type_picture, R.string.navigation_standard_directory_images,
         Environment.DIRECTORY_PICTURES, true
     ),
     StandardDirectory(
-        R.drawable.podcast_icon_white_24dp, R.string.navigation_standard_directory_podcasts,
-        Environment.DIRECTORY_PODCASTS, false
+        R.drawable.nav_file_type_video, R.string.navigation_standard_directory_videos,
+        Environment.DIRECTORY_MOVIES, true
     ),
     StandardDirectory(
-        R.drawable.ringtone_icon_white_24dp, R.string.navigation_standard_directory_ringtones,
-        Environment.DIRECTORY_RINGTONES, false
+        R.drawable.nav_file_type_audio, R.string.navigation_standard_directory_audio,
+        Environment.DIRECTORY_MUSIC, true
     ),
     StandardDirectory(
-        R.drawable.qq_icon_white_24dp, R.string.navigation_standard_directory_qq,
-        listOf("Android/data/com.tencent.mobileqq/Tencent/QQfile_recv", "Tencent/QQfile_recv")
-            .joinToString(relativePathSeparator), false
-    ),
-    StandardDirectory(
-        R.drawable.tim_icon_white_24dp, R.string.navigation_standard_directory_tim,
-        listOf("Android/data/com.tencent.tim/Tencent/TIMfile_recv", "Tencent/TIMfile_recv")
-            .joinToString(relativePathSeparator), false
-    ),
-    StandardDirectory(
-        R.drawable.wechat_icon_white_24dp, R.string.navigation_standard_directory_wechat,
-        listOf("Android/data/com.tencent.mm/MicroMsg/Download", "Tencent/MicroMsg/Download")
-            .joinToString(relativePathSeparator), false
+        R.drawable.nav_file_type_document, R.string.navigation_standard_directory_documents,
+        Environment.DIRECTORY_DOCUMENTS, true
     )
 )
 

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.storage.StorageVolume
 import androidx.annotation.DrawableRes
 import com.android.imagic.files.R
-import com.android.imagic.files.compat.getDescriptionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
 import com.android.imagic.files.compat.pathCompat
 import com.android.imagic.files.util.createIntent
@@ -74,7 +73,8 @@ data class PrimaryStorageVolume(
         get() = R.drawable.nav_storage_internal
 
     override fun getDefaultName(context: Context): String =
-        storageVolume.getDescriptionCompat(context)
+        /*storageVolume.getDescriptionCompat(context)*/
+        context.getString(R.string.navigation_internal_storage_name)
 
     override val linuxPath: String
         get() = storageVolume.pathCompat

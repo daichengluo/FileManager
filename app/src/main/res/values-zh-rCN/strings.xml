@@ -526,7 +526,6 @@
 
     <string name="navigation_storage_subtitle_format">共 %2$s，剩余 %1$s</string>
     <string name="navigation_add_storage">添加存储空间…</string>
-    <string name="navigation_add_shortcut">添加</string>
     <string name="navigation_standard_directory_alarms">闹钟</string>
     <string name="navigation_standard_directory_dcim">相片</string>
     <string name="navigation_standard_directory_documents">文档</string>
@@ -640,7 +639,16 @@
     <string name="about_author_github_title">在 GitHub 上关注</string>
     <string name="about_author_twitter_title">在 Twitter 上关注</string>
 
+    <!-- Add new -->
     <plurals name="file_item_file_count_format">
         <item quantity="other">%1$,d项</item>
     </plurals>
+
+    <string name="navigation_internal_storage_name">内部存储</string>
+    <string name="navigation_standard_directory_images">图片</string>
+    <string name="navigation_standard_directory_videos">视频</string>
+    <string name="navigation_standard_directory_audio">音频</string>
+    <string name="navigation_standard_directory_apk">安装包</string>
+
+    <string name="navigation_login_account_tip">请登录账号</string>
 </resources>

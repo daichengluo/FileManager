@@ -11,7 +11,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.android.imagic.files.R
 import com.android.imagic.files.util.shortAnimTime
 
 class CrossfadeSubtitleToolbar : Toolbar {
@@ -21,6 +23,10 @@ class CrossfadeSubtitleToolbar : Toolbar {
         val listener = AnimatorListener()
         addUpdateListener(listener)
         addListener(listener)
+    }
+
+    init {
+        overflowIcon = ContextCompat.getDrawable(context, R.drawable.menu_icon)
     }
 
     private var nextSubtitle: CharSequence? = null
@@ -63,6 +69,7 @@ class CrossfadeSubtitleToolbar : Toolbar {
             e.printStackTrace()
             null
         } ?: return
+        subtitleTextView.visibility = View.GONE
         subtitleAnimator.target = subtitleTextView
     }
 

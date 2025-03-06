@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.android.imagic.files.ui.CheckableForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/itemLayout"
     android:layout_width="match_parent"
-    android:layout_height="37dp"
-    android:gravity="center_vertical"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp"
     android:paddingVertical="4dp">
 
-    <ImageView
-        android:id="@+id/iconImage"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
-        android:layout_margin="8dp"
-        android:scaleType="centerCrop"
-        tools:srcCompat="@drawable/nav_storage_internal" />
+    <com.android.imagic.files.ui.CheckableForegroundLinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ellipsize="marquee"
-        android:lineHeight="19dp"
-        android:singleLine="true"
-        android:textColor="#FF262626"
-        android:textSize="13sp"
-        tools:ignore="UnusedAttribute"
-        tools:text="内部存储空间" />
+        <ImageView
+            android:id="@+id/iconImage"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@drawable/nav_storage_internal" />
 
-    <ImageView
-        android:id="@+id/storageActionImage"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_margin="5dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/nav_storage_item_action" />
-</com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:lineHeight="19dp"
+            android:singleLine="true"
+            android:textColor="#FF262626"
+            android:textSize="13sp"
+            tools:ignore="UnusedAttribute"
+            tools:text="内部存储空间" />
+
+        <ImageView
+            android:id="@+id/storageActionImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nav_storage_item_action" />
+    </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+</LinearLayout>

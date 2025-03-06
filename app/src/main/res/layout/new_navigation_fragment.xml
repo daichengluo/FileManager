@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="270dp"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:scrollbars="none">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:background="#FFEFF0F7"
         android:orientation="vertical"
@@ -24,23 +24,6 @@
             android:textColor="#FF262626"
             android:textSize="21sp"
             android:textStyle="bold"
-            tools:ignore="UnusedAttribute" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="11dp" />
-
-        <com.android.imagic.files.ui.FixQueryChangeSearchView
-            android:id="@+id/searchBarEdit"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@drawable/search_bar_background"
-            android:clipToOutline="true"
-            android:inputType="text"
-            android:lineHeight="19dp"
-            android:paddingHorizontal="16dp"
-            android:textColor="#57262626"
-            android:textSize="13sp"
             tools:ignore="UnusedAttribute" />
 
         <Space
@@ -72,7 +55,7 @@
                 android:ellipsize="marquee"
                 android:lineHeight="22dp"
                 android:singleLine="true"
-                android:text="请登录账号"
+                android:text="@string/navigation_login_account_tip"
                 android:textAlignment="textStart"
                 android:textColor="#FF262626"
                 android:textSize="16sp"
@@ -87,15 +70,23 @@
                 android:src="@drawable/nav_user_login_action" />
         </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="11dp" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/classShortcutRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
             android:background="@drawable/surface_background"
+            android:maxHeight="155dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="11dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bookmarkRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/surface_background"
+            android:maxHeight="100dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="11dp" />
 
@@ -106,10 +97,9 @@
         <LinearLayout
             android:id="@+id/storageLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/surface_background"
             android:orientation="vertical"
-            android:paddingHorizontal="12dp"
             android:paddingVertical="11dp">
 
             <TextView
@@ -118,8 +108,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:lineHeight="19dp"
+                android:paddingHorizontal="12dp"
                 android:singleLine="true"
-                android:text="存储空间"
+                android:text="@string/storage_list_title"
                 android:textAlignment="textStart"
                 android:textColor="#FF262626"
                 android:textSize="13sp"
@@ -131,22 +122,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/surface_background"
-                android:paddingVertical="8dp"
+                android:paddingVertical="4dp"
                 tools:listitem="@layout/new_storage_item" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="11dp" />
 
             <com.android.imagic.files.ui.CheckableForegroundLinearLayout
                 android:id="@+id/addStorageLayout"
-                android:layout_width="match_parent"
+                android:layout_width="219dp"
                 android:layout_height="43dp"
+                android:layout_gravity="center_horizontal"
                 android:background="@drawable/nav_button_background"
                 android:foreground="@drawable/file_item_list_foreground"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/addButtonImage"
@@ -175,5 +164,9 @@
                     tools:ignore="UnusedAttribute" />
             </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="88dp" />
     </LinearLayout>
 </ScrollView>
