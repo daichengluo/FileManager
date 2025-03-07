@@ -25,7 +25,6 @@ import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.provider.archive.isArchivePath
-import com.android.imagic.files.provider.common.isEncrypted
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.ui.AnimatedListAdapter
 import com.android.imagic.files.ui.CheckableForegroundLinearLayout
@@ -195,17 +194,11 @@ class FileListAdapter(
                     CheckableItemBackground.create(0f, 8f, context)
                 }
             }
-            thumbnailOutlineView?.apply {
-                val context = context
-                if (context.isMaterial3Theme) {
-                    background = context.getDrawableCompat(
-                        R.drawable.file_item_grid_thumbnail_outline_material3
-                    )
-                }
+            menuButton?.let {
+                popupMenu = PopupMenu(menuButton.context, menuButton)
+                    .apply { inflate(R.menu.file_item) }
+                menuButton.setOnClickListener { popupMenu?.show() }
             }
-            popupMenu = PopupMenu(menuButton.context, menuButton)
-                .apply { inflate(R.menu.file_item) }
-            menuButton.setOnClickListener { popupMenu.show() }
         }
     }
 
@@ -218,15 +211,14 @@ class FileListAdapter(
         val isDirectory = file.attributes.isDirectory
         val isEnabled = isFileSelectable(file) || isDirectory
         holder.itemLayout.isEnabled = isEnabled
-        holder.menuButton.isEnabled = isEnabled
-        holder.menuButton.isVisible = selectedFiles.isEmpty() && _viewType == FileViewType.LIST
+        holder.menuButton?.isEnabled = isEnabled
         holder.checkImage.isVisible = selectedFiles.isNotEmpty()
-        val menu = holder.popupMenu.menu
+        val menu = holder.popupMenu?.menu
         val path = file.path
         val hasPickOptions = pickOptions != null
         val isReadOnly = path.fileSystem.isReadOnly
-        menu.findItem(R.id.action_cut).isVisible = !hasPickOptions && !isReadOnly
-        menu.findItem(R.id.action_copy).isVisible = !hasPickOptions
+        menu?.findItem(R.id.action_cut)?.isVisible = !hasPickOptions && !isReadOnly
+        menu?.findItem(R.id.action_copy)?.isVisible = !hasPickOptions
         val checked = file in selectedFiles
         holder.itemLayout.isChecked = checked
         holder.nameText.apply {
@@ -257,25 +249,24 @@ class FileListAdapter(
                 true
             }
         }
-        holder.iconLayout.setOnClickListener {
+        holder.iconLayout?.setOnClickListener {
             selectFile(file)
-            holder.menuButton.isVisible = selectedFiles.isEmpty()
+            holder.menuButton?.isVisible = selectedFiles.isEmpty()
             holder.checkImage.isVisible = selectedFiles.isNotEmpty()
         }
         val iconRes = file.mimeType.iconRes
-        holder.iconImage.apply {
+        holder.iconImage?.apply {
             isVisible = true
             setImageResource(iconRes)
         }
-        //holder.directoryThumbnailImage?.isVisible = isDirectory
-        //holder.thumbnailOutlineView?.isVisible = !isDirectory
+        holder.directoryThumbnailImage?.isVisible = isDirectory
         val supportsThumbnail = file.supportsThumbnail
         val shouldLoadThumbnailIcon = supportsThumbnail && holder.thumbnailIconImage != null &&
                 file.mimeType.isApk
         val attributes = file.attributes
         holder.thumbnailIconImage?.apply {
             dispose()
-            //isVisible = !isDirectory
+            isVisible = !isDirectory
             setImageResource(iconRes)
             if (shouldLoadThumbnailIcon) {
                 load(path to attributes)
@@ -290,12 +281,12 @@ class FileListAdapter(
                 load(path to attributes) {
                     listener { _, _ ->
                         val iconImage = holder.thumbnailIconImage ?: holder.iconImage
-                        iconImage.isVisible = false
+                        iconImage?.isVisible = false
                     }
                 }
             }
         }
-        holder.appIconBadgeImage.apply {
+        holder.appIconBadgeImage?.apply {
             dispose()
             setImageDrawable(null)
             val appDirectoryPackageName = file.appDirectoryPackageName
@@ -303,26 +294,6 @@ class FileListAdapter(
             isVisible = hasAppIconBadge
             if (hasAppIconBadge) {
                 load(AppIconPackageName(appDirectoryPackageName!!))
-            }
-        }
-        holder.badgeImage.apply {
-            val badgeIconRes = if (file.attributesNoFollowLinks.isSymbolicLink) {
-                if (file.isSymbolicLinkBroken) {
-                    R.drawable.error_badge_icon_18dp
-                } else {
-                    R.drawable.symbolic_link_badge_icon_18dp
-                }
-            } else if (file.attributesNoFollowLinks.isEncrypted()) {
-                R.drawable.encrypted_badge_icon_18dp
-            } else {
-                null
-            }
-            val hasBadge = badgeIconRes != null
-            isVisible = hasBadge
-            if (hasBadge) {
-                setImageResource(badgeIconRes!!)
-            } else {
-                setImageDrawable(null)
             }
         }
         holder.nameText.text = file.name
@@ -345,14 +316,14 @@ class FileListAdapter(
             listOf(lastModificationTime, size).joinToString(descriptionSeparator)
         }
         val isArchivePath = path.isArchivePath
-        menu.findItem(R.id.action_copy)
-            .setTitle(if (isArchivePath) R.string.file_item_action_extract else R.string.copy)
-        menu.findItem(R.id.action_delete).isVisible = !isReadOnly
-        menu.findItem(R.id.action_rename).isVisible = !isReadOnly
-        menu.findItem(R.id.action_extract).isVisible = file.isArchiveFile
-        menu.findItem(R.id.action_archive).isVisible = !isArchivePath
-        menu.findItem(R.id.action_add_bookmark).isVisible = isDirectory
-        holder.popupMenu.setOnMenuItemClickListener {
+        menu?.findItem(R.id.action_copy)
+            ?.setTitle(if (isArchivePath) R.string.file_item_action_extract else R.string.copy)
+        menu?.findItem(R.id.action_delete)?.isVisible = !isReadOnly
+        menu?.findItem(R.id.action_rename)?.isVisible = !isReadOnly
+        menu?.findItem(R.id.action_extract)?.isVisible = file.isArchiveFile
+        menu?.findItem(R.id.action_archive)?.isVisible = !isArchivePath
+        menu?.findItem(R.id.action_add_bookmark)?.isVisible = isDirectory
+        holder.popupMenu?.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_open_with -> {
                     listener.openFileWith(file)
@@ -448,17 +419,15 @@ class FileListAdapter(
     class ViewHolder private constructor(
         root: View,
         val itemLayout: CheckableForegroundLinearLayout,
-        val iconLayout: View,
-        val iconImage: ImageView,
+        val iconLayout: View?,
+        val iconImage: ImageView?,
         val directoryThumbnailImage: ImageView?,
-        val thumbnailOutlineView: View?,
         val thumbnailIconImage: ImageView?,
         val thumbnailImage: ImageView,
-        val appIconBadgeImage: ImageView,
-        val badgeImage: ImageView,
+        val appIconBadgeImage: ImageView?,
         val nameText: TextView,
         val descriptionText: TextView?,
-        val menuButton: ImageButton,
+        val menuButton: ImageButton?,
         val checkImage: ImageView
     ) : RecyclerView.ViewHolder(root) {
         constructor(binding: FileItemListBinding) : this(
@@ -468,10 +437,8 @@ class FileListAdapter(
             binding.iconImage,
             null,
             null,
-            null,
             binding.thumbnailImage,
             binding.appIconBadgeImage,
-            binding.badgeImage,
             binding.nameText,
             binding.descriptionText,
             binding.menuButton,
@@ -481,21 +448,19 @@ class FileListAdapter(
         constructor(binding: FileItemGridBinding) : this(
             binding.root,
             binding.itemLayout,
-            binding.iconLayout,
-            binding.iconImage,
+            null,
+            null,
             binding.directoryThumbnailImage,
-            binding.thumbnailOutlineView,
             binding.thumbnailIconImage,
             binding.thumbnailImage,
-            binding.appIconBadgeImage,
-            binding.badgeImage,
+            null,
             binding.nameText,
             null,
-            binding.menuButton,
+            null,
             binding.checkImage
         )
 
-        lateinit var popupMenu: PopupMenu
+        var popupMenu: PopupMenu? = null
     }
 
     interface Listener {

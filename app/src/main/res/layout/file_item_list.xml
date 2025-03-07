@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="11dp"
     android:paddingVertical="4dp">
 
     <com.android.imagic.files.ui.CheckableForegroundLinearLayout
@@ -54,22 +53,6 @@
                 android:layout_marginBottom="-0.5dp"
                 android:duplicateParentState="true"
                 app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
-
-            <com.android.imagic.files.ui.DisabledAlphaImageView
-                android:id="@+id/badgeImage"
-                android:layout_width="@dimen/badge_size"
-                android:layout_height="@dimen/badge_size"
-                android:layout_gravity="end|bottom"
-                android:background="@drawable/badge_background_18dp"
-                android:duplicateParentState="true" />
-
-            <com.android.imagic.files.ui.DisabledAlphaImageView
-                android:layout_width="@dimen/badge_size"
-                android:layout_height="@dimen/badge_size"
-                android:layout_gravity="end|bottom"
-                android:duplicateParentState="true"
-                android:src="@drawable/checkable_badge"
-                android:visibility="gone" />
         </FrameLayout>
 
         <Space

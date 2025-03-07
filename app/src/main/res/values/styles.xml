@@ -93,6 +93,11 @@
         <item name="cornerSize">11dp</item>
     </style>
 
+    <style name="RoundedCornerImageGrid">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
+
     <style name="TextAppearanceListItem" parent="TextAppearance.AppCompat">
         <item name="android:textColor">#FF030C22</item>
         <item name="android:textSize">16sp</item>
