@@ -212,6 +212,7 @@ class FileListAdapter(
         val isEnabled = isFileSelectable(file) || isDirectory
         holder.itemLayout.isEnabled = isEnabled
         holder.menuButton?.isEnabled = isEnabled
+        holder.menuButton?.isVisible = selectedFiles.isEmpty() && _viewType == FileViewType.LIST
         holder.checkImage.isVisible = selectedFiles.isNotEmpty()
         val menu = holder.popupMenu?.menu
         val path = file.path
@@ -251,8 +252,6 @@ class FileListAdapter(
         }
         holder.iconLayout?.setOnClickListener {
             selectFile(file)
-            holder.menuButton?.isVisible = selectedFiles.isEmpty()
-            holder.checkImage.isVisible = selectedFiles.isNotEmpty()
         }
         val iconRes = file.mimeType.iconRes
         holder.iconImage?.apply {
