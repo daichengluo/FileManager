@@ -34,13 +34,17 @@ import com.android.imagic.files.util.isMaterial3Theme
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.util.Locale
 
 class FileListAdapter(
-    private val listener: Listener
+    private val listener: Listener,
+    private val scope: CoroutineScope
 ) : AnimatedListAdapter<FileItem, FileListAdapter.ViewHolder>(CALLBACK), PopupTextProvider {
     private var isSearching = false
+    private var isShowHiddenFiles = false
 
     private lateinit var _viewType: FileViewType
     var viewType: FileViewType
@@ -154,9 +158,14 @@ class FileListAdapter(
         throw UnsupportedOperationException()
     }
 
-    fun replaceListAndIsSearching(list: List<FileItem>, isSearching: Boolean) {
+    fun replaceListAndIsSearching(
+        list: List<FileItem>,
+        isSearching: Boolean,
+        isShowHiddenFiles: Boolean
+    ) {
         val clear = this.isSearching != isSearching
         this.isSearching = isSearching
+        this.isShowHiddenFiles = isShowHiddenFiles
         val sortedList = if (!isSearching) list.sortedWith(sortOptions.createComparator()) else list
         super.replace(sortedList, clear)
         rebuildFilePositionMap()
@@ -296,23 +305,37 @@ class FileListAdapter(
             }
         }
         holder.nameText.text = file.name
-        holder.descriptionText?.text = if (isDirectory) {
-            val context = holder.descriptionText!!.context
-            val lastModificationTime = attributes.lastModifiedTime().toInstant()
-                .formatShort(context)
-            val fileCount = file.getFileCount()
-            val fileCountText = context.getQuantityString(
-                R.plurals.file_item_file_count_format, fileCount, fileCount
-            )
-            val descriptionSeparator = context.getString(R.string.file_item_description_separator)
-            listOf(lastModificationTime, fileCountText).joinToString(descriptionSeparator)
+        if (isDirectory) {
+            holder.descriptionText?.let {
+                val context = holder.descriptionText.context
+                val lastModificationTime = attributes.lastModifiedTime().toInstant()
+                    .formatShort(context)
+
+                scope.launch {
+                    file.getFolderItemCount(isShowHiddenFiles) { count ->
+                        val fileCountText = context.getQuantityString(
+                            R.plurals.file_item_file_count_format, count, count
+                        )
+                        val descriptionSeparator =
+                            context.getString(R.string.file_item_description_separator)
+                        holder.descriptionText.text =
+                            listOf(lastModificationTime, fileCountText).joinToString(
+                                descriptionSeparator
+                            )
+                    }
+                }
+            }
         } else {
-            val context = holder.descriptionText!!.context
-            val lastModificationTime = attributes.lastModifiedTime().toInstant()
-                .formatShort(context)
-            val size = attributes.fileSize.formatHumanReadable(context)
-            val descriptionSeparator = context.getString(R.string.file_item_description_separator)
-            listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+            holder.descriptionText?.let {
+                val context = holder.descriptionText.context
+                val lastModificationTime = attributes.lastModifiedTime().toInstant()
+                    .formatShort(context)
+                val size = attributes.fileSize.formatHumanReadable(context)
+                val descriptionSeparator =
+                    context.getString(R.string.file_item_description_separator)
+                holder.descriptionText.text =
+                    listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+            }
         }
         val isArchivePath = path.isArchivePath
         menu?.findItem(R.id.action_copy)

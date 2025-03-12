@@ -41,6 +41,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -241,7 +242,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         binding.swipeRefreshLayout.setOnRefreshListener { this.refresh() }
         layoutManager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = layoutManager
-        adapter = FileListAdapter(this)
+        adapter = FileListAdapter(this, viewLifecycleOwner.lifecycleScope)
         binding.recyclerView.adapter = adapter
         val fastScroller = ThemedFastScroller.create(binding.recyclerView)
         binding.recyclerView.setOnApplyWindowInsetsListener(
@@ -751,10 +752,15 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun updateAdapterFileList() {
         var files = viewModel.fileListStateful.value ?: return
-        if (!Settings.FILE_LIST_SHOW_HIDDEN_FILES.valueCompat) {
+        val isShowHiddenFiles = Settings.FILE_LIST_SHOW_HIDDEN_FILES.valueCompat
+        if (!isShowHiddenFiles) {
             files = files.filterNot { it.isHidden }
         }
-        adapter.replaceListAndIsSearching(files, viewModel.searchState.isSearching)
+        adapter.replaceListAndIsSearching(
+            files,
+            viewModel.searchState.isSearching,
+            isShowHiddenFiles
+        )
     }
 
     private fun updateShowHiddenFilesMenuItem() {

@@ -11,6 +11,7 @@ import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
 import com.android.imagic.files.file.isPdf
 import com.android.imagic.files.provider.archive.createArchiveRootPath
+import com.android.imagic.files.provider.common.isHidden
 import com.android.imagic.files.provider.document.documentSupportsThumbnail
 import com.android.imagic.files.provider.document.isDocumentPath
 import com.android.imagic.files.provider.ftp.isFtpPath
@@ -24,6 +25,8 @@ import java8.nio.file.Files
 import java8.nio.file.Path
 import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileTime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.CollationKey
 
 val FileItem.name: String
@@ -102,39 +105,22 @@ fun FileItem.createDummyArchiveRoot(): FileItem =
         null, null, false, MimeType.DIRECTORY
     )
 
-fun FileItem.getFileAndFolderCount(): Pair<Int, Int> {
-    if (!attributes.isDirectory) {
-        return Pair(0, 0)
-    }
-    var fileCount = 0
-    var directoryCount = 0
-    try {
-        Files.list(path).forEach { item ->
-            if (Files.isDirectory(item)) {
-                directoryCount++
-            } else if (Files.isRegularFile(item)) {
-                fileCount++
-            }
-        }
-    } catch (_: Exception) {
-    }
-    return Pair(fileCount, directoryCount)
-}
-
-
-// todo bug webdav crash
-fun FileItem.getFileCount(): Int {
-    return 0
+suspend fun FileItem.getFolderItemCount(
+    isShowHiddenFiles: Boolean,
+    listener: (Int) -> Unit
+) = withContext(Dispatchers.IO) {
     if (!Files.isDirectory(path)) {
-        return 0
+        withContext(Dispatchers.Main) {
+            listener(0)
+        }
     }
-    return try {
-        Files.list(path)
-            .filter { Files.isRegularFile(it) }
-            .count()
-            .toInt()
+    val count = try {
+        Files.list(path).filter { isShowHiddenFiles || !it.isHidden }.count().toInt()
     } catch (_: Exception) {
         0
+    }
+    withContext(Dispatchers.Main) {
+        listener(count)
     }
 }
 
