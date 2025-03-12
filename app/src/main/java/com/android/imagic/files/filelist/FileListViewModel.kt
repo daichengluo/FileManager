@@ -29,7 +29,7 @@ class FileListViewModel : ViewModel() {
 
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
 
-    fun navigateUp(): Boolean = trailLiveData.navigateUp()
+    fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) trailLiveData.navigateUp() else false
 
     val currentPathLiveData = trailLiveData.map { it.currentPath }
     val currentPath: Path

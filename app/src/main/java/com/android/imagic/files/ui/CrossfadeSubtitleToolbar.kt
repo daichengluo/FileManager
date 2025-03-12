@@ -8,6 +8,7 @@ import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.appcompat.widget.Toolbar
@@ -54,6 +55,28 @@ class CrossfadeSubtitleToolbar : Toolbar {
         }
         if (!subtitleAnimator.isRunning) {
             subtitleAnimator.start()
+        }
+    }
+
+    fun setNavButtonEnable(enable: Boolean) {
+        val navButton = try {
+            Toolbar::class.java.getDeclaredField("mNavButtonView")
+                .apply { isAccessible = true }
+                .get(this) as ImageButton?
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        } ?: return
+
+        navButton.isEnabled = enable
+        if (enable) {
+            navButton.alpha = 1.0f
+            val context = this.context
+            val defaultDescription = context.getString(R.string.file_list_action_navigate_up)
+            navigationContentDescription = defaultDescription
+        } else {
+            navButton.alpha = 0.5f
+            navigationContentDescription = null
         }
     }
 

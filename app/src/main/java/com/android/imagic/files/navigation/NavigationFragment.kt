@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.filelist.FileListActivity
-import com.android.imagic.files.storage.AddStorageDialogActivity
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
@@ -48,21 +47,21 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
             GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
         classShortcutListAdapter = ClassShortcutListAdapter(this, context)
         binding.classShortcutRecyclerView.adapter = classShortcutListAdapter
+        binding.classShortcutRecyclerView.setMaxHeight(500)
 
         binding.bookmarkRecyclerView.layoutManager =
             GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
         bookmarkListAdapter = ClassShortcutListAdapter(this, context)
         binding.bookmarkRecyclerView.adapter = bookmarkListAdapter
+        binding.bookmarkRecyclerView.setMaxHeight(500)
 
         binding.storageRecyclerView.layoutManager = LinearLayoutManager(context)
         storageListAdapter = StorageListAdapter(this, context)
         binding.storageRecyclerView.adapter = storageListAdapter
+        binding.storageRecyclerView.setMaxHeight(500)
 
         binding.loginLayout.setOnClickListener {
             // todo login action
-        }
-        binding.addStorageLayout.setOnClickListener {
-            launchIntent(AddStorageDialogActivity::class.createIntent())
         }
 
         val viewLifecycleOwner = viewLifecycleOwner

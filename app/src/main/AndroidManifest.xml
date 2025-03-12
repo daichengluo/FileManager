@@ -53,7 +53,7 @@
         android:resizeableActivity="true"
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialFiles"
+        android:theme="@style/Theme.Files"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
@@ -155,7 +155,7 @@
             android:documentLaunchMode="always"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:theme="@style/Theme.MaterialFiles.Translucent">
+            android:theme="@style/Theme.Files.Translucent">
             <intent-filter>
                 <action android:name="com.android.imagic.files.intent.action.OPEN_FILE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -168,86 +168,86 @@
             android:autoRemoveFromRecents="true"
             android:icon="@drawable/edit_icon"
             android:label="@string/file_edit_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.filelist.OpenFileAsDialogActivity"
             android:autoRemoveFromRecents="true"
             android:icon="@drawable/open_as_icon"
             android:label="@string/file_open_as_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.AddStorageDialogActivity"
             android:label="@string/storage_add_storage_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditDeviceStorageDialogActivity"
             android:label="@string/storage_edit_device_storage_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.AddExternalStorageShortcutActivity"
             android:label="@string/storage_add_external_storage_shortcut_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditExternalStorageShortcutDialogActivity"
             android:label="@string/storage_edit_external_storage_shortcut_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.AddDocumentTreeActivity"
             android:label="@string/storage_add_document_tree_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditDocumentTreeDialogActivity"
             android:label="@string/storage_edit_document_tree_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditFtpServerActivity"
             android:label="@string/storage_edit_ftp_server_title_edit"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditSftpServerActivity"
             android:label="@string/storage_edit_sftp_server_title_edit"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.storage.AddLanSmbServerActivity"
             android:label="@string/storage_add_lan_smb_server_title"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditSmbServerActivity"
             android:label="@string/storage_edit_smb_server_title_edit"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.storage.EditWebDavServerActivity"
             android:label="@string/storage_edit_webdav_server_title_edit"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.navigation.EditBookmarkDirectoryDialogActivity"
             android:label="@string/navigation_edit_bookmark_directory_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.navigation.AddBookmarkDirectoryDialogActivity"
             android:label="@string/navigation_edit_bookmark_directory_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.ftpserver.FtpServerActivity"
             android:exported="true"
             android:label="@string/ftp_server_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles">
+            android:theme="@style/Theme.Files">
             <intent-filter>
                 <action android:name="com.android.imagic.files.intent.action.MANAGE_FTP_SERVER" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -263,7 +263,7 @@
             android:exported="true"
             android:label="@string/settings_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles">
+            android:theme="@style/Theme.Files">
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -274,47 +274,47 @@
             android:name="com.android.imagic.files.storage.StorageListActivity"
             android:label="@string/storage_list_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.settings.StandardDirectoryListActivity"
             android:label="@string/settings_standard_directory_list_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.settings.BookmarkDirectoryListActivity"
             android:label="@string/settings_bookmark_directory_list_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.about.AboutActivity"
             android:label="@string/about_title"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialFiles" />
+            android:theme="@style/Theme.Files" />
 
         <activity
             android:name="com.android.imagic.files.fileaction.ArchivePasswordDialogActivity"
             android:autoRemoveFromRecents="true"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.filejob.FileJobErrorDialogActivity"
             android:autoRemoveFromRecents="true"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.filejob.FileJobConflictDialogActivity"
             android:autoRemoveFromRecents="true"
-            android:theme="@style/Theme.MaterialFiles.Translucent" />
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.viewer.saveas.SaveAsActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
             android:label="@string/save_as_title"
-            android:theme="@style/Theme.MaterialFiles.Translucent">
+            android:theme="@style/Theme.Files.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -333,7 +333,7 @@
             android:name="com.android.imagic.files.viewer.text.TextEditorActivity"
             android:exported="true"
             android:label="@string/text_editor_title"
-            android:theme="@style/Theme.MaterialFiles">
+            android:theme="@style/Theme.Files">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -354,7 +354,7 @@
             android:name="com.android.imagic.files.viewer.image.ImageViewerActivity"
             android:exported="true"
             android:label="@string/image_viewer_title"
-            android:theme="@style/Theme.MaterialFiles.Immersive">
+            android:theme="@style/Theme.Files.Immersive">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

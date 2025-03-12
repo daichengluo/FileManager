@@ -1,14 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:tint="?colorControlNormal"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="21dp"
+    android:height="21dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
 
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M16 1H4c-1.1 0-2 0.9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 0.9-2 2v14c0 1.1 0.9 2 2 2h11c1.1 0 2-0.9 2-2V7c0-1.1-0.9-2-2-2zm0 16H8V7h11v14z" />
+        android:fillAlpha="0"
+        android:fillColor="#5B5B5B"
+        android:fillType="nonZero"
+        android:pathData="M0,0h32v32h-32z"
+        android:strokeWidth="1"
+        android:strokeAlpha="0"
+        android:strokeColor="#00000000" />
+
+    <path
+        android:fillColor="#5B5B5B"
+        android:fillType="evenOdd"
+        android:pathData="M10,17L18,17A1,1 0,0 1,19 18L19,18A1,1 0,0 1,18 19L10,19A1,1 0,0 1,9 18L9,18A1,1 0,0 1,10 17z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+
+    <path
+        android:fillColor="#5B5B5B"
+        android:fillType="evenOdd"
+        android:pathData="M15,14L15,22A1,1 0,0 1,14 23L14,23A1,1 0,0 1,13 22L13,14A1,1 0,0 1,14 13L14,13A1,1 0,0 1,15 14z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M8,8L19,8A3,3 0,0 1,22 11L22,25A3,3 0,0 1,19 28L8,28A3,3 0,0 1,5 25L5,11A3,3 0,0 1,8 8z"
+        android:strokeWidth="2"
+        android:strokeColor="#5B5B5B" />
+
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M9,7.158C9,5.501 10.343,4.158 12,4.158L23,4.158C24.657,4.158 26,5.501 26,7.158L26,20.842C26,22.499 24.657,23.842 23,23.842"
+        android:strokeWidth="2"
+        android:strokeColor="#5B5B5B" />
+
 </vector>

@@ -70,23 +70,21 @@
                 android:src="@drawable/nav_user_login_action" />
         </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.android.imagic.files.ui.MaxHeightRecyclerView
             android:id="@+id/classShortcutRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
             android:background="@drawable/surface_background"
-            android:maxHeight="155dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="11dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.android.imagic.files.ui.MaxHeightRecyclerView
             android:id="@+id/bookmarkRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
             android:background="@drawable/surface_background"
-            android:maxHeight="100dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="11dp" />
 
@@ -117,52 +115,13 @@
                 android:textStyle="bold"
                 tools:ignore="UnusedAttribute" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.android.imagic.files.ui.MaxHeightRecyclerView
                 android:id="@+id/storageRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/surface_background"
                 android:paddingVertical="4dp"
                 tools:listitem="@layout/new_storage_item" />
-
-            <com.android.imagic.files.ui.CheckableForegroundLinearLayout
-                android:id="@+id/addStorageLayout"
-                android:layout_width="219dp"
-                android:layout_height="43dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/nav_button_background"
-                android:foreground="@drawable/file_item_list_foreground"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/addButtonImage"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:contentDescription="Add storage"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/nav_storage_add" />
-
-                <Space
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent" />
-
-                <TextView
-                    android:id="@+id/addStorageText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:lineHeight="20dp"
-                    android:singleLine="true"
-                    android:text="添加存储空间"
-                    android:textAlignment="textStart"
-                    android:textColor="#FF0559FF"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:ignore="UnusedAttribute" />
-            </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
         </LinearLayout>
 
         <Space

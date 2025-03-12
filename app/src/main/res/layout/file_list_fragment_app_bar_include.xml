@@ -32,16 +32,21 @@
             <com.android.imagic.files.ui.OverlayToolbar
                 android:id="@+id/overlayToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/surface_background"
+                android:minHeight="0dp"
                 android:visibility="gone"
-                app:navigationIcon="@drawable/close_icon_control_normal_24dp" />
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationIcon="@drawable/close_icon_control_normal_24dp"
+                app:titleTextAppearance="@style/TitleTextStorageAppearance" />
         </FrameLayout>
 
         <com.android.imagic.files.filelist.BreadcrumbLayout
             android:id="@+id/breadcrumbLayout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingHorizontal="11dp" />
+            android:paddingStart="16dp"
+            android:paddingEnd="11dp" />
     </com.android.imagic.files.ui.CoordinatorAppBarLayout>
 </merge>

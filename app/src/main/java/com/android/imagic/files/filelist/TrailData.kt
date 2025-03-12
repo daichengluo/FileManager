@@ -1,7 +1,6 @@
 package com.android.imagic.files.filelist
 
 import android.os.Parcelable
-import android.util.Log
 import com.android.imagic.files.provider.archive.archiveFile
 import com.android.imagic.files.provider.archive.isArchivePath
 import java8.nio.file.Path
@@ -38,11 +37,7 @@ class TrailData private constructor(
     }
 
     fun navigateUp(): TrailData? {
-        Log.d("chengluo", "navigateUp: $trail")
-        if (currentPath == Path.of("/storage/emulated/0")) {
-            return null
-        }
-        if (currentIndex < 3) {
+        if (currentIndex == 0) {
             return null
         }
         val newIndex = currentIndex - 1

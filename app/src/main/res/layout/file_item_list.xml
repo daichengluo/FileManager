@@ -104,7 +104,7 @@
                 android:layout_marginHorizontal="4dp"
                 android:background="@null"
                 android:foreground="@drawable/selectable_item_background_oval"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:src="@drawable/file_item_action_icon" />
 
             <com.android.imagic.files.ui.DisabledAlphaImageView

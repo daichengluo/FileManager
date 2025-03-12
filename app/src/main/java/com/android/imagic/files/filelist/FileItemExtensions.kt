@@ -121,7 +121,10 @@ fun FileItem.getFileAndFolderCount(): Pair<Int, Int> {
     return Pair(fileCount, directoryCount)
 }
 
+
+// todo bug webdav crash
 fun FileItem.getFileCount(): Int {
+    return 0
     if (!Files.isDirectory(path)) {
         return 0
     }

@@ -74,9 +74,9 @@ import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
-import com.android.imagic.files.terminal.Terminal
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
 import com.android.imagic.files.ui.CoordinatorAppBarLayout
+import com.android.imagic.files.ui.CrossfadeSubtitleToolbar
 import com.android.imagic.files.ui.DrawerLayoutOnBackPressedCallback
 import com.android.imagic.files.ui.FixQueryChangeSearchView
 import com.android.imagic.files.ui.OverlayToolbarActionMode
@@ -372,6 +372,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.pasteStateLiveData.observe(viewLifecycleOwner) { onPasteStateChanged(it) }
         Settings.FILE_NAME_ELLIPSIZE.observe(viewLifecycleOwner) { onFileNameEllipsizeChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
+        viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
+            binding.toolbar.setNavButtonEnable(viewModel.canNavigateUpBreadcrumb)
+        }
         Settings.FILE_LIST_SHOW_HIDDEN_FILES.observe(viewLifecycleOwner) {
             onShowHiddenFilesChanged(it)
         }
@@ -392,7 +395,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         super.onCreateOptionsMenu(menu, inflater)
 
         menuBinding = MenuBinding.inflate(menu, inflater)
-        menuBinding.viewSortItem.subMenu!!.setGroupDividerEnabledCompat(true)
+        menuBinding.sortItem.subMenu!!.setGroupDividerEnabledCompat(true)
         setUpSearchView()
         menuBinding.viewTypeItem.setOnMenuItemClickListener {
             viewModel.viewType = when (viewModel.viewType) {
@@ -464,16 +467,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
-            R.id.action_view_list -> {
-                viewModel.viewType = FileViewType.LIST
-                true
-            }
-
-            R.id.action_view_grid -> {
-                viewModel.viewType = FileViewType.GRID
-                true
-            }
-
             R.id.action_sort_by_name -> {
                 viewModel.setSortBy(By.NAME)
                 true
@@ -520,11 +513,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
-            R.id.action_navigate_up -> {
-                navigateUp()
-                true
-            }
-
             R.id.action_navigate_to -> {
                 showNavigateToPathDialog()
                 true
@@ -552,11 +540,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
             R.id.action_copy_path -> {
                 copyPath()
-                true
-            }
-
-            R.id.action_open_in_terminal -> {
-                openInTerminal()
                 true
             }
 
@@ -714,24 +697,19 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             return
         }
         val searchViewExpanded = viewModel.isSearchViewExpanded
-        menuBinding.viewSortItem.isVisible = !searchViewExpanded
+        menuBinding.sortItem.isVisible = !searchViewExpanded
         if (searchViewExpanded) {
             return
         }
         val viewType = viewModel.viewType
-        val checkedViewTypeItem = when (viewType) {
-            FileViewType.LIST -> menuBinding.viewListItem
-            FileViewType.GRID -> menuBinding.viewGridItem
-        }
         menuBinding.viewTypeItem.icon = when (viewType) {
             FileViewType.LIST -> getDrawable(R.drawable.view_type_grid_icon)
             FileViewType.GRID -> getDrawable(R.drawable.view_type_list_icon)
         }
         menuBinding.viewTypeItem.title = when (viewType) {
-            FileViewType.LIST -> getString(R.string.file_list_action_view_grid)
-            FileViewType.GRID -> getString(R.string.file_list_action_view_list)
+            FileViewType.LIST -> getString(R.string.file_list_action_view_type_grid)
+            FileViewType.GRID -> getString(R.string.file_list_action_view_type_list)
         }
-        checkedViewTypeItem.isChecked = true
         val sortOptions = viewModel.sortOptions
         val checkedSortByItem = when (sortOptions.by) {
             By.NAME -> menuBinding.sortByNameItem
@@ -793,15 +771,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun copyPath() {
         copyPath(currentPath)
-    }
-
-    private fun openInTerminal() {
-        val path = currentPath
-        if (path.isLinuxPath) {
-            Terminal.open(path.toFile().path, requireContext())
-        } else {
-            // TODO
-        }
     }
 
     override fun navigateTo(path: Path) {
@@ -901,7 +870,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         val pickOptions = viewModel.pickOptions
         if (pickOptions != null) {
-            overlayActionMode.title = getString(R.string.file_list_select_title_format, files.size)
+            overlayActionMode.title =
+                getString(R.string.file_list_select_title_format_new, files.size)
             overlayActionMode.setMenuResource(R.menu.file_list_pick)
             val menu = overlayActionMode.menu
             val isOpen = when (pickOptions.mode) {
@@ -912,7 +882,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             menu.findItem(R.id.action_create).isVisible = !isOpen
             menu.findItem(R.id.action_select_all).isVisible = pickOptions.allowMultiple
         } else {
-            overlayActionMode.title = getString(R.string.file_list_select_title_format, files.size)
+            overlayActionMode.title =
+                getString(R.string.file_list_select_title_format_new, files.size)
             overlayActionMode.setMenuResource(R.menu.file_list_select)
             val menu = overlayActionMode.menu
             val isAnyFileReadOnly = files.any { it.path.fileSystem.isReadOnly }
@@ -1725,7 +1696,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val persistentDrawerLayout: PersistentDrawerLayout? = null,
         val persistentBarLayout: PersistentBarLayout,
         val appBarLayout: CoordinatorAppBarLayout,
-        val toolbar: Toolbar,
+        val toolbar: CrossfadeSubtitleToolbar,
         val overlayToolbar: Toolbar,
         val breadcrumbLayout: BreadcrumbLayout,
         val contentLayout: ViewGroup,
@@ -1769,10 +1740,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     private class MenuBinding private constructor(
         val menu: Menu,
         val searchItem: MenuItem,
-        val viewSortItem: MenuItem,
+        val sortItem: MenuItem,
         val viewTypeItem: MenuItem,
-        val viewListItem: MenuItem,
-        val viewGridItem: MenuItem,
         val sortByNameItem: MenuItem,
         val sortByTypeItem: MenuItem,
         val sortBySizeItem: MenuItem,
@@ -1787,11 +1756,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             fun inflate(menu: Menu, inflater: MenuInflater): MenuBinding {
                 inflater.inflate(R.menu.file_list, menu)
                 return MenuBinding(
-                    menu, menu.findItem(R.id.action_search),
-                    menu.findItem(R.id.action_view_sort),
+                    menu,
+                    menu.findItem(R.id.action_search),
+                    menu.findItem(R.id.action_sort),
                     menu.findItem(R.id.action_view_type),
-                    menu.findItem(R.id.action_view_list),
-                    menu.findItem(R.id.action_view_grid),
                     menu.findItem(R.id.action_sort_by_name),
                     menu.findItem(R.id.action_sort_by_type),
                     menu.findItem(R.id.action_sort_by_size),

@@ -11,10 +11,10 @@
 
     <style name="Base.Theme.MaterialFiles.Material3" parent="Platform.Theme.MaterialFiles.Material3">
 
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialFiles.ActionBar</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialFiles.ActionBarPopup</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.Files.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.Files.ActionBarPopup</item>
         <item name="android:colorBackground">?colorSurface</item>
-        <item name="dropDownListViewStyle">@style/Widget.MaterialFiles.ListView.DropDown</item>
+        <item name="dropDownListViewStyle">@style/Widget.Files.ListView.DropDown</item>
         <!-- https://developer.android.com/training/tv/start/start#transition-color -->
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -37,7 +37,7 @@
         </item>
         <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
         <item name="floatingActionButtonStyle">?floatingActionButtonSecondaryStyle</item>
-        <item name="materialCardViewStyle">@style/Widget.MaterialFiles.CardView</item>
+        <item name="materialCardViewStyle">@style/Widget.Files.CardView</item>
         <item name="navigationViewStyle">@style/Widget.MaterialFiles.Material3.NavigationView</item>
         <item name="simpleMenuPreferenceStyle">
             @style/Preference.MaterialFiles.Material3.SimpleMenuPreference
@@ -84,10 +84,10 @@
 
     <style name="Base.Theme.MaterialFiles.Material3.Immersive" parent="Platform.Theme.MaterialFiles.Material3.Immersive">
 
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialFiles.ActionBar</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialFiles.ActionBarPopup</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.Files.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.Files.ActionBarPopup</item>
         <item name="android:colorBackground">?colorSurface</item>
-        <item name="dropDownListViewStyle">@style/Widget.MaterialFiles.ListView.DropDown</item>
+        <item name="dropDownListViewStyle">@style/Widget.Files.ListView.DropDown</item>
         <!-- https://developer.android.com/training/tv/start/start#transition-color -->
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -111,7 +111,7 @@
         </item>
         <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
         <item name="floatingActionButtonStyle">?floatingActionButtonSecondaryStyle</item>
-        <item name="materialCardViewStyle">@style/Widget.MaterialFiles.CardView</item>
+        <item name="materialCardViewStyle">@style/Widget.Files.CardView</item>
         <item name="navigationViewStyle">@style/Widget.MaterialFiles.Material3.NavigationView</item>
         <item name="simpleMenuPreferenceStyle">
             @style/Preference.MaterialFiles.Material3.SimpleMenuPreference

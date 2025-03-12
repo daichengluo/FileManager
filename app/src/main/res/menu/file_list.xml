@@ -14,22 +14,12 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_view_sort"
+        android:id="@+id/action_sort"
         android:icon="@drawable/sort_icon_control_normal_24dp"
         android:orderInCategory="100"
-        android:title="@string/file_list_action_view_sort"
+        android:title="@string/file_list_action_sort"
         app:showAsAction="always">
         <menu>
-            <group
-                android:id="@+id/group_view"
-                android:checkableBehavior="single">
-                <item
-                    android:id="@+id/action_view_list"
-                    android:title="@string/file_list_action_view_list" />
-                <item
-                    android:id="@+id/action_view_grid"
-                    android:title="@string/file_list_action_view_grid" />
-            </group>
             <group
                 android:id="@+id/group_sort"
                 android:checkableBehavior="single">
@@ -65,19 +55,13 @@
         android:id="@+id/action_view_type"
         android:icon="@drawable/view_type_grid_icon"
         android:orderInCategory="100"
-        android:title="@string/file_list_action_view_grid"
+        android:title="@string/file_list_action_view_type_grid"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_new_task"
         android:orderInCategory="100"
         android:title="@string/file_list_action_new_task"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_navigate_up"
-        android:orderInCategory="100"
-        android:title="@string/file_list_action_navigate_up"
         app:showAsAction="never" />
 
     <item
@@ -102,14 +86,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_show_hidden_files"
-        android:alphabeticShortcut="h"
-        android:checkable="true"
-        android:orderInCategory="100"
-        android:title="@string/file_list_action_show_hidden_files"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_share"
         android:orderInCategory="100"
         android:title="@string/share"
@@ -122,12 +98,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_open_in_terminal"
-        android:orderInCategory="100"
-        android:title="@string/file_list_action_open_in_terminal"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_add_bookmark"
         android:orderInCategory="100"
         android:title="@string/file_list_action_add_bookmark"
@@ -137,5 +107,13 @@
         android:id="@+id/action_create_shortcut"
         android:orderInCategory="100"
         android:title="@string/file_list_action_create_shortcut"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_show_hidden_files"
+        android:alphabeticShortcut="h"
+        android:checkable="true"
+        android:orderInCategory="100"
+        android:title="@string/file_list_action_show_hidden_files"
         app:showAsAction="never" />
 </menu>

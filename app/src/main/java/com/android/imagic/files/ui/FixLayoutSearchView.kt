@@ -3,8 +3,11 @@ package com.android.imagic.files.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.toColorInt
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
 import com.android.imagic.files.compat.requireViewByIdCompat
@@ -29,9 +32,13 @@ open class FixLayoutSearchView : SearchView {
             leftMargin = 0
             rightMargin = 0
         }
-        val searchSrcText = requireViewByIdCompat<View>(androidx.appcompat.R.id.search_src_text)
+        val searchSrcText = requireViewByIdCompat<TextView>(androidx.appcompat.R.id.search_src_text)
+        searchSrcText.setTextColor("#FF262626".toColorInt())
+        searchSrcText.setHintTextColor("#80262626".toColorInt())
         searchSrcText.updatePaddingRelative(start = 0, end = 0)
-        val searchCloseBtn = requireViewByIdCompat<View>(androidx.appcompat.R.id.search_close_btn)
+        val searchCloseBtn =
+            requireViewByIdCompat<ImageView>(androidx.appcompat.R.id.search_close_btn)
+        //searchCloseBtn.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_clear))
         val searchCloseBtnPaddingHorizontal = searchCloseBtn.context.dpToDimensionPixelSize(12)
         searchCloseBtn.updatePaddingRelative(
             start = searchCloseBtnPaddingHorizontal, end = searchCloseBtnPaddingHorizontal

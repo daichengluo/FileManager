@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <resources>
+    <color name="primary_color">#FFAFC7FF</color>
 
     <color name="dark_30_percent">#4D000000</color>
     <color name="dark_50_percent">#80000000</color>
@@ -20,7 +20,8 @@
 
     <color name="color_primary_light">@color/google_blue_600</color>
     <color name="color_primary_dark">@color/google_blue_300</color>
-    <color name="color_primary">@color/color_primary_light</color>
+    <color name="primary_blue">@color/color_primary_light</color>
+    <color name="color_primary">@color/primary_color</color>
 
     <color name="color_surface_light">@android:color/white</color>
     <color name="color_surface_dark">@color/google_grey_900</color>

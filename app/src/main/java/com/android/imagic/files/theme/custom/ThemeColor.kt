@@ -5,6 +5,7 @@ import com.android.imagic.files.R
 
 enum class ThemeColor(@ColorRes val resourceId: Int) {
     COLOR_PRIMARY(R.color.color_primary),
+    PRIMARY_BLUE(R.color.primary_blue),
     MATERIAL_RED(R.color.material_red),
     MATERIAL_PINK(R.color.material_pink),
     MATERIAL_PURPLE(R.color.material_purple),

@@ -165,12 +165,12 @@ class ThemedSpeedDialView : SpeedDialView {
             actionItem.getFabImageDrawable(null)
         )
             .setLabel(actionItem.getLabel(context))
-            .setFabImageTintColor(fabImageTintColor)
-            .setFabBackgroundColor(fabBackgroundColor)
-            .setLabelColor(labelColor)
-            .setLabelBackgroundColor(labelBackgroundColor)
+            //.setFabImageTintColor(fabImageTintColor)
+            //.setFabBackgroundColor(fabBackgroundColor)
+            //.setLabelColor(labelColor)
+            //.setLabelBackgroundColor(labelBackgroundColor)
             .setLabelClickable(actionItem.isLabelClickable)
-            .setTheme(actionItem.theme)
+            //.setTheme(actionItem.theme)
             .create()
         return super.addActionItem(actionItem, position, animate)?.apply {
             fab.apply {

@@ -2,12 +2,9 @@ package com.android.imagic.files.storage
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.android.imagic.files.R
-import com.android.imagic.files.file.asExternalStorageUri
-import com.android.imagic.files.provider.document.resolver.ExternalStorageProviderHacks
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.putArgs
@@ -35,28 +32,6 @@ class AddStorageDialogFragment : AppCompatDialogFragment() {
 
     companion object {
         private val STORAGE_TYPES = listOfNotNull(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                R.string.storage_add_storage_android_data to
-                        AddExternalStorageShortcutActivity::class.createIntent().putArgs(
-                            AddExternalStorageShortcutFragment.Args(
-                                R.string.storage_add_storage_android_data,
-                                ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_DATA
-                                    .asExternalStorageUri()
-                            )
-                        )
-            } else null,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                R.string.storage_add_storage_android_obb to
-                        AddExternalStorageShortcutActivity::class.createIntent().putArgs(
-                            AddExternalStorageShortcutFragment.Args(
-                                R.string.storage_add_storage_android_obb,
-                                ExternalStorageProviderHacks.DOCUMENT_URI_ANDROID_OBB
-                                    .asExternalStorageUri()
-                            )
-                        )
-            } else null,
-            R.string.storage_add_storage_document_tree to
-                    AddDocumentTreeActivity::class.createIntent(),
             R.string.storage_add_storage_ftp_server to
                     EditFtpServerActivity::class.createIntent()
                         .putArgs(EditFtpServerFragment.Args()),
