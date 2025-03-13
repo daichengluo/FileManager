@@ -116,4 +116,10 @@
         android:orderInCategory="100"
         android:title="@string/file_list_action_show_hidden_files"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_exit_app"
+        android:orderInCategory="100"
+        android:title="@string/file_list_action_exit_app"
+        app:showAsAction="never" />
 </menu>

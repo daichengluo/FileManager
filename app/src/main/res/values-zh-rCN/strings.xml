@@ -653,4 +653,5 @@
     <string name="file_list_action_view_type_list">列表视图</string>
     <string name="file_list_action_view_type_grid">网格视图</string>
     <string name="file_list_action_sort">排序</string>
+    <string name="file_list_action_exit_app">退出应用</string>
 </resources>

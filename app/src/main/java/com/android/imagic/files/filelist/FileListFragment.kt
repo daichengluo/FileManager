@@ -109,6 +109,7 @@ import com.android.imagic.files.util.createViewIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.extraPathList
 import com.android.imagic.files.util.fadeToVisibilityUnsafe
+import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.getDimensionDp
 import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
@@ -529,11 +530,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
-            R.id.action_show_hidden_files -> {
-                setShowHiddenFiles(!menuBinding.showHiddenFilesItem.isChecked)
-                true
-            }
-
             R.id.action_share -> {
                 share()
                 true
@@ -551,6 +547,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
             R.id.action_create_shortcut -> {
                 createShortcut()
+                true
+            }
+
+            R.id.action_show_hidden_files -> {
+                setShowHiddenFiles(!menuBinding.showHiddenFilesItem.isChecked)
+                true
+            }
+
+            R.id.action_exit_app -> {
+                finish()
                 true
             }
 
@@ -1756,7 +1762,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val sortDirectoriesFirstItem: MenuItem,
         val viewSortPathSpecificItem: MenuItem,
         val selectAllItem: MenuItem,
-        val showHiddenFilesItem: MenuItem
+        val showHiddenFilesItem: MenuItem,
+        val exitApp: MenuItem
     ) {
         companion object {
             fun inflate(menu: Menu, inflater: MenuInflater): MenuBinding {
@@ -1774,7 +1781,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     menu.findItem(R.id.action_sort_directories_first),
                     menu.findItem(R.id.action_view_sort_path_specific),
                     menu.findItem(R.id.action_select_all),
-                    menu.findItem(R.id.action_show_hidden_files)
+                    menu.findItem(R.id.action_show_hidden_files),
+                    menu.findItem(R.id.action_exit_app)
                 )
             }
         }

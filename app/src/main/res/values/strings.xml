@@ -811,4 +811,5 @@
     <string name="file_list_action_sort">Sort</string>
     <string name="file_list_action_view_type_list">List view</string>
     <string name="file_list_action_view_type_grid">Grid view</string>
+    <string name="file_list_action_exit_app">Exit</string>
 </resources>
