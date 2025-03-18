@@ -5,11 +5,14 @@ import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
 import com.android.imagic.files.file.MimeType
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.decodedPathByteString
 import com.android.imagic.files.provider.common.decodedQueryByteString
@@ -46,7 +49,8 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
 
-object DocumentFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable {
+object DocumentFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable,
+    Lister {
     private const val SCHEME = "document"
 
     private val HIDDEN_FILE_NAME_PREFIX = ".".toByteString()
@@ -443,5 +447,16 @@ object DocumentFileSystemProvider : FileSystemProvider(), PathObservableProvider
     ) {
         directory as? DocumentPath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? DocumentPath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 }

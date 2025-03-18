@@ -1,17 +1,15 @@
-/*
- * Copyright (c) 2022 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
- */
-
 package com.android.imagic.files.provider.ftp
 
 import android.net.Uri
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.WatchServicePathObservable
 import com.android.imagic.files.provider.common.decodedPathByteString
@@ -52,7 +50,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
 
-object FtpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable {
+object FtpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable, Lister {
     private val HIDDEN_FILE_NAME_PREFIX = ".".toByteString()
 
     private val fileSystems = mutableMapOf<Authority, FtpFileSystem>()
@@ -448,6 +446,17 @@ object FtpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
     ) {
         directory as? FtpPath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? FtpPath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 }
 

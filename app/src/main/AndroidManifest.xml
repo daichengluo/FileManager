@@ -373,7 +373,7 @@
         <service
             android:name="com.android.imagic.files.ftpserver.FtpServerTileService"
             android:exported="true"
-            android:icon="@drawable/nav_file_type_directory"
+            android:icon="@drawable/file_directory_icon"
             android:label="@string/ftp_server_title"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

@@ -1,13 +1,16 @@
 package com.android.imagic.files.provider.webdav
 
 import at.bitfire.dav4jvm.exception.DavException
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.WatchServicePathObservable
 import com.android.imagic.files.provider.common.decodedPathByteString
@@ -47,7 +50,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
 
-object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable {
+object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable, Lister {
     private val HIDDEN_FILE_NAME_PREFIX = ".".toByteString()
 
     private val fileSystems = mutableMapOf<Authority, WebDavFileSystem>()
@@ -437,6 +440,17 @@ object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, 
     ) {
         directory as? WebDavPath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? WebDavPath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 }
 

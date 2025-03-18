@@ -1,12 +1,15 @@
 package com.android.imagic.files.provider.smb
 
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.CloseableIterator
 import com.android.imagic.files.provider.common.InvalidFileNameException
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathIteratorDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.WatchServicePathObservable
 import com.android.imagic.files.provider.common.decodedPathByteString
@@ -43,7 +46,7 @@ import java8.nio.file.spi.FileSystemProvider
 import java.io.IOException
 import java.net.URI
 
-object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable {
+object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable, Lister {
     private const val SCHEME = "smb"
 
     private val HIDDEN_FILE_NAME_PREFIX = ".".toByteString()
@@ -398,5 +401,16 @@ object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
     ) {
         directory as? SmbPath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? SmbPath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 }

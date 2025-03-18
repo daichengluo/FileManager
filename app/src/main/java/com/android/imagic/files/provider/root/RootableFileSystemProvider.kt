@@ -1,8 +1,12 @@
 package com.android.imagic.files.provider.root
 
+import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
+import com.android.imagic.files.provider.linux.LinuxPath
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -13,6 +17,7 @@ import java8.nio.file.FileSystem
 import java8.nio.file.LinkOption
 import java8.nio.file.OpenOption
 import java8.nio.file.Path
+import java8.nio.file.ProviderMismatchException
 import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.attribute.FileAttributeView
@@ -25,7 +30,7 @@ import java.net.URI
 abstract class RootableFileSystemProvider(
     localProviderCreator: (FileSystemProvider) -> FileSystemProvider,
     rootProviderCreator: (FileSystemProvider) -> FileSystemProvider
-) : FileSystemProvider(), PathObservableProvider, Searchable {
+) : FileSystemProvider(), PathObservableProvider, Searchable, Lister {
     protected open val localProvider: FileSystemProvider = localProviderCreator(this)
     protected open val rootProvider: FileSystemProvider = rootProviderCreator(this)
 
@@ -179,6 +184,18 @@ abstract class RootableFileSystemProvider(
     ) {
         callRootable(directory) {
             (this as Searchable).search(directory, query, intervalMillis, listener)
+        }
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        callRootable(directory) {
+            (this as Lister).list(directory, category, intervalMillis, listener)
         }
     }
 

@@ -71,6 +71,7 @@ import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
+import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.linux.isLinuxPath
@@ -349,7 +350,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             onSearchViewExpandedChanged(it)
         }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
-            Log.d("chengluo", "breadcrumbData paths: ${it.paths}")
             binding.breadcrumbLayout.setData(it)
             val currentStorageName = it.nameProducers[0](requireContext())
             if (!activity.title.equals(currentStorageName)) {
@@ -1494,6 +1494,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun navigateToDefaultRoot() {
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
+    }
+
+    override fun quickAccessTo(category: QuickAccessCategory) {
+        collapseSearchView()
+        viewModel.quickAccessTo(category)
     }
 
     override fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit) {

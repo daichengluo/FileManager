@@ -32,7 +32,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 abstract class RemoteFileSystemProvider(
-    private val remoteInterface: RemoteInterface<com.android.imagic.files.provider.remote.IRemoteFileSystemProvider>
+    private val remoteInterface: RemoteInterface<IRemoteFileSystemProvider>
 ) : FileSystemProvider(), PathObservableProvider, Searchable {
     @Throws(IOException::class)
     override fun newInputStream(file: Path, vararg options: OpenOption): InputStream =

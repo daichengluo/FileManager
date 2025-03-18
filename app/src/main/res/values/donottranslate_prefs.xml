@@ -55,6 +55,7 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string name="pref_key_quick_access">key_quick_access</string>
     <string name="pref_key_standard_directory_settings">key_standard_directories</string>
     <string name="pref_key_bookmark_directories">key_bookmark_directories</string>
     <string name="pref_key_root_strategy">key_root_strategy</string>

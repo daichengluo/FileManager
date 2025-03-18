@@ -2,7 +2,6 @@ package com.android.imagic.files.navigation
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageVolume
 import androidx.annotation.DrawableRes
@@ -44,11 +43,11 @@ val navigationStorageItems: List<NavigationItem?>
         add(AddStorageItem())
     }
 
-val navigationClassShortcutItems: List<NavigationItem?>
+val navigationQuickAccessItems: List<NavigationItem?>
     get() = mutableListOf<NavigationItem?>().apply {
-        val standardDirectoryItems = standardDirectoryItems
-        if (standardDirectoryItems.isNotEmpty()) {
-            addAll(standardDirectoryItems)
+        val quickAccessItems = quickAccessItems
+        if (quickAccessItems.isNotEmpty()) {
+            addAll(quickAccessItems)
         }
     }
 
@@ -226,6 +225,78 @@ private class AddStorageItem : NavigationItem() {
     }
 }
 
+private val quickAccessItems: List<NavigationItem>
+    @Size(min = 0)
+    get() = QuickAccessesLiveData.valueCompat
+        .filter { it.isEnabled }
+        .map { QuickAccessItem(it) }
+
+private class QuickAccessItem(
+    private val quickAccess: QuickAccess
+) : NavigationItem() {
+    init {
+        require(quickAccess.isEnabled)
+    }
+
+    override val id: Long
+        get() = quickAccess.id
+
+    override val iconRes: Int
+        @DrawableRes
+        get() = quickAccess.iconRes
+
+    override fun getTitle(context: Context): String = quickAccess.getTitle(context)
+
+    override fun onClick(listener: Listener) {
+        listener.quickAccessTo(quickAccess.category)
+        listener.closeNavigationDrawer()
+    }
+
+    override fun onLongClick(listener: Listener): Boolean {
+        listener.launchIntent(StandardDirectoryListActivity::class.createIntent())
+        return true
+    }
+}
+
+val quickAccesses: List<QuickAccess>
+    get() {
+        val settingsMap = Settings.QUICK_ACCESS.valueCompat.associateBy { it.id }
+        return defaultQuickAccesses.map {
+            val settings = settingsMap[it.key]
+            if (settings != null) it.withSettings(settings) else it
+        }
+    }
+
+private val defaultQuickAccesses: List<QuickAccess>
+    get() = DEFAULT_QUICK_ACCESS
+
+private val DEFAULT_QUICK_ACCESS = listOf(
+    QuickAccess(
+        R.drawable.quick_access_download_icon, R.string.navigation_standard_directory_downloads,
+        QuickAccessCategory.DOWNLOAD, true
+    ),
+    QuickAccess(
+        R.drawable.file_image_icon, R.string.navigation_standard_directory_images,
+        QuickAccessCategory.IMAGE, true
+    ),
+    QuickAccess(
+        R.drawable.file_video_icon, R.string.navigation_standard_directory_videos,
+        QuickAccessCategory.VIDEO, true
+    ),
+    QuickAccess(
+        R.drawable.file_audio_icon, R.string.navigation_standard_directory_audio,
+        QuickAccessCategory.AUDIO, true
+    ),
+    QuickAccess(
+        R.drawable.file_document_icon, R.string.navigation_standard_directory_documents,
+        QuickAccessCategory.DOCUMENT, true
+    ),
+    QuickAccess(
+        R.drawable.file_apk_icon, R.string.navigation_standard_directory_apk,
+        QuickAccessCategory.APK, true
+    )
+)
+
 private val standardDirectoryItems: List<NavigationItem>
     @Size(min = 0)
     get() = StandardDirectoriesLiveData.valueCompat
@@ -277,52 +348,29 @@ val standardDirectories: List<StandardDirectory>
         }
     }
 
-private const val relativePathSeparator = ":"
-
 private val defaultStandardDirectories: List<StandardDirectory>
-    // HACK: Show QQ, TIM and WeChat standard directories based on whether the directory exists.
-    get() = DEFAULT_STANDARD_DIRECTORIES.mapNotNull {
-        when (it.iconRes) {
-            R.drawable.qq_icon_white_24dp, R.drawable.tim_icon_white_24dp,
-            R.drawable.wechat_icon_white_24dp -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    // Direct access to Android/data is blocked since Android 11.
-                    null
-                } else {
-                    for (relativePath in it.relativePath.split(relativePathSeparator)) {
-                        val path = getExternalStorageDirectory(relativePath)
-                        if (JavaFile.isDirectory(path)) {
-                            return@mapNotNull it.copy(relativePath = relativePath)
-                        }
-                    }
-                    null
-                }
-            }
-
-            else -> it
-        }
-    }
+    get() = DEFAULT_STANDARD_DIRECTORIES
 
 // @see android.os.Environment#STANDARD_DIRECTORIES
 private val DEFAULT_STANDARD_DIRECTORIES = listOf(
     StandardDirectory(
-        R.drawable.nav_file_type_download, R.string.navigation_standard_directory_downloads,
+        R.drawable.quick_access_download_icon, R.string.navigation_standard_directory_downloads,
         Environment.DIRECTORY_DOWNLOADS, true
     ),
     StandardDirectory(
-        R.drawable.nav_file_type_picture, R.string.navigation_standard_directory_images,
+        R.drawable.file_image_icon, R.string.navigation_standard_directory_images,
         Environment.DIRECTORY_PICTURES, true
     ),
     StandardDirectory(
-        R.drawable.nav_file_type_video, R.string.navigation_standard_directory_videos,
+        R.drawable.file_video_icon, R.string.navigation_standard_directory_videos,
         Environment.DIRECTORY_MOVIES, true
     ),
     StandardDirectory(
-        R.drawable.nav_file_type_audio, R.string.navigation_standard_directory_audio,
+        R.drawable.file_audio_icon, R.string.navigation_standard_directory_audio,
         Environment.DIRECTORY_MUSIC, true
     ),
     StandardDirectory(
-        R.drawable.nav_file_type_document, R.string.navigation_standard_directory_documents,
+        R.drawable.file_document_icon, R.string.navigation_standard_directory_documents,
         Environment.DIRECTORY_DOCUMENTS, true
     )
 )
@@ -344,7 +392,7 @@ private class BookmarkDirectoryItem(
         get() = bookmarkDirectory.id
 
     @DrawableRes
-    override val iconRes: Int = R.drawable.nav_file_type_directory
+    override val iconRes: Int = R.drawable.file_directory_icon
 
     override fun getTitle(context: Context): String = bookmarkDirectory.name
 
@@ -361,7 +409,7 @@ private val menuItems: List<NavigationItem>
     @Size(3)
     get() = listOf(
         IntentMenuItem(
-            R.drawable.nav_file_type_directory, R.string.navigation_ftp_server,
+            R.drawable.file_directory_icon, R.string.navigation_ftp_server,
             FtpServerActivity::class.createIntent()
         ),
         IntentMenuItem(

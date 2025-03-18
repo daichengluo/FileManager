@@ -21,7 +21,7 @@ import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 
-class ClassShortcutListAdapter(
+class QuickAccessListAdapter(
     private val listener: NavigationItem.Listener,
     context: Context
 ) : SimpleAdapter<NavigationItem?, RecyclerView.ViewHolder>() {

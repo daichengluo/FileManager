@@ -29,6 +29,7 @@ abstract class NavigationItem {
         val currentPath: Path
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
+        fun quickAccessTo(category: QuickAccessCategory)
         fun launchIntent(intent: Intent)
         fun closeNavigationDrawer()
         fun addBookmark()

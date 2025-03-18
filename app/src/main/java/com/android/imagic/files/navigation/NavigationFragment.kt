@@ -2,6 +2,7 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.imagic.files.compat.pathCompat
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.filelist.FileListActivity
+import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.util.createIntent
+import com.android.imagic.files.util.isMounted
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
+import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
+import java8.nio.file.Paths
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private val openPathLauncher =
@@ -24,8 +30,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     private lateinit var binding: NewNavigationFragmentBinding
 
     private lateinit var storageListAdapter: StorageListAdapter
-    private lateinit var classShortcutListAdapter: ClassShortcutListAdapter
-    private lateinit var bookmarkListAdapter: ClassShortcutListAdapter
+    private lateinit var quickAccessListAdapter: QuickAccessListAdapter
+    private lateinit var bookmarkListAdapter: QuickAccessListAdapter
 
     lateinit var listener: Listener
 
@@ -43,15 +49,15 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         // TODO: Needed?
         //binding.recyclerView.setItemAnimator(new NoChangeAnimationItemAnimator())
         val context = requireContext()
-        binding.classShortcutRecyclerView.layoutManager =
+        binding.quickAccessRecyclerView.layoutManager =
             GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
-        classShortcutListAdapter = ClassShortcutListAdapter(this, context)
-        binding.classShortcutRecyclerView.adapter = classShortcutListAdapter
-        binding.classShortcutRecyclerView.setMaxHeight(500)
+        quickAccessListAdapter = QuickAccessListAdapter(this, context)
+        binding.quickAccessRecyclerView.adapter = quickAccessListAdapter
+        binding.quickAccessRecyclerView.setMaxHeight(500)
 
         binding.bookmarkRecyclerView.layoutManager =
             GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
-        bookmarkListAdapter = ClassShortcutListAdapter(this, context)
+        bookmarkListAdapter = QuickAccessListAdapter(this, context)
         binding.bookmarkRecyclerView.adapter = bookmarkListAdapter
         binding.bookmarkRecyclerView.setMaxHeight(500)
 
@@ -66,10 +72,10 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
         val viewLifecycleOwner = viewLifecycleOwner
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
-        ClassShortcutItemListLiveData.observe(viewLifecycleOwner) {
-            onClassShortcutItemsChanged(it)
-            if (classShortcutListAdapter.itemCount == 0) {
-                binding.classShortcutRecyclerView.visibility = View.GONE
+        QuickAccessItemListLiveData.observe(viewLifecycleOwner) {
+            onQuickAccessItemsChanged(it)
+            if (quickAccessListAdapter.itemCount == 0) {
+                binding.quickAccessRecyclerView.visibility = View.GONE
             }
         }
         BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
@@ -89,8 +95,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         storageListAdapter.replace(navigationItems)
     }
 
-    private fun onClassShortcutItemsChanged(navigationItems: List<NavigationItem?>) {
-        classShortcutListAdapter.replace(navigationItems)
+    private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {
+        quickAccessListAdapter.replace(navigationItems)
     }
 
     private fun onBookmarkItemsChanged(navigationItems: List<NavigationItem?>) {
@@ -99,7 +105,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private fun onCurrentPathChanged(path: Path) {
         storageListAdapter.notifyCheckedChanged()
-        classShortcutListAdapter.notifyCheckedChanged()
+        quickAccessListAdapter.notifyCheckedChanged()
     }
 
     override val currentPath: Path
@@ -111,6 +117,10 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     override fun navigateToRoot(path: Path) {
         listener.navigateToRoot(path)
+    }
+
+    override fun quickAccessTo(category: QuickAccessCategory) {
+        listener.quickAccessTo(category)
     }
 
     override fun launchIntent(intent: Intent) {
@@ -130,6 +140,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
+        fun quickAccessTo(category: QuickAccessCategory)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
         fun closeNavigationDrawer()
     }

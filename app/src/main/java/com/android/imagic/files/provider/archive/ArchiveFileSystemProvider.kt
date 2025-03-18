@@ -1,12 +1,15 @@
 package com.android.imagic.files.provider.archive
 
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.FileSystemCache
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.ReadOnlyFileSystemException
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.decodedPathByteString
 import com.android.imagic.files.provider.common.decodedQueryByteString
@@ -35,7 +38,8 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.URI
 
-object ArchiveFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable {
+object ArchiveFileSystemProvider : FileSystemProvider(), PathObservableProvider, Searchable,
+    Lister {
     private const val SCHEME = "archive"
 
     private val fileSystems = FileSystemCache<Path, ArchiveFileSystem>()
@@ -284,5 +288,16 @@ object ArchiveFileSystemProvider : FileSystemProvider(), PathObservableProvider,
     ) {
         directory as? ArchivePath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? ArchivePath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 }

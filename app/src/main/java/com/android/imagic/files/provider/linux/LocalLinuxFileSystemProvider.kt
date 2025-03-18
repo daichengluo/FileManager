@@ -1,11 +1,14 @@
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
+import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.PosixFileMode
 import com.android.imagic.files.provider.common.Searchable
+import com.android.imagic.files.provider.common.WalkFileTreeLister
 import com.android.imagic.files.provider.common.WalkFileTreeSearchable
 import com.android.imagic.files.provider.common.WatchServicePathObservable
 import com.android.imagic.files.provider.common.decodedPathByteString
@@ -41,7 +44,7 @@ import java.io.IOException
 import java.net.URI
 
 class LocalLinuxFileSystemProvider(provider: LinuxFileSystemProvider) : FileSystemProvider(),
-    PathObservableProvider, Searchable {
+    PathObservableProvider, Searchable, Lister {
     internal val fileSystem: LinuxFileSystem = LinuxFileSystem(provider)
 
     override fun getScheme(): String = SCHEME
@@ -361,6 +364,17 @@ class LocalLinuxFileSystemProvider(provider: LinuxFileSystemProvider) : FileSyst
     ) {
         directory as? LinuxPath ?: throw ProviderMismatchException(directory.toString())
         WalkFileTreeSearchable.search(directory, query, intervalMillis, listener)
+    }
+
+    @Throws(IOException::class)
+    override fun list(
+        directory: Path,
+        category: MimeTypeCategory?,
+        intervalMillis: Long,
+        listener: (List<Path>) -> Unit
+    ) {
+        directory as? LinuxPath ?: throw ProviderMismatchException(directory.toString())
+        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
     }
 
     companion object {

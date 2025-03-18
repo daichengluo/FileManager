@@ -1,5 +1,6 @@
 package com.android.imagic.files.provider.common
 
+import com.android.imagic.files.file.MimeTypeCategory
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
 import java8.nio.file.CopyOption
@@ -337,6 +338,11 @@ fun Path.resolveForeign(other: Path): Path {
 @Throws(IOException::class)
 fun Path.search(query: String, intervalMillis: Long, listener: (List<Path>) -> Unit) {
     (provider as Searchable).search(this, query, intervalMillis, listener)
+}
+
+@Throws(IOException::class)
+fun Path.list(category: MimeTypeCategory?, intervalMillis: Long, listener: (List<Path>) -> Unit) {
+    (provider as Lister).list(this, category, intervalMillis, listener)
 }
 
 @Throws(IOException::class)
