@@ -31,7 +31,8 @@
                 android:hint="@string/file_list_create_file_name_hint"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="#80262626" />
         </androidx.appcompat.widget.Toolbar>
     </com.android.imagic.files.ui.BottomBarLayout>
 </merge>
