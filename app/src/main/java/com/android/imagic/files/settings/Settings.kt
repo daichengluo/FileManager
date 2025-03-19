@@ -9,8 +9,6 @@ import com.android.imagic.files.filelist.FileSortOptions
 import com.android.imagic.files.filelist.FileViewType
 import com.android.imagic.files.filelist.OpenApkDefaultAction
 import com.android.imagic.files.navigation.BookmarkDirectory
-import com.android.imagic.files.navigation.QuickAccess
-import com.android.imagic.files.navigation.QuickAccessSettings
 import com.android.imagic.files.navigation.StandardDirectorySettings
 import com.android.imagic.files.provider.root.RootStrategy
 import com.android.imagic.files.storage.PrimaryStorageVolume
@@ -127,9 +125,6 @@ object Settings {
             R.string.pref_key_file_name_ellipsize, R.string.pref_default_value_file_name_ellipsize,
             TextUtils.TruncateAt::class.java
         )
-
-    val QUICK_ACCESS: SettingLiveData<List<QuickAccessSettings>> =
-        ParcelValueSettingLiveData(R.string.pref_key_quick_access, emptyList())
 
     val STANDARD_DIRECTORY_SETTINGS: SettingLiveData<List<StandardDirectorySettings>> =
         ParcelValueSettingLiveData(R.string.pref_key_standard_directory_settings, emptyList())

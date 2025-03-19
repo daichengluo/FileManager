@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.obtainStyledAttributesCompat
 import com.android.imagic.files.compat.use
-import com.android.imagic.files.databinding.NavClassShortcutItemBinding
+import com.android.imagic.files.databinding.NavigationQuickAccessItemBinding
 import com.android.imagic.files.ui.AutoMirrorDrawable
 import com.android.imagic.files.ui.SimpleAdapter
 import com.android.imagic.files.util.layoutInflater
@@ -92,7 +92,7 @@ class QuickAccessListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ItemHolder(
-            NavClassShortcutItemBinding.inflate(parent.context.layoutInflater, parent, false)
+            NavigationQuickAccessItemBinding.inflate(parent.context.layoutInflater, parent, false)
         ).apply {
             binding.itemLayout.background =
                 viewAttributes.itemBackground?.constantState?.newDrawable()
@@ -131,7 +131,8 @@ class QuickAccessListAdapter(
         val itemForeground: Drawable?
     )
 
-    private class ItemHolder(val binding: NavClassShortcutItemBinding) : RecyclerView.ViewHolder(
+    private class ItemHolder(val binding: NavigationQuickAccessItemBinding) :
+        RecyclerView.ViewHolder(
         binding.root
     )
 }

@@ -2,7 +2,6 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.imagic.files.compat.pathCompat
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.filelist.FileListActivity
-import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.util.createIntent
-import com.android.imagic.files.util.isMounted
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
-import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
-import java8.nio.file.Paths
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private val openPathLauncher =
@@ -31,7 +26,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private lateinit var storageListAdapter: StorageListAdapter
     private lateinit var quickAccessListAdapter: QuickAccessListAdapter
-    private lateinit var bookmarkListAdapter: QuickAccessListAdapter
+    private lateinit var bookmarkListAdapter: BookmarkListAdapter
 
     lateinit var listener: Listener
 
@@ -57,7 +52,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
         binding.bookmarkRecyclerView.layoutManager =
             GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
-        bookmarkListAdapter = QuickAccessListAdapter(this, context)
+        bookmarkListAdapter = BookmarkListAdapter(this, context)
         binding.bookmarkRecyclerView.adapter = bookmarkListAdapter
         binding.bookmarkRecyclerView.setMaxHeight(500)
 
@@ -72,12 +67,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
         val viewLifecycleOwner = viewLifecycleOwner
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
-        QuickAccessItemListLiveData.observe(viewLifecycleOwner) {
-            onQuickAccessItemsChanged(it)
-            if (quickAccessListAdapter.itemCount == 0) {
-                binding.quickAccessRecyclerView.visibility = View.GONE
-            }
-        }
+        QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
     }
@@ -106,6 +96,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     private fun onCurrentPathChanged(path: Path) {
         storageListAdapter.notifyCheckedChanged()
         quickAccessListAdapter.notifyCheckedChanged()
+        bookmarkListAdapter.notifyCheckedChanged()
     }
 
     override val currentPath: Path
@@ -119,7 +110,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         listener.navigateToRoot(path)
     }
 
-    override fun quickAccessTo(category: QuickAccessCategory) {
+    override fun quickAccessTo(category: MimeTypeCategory?) {
         listener.quickAccessTo(category)
     }
 
@@ -140,7 +131,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
-        fun quickAccessTo(category: QuickAccessCategory)
+        fun quickAccessTo(category: MimeTypeCategory?)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
         fun closeNavigationDrawer()
     }

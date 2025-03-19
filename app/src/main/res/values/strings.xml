@@ -803,10 +803,10 @@
     </plurals>
     <string name="navigation_login_account_tip">Login account</string>
     <string name="navigation_internal_storage_name">Internal storage</string>
-    <string name="navigation_standard_directory_images">Images</string>
-    <string name="navigation_standard_directory_videos">Videos</string>
-    <string name="navigation_standard_directory_audio">Audio</string>
-    <string name="navigation_standard_directory_apk">APKs</string>
+    <string name="navigation_quick_access_images">Images</string>
+    <string name="navigation_quick_access_videos">Videos</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
     <string name="file_list_select_title_format_new">%1$,d selected</string>
     <string name="file_list_action_sort">Sort</string>
     <string name="file_list_action_view_type_list">List view</string>

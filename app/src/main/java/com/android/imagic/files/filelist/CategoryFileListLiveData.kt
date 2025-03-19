@@ -39,7 +39,6 @@ class CategoryFileListLiveData(
         val storagePaths = StorageVolumeListLiveData.valueCompat
             .filter { it.isMounted }
             .map { Paths.get(it.pathCompat) }
-
         pendingTasks.set(storagePaths.size)
 
         for (storagePath in storagePaths) {

@@ -12,7 +12,6 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -58,6 +57,7 @@ import com.android.imagic.files.databinding.FileListFragmentIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentSpeedDialIncludeBinding
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
+import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.file.asMimeTypeOrNull
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
@@ -71,7 +71,6 @@ import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
-import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.linux.isLinuxPath
@@ -351,9 +350,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
             binding.breadcrumbLayout.setData(it)
-            val currentStorageName = it.nameProducers[0](requireContext())
-            if (!activity.title.equals(currentStorageName)) {
-                activity.setTitle(currentStorageName)
+            val storageTitle = it.nameProducers[0](requireContext())
+            if (!activity.title.equals(storageTitle)) {
+                activity.setTitle(storageTitle)
             }
         }
         viewModel.viewTypeLiveData.observe(viewLifecycleOwner) { onViewTypeChanged(it) }
@@ -1496,8 +1495,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
     }
 
-    override fun quickAccessTo(category: QuickAccessCategory) {
-        collapseSearchView()
+    override fun quickAccessTo(category: MimeTypeCategory?) {
         viewModel.quickAccessTo(category)
     }
 
