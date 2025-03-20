@@ -13,6 +13,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
+            <include layout="@layout/file_drag_placeholder" />
+
             <com.android.imagic.files.ui.PersistentBarLayout
                 android:id="@+id/persistentBarLayout"
                 android:layout_width="match_parent"

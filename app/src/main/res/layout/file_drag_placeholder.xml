@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dragPlaceholder"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="invisible">
+
+        <FrameLayout
+            android:id="@+id/iconLayout"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/surface_background"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.android.imagic.files.ui.DisabledAlphaImageView
+                android:id="@+id/iconImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:duplicateParentState="true"
+                android:scaleType="centerCrop" />
+
+            <com.android.imagic.files.ui.DisabledAlphaImageView
+                android:id="@+id/thumbnailImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:duplicateParentState="true"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+
+            <com.android.imagic.files.ui.DisabledAlphaImageView
+                android:id="@+id/appIconBadgeImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:duplicateParentState="true"
+                app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

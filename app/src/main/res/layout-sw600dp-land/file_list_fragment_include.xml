@@ -8,6 +8,8 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
+        <include layout="@layout/file_drag_placeholder" />
+
         <com.android.imagic.files.ui.PersistentDrawerLayout
             android:id="@+id/persistentDrawerLayout"
             android:layout_width="match_parent"

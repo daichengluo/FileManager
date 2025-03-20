@@ -12,6 +12,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.view.DragEvent
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -30,6 +32,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -44,11 +47,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import coil.dispose
+import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
+import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
 import com.android.imagic.files.compat.setGroupDividerEnabledCompat
+import com.android.imagic.files.databinding.FileDragPlaceholderBinding
 import com.android.imagic.files.databinding.FileListFragmentAppBarIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentBinding
 import com.android.imagic.files.databinding.FileListFragmentBottomBarIncludeBinding
@@ -61,6 +68,7 @@ import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.file.asMimeTypeOrNull
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
+import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.filejob.FileJobService
@@ -73,6 +81,7 @@ import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
+import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
@@ -259,6 +268,40 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             //return false
             binding.speedDialView.close()
             true
+        }
+        binding.recyclerView.setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    cancelDragDrop()
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    true
+                }
+
+                DragEvent.ACTION_DROP -> {
+                    val path = currentPath
+                    if (path.isDirectory()) {
+                        dropFileTo(path)
+                    }
+                    true
+                }
+
+                else -> false
+            }
         }
 
         val viewLifecycleOwner = viewLifecycleOwner
@@ -1226,6 +1269,46 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         adapter.nameEllipsize = fileNameEllipsize
     }
 
+    override fun cancelDragDrop() {
+        viewModel.clearPasteState()
+        binding.dragPlaceholder.isVisible = false
+    }
+
+    override fun dropFileTo(targetPath: Path) {
+        pasteFiles(targetPath)
+        binding.dragPlaceholder.isVisible = false
+    }
+
+    override fun getDragShadow(file: FileItem): View {
+        binding.iconImage.apply {
+            isVisible = true
+            val iconRes = file.mimeType.iconRes
+            setImageResource(iconRes)
+        }
+        binding.thumbnailImage.apply {
+            dispose()
+            setImageDrawable(null)
+            val path = file.path
+            val attributes = file.attributes
+            val supportsThumbnail = file.supportsThumbnail
+            isVisible = supportsThumbnail
+            if (supportsThumbnail) {
+                load(path to attributes)
+            }
+        }
+        binding.appIconBadgeImage.apply {
+            dispose()
+            setImageDrawable(null)
+            val appDirectoryPackageName = file.appDirectoryPackageName
+            val hasAppIconBadge = appDirectoryPackageName != null
+            isVisible = hasAppIconBadge
+            if (hasAppIconBadge) {
+                load(AppIconPackageName(appDirectoryPackageName!!))
+            }
+        }
+        return binding.dragPlaceholder.apply { isVisible = true }
+    }
+
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
     }
@@ -1723,7 +1806,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val bottomBarLayout: ViewGroup,
         val bottomToolbar: Toolbar,
         val bottomCreateFileNameEdit: EditText,
-        val speedDialView: SpeedDialView
+        val speedDialView: SpeedDialView,
+        val dragPlaceholder: ConstraintLayout,
+        val iconImage: ImageView,
+        val thumbnailImage: ImageView,
+        val appIconBadgeImage: ImageView
     ) {
         companion object {
             fun inflate(
@@ -1738,6 +1825,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 val contentBinding = FileListFragmentContentIncludeBinding.bind(bindingRoot)
                 val bottomBarBinding = FileListFragmentBottomBarIncludeBinding.bind(bindingRoot)
                 val speedDialBinding = FileListFragmentSpeedDialIncludeBinding.bind(bindingRoot)
+                val dragBinding = FileDragPlaceholderBinding.bind(bindingRoot)
                 return Binding(
                     bindingRoot, includeBinding.drawerLayout, includeBinding.persistentDrawerLayout,
                     includeBinding.persistentBarLayout, appBarBinding.appBarLayout,
@@ -1746,7 +1834,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     contentBinding.progress, contentBinding.errorText, contentBinding.emptyView,
                     contentBinding.swipeRefreshLayout, contentBinding.recyclerView,
                     bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomToolbar,
-                    bottomBarBinding.bottomCreateFileNameEdit, speedDialBinding.speedDialView
+                    bottomBarBinding.bottomCreateFileNameEdit, speedDialBinding.speedDialView,
+                    dragBinding.dragPlaceholder, dragBinding.iconImage, dragBinding.thumbnailImage,
+                    dragBinding.appIconBadgeImage
                 )
             }
         }

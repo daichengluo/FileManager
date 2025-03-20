@@ -1,7 +1,12 @@
 package com.android.imagic.files.filelist
 
+import android.annotation.SuppressLint
+import android.content.ClipData
 import android.text.TextUtils
+import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.DRAG_FLAG_GLOBAL
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -38,6 +43,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.util.Locale
+import kotlin.math.abs
 
 class FileListAdapter(
     private val listener: Listener,
@@ -215,6 +221,7 @@ class FileListAdapter(
         throw UnsupportedOperationException()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
         val file = getItem(position)
         val isDirectory = file.attributes.isDirectory
@@ -242,6 +249,44 @@ class FileListAdapter(
             return
         }
         bindViewHolderAnimation(holder)
+        holder.itemLayout.setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    if (isDirectory) {
+                        holder.itemLayout.isChecked = true
+                    }
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    holder.itemLayout.isChecked = false
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    listener.cancelDragDrop()
+                    holder.itemLayout.isChecked = false
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    true
+                }
+
+                DragEvent.ACTION_DROP -> {
+                    if (isDirectory) {
+                        listener.dropFileTo(path)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
         holder.itemLayout.apply {
             setOnClickListener {
                 if (selectedFiles.isEmpty()) {
@@ -258,9 +303,20 @@ class FileListAdapter(
                 }
                 true
             }
+            setOnFileDragListener(this, file)
         }
-        holder.iconLayout?.setOnClickListener {
+        /*holder.iconLayout?.setOnClickListener {
             selectFile(file)
+        }*/
+        holder.iconLayout?.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    startDragAndDrop(file, holder.itemLayout)
+                    true
+                }
+
+                else -> false
+            }
         }
         val iconRes = file.mimeType.iconRes
         holder.iconImage?.apply {
@@ -426,6 +482,47 @@ class FileListAdapter(
     override val isAnimationEnabled: Boolean
         get() = Settings.FILE_LIST_ANIMATION.valueCompat
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setOnFileDragListener(view: View, file: FileItem) {
+        var initialTouchX = 0f
+        var initialTouchY = 0f
+
+        view.setOnTouchListener { _, event ->
+            //if (!isDraggable) return@setOnTouchListener false
+
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    initialTouchX = event.rawX
+                    initialTouchY = event.rawY
+                    false
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (abs(event.rawX - initialTouchX) > 10 || abs(event.rawY - initialTouchY) > 10) {
+                        startDragAndDrop(file, view)
+                        true
+                    } else false
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun startDragAndDrop(file: FileItem, view: View) {
+        // drag moved clearSelectedFiles
+        listener.clearSelectedFiles()
+        clearSelectedFiles()
+
+        // copy file
+        listener.copyFile(file)
+
+        val data = ClipData.newPlainText("filePath", file.path.toString())
+        val shadowView = listener.getDragShadow(file)
+        val dragShadow = View.DragShadowBuilder(shadowView)
+        view.startDragAndDrop(data, dragShadow, null, DRAG_FLAG_GLOBAL)
+    }
+
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()
 
@@ -486,6 +583,9 @@ class FileListAdapter(
     }
 
     interface Listener {
+        fun cancelDragDrop()
+        fun dropFileTo(targetPath: Path)
+        fun getDragShadow(file: FileItem): View
         fun clearSelectedFiles()
         fun selectFile(file: FileItem, selected: Boolean)
         fun selectFiles(files: FileItemSet, selected: Boolean)
