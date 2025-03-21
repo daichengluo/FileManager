@@ -39,7 +39,7 @@ class AddBookmarkDirectoryDialogFragment : AppCompatDialogFragment() {
             .apply {
                 binding = AddBookmarkDirectoryDialogBinding.inflate(context.layoutInflater)
                 val bookmarkDirectory = args.bookmarkDirectory
-                binding.nameLayout.placeholderText = bookmarkDirectory.defaultName
+                binding.nameEdit.setText(bookmarkDirectory.defaultName)
                 updatePathText()
                 setView(binding.root)
             }
