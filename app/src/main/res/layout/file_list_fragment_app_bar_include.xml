@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- app:statusBarBackground is broken when scrolling. -->
@@ -7,11 +8,11 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:theme="?actionBarTheme"
+        android:background="@drawable/app_bar_background"
+        android:clipToOutline="true"
         app:liftOnScroll="true"
-        app:liftOnScrollColor="@android:color/transparent"
-        app:liftOnScrollTargetViewId="@id/recyclerView">
+        app:liftOnScrollTargetViewId="@id/recyclerView"
+        tools:ignore="UnusedAttribute">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/surface_background"
+                android:background="@drawable/app_bar_background"
                 android:minHeight="0dp"
                 android:visibility="gone"
                 app:contentInsetStartWithNavigation="0dp"
