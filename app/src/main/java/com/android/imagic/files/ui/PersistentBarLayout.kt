@@ -10,6 +10,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.core.content.res.use
 import androidx.core.view.children
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.customview.widget.ViewDragHelper
 import com.android.imagic.files.util.layoutInStatusBar
@@ -128,7 +129,7 @@ class PersistentBarLayout @JvmOverloads constructor(
         var hasTopBar = false
         var hasBottomBar = false
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             val isBar = isBarView(child)
@@ -167,7 +168,7 @@ class PersistentBarLayout @JvmOverloads constructor(
         val contentWidth = measuredWidth
         var contentHeight = measuredHeight
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isBarView(child)) {
@@ -178,7 +179,7 @@ class PersistentBarLayout @JvmOverloads constructor(
             }
         }
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isContentView(child)) {
@@ -198,7 +199,7 @@ class PersistentBarLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isBarView(child)) {
@@ -265,7 +266,7 @@ class PersistentBarLayout @JvmOverloads constructor(
     private fun layoutContentViews() {
         var contentTop = 0
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isBarView(child)) {
@@ -276,7 +277,7 @@ class PersistentBarLayout @JvmOverloads constructor(
             }
         }
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isContentView(child)) {
