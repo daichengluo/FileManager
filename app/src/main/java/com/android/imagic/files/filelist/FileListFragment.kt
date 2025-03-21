@@ -1161,16 +1161,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 return
             }
             val areAllFilesArchivePaths = files.all { it.path.isArchivePath }
-            bottomActionMode.title = getString(
+            bottomActionMode.title = getQuantityString(
                 if (pasteState.copy) {
                     if (areAllFilesArchivePaths) {
-                        R.string.file_list_paste_extract_title_format
+                        R.plurals.file_list_paste_extract_title_format_new
                     } else {
-                        R.string.file_list_paste_copy_title_format
+                        R.plurals.file_list_paste_copy_title_format_new
                     }
                 } else {
-                    R.string.file_list_paste_move_title_format
-                }, files.size
+                    R.plurals.file_list_paste_move_title_format_new
+                }, files.size, files.size
             )
             binding.bottomCreateFileNameEdit.isVisible = false
             bottomActionMode.setMenuResource(R.menu.file_list_paste)

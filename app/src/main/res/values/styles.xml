@@ -78,6 +78,12 @@
         <item name="android:lineHeight" tools:ignore="NewApi">27dp</item>
     </style>
 
+    <style name="BottomBarTitleTextStorageAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">17sp</item>
+        <item name="android:titleTextColor">#80262626</item>
+        <item name="titleMarginStart">0dp</item>
+    </style>
+
     <style name="SubtitleTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:visibility">gone</item>
         <item name="android:layout_height">0dp</item>

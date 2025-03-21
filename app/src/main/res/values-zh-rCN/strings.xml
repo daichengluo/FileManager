@@ -650,6 +650,15 @@
     <string name="navigation_quick_access_audio">音频</string>
     <string name="navigation_quick_access_apk">安装包</string>
     <string name="file_list_select_title_format_new">已选择%1$,d项</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="other">移动%1$,d项</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="other">复制%1$,d项</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="other">提取%1$,d项</item>
+    </plurals>
     <string name="file_list_action_view_type_list">列表视图</string>
     <string name="file_list_action_view_type_grid">网格视图</string>
     <string name="file_list_action_sort">排序</string>

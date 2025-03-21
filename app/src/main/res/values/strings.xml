@@ -808,6 +808,18 @@
     <string name="navigation_quick_access_audio">Audio</string>
     <string name="navigation_quick_access_apk">APKs</string>
     <string name="file_list_select_title_format_new">%1$,d selected</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Moving %1$,d item</item>
+        <item quantity="other">Moving %1$,d items</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Copying %1$,d item</item>
+        <item quantity="other">Copying %1$,d items</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Extracting %1$,d item</item>
+        <item quantity="other">Extracting %1$,d items</item>
+    </plurals>
     <string name="file_list_action_sort">Sort</string>
     <string name="file_list_action_view_type_list">List view</string>
     <string name="file_list_action_view_type_grid">Grid view</string>
