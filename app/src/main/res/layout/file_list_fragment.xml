@@ -3,9 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFEFF0F7"
-    android:paddingHorizontal="13dp"
-    android:paddingVertical="26dp">
+    android:background="@color/background_color">
 
     <!--
       ~ View binding complains about different root view IDs, so we have to wrap them inside a

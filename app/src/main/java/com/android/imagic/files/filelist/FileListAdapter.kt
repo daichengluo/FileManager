@@ -298,25 +298,15 @@ class FileListAdapter(
             setOnLongClickListener {
                 if (selectedFiles.isEmpty()) {
                     selectFile(file)
-                } else {
+                }/* else {
                     listener.openFile(file)
-                }
+                }*/
                 true
             }
             setOnFileDragListener(this, file)
         }
-        /*holder.iconLayout?.setOnClickListener {
+        holder.iconLayout?.setOnClickListener {
             selectFile(file)
-        }*/
-        holder.iconLayout?.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_MOVE -> {
-                    startDragAndDrop(file, holder.itemLayout)
-                    true
-                }
-
-                else -> false
-            }
         }
         val iconRes = file.mimeType.iconRes
         holder.iconImage?.apply {
@@ -483,9 +473,15 @@ class FileListAdapter(
         get() = Settings.FILE_LIST_ANIMATION.valueCompat
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setOnFileDragListener(view: View, file: FileItem) {
+    private fun setOnFileDragListener(view: View, file: FileItem, delayMillis: Long = 500) {
         var initialTouchX = 0f
         var initialTouchY = 0f
+        var isLongPressTriggered = false
+        var isDraggingStarted = false
+
+        val longPressRunnable = Runnable {
+            isLongPressTriggered = true
+        }
 
         view.setOnTouchListener { _, event ->
             //if (!isDraggable) return@setOnTouchListener false
@@ -494,14 +490,29 @@ class FileListAdapter(
                 MotionEvent.ACTION_DOWN -> {
                     initialTouchX = event.rawX
                     initialTouchY = event.rawY
+                    isLongPressTriggered = false
+                    isDraggingStarted = false
+
+                    view.postDelayed(longPressRunnable, delayMillis)
                     false
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    if (abs(event.rawX - initialTouchX) > 10 || abs(event.rawY - initialTouchY) > 10) {
-                        startDragAndDrop(file, view)
-                        true
-                    } else false
+                    val deltaX = abs(event.rawX - initialTouchX)
+                    val deltaY = abs(event.rawY - initialTouchY)
+
+                    if (deltaX > 10 || deltaY > 10) {
+                        if (isLongPressTriggered && !isDraggingStarted) {
+                            isDraggingStarted = true
+                            startDragAndDrop(file, view)
+                        }
+                    }
+                    false
+                }
+
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    view.removeCallbacks(longPressRunnable)
+                    false
                 }
 
                 else -> false

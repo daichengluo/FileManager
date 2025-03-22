@@ -1306,9 +1306,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 load(AppIconPackageName(appDirectoryPackageName!!))
             }
         }
-        if (!requireActivity().isInMultiWindowMode) {
-            newTask()
-        }
         return binding.dragPlaceholder.apply { isVisible = true }
     }
 

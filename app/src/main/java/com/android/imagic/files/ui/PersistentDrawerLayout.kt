@@ -10,6 +10,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.core.content.res.use
 import androidx.core.view.children
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.customview.widget.ViewDragHelper
 import com.android.imagic.files.util.layoutInStatusBar
@@ -126,7 +127,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
         var hasLeftDrawer = false
         var hasRightDrawer = false
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             val isDrawer = isDrawerView(child)
@@ -165,7 +166,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
         var contentWidth = measuredWidth
         val contentHeight = measuredHeight
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isDrawerView(child)) {
@@ -176,7 +177,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
             }
         }
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isContentView(child)) {
@@ -196,7 +197,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isDrawerView(child)) {
@@ -263,7 +264,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
     private fun layoutContentViews() {
         var contentLeft = 0
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isDrawerView(child)) {
@@ -274,7 +275,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
             }
         }
         for (child in children) {
-            if (child.visibility == View.GONE) {
+            if (child.isGone) {
                 continue
             }
             if (isContentView(child)) {

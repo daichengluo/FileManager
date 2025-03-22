@@ -2,30 +2,32 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.android.imagic.files.ui.PersistentBarLayout
-        android:id="@+id/persistentBarLayout"
+    <include layout="@layout/file_drag_placeholder" />
+
+    <com.android.imagic.files.ui.PersistentDrawerLayout
+        android:id="@+id/persistentDrawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/file_drag_placeholder" />
+        <com.android.imagic.files.ui.NavigationFrameLayout
+            android:id="@+id/navigationFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
 
-        <com.android.imagic.files.ui.PersistentDrawerLayout
-            android:id="@+id/persistentDrawerLayout"
+        <com.android.imagic.files.ui.PersistentBarLayout
+            android:id="@+id/persistentBarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <com.android.imagic.files.ui.NavigationFrameLayout
-                android:id="@+id/navigationFragment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start" />
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="27dp"
+            android:layout_marginBottom="27dp"
+            android:fitsSystemWindows="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="13dp"
+                android:fitsSystemWindows="true"
                 android:background="@drawable/surface_background"
                 android:orientation="vertical">
 
@@ -33,10 +35,10 @@
 
                 <include layout="@layout/file_list_fragment_content_include" />
             </LinearLayout>
-        </com.android.imagic.files.ui.PersistentDrawerLayout>
 
-        <include layout="@layout/file_list_fragment_bottom_bar_include" />
+            <include layout="@layout/file_list_fragment_bottom_bar_include" />
+        </com.android.imagic.files.ui.PersistentBarLayout>
+    </com.android.imagic.files.ui.PersistentDrawerLayout>
 
-        <include layout="@layout/file_list_fragment_speed_dial_include" />
-    </com.android.imagic.files.ui.PersistentBarLayout>
+    <include layout="@layout/file_list_fragment_speed_dial_include" />
 </merge>

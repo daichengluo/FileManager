@@ -2,6 +2,8 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <include layout="@layout/file_drag_placeholder" />
+
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
@@ -13,30 +15,36 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
-            <include layout="@layout/file_drag_placeholder" />
-
-            <com.android.imagic.files.ui.PersistentBarLayout
-                android:id="@+id/persistentBarLayout"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true">
 
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                <com.android.imagic.files.ui.PersistentBarLayout
+                    android:id="@+id/persistentBarLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/surface_background"
                     android:fitsSystemWindows="true">
 
-                    <include layout="@layout/file_list_fragment_app_bar_include" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/surface_background"
+                        android:fitsSystemWindows="true"
+                        android:orientation="vertical">
 
-                    <include layout="@layout/file_list_fragment_content_include" />
+                        <include layout="@layout/file_list_fragment_app_bar_include" />
 
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                        <include layout="@layout/file_list_fragment_content_include" />
+                    </LinearLayout>
 
-                <include layout="@layout/file_list_fragment_bottom_bar_include" />
+                    <include layout="@layout/file_list_fragment_bottom_bar_include" />
+                </com.android.imagic.files.ui.PersistentBarLayout>
 
-                <include layout="@layout/file_list_fragment_speed_dial_include" />
-            </com.android.imagic.files.ui.PersistentBarLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <include layout="@layout/file_list_fragment_speed_dial_include" />
+
         </com.android.imagic.files.ui.IgnoreFitsSystemWindowsFullyDraggableDrawerContentLayout>
 
         <!--

@@ -2,6 +2,7 @@
 
 <resources>
     <color name="primary_color">#FFAFC7FF</color>
+    <color name="background_color">#FFEFF0F7</color>
 
     <color name="dark_30_percent">#4D000000</color>
     <color name="dark_50_percent">#80000000</color>
