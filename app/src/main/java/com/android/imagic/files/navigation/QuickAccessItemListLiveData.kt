@@ -7,7 +7,7 @@ object QuickAccessItemListLiveData : MediatorLiveData<List<NavigationItem>>() {
     init {
         // Initialize value before we have any active observer.
         loadValue()
-        addSource(Settings.STANDARD_DIRECTORY_SETTINGS) { loadValue() }
+        addSource(Settings.QUICK_ACCESS_SETTINGS) { loadValue() }
     }
 
     private fun loadValue() {

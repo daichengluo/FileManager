@@ -283,6 +283,12 @@
             android:theme="@style/Theme.Files" />
 
         <activity
+            android:name="com.android.imagic.files.settings.QuickAccessListActivity"
+            android:label="@string/settings_quick_access_title"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Files" />
+
+        <activity
             android:name="com.android.imagic.files.settings.BookmarkDirectoryListActivity"
             android:label="@string/settings_bookmark_directory_list_title"
             android:launchMode="singleTop"

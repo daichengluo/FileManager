@@ -13,7 +13,7 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
     private lateinit var localePreference: LocalePreference
 
     override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.settings)
+        addPreferencesFromResource(R.xml.new_settings)
 
         localePreference = preferenceScreen.findPreference(getString(R.string.pref_key_locale))!!
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -38,25 +38,15 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         //Settings.NIGHT_MODE.observe(viewLifecycleOwner) { NightModeHelper.sync() }
         //Settings.BLACK_NIGHT_MODE.observe(viewLifecycleOwner) { CustomThemeHelper.sync() }
         Settings.THEME_COLOR.observe(viewLifecycleOwner, this::onThemeColorChanged)
-        Settings.MATERIAL_DESIGN_3.observe(viewLifecycleOwner, this::onMaterialDesign3Changed)
         Settings.NIGHT_MODE.observe(viewLifecycleOwner, this::onNightModeChanged)
-        Settings.BLACK_NIGHT_MODE.observe(viewLifecycleOwner, this::onBlackNightModeChanged)
     }
 
     private fun onThemeColorChanged(themeColor: ThemeColor) {
         CustomThemeHelper.sync()
     }
 
-    private fun onMaterialDesign3Changed(isMaterialDesign3: Boolean) {
-        CustomThemeHelper.sync()
-    }
-
     private fun onNightModeChanged(nightMode: NightMode) {
         NightModeHelper.sync()
-    }
-
-    private fun onBlackNightModeChanged(blackNightMode: Boolean) {
-        CustomThemeHelper.sync()
     }
 
     override fun onResume() {

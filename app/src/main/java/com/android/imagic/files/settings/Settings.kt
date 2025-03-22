@@ -9,6 +9,7 @@ import com.android.imagic.files.filelist.FileSortOptions
 import com.android.imagic.files.filelist.FileViewType
 import com.android.imagic.files.filelist.OpenApkDefaultAction
 import com.android.imagic.files.navigation.BookmarkDirectory
+import com.android.imagic.files.navigation.QuickAccessSettings
 import com.android.imagic.files.navigation.StandardDirectorySettings
 import com.android.imagic.files.provider.root.RootStrategy
 import com.android.imagic.files.storage.PrimaryStorageVolume
@@ -128,6 +129,9 @@ object Settings {
 
     val STANDARD_DIRECTORY_SETTINGS: SettingLiveData<List<StandardDirectorySettings>> =
         ParcelValueSettingLiveData(R.string.pref_key_standard_directory_settings, emptyList())
+
+    val QUICK_ACCESS_SETTINGS: SettingLiveData<List<QuickAccessSettings>> =
+        ParcelValueSettingLiveData(R.string.pref_key_quick_access_settings, emptyList())
 
     val BOOKMARK_DIRECTORIES: SettingLiveData<List<BookmarkDirectory>> =
         ParcelValueSettingLiveData(
