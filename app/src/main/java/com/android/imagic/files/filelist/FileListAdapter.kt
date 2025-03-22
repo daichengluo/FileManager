@@ -40,15 +40,17 @@ import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.util.Locale
 import kotlin.math.abs
 
 class FileListAdapter(
-    private val listener: Listener,
-    private val scope: CoroutineScope
+    private val listener: Listener
 ) : AnimatedListAdapter<FileItem, FileListAdapter.ViewHolder>(CALLBACK), PopupTextProvider {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var isSearching = false
     private var isShowHiddenFiles = false
 

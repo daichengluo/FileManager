@@ -36,8 +36,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = NewNavigationFragmentBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+        .also { binding = it }
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -116,7 +116,8 @@ suspend fun FileItem.getFolderItemCount(
     }
     val count = try {
         Files.list(path).filter { isShowHiddenFiles || !it.isHidden }.count().toInt()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        e.printStackTrace()
         0
     }
     withContext(Dispatchers.Main) {

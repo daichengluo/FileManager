@@ -43,7 +43,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -252,7 +251,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         binding.swipeRefreshLayout.setOnRefreshListener { this.refresh() }
         layoutManager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = layoutManager
-        adapter = FileListAdapter(this, viewLifecycleOwner.lifecycleScope)
+        adapter = FileListAdapter(this)
         binding.recyclerView.adapter = adapter
         val fastScroller = ThemedFastScroller.create(binding.recyclerView)
         binding.recyclerView.setOnApplyWindowInsetsListener(
@@ -393,9 +392,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
             binding.breadcrumbLayout.setData(it)
-            val storageTitle = it.nameProducers[0](requireContext())
-            if (!activity.title.equals(storageTitle)) {
-                activity.setTitle(storageTitle)
+            it.nameProducers.firstOrNull()?.let { producer ->
+                val storageTitle = producer.invoke(requireContext())
+                if (!activity.title.equals(storageTitle)) {
+                    activity.setTitle(storageTitle)
+                }
             }
         }
         viewModel.viewTypeLiveData.observe(viewLifecycleOwner) { onViewTypeChanged(it) }
