@@ -26,7 +26,7 @@
                 app:contentInsetStartWithNavigation="0dp"
                 app:navigationContentDescription="@string/file_list_action_navigate_up"
                 app:navigationIcon="@drawable/action_bar_back_icon"
-                app:titleTextAppearance="@style/TitleTextStorageAppearance" />
+                app:titleTextAppearance="@style/TitleTextAppearance" />
 
             <com.android.imagic.files.ui.OverlayToolbar
                 android:id="@+id/overlayToolbar"
@@ -38,7 +38,7 @@
                 android:visibility="gone"
                 app:contentInsetStartWithNavigation="0dp"
                 app:navigationIcon="@drawable/close_icon_control_normal_24dp"
-                app:titleTextAppearance="@style/TitleTextStorageAppearance" />
+                app:titleTextAppearance="@style/TitleTextAppearance" />
         </FrameLayout>
 
         <com.android.imagic.files.filelist.BreadcrumbLayout

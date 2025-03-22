@@ -70,7 +70,7 @@
         <item name="searchViewStyle">@style/Widget.AppCompat.SearchView</item>
     </style>
 
-    <style name="TitleTextStorageAppearance" parent="TextAppearance.AppCompat">
+    <style name="TitleTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">19sp</item>
         <item name="android:textColor">#FF262626</item>
         <item name="titleMarginStart">0dp</item>
@@ -78,7 +78,7 @@
         <item name="android:lineHeight" tools:ignore="NewApi">27dp</item>
     </style>
 
-    <style name="BottomBarTitleTextStorageAppearance" parent="TextAppearance.AppCompat">
+    <style name="BottomBarTitleTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">17sp</item>
         <item name="android:titleTextColor">#80262626</item>
         <item name="titleMarginStart">0dp</item>

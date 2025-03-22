@@ -171,7 +171,7 @@ class PersistentBarLayout @JvmOverloads constructor(
             if (child.isGone) {
                 continue
             }
-            if (isBarView(child)) {
+            if (isTopBarView(child)) {
                 val childLayoutParams = child.layoutParams as LayoutParams
                 val childRange = (childLayoutParams.topMargin + child.measuredHeight
                         + childLayoutParams.bottomMargin)

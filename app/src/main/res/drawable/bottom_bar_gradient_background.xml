@@ -7,6 +7,11 @@
                 android:endColor="#FFFFFFFF"
                 android:startColor="#00FFFFFF"
                 android:type="linear" />
+            <corners
+                android:bottomLeftRadius="11dp"
+                android:bottomRightRadius="11dp"
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp" />
         </shape>
     </item>
 </layer-list>

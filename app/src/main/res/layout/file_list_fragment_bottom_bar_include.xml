@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/surface_background"
-        android:elevation="@dimen/design_appbar_elevation"
+        android:background="@drawable/bottom_bar_gradient_background"
         android:fitsSystemWindows="true"
         android:theme="?actionBarTheme">
 
@@ -22,7 +21,7 @@
             app:navigationContentDescription="@string/close"
             app:navigationIcon="@drawable/close_icon_control_normal_24dp"
             app:popupTheme="?actionBarPopupTheme"
-            app:titleTextAppearance="@style/BottomBarTitleTextStorageAppearance"
+            app:titleTextAppearance="@style/BottomBarTitleTextAppearance"
             app:titleTextColor="#80262626">
 
             <EditText
