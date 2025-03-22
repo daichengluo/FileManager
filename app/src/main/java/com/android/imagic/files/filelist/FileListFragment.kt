@@ -53,6 +53,8 @@ import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
+import com.android.imagic.files.compat.isPrimaryCompat
+import com.android.imagic.files.compat.pathCompat
 import com.android.imagic.files.compat.setGroupDividerEnabledCompat
 import com.android.imagic.files.databinding.FileDragPlaceholderBinding
 import com.android.imagic.files.databinding.FileListFragmentAppBarIncludeBinding
@@ -83,6 +85,7 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
 import com.android.imagic.files.ui.CoordinatorAppBarLayout
 import com.android.imagic.files.ui.CrossfadeSubtitleToolbar
@@ -390,11 +393,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.searchViewExpandedLiveData.observe(viewLifecycleOwner) {
             onSearchViewExpandedChanged(it)
         }
-        viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
-            binding.breadcrumbLayout.setData(it)
-            it.nameProducers.firstOrNull()?.let { producer ->
+        viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) { breadcrumbData ->
+            binding.breadcrumbLayout.setData(breadcrumbData)
+            breadcrumbData.nameProducers.firstOrNull()?.let { producer ->
                 val storageTitle = producer.invoke(requireContext())
-                if (!activity.title.equals(storageTitle)) {
+                if ("/" == storageTitle) {
+                    val internalStoragePath = StorageVolumeListLiveData.valueCompat
+                        .find { it.isPrimaryCompat }!!
+                        .let { Paths.get(it.pathCompat) }
+                    navigateToRoot(internalStoragePath)
+                } else if (!activity.title.equals(storageTitle)) {
                     activity.setTitle(storageTitle)
                 }
             }
@@ -664,11 +672,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val throwable = (stateful as? Failure)?.throwable
         if (throwable != null) {
             throwable.printStackTrace()
-            val error = throwable.toString()
             if (hasFiles) {
-                showToast(error)
-            } else {
-                //binding.errorText.text = error
+                showToast(R.string.error)
             }
         }
         binding.emptyView.fadeToVisibilityUnsafe(stateful is Success && !hasFiles)
