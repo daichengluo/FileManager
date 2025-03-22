@@ -27,6 +27,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     private lateinit var storageListAdapter: StorageListAdapter
     private lateinit var quickAccessListAdapter: QuickAccessListAdapter
     private lateinit var bookmarkListAdapter: BookmarkListAdapter
+    private lateinit var settingsListAdapter: SettingsListAdapter
 
     lateinit var listener: Listener
 
@@ -59,7 +60,12 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         binding.storageRecyclerView.layoutManager = LinearLayoutManager(context)
         storageListAdapter = StorageListAdapter(this, context)
         binding.storageRecyclerView.adapter = storageListAdapter
-        binding.storageRecyclerView.setMaxHeight(500)
+        binding.storageRecyclerView.setMaxHeight(600)
+
+        binding.settingsRecyclerView.layoutManager = LinearLayoutManager(context)
+        settingsListAdapter = SettingsListAdapter(this, context)
+        binding.settingsRecyclerView.adapter = settingsListAdapter
+        binding.settingsRecyclerView.setMaxHeight(500)
 
         binding.loginLayout.setOnClickListener {
             // todo login action
@@ -69,6 +75,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
+        SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
     }
 
@@ -91,6 +98,10 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private fun onBookmarkItemsChanged(navigationItems: List<NavigationItem?>) {
         bookmarkListAdapter.replace(navigationItems)
+    }
+
+    private fun onSettingsItemsChanged(navigationItems: List<NavigationItem?>) {
+        settingsListAdapter.replace(navigationItems)
     }
 
     private fun onCurrentPathChanged(path: Path) {

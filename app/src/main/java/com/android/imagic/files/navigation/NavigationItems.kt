@@ -61,6 +61,11 @@ val navigationBookmarkItems: List<NavigationItem>
         add(AddBookmarkItem())
     }
 
+val navigationSettingsItems: List<NavigationItem>
+    get() = mutableListOf<NavigationItem>().apply {
+        addAll(menuItems)
+    }
+
 val navigationItems: List<NavigationItem?>
     get() = mutableListOf<NavigationItem?>().apply {
         addAll(storageItems)
@@ -364,7 +369,7 @@ private val menuItems: List<NavigationItem>
     @Size(3)
     get() = listOf(
         IntentMenuItem(
-            R.drawable.file_directory_icon, R.string.navigation_ftp_server,
+            R.drawable.shared_directory_icon_white_24dp, R.string.navigation_ftp_server,
             FtpServerActivity::class.createIntent()
         ),
         IntentMenuItem(

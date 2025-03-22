@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="3dp">
+
+    <com.android.imagic.files.ui.CheckableForegroundLinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iconImage"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/settings_title"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@drawable/nav_storage_internal" />
+
+        <Space
+            android:layout_width="3dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:lineHeight="19dp"
+            android:singleLine="true"
+            android:textColor="#FF262626"
+            android:textSize="13sp"
+            tools:ignore="UnusedAttribute"
+            tools:text="设置" />
+    </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+</LinearLayout>

@@ -99,7 +99,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/surface_background"
             android:orientation="vertical"
-            android:paddingVertical="11dp">
+            android:paddingVertical="13dp">
 
             <TextView
                 android:id="@+id/storageTitleText"
@@ -107,26 +107,51 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:lineHeight="19dp"
-                android:paddingHorizontal="12dp"
+                android:paddingHorizontal="15dp"
                 android:singleLine="true"
                 android:text="@string/storage_list_title"
                 android:textAlignment="textStart"
                 android:textColor="#FF262626"
-                android:textSize="13sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 tools:ignore="UnusedAttribute" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
 
             <com.android.imagic.files.ui.MaxHeightRecyclerView
                 android:id="@+id/storageRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/surface_background"
-                android:paddingVertical="4dp"
+                android:paddingVertical="5dp"
                 tools:listitem="@layout/new_storage_item" />
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="88dp" />
+            android:layout_height="11dp" />
+
+        <LinearLayout
+            android:id="@+id/settingsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/surface_background"
+            android:orientation="vertical"
+            android:paddingVertical="13dp">
+
+            <com.android.imagic.files.ui.MaxHeightRecyclerView
+                android:id="@+id/settingsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/surface_background"
+                android:paddingVertical="5dp"
+                tools:listitem="@layout/new_storage_item" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
     </LinearLayout>
 </ScrollView>
