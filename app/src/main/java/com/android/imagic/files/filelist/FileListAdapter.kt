@@ -39,10 +39,6 @@ import com.android.imagic.files.util.isMaterial3Theme
 import com.android.imagic.files.util.layoutInflater
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.util.Locale
 import kotlin.math.abs
@@ -50,7 +46,6 @@ import kotlin.math.abs
 class FileListAdapter(
     private val listener: Listener
 ) : AnimatedListAdapter<FileItem, FileListAdapter.ViewHolder>(CALLBACK), PopupTextProvider {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var isSearching = false
     private var isShowHiddenFiles = false
 
@@ -116,7 +111,7 @@ class FileListAdapter(
         }
     }
 
-    fun clearSelectedFiles() {
+    fun notifyStateChanged() {
         notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
     }
 
@@ -349,40 +344,30 @@ class FileListAdapter(
             val hasAppIconBadge = appDirectoryPackageName != null
             isVisible = hasAppIconBadge
             if (hasAppIconBadge) {
-                load(AppIconPackageName(appDirectoryPackageName!!))
+                load(AppIconPackageName(appDirectoryPackageName))
             }
         }
         holder.nameText.text = file.name
-        if (isDirectory) {
-            holder.descriptionText?.let {
-                val context = holder.descriptionText.context
-                val lastModificationTime = attributes.lastModifiedTime().toInstant()
-                    .formatShort(context)
 
-                scope.launch {
-                    file.getFolderItemCount(isShowHiddenFiles) { count ->
-                        val fileCountText = context.getQuantityString(
-                            R.plurals.file_item_file_count_format, count, count
-                        )
-                        val descriptionSeparator =
-                            context.getString(R.string.file_item_description_separator)
-                        holder.descriptionText.text =
-                            listOf(lastModificationTime, fileCountText).joinToString(
-                                descriptionSeparator
-                            )
-                    }
+        holder.descriptionText?.let {
+            val context = it.context
+            val descriptionSeparator = context.getString(R.string.file_item_description_separator)
+            val lastModificationTime =
+                attributes.lastModifiedTime().toInstant().formatShort(context)
+
+            it.text = if (isDirectory) {
+                val count = if (isShowHiddenFiles) {
+                    file.totalChildrenCount ?: 0
+                } else {
+                    file.visibleChildrenCount ?: 0
                 }
-            }
-        } else {
-            holder.descriptionText?.let {
-                val context = holder.descriptionText.context
-                val lastModificationTime = attributes.lastModifiedTime().toInstant()
-                    .formatShort(context)
+                val childrenCountText = context.getQuantityString(
+                    R.plurals.file_item_file_count_format, count, count
+                )
+                listOf(lastModificationTime, childrenCountText).joinToString(descriptionSeparator)
+            } else {
                 val size = attributes.fileSize.formatHumanReadable(context)
-                val descriptionSeparator =
-                    context.getString(R.string.file_item_description_separator)
-                holder.descriptionText.text =
-                    listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+                listOf(lastModificationTime, size).joinToString(descriptionSeparator)
             }
         }
         val isArchivePath = path.isArchivePath
@@ -525,7 +510,7 @@ class FileListAdapter(
     private fun startDragAndDrop(file: FileItem, view: View) {
         // drag moved clearSelectedFiles
         listener.clearSelectedFiles()
-        clearSelectedFiles()
+        notifyStateChanged()
 
         // copy file
         listener.copyFile(file)

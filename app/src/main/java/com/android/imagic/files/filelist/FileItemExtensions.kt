@@ -11,7 +11,6 @@ import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
 import com.android.imagic.files.file.isPdf
 import com.android.imagic.files.provider.archive.createArchiveRootPath
-import com.android.imagic.files.provider.common.isHidden
 import com.android.imagic.files.provider.document.documentSupportsThumbnail
 import com.android.imagic.files.provider.document.isDocumentPath
 import com.android.imagic.files.provider.ftp.isFtpPath
@@ -21,12 +20,9 @@ import com.android.imagic.files.util.asFileName
 import com.android.imagic.files.util.isGetPackageArchiveInfoCompatible
 import com.android.imagic.files.util.isMediaMetadataRetrieverCompatible
 import com.android.imagic.files.util.valueCompat
-import java8.nio.file.Files
 import java8.nio.file.Path
 import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileTime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.text.CollationKey
 
 val FileItem.name: String
@@ -104,26 +100,6 @@ fun FileItem.createDummyArchiveRoot(): FileItem =
         path.createArchiveRootPath(), DummyCollationKey(), DummyArchiveRootBasicFileAttributes(),
         null, null, false, MimeType.DIRECTORY
     )
-
-suspend fun FileItem.getFolderItemCount(
-    isShowHiddenFiles: Boolean,
-    listener: (Int) -> Unit
-) = withContext(Dispatchers.IO) {
-    if (!Files.isDirectory(path)) {
-        withContext(Dispatchers.Main) {
-            listener(0)
-        }
-    }
-    val count = try {
-        Files.list(path).filter { isShowHiddenFiles || !it.isHidden }.count().toInt()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        0
-    }
-    withContext(Dispatchers.Main) {
-        listener(count)
-    }
-}
 
 // Dummy collation key only to be added to the selection set, which may be used to determine file
 // type when confirming deletion.

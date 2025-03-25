@@ -800,7 +800,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun onShowHiddenFilesChanged(showHiddenFiles: Boolean) {
-        updateAdapterFileList()
+        viewModel.reload()
         updateShowHiddenFilesMenuItem()
     }
 
@@ -1040,7 +1040,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun onOverlayActionModeFinished() {
         viewModel.clearSelectedFiles()
-        adapter.clearSelectedFiles()
+        adapter.notifyStateChanged()
     }
 
     private fun confirmReplaceFile(file: FileItem, setFileName: Boolean = true) {

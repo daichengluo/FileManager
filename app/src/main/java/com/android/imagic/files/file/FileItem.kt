@@ -6,6 +6,7 @@ import com.android.imagic.files.filelist.getCollationKeyForFileName
 import com.android.imagic.files.filelist.name
 import com.android.imagic.files.provider.common.AndroidFileTypeDetector
 import com.android.imagic.files.provider.common.isHidden
+import com.android.imagic.files.provider.common.newDirectoryStream
 import com.android.imagic.files.provider.common.readAttributes
 import com.android.imagic.files.provider.common.readSymbolicLinkByteString
 import com.android.imagic.files.util.ParcelableParceler
@@ -26,7 +27,9 @@ data class FileItem(
     val symbolicLinkTarget: String?,
     private val symbolicLinkTargetAttributes: @WriteWith<ParcelableParceler> BasicFileAttributes?,
     val isHidden: Boolean,
-    val mimeType: MimeType
+    val mimeType: MimeType,
+    var totalChildrenCount: Int? = null,
+    var visibleChildrenCount: Int? = null
 ) : Parcelable {
     val attributes: BasicFileAttributes
         get() = symbolicLinkTargetAttributes ?: attributesNoFollowLinks
@@ -44,9 +47,30 @@ fun Path.loadFileItem(): FileItem {
     val nameCollationKey = Collator.getInstance().getCollationKeyForFileName(name)
     val attributes = readAttributes(BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)
     val isHidden = isHidden
+    var totalChildrenCount: Int? = null
+    var visibleChildrenCount: Int? = null
+
+    if (attributes.isDirectory) {
+        try {
+            newDirectoryStream().use { stream ->
+                val counts = stream.fold(0 to 0) { (total, visible), path ->
+                    val hidden = path.isHidden
+                    (total + 1) to (if (!hidden) visible + 1 else visible)
+                }
+                totalChildrenCount = counts.first
+                visibleChildrenCount = counts.second
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     if (!attributes.isSymbolicLink) {
         val mimeType = AndroidFileTypeDetector.getMimeType(this, attributes).asMimeType()
-        return FileItem(this, nameCollationKey, attributes, null, null, isHidden, mimeType)
+        return FileItem(
+            this, nameCollationKey, attributes, null, null, isHidden, mimeType,
+            totalChildrenCount, visibleChildrenCount
+        )
     }
     val symbolicLinkTarget = readSymbolicLinkByteString().toString()
     val symbolicLinkTargetAttributes = try {
@@ -60,6 +84,6 @@ fun Path.loadFileItem(): FileItem {
     ).asMimeType()
     return FileItem(
         this, nameCollationKey, attributes, symbolicLinkTarget, symbolicLinkTargetAttributes,
-        isHidden, mimeType
+        isHidden, mimeType, totalChildrenCount, visibleChildrenCount
     )
 }
