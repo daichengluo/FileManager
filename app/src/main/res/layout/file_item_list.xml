@@ -99,12 +99,12 @@
 
             <me.zhanghai.android.foregroundcompat.ForegroundImageButton
                 android:id="@+id/menuButton"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginHorizontal="4dp"
                 android:background="@null"
                 android:foreground="@drawable/selectable_item_background_oval"
-                android:padding="12dp"
+                android:padding="6dp"
                 android:src="@drawable/file_item_action_icon" />
 
             <com.android.imagic.files.ui.DisabledAlphaImageView
