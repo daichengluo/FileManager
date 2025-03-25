@@ -1,157 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:background="#FFEFF0F7"
+    android:orientation="vertical"
+    android:paddingHorizontal="27dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="27dp" />
+
+    <TextView
+        android:id="@+id/appNameText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFEFF0F7"
-        android:orientation="vertical"
-        android:padding="27dp">
+        android:ellipsize="marquee"
+        android:lineHeight="30dp"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAlignment="textStart"
+        android:textColor="#FF262626"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        tools:ignore="UnusedAttribute" />
 
-        <TextView
-            android:id="@+id/appNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:lineHeight="30dp"
-            android:singleLine="true"
-            android:text="@string/app_name"
-            android:textAlignment="textStart"
-            android:textColor="#FF262626"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            tools:ignore="UnusedAttribute" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="11dp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="11dp" />
-
-        <com.android.imagic.files.ui.CheckableForegroundLinearLayout
-            android:id="@+id/loginLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/surface_background"
-            android:foreground="@drawable/nav_login_foreground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/userHeaderImage"
-                android:layout_width="53dp"
-                android:layout_height="53dp"
-                android:layout_margin="11dp"
-                android:contentDescription="@string/navigation_login_account_tip"
-                android:src="@drawable/nav_user_header_img" />
-
-            <TextView
-                android:id="@+id/loginTipText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:lineHeight="22dp"
-                android:singleLine="true"
-                android:text="@string/navigation_login_account_tip"
-                android:textAlignment="textStart"
-                android:textColor="#FF262626"
-                android:textSize="16sp"
-                tools:ignore="UnusedAttribute" />
-
-            <ImageView
-                android:id="@+id/loginButton"
-                android:layout_width="21dp"
-                android:layout_height="21dp"
-                android:layout_margin="11dp"
-                android:contentDescription="@string/navigation_login_account_tip"
-                android:src="@drawable/nav_user_login_action" />
-        </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
-
-        <com.android.imagic.files.ui.MaxHeightRecyclerView
-            android:id="@+id/quickAccessRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:background="@drawable/surface_background"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="11dp" />
-
-        <com.android.imagic.files.ui.MaxHeightRecyclerView
-            android:id="@+id/bookmarkRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:background="@drawable/surface_background"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="11dp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="11dp" />
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/storageLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/surface_background"
-            android:orientation="vertical"
-            android:paddingVertical="13dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/storageTitleText"
+            <com.android.imagic.files.ui.CheckableForegroundLinearLayout
+                android:id="@+id/loginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:lineHeight="19dp"
-                android:paddingHorizontal="15dp"
-                android:singleLine="true"
-                android:text="@string/storage_list_title"
-                android:textAlignment="textStart"
-                android:textColor="#FF262626"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:ignore="UnusedAttribute" />
+                android:background="@drawable/surface_background"
+                android:foreground="@drawable/nav_login_foreground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/userHeaderImage"
+                    android:layout_width="53dp"
+                    android:layout_height="53dp"
+                    android:layout_margin="11dp"
+                    android:contentDescription="@string/navigation_login_account_tip"
+                    android:src="@drawable/nav_user_header_img" />
+
+                <TextView
+                    android:id="@+id/loginTipText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:lineHeight="22dp"
+                    android:singleLine="true"
+                    android:text="@string/navigation_login_account_tip"
+                    android:textAlignment="textStart"
+                    android:textColor="#FF262626"
+                    android:textSize="16sp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageView
+                    android:id="@+id/loginButton"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_margin="11dp"
+                    android:contentDescription="@string/navigation_login_account_tip"
+                    android:src="@drawable/nav_user_login_action" />
+            </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+
+            <com.android.imagic.files.ui.MaxHeightRecyclerView
+                android:id="@+id/quickAccessRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/surface_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="11dp" />
+
+            <com.android.imagic.files.ui.MaxHeightRecyclerView
+                android:id="@+id/bookmarkRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/surface_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="11dp" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="11dp" />
 
-            <com.android.imagic.files.ui.MaxHeightRecyclerView
-                android:id="@+id/storageRecyclerView"
+            <LinearLayout
+                android:id="@+id/storageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/surface_background"
-                android:paddingVertical="5dp"
-                tools:listitem="@layout/new_storage_item" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:paddingVertical="13dp">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="11dp" />
+                <TextView
+                    android:id="@+id/storageTitleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:lineHeight="19dp"
+                    android:paddingHorizontal="15dp"
+                    android:singleLine="true"
+                    android:text="@string/storage_list_title"
+                    android:textAlignment="textStart"
+                    android:textColor="#FF262626"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    tools:ignore="UnusedAttribute" />
 
-        <LinearLayout
-            android:id="@+id/settingsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/surface_background"
-            android:orientation="vertical"
-            android:paddingVertical="13dp">
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
 
-            <com.android.imagic.files.ui.MaxHeightRecyclerView
-                android:id="@+id/settingsRecyclerView"
+                <com.android.imagic.files.ui.MaxHeightRecyclerView
+                    android:id="@+id/storageRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/surface_background"
+                    android:paddingVertical="5dp"
+                    tools:listitem="@layout/new_storage_item" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="11dp" />
+
+            <LinearLayout
+                android:id="@+id/settingsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/surface_background"
-                android:paddingVertical="5dp"
-                tools:listitem="@layout/new_storage_item" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:paddingVertical="13dp">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
-    </LinearLayout>
-</ScrollView>
+                <com.android.imagic.files.ui.MaxHeightRecyclerView
+                    android:id="@+id/settingsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/surface_background"
+                    android:paddingVertical="5dp"
+                    tools:listitem="@layout/new_storage_item" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="27dp" />
+</LinearLayout>
