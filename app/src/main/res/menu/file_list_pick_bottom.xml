@@ -18,12 +18,4 @@
         android:orderInCategory="100"
         android:title="@string/save"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_cancel"
-        android:alphabeticShortcut="v"
-        android:icon="@drawable/close_icon_control_normal_24dp"
-        android:orderInCategory="100"
-        android:title="@android:string/cancel"
-        app:showAsAction="always" />
 </menu>
