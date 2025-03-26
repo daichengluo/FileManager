@@ -1,9 +1,11 @@
 package com.android.imagic.files.filelist
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -43,6 +45,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -73,6 +76,12 @@ import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.filejob.FileJobService
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_INDETERMINATE
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_MAX
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_PROGRESS
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TEXT
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TITLE
 import com.android.imagic.files.filelist.FileSortOptions.By
 import com.android.imagic.files.filelist.FileSortOptions.Order
 import com.android.imagic.files.fileproperties.FilePropertiesDialogFragment
@@ -187,7 +196,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private lateinit var overlayActionMode: ToolbarActionMode
 
-    private lateinit var bottomActionMode: ToolbarActionMode
+    private lateinit var bottomActionMode: PersistentBarLayoutToolbarActionMode
 
     private lateinit var layoutManager: GridLayoutManager
 
@@ -204,6 +213,25 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.search(query)
     }
 
+    private val fileTransferReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                FileJobService.Actions.PROGRESS.toString() -> {
+                    val id = intent.getIntExtra(FILE_TRANSFER_ID, -1)
+                    val title = intent.getStringExtra(FILE_TRANSFER_TITLE)
+                    val text = intent.getStringExtra(FILE_TRANSFER_TEXT)
+                    val max = intent.getIntExtra(FILE_TRANSFER_MAX, 100)
+                    val progress = intent.getIntExtra(FILE_TRANSFER_PROGRESS, 0)
+                    val indeterminate = intent.getBooleanExtra(FILE_TRANSFER_INDETERMINATE, false)
+                }
+
+                FileJobService.Actions.CANCELLED.toString() -> {
+                    val id = intent.getIntExtra(FILE_TRANSFER_ID, -1)
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -214,10 +242,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-        Binding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+    ): View = Binding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -235,7 +262,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         activity.setSupportActionBar(binding.toolbar)
         overlayActionMode = OverlayToolbarActionMode(binding.overlayToolbar)
         bottomActionMode = PersistentBarLayoutToolbarActionMode(
-            binding.persistentBarLayout, binding.bottomBarLayout, binding.bottomToolbar
+            binding.persistentBarLayout, binding.bottomProgressbar,
+            binding.bottomBarLayout, binding.bottomToolbar
         )
         val contentLayoutInitialPaddingBottom = binding.contentLayout.paddingBottom
         binding.appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
@@ -433,6 +461,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            fileTransferReceiver, IntentFilter().apply {
+                addAction(FileJobService.Actions.PROGRESS.toString())
+                addAction(FileJobService.Actions.CANCELLED.toString())
+            }
+        )
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -442,6 +481,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (!viewModel.isStorageAccessRequested) {
             ensureNotificationPermission()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(fileTransferReceiver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -1810,6 +1855,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val swipeRefreshLayout: SwipeRefreshLayout,
         val recyclerView: RecyclerView,
         val bottomBarLayout: ViewGroup,
+        val bottomProgressbar: ProgressBar,
         val bottomToolbar: Toolbar,
         val bottomCreateFileNameEdit: EditText,
         val speedDialView: SpeedDialView,
@@ -1839,10 +1885,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     appBarBinding.breadcrumbLayout, contentBinding.contentLayout,
                     contentBinding.progress, contentBinding.errorText, contentBinding.emptyView,
                     contentBinding.swipeRefreshLayout, contentBinding.recyclerView,
-                    bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomToolbar,
-                    bottomBarBinding.bottomCreateFileNameEdit, speedDialBinding.speedDialView,
-                    dragBinding.dragPlaceholder, dragBinding.iconImage, dragBinding.thumbnailImage,
-                    dragBinding.appIconBadgeImage
+                    bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomProgressbar,
+                    bottomBarBinding.bottomToolbar, bottomBarBinding.bottomCreateFileNameEdit,
+                    speedDialBinding.speedDialView, dragBinding.dragPlaceholder,
+                    dragBinding.iconImage, dragBinding.thumbnailImage, dragBinding.appIconBadgeImage
                 )
             }
         }

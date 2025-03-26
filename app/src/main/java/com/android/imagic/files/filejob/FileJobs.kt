@@ -18,6 +18,13 @@ import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.loadFileItem
+import com.android.imagic.files.filejob.FileJobService.Actions
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_INDETERMINATE
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_MAX
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_PROGRESS
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TEXT
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TITLE
 import com.android.imagic.files.filelist.OpenFileAsDialogActivity
 import com.android.imagic.files.filelist.OpenFileAsDialogFragment
 import com.android.imagic.files.provider.archive.archiveFile
@@ -145,6 +152,25 @@ private fun FileJob.postNotification(
         }
     }.build()
     service.notificationManager.notify(id, notification)
+}
+
+private fun FileJob.sendLocalProgress(
+    title: CharSequence,
+    text: CharSequence?,
+    max: Int,
+    progress: Int,
+    indeterminate: Boolean = false
+) {
+    Intent(Actions.PROGRESS.toString()).apply {
+        putExtra(FILE_TRANSFER_TITLE, title)
+        putExtra(FILE_TRANSFER_TEXT, text)
+        putExtra(FILE_TRANSFER_ID, id)
+        putExtra(FILE_TRANSFER_MAX, max)
+        putExtra(FILE_TRANSFER_PROGRESS, progress)
+        putExtra(FILE_TRANSFER_INDETERMINATE, indeterminate)
+    }.also {
+        service.localBroadcastManager.sendBroadcast(it)
+    }
 }
 
 private const val PROGRESS_INTERVAL_MILLIS = 200L
@@ -383,6 +409,7 @@ private fun FileJob.postTransferSizeNotification(
         max = maxLong.toInt()
         progress = progressLong.toInt()
     }
+    sendLocalProgress(title, text, max, progress)
     postNotification(title, text, null, null, max, progress, false, true)
 }
 
@@ -419,6 +446,7 @@ private fun FileJob.postTransferCountNotification(
         progress = transferredFileCount
         indeterminate = false
     }
+    sendLocalProgress(title, text, max, progress, indeterminate)
     postNotification(title, text, null, null, max, progress, indeterminate, true)
 }
 
@@ -504,25 +532,24 @@ private fun FileJob.showErrorDialog(
     positiveButtonText: CharSequence?,
     negativeButtonText: CharSequence?,
     neutralButtonText: CharSequence?
-): ErrorResult =
-    try {
-        runBlocking {
-            suspendCoroutine { continuation ->
-                BackgroundActivityStarter.startActivity(
-                    FileJobErrorDialogActivity::class.createIntent().putArgs(
-                        FileJobErrorDialogFragment.Args(
-                            title, message, readOnlyFileStore, showAll, positiveButtonText,
-                            negativeButtonText, neutralButtonText
-                        ) { action, isAll ->
-                            continuation.resume(ErrorResult(action, isAll))
-                        }
-                    ), title, message, service
-                )
-            }
+): ErrorResult = try {
+    runBlocking {
+        suspendCoroutine { continuation ->
+            BackgroundActivityStarter.startActivity(
+                FileJobErrorDialogActivity::class.createIntent().putArgs(
+                    FileJobErrorDialogFragment.Args(
+                        title, message, readOnlyFileStore, showAll, positiveButtonText,
+                        negativeButtonText, neutralButtonText
+                    ) { action, isAll ->
+                        continuation.resume(ErrorResult(action, isAll))
+                    }
+                ), title, message, service
+            )
         }
-    } catch (e: InterruptedException) {
-        throw InterruptedIOException().apply { initCause(e) }
     }
+} catch (e: InterruptedException) {
+    throw InterruptedIOException().apply { initCause(e) }
+}
 
 private fun FileJob.getReadOnlyFileStore(path: Path, exception: IOException): PosixFileStore? {
     if (exception !is ReadOnlyFileSystemException || !path.isLinuxPath) {
@@ -547,26 +574,25 @@ private fun FileJob.showConflictDialog(
     sourceFile: FileItem,
     targetFile: FileItem,
     type: CopyMoveType
-): ConflictResult =
-    try {
-        runBlocking {
-            suspendCoroutine { continuation ->
-                BackgroundActivityStarter.startActivity(
-                    FileJobConflictDialogActivity::class.createIntent().putArgs(
-                        FileJobConflictDialogFragment.Args(
-                            sourceFile, targetFile, type
-                        ) { action, name, all ->
-                            continuation.resume(ConflictResult(action, name, all))
-                        }
-                    ), FileJobConflictDialogFragment.getTitle(sourceFile, targetFile, service),
-                    FileJobConflictDialogFragment.getMessage(sourceFile, targetFile, type, service),
-                    service
-                )
-            }
+): ConflictResult = try {
+    runBlocking {
+        suspendCoroutine { continuation ->
+            BackgroundActivityStarter.startActivity(
+                FileJobConflictDialogActivity::class.createIntent().putArgs(
+                    FileJobConflictDialogFragment.Args(
+                        sourceFile, targetFile, type
+                    ) { action, name, all ->
+                        continuation.resume(ConflictResult(action, name, all))
+                    }
+                ), FileJobConflictDialogFragment.getTitle(sourceFile, targetFile, service),
+                FileJobConflictDialogFragment.getMessage(sourceFile, targetFile, type, service),
+                service
+            )
         }
-    } catch (e: InterruptedException) {
-        throw InterruptedIOException().apply { initCause(e) }
     }
+} catch (e: InterruptedException) {
+    throw InterruptedIOException().apply { initCause(e) }
+}
 
 enum class CopyMoveType {
     COPY,
@@ -578,12 +604,11 @@ fun CopyMoveType.getResourceId(
     @AnyRes copyRes: Int,
     @AnyRes extractRes: Int,
     @AnyRes moveRes: Int
-): Int =
-    when (this) {
-        CopyMoveType.COPY -> copyRes
-        CopyMoveType.EXTRACT -> extractRes
-        CopyMoveType.MOVE -> moveRes
-    }
+): Int = when (this) {
+    CopyMoveType.COPY -> copyRes
+    CopyMoveType.EXTRACT -> extractRes
+    CopyMoveType.MOVE -> moveRes
+}
 
 private class ConflictResult(
     val action: FileJobConflictAction,
@@ -881,11 +906,10 @@ private fun FileJob.copy(
     isExtract: Boolean,
     transferInfo: TransferInfo,
     actionAllInfo: ActionAllInfo
-): Boolean =
-    copyOrMove(
-        source, target, if (isExtract) CopyMoveType.EXTRACT else CopyMoveType.COPY, true, false,
-        transferInfo, actionAllInfo
-    )
+): Boolean = copyOrMove(
+    source, target, if (isExtract) CopyMoveType.EXTRACT else CopyMoveType.COPY, true, false,
+    transferInfo, actionAllInfo
+)
 
 class CreateFileJob(private val path: Path, private val createDirectory: Boolean) : FileJob() {
     @Throws(IOException::class)
@@ -1057,7 +1081,6 @@ private fun FileJob.delete(path: Path, transferInfo: TransferInfo?, actionAllInf
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -1181,8 +1204,7 @@ private fun FileJob.moveByCopy(
     target: Path,
     transferInfo: TransferInfo,
     actionAllInfo: ActionAllInfo
-): Boolean =
-    copyOrMove(source, target, CopyMoveType.MOVE, false, true, transferInfo, actionAllInfo)
+): Boolean = copyOrMove(source, target, CopyMoveType.MOVE, false, true, transferInfo, actionAllInfo)
 
 // @see https://github.com/GNOME/nautilus/blob/master/src/nautilus-file-operations.c copy_move_file
 @Throws(IOException::class)
@@ -1515,10 +1537,9 @@ class OpenFileJob(
 }
 
 private val FileJob.cacheDirectory: File
-    get() =
-        service.externalCacheDir?.takeIf {
-            Environment.getExternalStorageState(it) == Environment.MEDIA_MOUNTED
-        } ?: service.cacheDir
+    get() = service.externalCacheDir?.takeIf {
+        Environment.getExternalStorageState(it) == Environment.MEDIA_MOUNTED
+    } ?: service.cacheDir
 
 @Throws(IOException::class)
 private fun FileJob.open(
@@ -1713,7 +1734,6 @@ private fun FileJob.restoreSeLinuxContext(
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -1861,7 +1881,6 @@ private fun FileJob.setGroup(
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -2010,7 +2029,6 @@ private fun FileJob.setMode(
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -2133,7 +2151,6 @@ private fun FileJob.setOwner(
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -2266,7 +2283,6 @@ private fun FileJob.setSeLinuxContext(
                 }
 
                 FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
             }
         }
     } while (retry)
@@ -2365,5 +2381,6 @@ private fun FileJob.postWriteNotification(transferInfo: TransferInfo) {
     )
     val max = size.toInt()
     val progress = transferredSize.toInt()
+    sendLocalProgress(title, text, max, progress)
     postNotification(title, text, null, null, max, progress, false, true)
 }

@@ -22,7 +22,7 @@ abstract class ToolbarActionMode(
     init {
         toolbar.setNavigationOnClickListener { callback?.onToolbarNavigationIconClicked(this) }
         toolbar.setOnMenuItemClickListener {
-            callback?.onToolbarActionModeMenuItemClicked(this, it) ?: false
+            callback?.onToolbarActionModeMenuItemClicked(this, it) == true
         }
     }
 

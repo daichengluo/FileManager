@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.annotation.MainThread
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.android.imagic.files.compat.removeFirstCompat
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.provider.common.PosixFileModeBit
@@ -23,6 +24,9 @@ class FileJobService : Service() {
     internal lateinit var notificationManager: ForegroundNotificationManager
         private set
 
+    internal lateinit var localBroadcastManager: LocalBroadcastManager
+        private set
+
     private val executorService = Executors.newCachedThreadPool()
 
     private val runningJobs = mutableMapOf<FileJob, Future<*>>()
@@ -32,6 +36,7 @@ class FileJobService : Service() {
 
         wakeWifiLock = WakeWifiLock(FileJobService::class.java.simpleName)
         notificationManager = ForegroundNotificationManager(this)
+        localBroadcastManager = LocalBroadcastManager.getInstance(this)
         instance = this
 
         while (pendingJobs.isNotEmpty()) {
@@ -62,6 +67,12 @@ class FileJobService : Service() {
     }
 
     private fun cancelJob(id: Int) {
+        Intent(Actions.CANCELLED.toString()).apply {
+            putExtra(FILE_TRANSFER_ID, id)
+        }.also {
+            localBroadcastManager.sendBroadcast(it)
+        }
+
         synchronized(runningJobs) {
             runningJobs.removeFirst { it.key.id == id }?.value?.cancel(true)
             updateWakeWifiLockLocked()
@@ -87,6 +98,10 @@ class FileJobService : Service() {
         wakeWifiLock.isAcquired = jobCount > 0
     }
 
+    enum class Actions {
+        PROGRESS, CANCELLED
+    }
+
     companion object {
         private var instance: FileJobService? = null
 
@@ -95,6 +110,13 @@ class FileJobService : Service() {
         val runningJobCount: Int
             @MainThread
             get() = instance?.jobCount ?: 0
+
+        const val FILE_TRANSFER_ID = "id"
+        const val FILE_TRANSFER_TITLE = "title"
+        const val FILE_TRANSFER_TEXT = "text"
+        const val FILE_TRANSFER_MAX = "max"
+        const val FILE_TRANSFER_PROGRESS = "progress"
+        const val FILE_TRANSFER_INDETERMINATE = "indeterminate"
 
         @MainThread
         private fun startJob(job: FileJob, context: Context) {
