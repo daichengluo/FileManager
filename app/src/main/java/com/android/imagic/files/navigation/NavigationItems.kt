@@ -51,7 +51,6 @@ val navigationBookmarkItems: List<NavigationItem>
         if (bookmarkDirectoryItems.isNotEmpty()) {
             addAll(bookmarkDirectoryItems)
         }
-        add(AddBookmarkItem())
     }
 
 val navigationSettingsItems: List<NavigationItem>
@@ -313,20 +312,6 @@ private val DEFAULT_QUICK_ACCESSES = listOf(
     )
 )
 
-private class AddBookmarkItem : NavigationItem() {
-    override val id: Long = R.string.file_list_action_add_bookmark.toLong()
-
-    @DrawableRes
-    override val iconRes: Int = R.drawable.nav_add_bookmark
-
-    override fun getTitle(context: Context): String =
-        context.getString(R.string.file_list_action_add_bookmark)
-
-    override fun onClick(listener: Listener) {
-        listener.addBookmark()
-    }
-}
-
 private val standardDirectoryItems: List<NavigationItem>
     @Size(min = 0)
     get() =
@@ -429,6 +414,20 @@ private class BookmarkDirectoryItem(
                 .putArgs(EditBookmarkDirectoryDialogFragment.Args(bookmarkDirectory))
         )
         return true
+    }
+}
+
+private class AddBookmarkItem : NavigationItem() {
+    override val id: Long = R.string.file_list_action_add_bookmark.toLong()
+
+    @DrawableRes
+    override val iconRes: Int = R.drawable.nav_add_bookmark
+
+    override fun getTitle(context: Context): String =
+        context.getString(R.string.file_list_action_add_bookmark)
+
+    override fun onClick(listener: Listener) {
+        listener.addBookmark()
     }
 }
 

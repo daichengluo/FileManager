@@ -100,6 +100,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private fun onBookmarkItemsChanged(navigationItems: List<NavigationItem?>) {
         bookmarkListAdapter.replace(navigationItems)
+        binding.bookmarkRecyclerView.isVisible = navigationItems.isNotEmpty()
     }
 
     private fun onSettingsItemsChanged(navigationItems: List<NavigationItem?>) {
