@@ -31,6 +31,10 @@
     <color name="activity_icon_tint">@color/secondary_text_default_material_light</color>
 
     <color name="shortcut_icon_background">#F5F5F5</color>
+    <color name="ftp_shortcut_icon_background">#D6E2FF</color>
+    <color name="download_shortcut_icon_background">#5EDC98</color>
+    <color name="file_shortcut_icon_background">#82C7F8</color>
+    <color name="directory_shortcut_icon_background">#FFDC53</color>
 
     <color name="file_icon_light_blue">#4B86F0</color>
     <color name="file_icon_blue">#4285F4</color>
