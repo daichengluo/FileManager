@@ -82,8 +82,7 @@ class PersistentDrawerLayout @JvmOverloads constructor(
                     contentInsets.replaceSystemWindowInsets(
                         contentInsets.systemWindowInsetLeft,
                         contentInsets.systemWindowInsetTop,
-                        (contentInsets.systemWindowInsetRight - childConsumedInset)
-                            .coerceAtLeast(0),
+                        (contentInsets.systemWindowInsetRight - childConsumedInset).coerceAtLeast(0),
                         contentInsets.systemWindowInsetBottom
                     )
                 }

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFEFF0F7"
+    android:maxWidth="297dp"
     android:orientation="vertical"
     android:paddingHorizontal="27dp">
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="27dp" />
 
     <TextView
         android:id="@+id/appNameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="11dp"
         android:ellipsize="marquee"
         android:lineHeight="30dp"
         android:singleLine="true"
@@ -25,10 +23,6 @@
         android:textSize="21sp"
         android:textStyle="bold"
         tools:ignore="UnusedAttribute" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="11dp" />
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -45,6 +39,7 @@
                 android:id="@+id/loginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
                 android:background="@drawable/surface_background"
                 android:foreground="@drawable/nav_login_foreground"
                 android:gravity="center_vertical"
@@ -85,7 +80,7 @@
                 android:id="@+id/quickAccessRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
+                android:layout_marginBottom="11dp"
                 android:background="@drawable/surface_background"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="11dp" />
@@ -94,20 +89,17 @@
                 android:id="@+id/bookmarkRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
+                android:layout_marginBottom="11dp"
                 android:background="@drawable/surface_background"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="11dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="11dp" />
 
             <LinearLayout
                 android:id="@+id/storageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/surface_background"
+                android:minWidth="243dp"
                 android:orientation="vertical"
                 android:paddingVertical="13dp">
 
@@ -139,14 +131,11 @@
                     tools:listitem="@layout/new_storage_item" />
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="11dp" />
-
             <LinearLayout
                 android:id="@+id/settingsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="11dp"
                 android:background="@drawable/surface_background"
                 android:orientation="vertical"
                 android:paddingVertical="13dp">

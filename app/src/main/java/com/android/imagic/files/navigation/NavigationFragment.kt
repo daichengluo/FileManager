@@ -68,6 +68,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         binding.settingsRecyclerView.adapter = settingsListAdapter
         binding.settingsRecyclerView.setMaxHeight(500)
 
+        binding.loginLayout.isVisible = false
         binding.loginLayout.setOnClickListener {
             // todo login action
         }
