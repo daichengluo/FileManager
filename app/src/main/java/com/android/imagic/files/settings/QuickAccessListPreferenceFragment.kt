@@ -4,12 +4,9 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.android.imagic.files.compat.getDrawableCompat
-import com.android.imagic.files.compat.setTintCompat
-import com.android.imagic.files.navigation.StandardDirectoriesLiveData
-import com.android.imagic.files.navigation.StandardDirectory
-import com.android.imagic.files.navigation.getExternalStorageDirectory
+import com.android.imagic.files.navigation.QuickAccess
+import com.android.imagic.files.navigation.QuickAccessesLiveData
 import com.android.imagic.files.ui.PreferenceFragmentCompat
-import com.android.imagic.files.util.getColorByAttr
 import com.android.imagic.files.util.valueCompat
 
 class QuickAccessListPreferenceFragment : PreferenceFragmentCompat(),
@@ -23,11 +20,11 @@ class QuickAccessListPreferenceFragment : PreferenceFragmentCompat(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        StandardDirectoriesLiveData.observe(viewLifecycleOwner) { onStandardDirectoriesChanged(it) }
+        QuickAccessesLiveData.observe(viewLifecycleOwner) { onQuickAccessesChanged(it) }
     }
 
-    private fun onStandardDirectoriesChanged(
-        standardDirectories: List<StandardDirectory>
+    private fun onQuickAccessesChanged(
+        quickAccesses: List<QuickAccess>
     ) {
         var preferenceScreen = preferenceScreen
         val context = requireContext()
@@ -42,9 +39,8 @@ class QuickAccessListPreferenceFragment : PreferenceFragmentCompat(),
                 oldPreferences[preference.key] = preference
             }
         }
-        val secondaryTextColor = context.getColorByAttr(android.R.attr.textColorSecondary)
-        for (standardDirectory in standardDirectories) {
-            val key = standardDirectory.key
+        for (quickAccess in quickAccesses) {
+            val key = quickAccess.key
             var preference = oldPreferences[key] as SwitchPreferenceCompat?
             if (preference == null) {
                 preference = SwitchPreferenceCompat(context).apply {
@@ -54,13 +50,9 @@ class QuickAccessListPreferenceFragment : PreferenceFragmentCompat(),
                 }
             }
             preference.apply {
-                icon = context.getDrawableCompat(standardDirectory.iconRes).apply {
-                    mutate()
-                    setTintCompat(secondaryTextColor)
-                }
-                title = standardDirectory.getTitle(context)
-                summary = getExternalStorageDirectory(standardDirectory.relativePath)
-                isChecked = standardDirectory.isEnabled
+                icon = context.getDrawableCompat(quickAccess.iconRes)
+                title = quickAccess.getTitle(context)
+                isChecked = quickAccess.isEnabled
             }
             preferenceScreen.addPreference(preference)
         }
@@ -70,15 +62,15 @@ class QuickAccessListPreferenceFragment : PreferenceFragmentCompat(),
         preference as SwitchPreferenceCompat
         val id = preference.key
         val isEnabled = preference.isChecked
-        val settingsList = Settings.STANDARD_DIRECTORY_SETTINGS.valueCompat.toMutableList()
+        val settingsList = Settings.QUICK_ACCESS_SETTINGS.valueCompat.toMutableList()
         val index = settingsList.indexOfFirst { it.id == id }
         if (index != -1) {
             settingsList[index] = settingsList[index].copy(isEnabled = isEnabled)
         } else {
-            val standardDirectory = StandardDirectoriesLiveData.valueCompat.find { it.key == id }!!
-            settingsList += standardDirectory.toSettings().copy(isEnabled = isEnabled)
+            val quickAccess = QuickAccessesLiveData.valueCompat.find { it.key == id }!!
+            settingsList += quickAccess.toSettings().copy(isEnabled = isEnabled)
         }
-        Settings.STANDARD_DIRECTORY_SETTINGS.putValue(settingsList)
+        Settings.QUICK_ACCESS_SETTINGS.putValue(settingsList)
         return true
     }
 }

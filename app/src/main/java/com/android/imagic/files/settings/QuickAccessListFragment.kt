@@ -15,10 +15,9 @@ class QuickAccessListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-        QuickAccessListFragmentBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+    ): View = QuickAccessListFragmentBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

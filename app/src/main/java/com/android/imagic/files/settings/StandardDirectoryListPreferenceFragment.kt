@@ -4,12 +4,10 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.android.imagic.files.compat.getDrawableCompat
-import com.android.imagic.files.compat.setTintCompat
 import com.android.imagic.files.navigation.StandardDirectoriesLiveData
 import com.android.imagic.files.navigation.StandardDirectory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.ui.PreferenceFragmentCompat
-import com.android.imagic.files.util.getColorByAttr
 import com.android.imagic.files.util.valueCompat
 
 class StandardDirectoryListPreferenceFragment : PreferenceFragmentCompat(),
@@ -42,7 +40,6 @@ class StandardDirectoryListPreferenceFragment : PreferenceFragmentCompat(),
                 oldPreferences[preference.key] = preference
             }
         }
-        val secondaryTextColor = context.getColorByAttr(android.R.attr.textColorSecondary)
         for (standardDirectory in standardDirectories) {
             val key = standardDirectory.key
             var preference = oldPreferences[key] as SwitchPreferenceCompat?
@@ -54,10 +51,7 @@ class StandardDirectoryListPreferenceFragment : PreferenceFragmentCompat(),
                 }
             }
             preference.apply {
-                icon = context.getDrawableCompat(standardDirectory.iconRes).apply {
-                    mutate()
-                    setTintCompat(secondaryTextColor)
-                }
+                icon = context.getDrawableCompat(standardDirectory.iconRes)
                 title = standardDirectory.getTitle(context)
                 summary = getExternalStorageDirectory(standardDirectory.relativePath)
                 isChecked = standardDirectory.isEnabled

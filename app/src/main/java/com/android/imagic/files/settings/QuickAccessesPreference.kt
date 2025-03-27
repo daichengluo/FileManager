@@ -10,12 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.android.imagic.files.compat.ListFormatterCompat
-import com.android.imagic.files.navigation.StandardDirectoriesLiveData
-import com.android.imagic.files.navigation.StandardDirectory
+import com.android.imagic.files.navigation.QuickAccess
+import com.android.imagic.files.navigation.QuickAccessesLiveData
 import com.android.imagic.files.util.createIntent
 
-class QuickAccessPreference : Preference {
-    private val observer = Observer<List<StandardDirectory>> { onStandardDirectoriesChanged(it) }
+class QuickAccessesPreference : Preference {
+    private val observer = Observer<List<QuickAccess>> { onQuickAccessesChanged(it) }
     private var emptySummary = summary
 
     constructor(context: Context) : super(context)
@@ -40,18 +40,18 @@ class QuickAccessPreference : Preference {
     override fun onAttached() {
         super.onAttached()
 
-        StandardDirectoriesLiveData.observeForever(observer)
+        QuickAccessesLiveData.observeForever(observer)
     }
 
     override fun onDetached() {
         super.onDetached()
 
-        StandardDirectoriesLiveData.removeObserver(observer)
+        QuickAccessesLiveData.removeObserver(observer)
     }
 
-    private fun onStandardDirectoriesChanged(standardDirectories: List<StandardDirectory>) {
+    private fun onQuickAccessesChanged(quickAccesses: List<QuickAccess>) {
         val context = context
-        val titles = standardDirectories.filter { it.isEnabled }.map { it.getTitle(context) }
+        val titles = quickAccesses.filter { it.isEnabled }.map { it.getTitle(context) }
         val summary = if (titles.isNotEmpty()) ListFormatterCompat.format(titles) else emptySummary
         setSummary(summary)
     }

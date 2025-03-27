@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
@@ -94,6 +95,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {
         quickAccessListAdapter.replace(navigationItems)
+        binding.quickAccessRecyclerView.isVisible = navigationItems.isNotEmpty()
     }
 
     private fun onBookmarkItemsChanged(navigationItems: List<NavigationItem?>) {

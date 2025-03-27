@@ -48,9 +48,9 @@
             android:summary="@string/settings_storages_summary_empty"
             android:title="@string/settings_storages_title" />
 
-        <com.android.imagic.files.settings.StandardDirectoriesPreference
-            android:summary="@string/settings_standard_directories_summary_empty"
-            android:title="@string/settings_standard_directories_title" />
+        <com.android.imagic.files.settings.QuickAccessesPreference
+            android:summary="@string/settings_quick_access_summary_empty"
+            android:title="@string/settings_quick_access_title" />
 
         <com.android.imagic.files.settings.BookmarkDirectoriesPreference
             android:summary="@string/settings_bookmark_directories_summary_empty"

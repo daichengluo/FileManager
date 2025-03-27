@@ -664,4 +664,5 @@
     <string name="file_list_action_sort">排序</string>
     <string name="file_list_action_exit_app">退出应用</string>
     <string name="settings_quick_access_title">快速访问</string>
+    <string name="settings_quick_access_summary_empty">未启用快速访问</string>
 </resources>

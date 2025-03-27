@@ -16,6 +16,7 @@ import com.android.imagic.files.file.JavaFile
 import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.ftpserver.FtpServerActivity
+import com.android.imagic.files.settings.QuickAccessListActivity
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.settings.SettingsActivity
 import com.android.imagic.files.settings.StandardDirectoryListActivity
@@ -42,14 +43,6 @@ val navigationStorageItems: List<NavigationItem>
             addAll(storageVolumeItems)
         }
         add(AddStorageItem())
-    }
-
-val quickAccessItems: List<NavigationItem>
-    get() = mutableListOf<NavigationItem>().apply {
-        val standardDirectoryItems = standardDirectoryItems
-        if (standardDirectoryItems.isNotEmpty()) {
-            addAll(standardDirectoryItems)
-        }
     }
 
 val navigationBookmarkItems: List<NavigationItem>
@@ -231,11 +224,94 @@ private class AddStorageItem : NavigationItem() {
     }
 }
 
-val standardDirectoryItems: List<NavigationItem>
+val quickAccessItems: List<NavigationItem>
     @Size(min = 0)
-    get() = StandardDirectoriesLiveData.valueCompat
+    get() = QuickAccessesLiveData.valueCompat
         .filter { it.isEnabled }
         .map { QuickAccessItem(it) }
+
+private class QuickAccessItem(
+    private val quickAccess: QuickAccess
+) : PathItem(Paths.get(getExternalStorageDirectory(quickAccess.relativePath))) {
+    init {
+        require(quickAccess.isEnabled)
+    }
+
+    override val id: Long
+        get() = quickAccess.id
+
+    override val iconRes: Int
+        @DrawableRes
+        get() = quickAccess.iconRes
+
+    override fun getTitle(context: Context): String = quickAccess.getTitle(context)
+
+    override fun onClick(listener: Listener) {
+        super.onClick(listener)
+        listener.quickAccessTo(quickAccess.category)
+    }
+
+    override fun onLongClick(listener: Listener): Boolean {
+        listener.launchIntent(QuickAccessListActivity::class.createIntent())
+        return true
+    }
+}
+
+val quickAccesses: List<QuickAccess>
+    get() {
+        val settingsMap = Settings.QUICK_ACCESS_SETTINGS.valueCompat.associateBy { it.id }
+        return defaultQuickAccesses.map {
+            val settings = settingsMap[it.key]
+            if (settings != null) it.withSettings(settings) else it
+        }
+    }
+
+private val defaultQuickAccesses: List<QuickAccess>
+    get() = DEFAULT_QUICK_ACCESSES
+
+private val DEFAULT_QUICK_ACCESSES = listOf(
+    QuickAccess(
+        R.drawable.quick_access_download_icon,
+        R.string.navigation_standard_directory_downloads,
+        Environment.DIRECTORY_DOWNLOADS,
+        true
+    ),
+    QuickAccess(
+        R.drawable.file_image_icon,
+        R.string.navigation_quick_access_images,
+        MimeTypeCategory.IMAGE,
+        Environment.DIRECTORY_PICTURES,
+        true
+    ),
+    QuickAccess(
+        R.drawable.file_video_icon,
+        R.string.navigation_quick_access_videos,
+        MimeTypeCategory.VIDEO,
+        Environment.DIRECTORY_MOVIES,
+        true
+    ),
+    QuickAccess(
+        R.drawable.file_audio_icon,
+        R.string.navigation_quick_access_audio,
+        MimeTypeCategory.AUDIO,
+        Environment.DIRECTORY_MUSIC,
+        true
+    ),
+    QuickAccess(
+        R.drawable.file_document_icon,
+        R.string.navigation_standard_directory_documents,
+        MimeTypeCategory.DOCUMENT,
+        Environment.DIRECTORY_DOCUMENTS,
+        true
+    ),
+    QuickAccess(
+        R.drawable.file_apk_icon,
+        R.string.navigation_quick_access_apk,
+        MimeTypeCategory.APK,
+        QuickAccess.QUICK_ACCESS_APK,
+        true
+    )
+)
 
 private class AddBookmarkItem : NavigationItem() {
     override val id: Long = R.string.file_list_action_add_bookmark.toLong()
@@ -251,7 +327,14 @@ private class AddBookmarkItem : NavigationItem() {
     }
 }
 
-private class QuickAccessItem(
+private val standardDirectoryItems: List<NavigationItem>
+    @Size(min = 0)
+    get() =
+        StandardDirectoriesLiveData.valueCompat
+            .filter { it.isEnabled }
+            .map { StandardDirectoryItem(it) }
+
+private class StandardDirectoryItem(
     private val standardDirectory: StandardDirectory
 ) : PathItem(Paths.get(getExternalStorageDirectory(standardDirectory.relativePath))) {
     init {
@@ -266,11 +349,6 @@ private class QuickAccessItem(
         get() = standardDirectory.iconRes
 
     override fun getTitle(context: Context): String = standardDirectory.getTitle(context)
-
-    override fun onClick(listener: Listener) {
-        super.onClick(listener)
-        listener.quickAccessTo(standardDirectory.category)
-    }
 
     override fun onLongClick(listener: Listener): Boolean {
         listener.launchIntent(StandardDirectoryListActivity::class.createIntent())
@@ -301,36 +379,25 @@ private val DEFAULT_STANDARD_DIRECTORIES = listOf(
     StandardDirectory(
         R.drawable.file_image_icon,
         R.string.navigation_quick_access_images,
-        MimeTypeCategory.IMAGE,
         Environment.DIRECTORY_PICTURES,
         true
     ),
     StandardDirectory(
         R.drawable.file_video_icon,
         R.string.navigation_quick_access_videos,
-        MimeTypeCategory.VIDEO,
         Environment.DIRECTORY_MOVIES,
         true
     ),
     StandardDirectory(
         R.drawable.file_audio_icon,
         R.string.navigation_quick_access_audio,
-        MimeTypeCategory.AUDIO,
         Environment.DIRECTORY_MUSIC,
         true
     ),
     StandardDirectory(
         R.drawable.file_document_icon,
         R.string.navigation_standard_directory_documents,
-        MimeTypeCategory.DOCUMENT,
         Environment.DIRECTORY_DOCUMENTS,
-        true
-    ),
-    StandardDirectory(
-        R.drawable.file_apk_icon,
-        R.string.navigation_quick_access_apk,
-        MimeTypeCategory.APK,
-        StandardDirectory.QUICK_ACCESS_APK,
         true
     )
 )
