@@ -39,5 +39,14 @@
             android:textSize="13sp"
             tools:ignore="UnusedAttribute"
             tools:text="设置" />
+
+        <ImageView
+            android:id="@+id/storageActionImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/settings_title"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nav_storage_item_action" />
     </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
 </LinearLayout>
