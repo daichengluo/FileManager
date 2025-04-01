@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="2.5dp">
+
+    <com.android.imagic.files.ui.CheckableForegroundLinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@drawable/file_transfer_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:lineHeight="15dp"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:textColor="#FF19496A"
+            android:textSize="11sp"
+            tools:ignore="UnusedAttribute" />
+
+        <Space
+            android:layout_width="21dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="68dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:progressDrawable="@drawable/file_transfer_progress" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="3dp" />
+
+            <TextView
+                android:id="@+id/subText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineHeight="9dp"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="#FF8C8C8C"
+                android:textSize="7sp"
+                tools:ignore="SmallSp,UnusedAttribute" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="33dp"
+            android:layout_height="match_parent" />
+
+        <me.zhanghai.android.foregroundcompat.ForegroundImageButton
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:foreground="@drawable/file_transfer_button_foreground"
+            android:src="@drawable/file_transfer_cancel_all_icon" />
+
+        <Space
+            android:layout_width="11dp"
+            android:layout_height="match_parent" />
+    </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+</LinearLayout>

@@ -67,12 +67,6 @@ class FileJobService : Service() {
     }
 
     private fun cancelJob(id: Int) {
-        Intent(Actions.CANCELLED.toString()).apply {
-            putExtra(FILE_TRANSFER_ID, id)
-        }.also {
-            localBroadcastManager.sendBroadcast(it)
-        }
-
         synchronized(runningJobs) {
             runningJobs.removeFirst { it.key.id == id }?.value?.cancel(true)
             updateWakeWifiLockLocked()
@@ -86,7 +80,13 @@ class FileJobService : Service() {
 
         synchronized(runningJobs) {
             while (runningJobs.isNotEmpty()) {
-                runningJobs.removeFirst().value.cancel(true)
+                val job = runningJobs.removeFirst()
+                Intent(Actions.CANCELLED.toString()).apply {
+                    putExtra(FILE_TRANSFER_ID, job.key.id)
+                }.also {
+                    localBroadcastManager.sendBroadcast(it)
+                }
+                job.value.cancel(true)
             }
             updateWakeWifiLockLocked()
         }
@@ -99,7 +99,7 @@ class FileJobService : Service() {
     }
 
     enum class Actions {
-        PROGRESS, CANCELLED
+        STARTED, PROGRESS, CANCELLING, CANCELLED, FAILED, FINISHED
     }
 
     companion object {

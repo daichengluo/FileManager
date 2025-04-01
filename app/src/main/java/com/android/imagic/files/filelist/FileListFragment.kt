@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import android.text.TextUtils
 import android.view.DragEvent
@@ -47,6 +48,7 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import coil.dispose
@@ -66,6 +68,7 @@ import com.android.imagic.files.databinding.FileListFragmentBottomBarIncludeBind
 import com.android.imagic.files.databinding.FileListFragmentContentIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentSpeedDialIncludeBinding
+import com.android.imagic.files.databinding.FileListFragmentTransferIncludeBinding
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.MimeTypeCategory
@@ -99,7 +102,10 @@ import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
 import com.android.imagic.files.ui.CoordinatorAppBarLayout
 import com.android.imagic.files.ui.CrossfadeSubtitleToolbar
 import com.android.imagic.files.ui.DrawerLayoutOnBackPressedCallback
+import com.android.imagic.files.ui.FileTransferActionMode
+import com.android.imagic.files.ui.FileTransferFloatingLayout
 import com.android.imagic.files.ui.FixQueryChangeSearchView
+import com.android.imagic.files.ui.FloatingButtonView
 import com.android.imagic.files.ui.OverlayToolbarActionMode
 import com.android.imagic.files.ui.PersistentBarLayout
 import com.android.imagic.files.ui.PersistentBarLayoutToolbarActionMode
@@ -149,14 +155,16 @@ import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
 import java8.nio.file.Paths
 import kotlinx.parcelize.Parcelize
+import me.zhanghai.android.foregroundcompat.ForegroundImageButton
 import kotlin.math.roundToInt
 
 class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.Listener,
-    ConfirmReplaceFileDialogFragment.Listener, OpenApkDialogFragment.Listener,
-    ConfirmDeleteFilesDialogFragment.Listener, CreateArchiveDialogFragment.Listener,
-    RenameFileDialogFragment.Listener, CreateFileDialogFragment.Listener,
-    CreateDirectoryDialogFragment.Listener, NavigateToPathDialogFragment.Listener,
-    NavigationFragment.Listener, ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
+    FileTransferAdapter.Listener, ConfirmReplaceFileDialogFragment.Listener,
+    OpenApkDialogFragment.Listener, ConfirmDeleteFilesDialogFragment.Listener,
+    CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
+    CreateFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
+    NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
+    ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionInSettingsRationaleDialogFragment.Listener,
     ShowRequestStoragePermissionRationaleDialogFragment.Listener,
@@ -198,11 +206,21 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private lateinit var bottomActionMode: PersistentBarLayoutToolbarActionMode
 
+    private lateinit var fileTransferActionMode: FileTransferActionMode
+
     private lateinit var layoutManager: GridLayoutManager
 
     private lateinit var adapter: FileListAdapter
 
-    private val debouncedSearchRunnable = DebouncedRunnable(Handler(Looper.getMainLooper()), 1000) {
+    private lateinit var fileTransferAdapter: FileTransferAdapter
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val handlerThread = HandlerThread("FileTransferReceiverThread").apply { start() }
+
+    private val workerHandler = Handler(handlerThread.looper)
+
+    private val debouncedSearchRunnable = DebouncedRunnable(handler, 1000) {
         if (!isResumed || !viewModel.isSearchViewExpanded) {
             return@DebouncedRunnable
         }
@@ -215,18 +233,55 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private val fileTransferReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.action) {
-                FileJobService.Actions.PROGRESS.toString() -> {
-                    val id = intent.getIntExtra(FILE_TRANSFER_ID, -1)
-                    val title = intent.getStringExtra(FILE_TRANSFER_TITLE)
-                    val text = intent.getStringExtra(FILE_TRANSFER_TEXT)
-                    val max = intent.getIntExtra(FILE_TRANSFER_MAX, 100)
-                    val progress = intent.getIntExtra(FILE_TRANSFER_PROGRESS, 0)
-                    val indeterminate = intent.getBooleanExtra(FILE_TRANSFER_INDETERMINATE, false)
-                }
+            if (intent == null) return
 
-                FileJobService.Actions.CANCELLED.toString() -> {
-                    val id = intent.getIntExtra(FILE_TRANSFER_ID, -1)
+            workerHandler.post {
+                val acton = intent.action
+                val id = intent.getIntExtra(FILE_TRANSFER_ID, -1)
+                val fileTransfer = FileTransfer(
+                    id = id,
+                    title = intent.getStringExtra(FILE_TRANSFER_TITLE),
+                    text = intent.getStringExtra(FILE_TRANSFER_TEXT),
+                    max = intent.getIntExtra(FILE_TRANSFER_MAX, 100),
+                    progress = intent.getIntExtra(FILE_TRANSFER_PROGRESS, 0),
+                    indeterminate = intent.getBooleanExtra(FILE_TRANSFER_INDETERMINATE, false),
+                    status = if (acton == FileJobService.Actions.CANCELLING.toString()) {
+                        FileTransfer.Status.CANCELLING
+                    } else FileTransfer.Status.TRANSFERRING
+                )
+
+                when (acton) {
+                    FileJobService.Actions.PROGRESS.toString(),
+                    FileJobService.Actions.CANCELLING.toString() -> {
+                        handler.post {
+                            fileTransferAdapter.updateItem(fileTransfer)
+                            if (fileTransferAdapter.list.isNotEmpty()) {
+                                fileTransferActionMode.show()
+                                val size = fileTransferAdapter.list.size
+                                binding.transferTitle.text = requireContext().getQuantityString(
+                                    R.plurals.file_transferring_title_format, size, size
+                                )
+                            }
+                        }
+                    }
+
+                    FileJobService.Actions.CANCELLED.toString() -> {
+                        handler.post {
+                            fileTransferAdapter.removeItem(id)
+                            if (fileTransferAdapter.list.isEmpty()) {
+                                fileTransferActionMode.hide()
+                            } else {
+                                val size = fileTransferAdapter.list.size
+                                binding.transferTitle.text = requireContext().getQuantityString(
+                                    R.plurals.file_transferring_title_format, size, size
+                                )
+                            }
+                            refresh()
+                        }
+                        return@post
+                    }
+
+                    else -> return@post
                 }
             }
         }
@@ -288,36 +343,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         binding.recyclerView.setOnApplyWindowInsetsListener(
             ScrollingViewOnApplyWindowInsetsListener(binding.recyclerView, fastScroller)
         )
-        binding.speedDialView.inflate(R.menu.file_list_speed_dial)
-        binding.speedDialView.setOnActionSelectedListener {
-            when (it.id) {
-                R.id.action_create_file -> showCreateFileDialog()
-                R.id.action_create_directory -> showCreateDirectoryDialog()
-            }
-            // Returning false causes the speed dial to close without animation.
-            //return false
-            binding.speedDialView.close()
-            true
-        }
         binding.recyclerView.setOnDragListener { _, event ->
             when (event.action) {
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    cancelDragDrop()
-                    true
-                }
-
+                DragEvent.ACTION_DRAG_STARTED, DragEvent.ACTION_DRAG_ENTERED,
+                DragEvent.ACTION_DRAG_EXITED, DragEvent.ACTION_DRAG_ENDED,
                 DragEvent.ACTION_DRAG_LOCATION -> {
                     true
                 }
@@ -333,6 +362,25 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 else -> false
             }
         }
+        binding.speedDialView.inflate(R.menu.file_list_speed_dial)
+        binding.speedDialView.setOnActionSelectedListener {
+            when (it.id) {
+                R.id.action_create_file -> showCreateFileDialog()
+                R.id.action_create_directory -> showCreateDirectoryDialog()
+            }
+            // Returning false causes the speed dial to close without animation.
+            //return false
+            binding.speedDialView.close()
+            true
+        }
+        binding.transferRecyclerView.layoutManager = LinearLayoutManager(context)
+        fileTransferAdapter = FileTransferAdapter(this)
+        binding.transferRecyclerView.adapter = fileTransferAdapter
+        fileTransferActionMode = FileTransferActionMode(
+            binding.transferRecyclerLayout, binding.floatingButton
+        )
+        binding.floatingButton.setOnClickListener { fileTransferActionMode.switchView(true) }
+        binding.transferDropDown.setOnClickListener { fileTransferActionMode.switchView(false) }
 
         val viewLifecycleOwner = viewLifecycleOwner
         addOnBackPressedCallback(
@@ -468,6 +516,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             fileTransferReceiver, IntentFilter().apply {
                 addAction(FileJobService.Actions.PROGRESS.toString())
                 addAction(FileJobService.Actions.CANCELLED.toString())
+                addAction(FileJobService.Actions.FAILED.toString())
+                addAction(FileJobService.Actions.FINISHED.toString())
             }
         )
     }
@@ -1806,6 +1856,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
+    override fun showTransfer() {
+        binding.transferRecyclerView.isVisible = true
+    }
+
+    override fun hideTransfer() {
+        binding.transferRecyclerView.isVisible = false
+    }
+
     companion object {
         private const val ACTION_VIEW_DOWNLOADS =
             "com.android.imagic.files.intent.action.VIEW_DOWNLOADS"
@@ -1862,7 +1920,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val dragPlaceholder: ConstraintLayout,
         val iconImage: ImageView,
         val thumbnailImage: ImageView,
-        val appIconBadgeImage: ImageView
+        val appIconBadgeImage: ImageView,
+        val transferRecyclerLayout: FileTransferFloatingLayout,
+        val transferRecyclerView: RecyclerView,
+        val transferTitle: TextView,
+        val transferDropDown: ForegroundImageButton,
+        val floatingButton: FloatingButtonView
     ) {
         companion object {
             fun inflate(
@@ -1878,6 +1941,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 val bottomBarBinding = FileListFragmentBottomBarIncludeBinding.bind(bindingRoot)
                 val speedDialBinding = FileListFragmentSpeedDialIncludeBinding.bind(bindingRoot)
                 val dragBinding = FileDragPlaceholderBinding.bind(bindingRoot)
+                val transferBinding = FileListFragmentTransferIncludeBinding.bind(bindingRoot)
                 return Binding(
                     bindingRoot, includeBinding.drawerLayout, includeBinding.persistentDrawerLayout,
                     includeBinding.persistentBarLayout, appBarBinding.appBarLayout,
@@ -1888,7 +1952,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomProgressbar,
                     bottomBarBinding.bottomToolbar, bottomBarBinding.bottomCreateFileNameEdit,
                     speedDialBinding.speedDialView, dragBinding.dragPlaceholder,
-                    dragBinding.iconImage, dragBinding.thumbnailImage, dragBinding.appIconBadgeImage
+                    dragBinding.iconImage, dragBinding.thumbnailImage,
+                    dragBinding.appIconBadgeImage, transferBinding.transferRecyclerLayout,
+                    transferBinding.transferRecyclerView, transferBinding.transferTitleText,
+                    transferBinding.dropDownButton, transferBinding.floatingButton
                 )
             }
         }

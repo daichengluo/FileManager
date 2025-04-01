@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="@dimen/sd_open_elevation"
+        android:fitsSystemWindows="true">
+
+        <com.android.imagic.files.ui.FileTransferFloatingLayout
+            android:id="@+id/transferRecyclerLayout"
+            android:layout_width="325dp"
+            android:layout_height="172dp"
+            android:background="@drawable/surface_background"
+            android:elevation="9dp"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/app_bar_background"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="11dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/transferTitleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:lineHeight="17dp"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="#FF19496A"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:ignore="UnusedAttribute" />
+
+                <Space
+                    android:layout_width="11dp"
+                    android:layout_height="match_parent" />
+
+                <me.zhanghai.android.foregroundcompat.ForegroundImageButton
+                    android:id="@+id/dropDownButton"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@null"
+                    android:foreground="@drawable/file_transfer_button_foreground"
+                    android:src="@drawable/file_transfer_drop_down_icon" />
+
+                <Space
+                    android:layout_width="11dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="0.667dp"
+                android:background="#FFF1F1F1" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transferRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="11dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="11dp"
+                android:paddingBottom="18dp"
+                tools:listitem="@layout/file_transfer_item" />
+        </com.android.imagic.files.ui.FileTransferFloatingLayout>
+
+        <com.android.imagic.files.ui.FloatingButtonView
+            android:id="@+id/floatingButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:foreground="@drawable/selectable_item_background_oval"
+            android:src="@drawable/file_transfer_icon"
+            android:visibility="invisible" />
+    </FrameLayout>
+</merge>

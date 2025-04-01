@@ -641,7 +641,7 @@
 
     <!-- Add new -->
     <plurals name="file_item_file_count_format">
-        <item quantity="other">%1$,d项</item>
+        <item quantity="other">%1$,d 项</item>
     </plurals>
     <string name="navigation_login_account_tip">请登录账号</string>
     <string name="navigation_internal_storage_name">内部存储</string>
@@ -649,15 +649,15 @@
     <string name="navigation_quick_access_videos">视频</string>
     <string name="navigation_quick_access_audio">音频</string>
     <string name="navigation_quick_access_apk">安装包</string>
-    <string name="file_list_select_title_format_new">已选择%1$,d项</string>
+    <string name="file_list_select_title_format_new">已选择 %1$,d 项</string>
     <plurals name="file_list_paste_move_title_format_new">
-        <item quantity="other">移动%1$,d项</item>
+        <item quantity="other">移动 %1$,d 项</item>
     </plurals>
     <plurals name="file_list_paste_copy_title_format_new">
-        <item quantity="other">复制%1$,d项</item>
+        <item quantity="other">复制 %1$,d 项</item>
     </plurals>
     <plurals name="file_list_paste_extract_title_format_new">
-        <item quantity="other">提取%1$,d项</item>
+        <item quantity="other">提取% 1$,d 项</item>
     </plurals>
     <string name="file_list_action_view_type_list">列表视图</string>
     <string name="file_list_action_view_type_grid">网格视图</string>
@@ -665,4 +665,8 @@
     <string name="file_list_action_exit_app">退出应用</string>
     <string name="settings_quick_access_title">快速访问</string>
     <string name="settings_quick_access_summary_empty">未启用快速访问</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="other">正在传输 %1$,d 项</item>
+    </plurals>
+    <string name="file_transfer_cancelling">正在取消</string>
 </resources>

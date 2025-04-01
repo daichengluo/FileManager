@@ -1,5 +1,8 @@
 package com.android.imagic.files.filejob
 
+import android.content.Intent
+import com.android.imagic.files.filejob.FileJobService.Actions
+import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
 import com.android.imagic.files.util.showToast
 import java.io.IOException
 import java.io.InterruptedIOException
@@ -24,6 +27,11 @@ abstract class FileJob {
             service.showToast(e.toString())
         } finally {
             service.notificationManager.cancel(id)
+            Intent(Actions.CANCELLED.toString()).apply {
+                putExtra(FILE_TRANSFER_ID, id)
+            }.also {
+                service.localBroadcastManager.sendBroadcast(it)
+            }
         }
     }
 

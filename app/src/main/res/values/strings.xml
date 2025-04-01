@@ -826,4 +826,9 @@
     <string name="file_list_action_exit_app">Exit</string>
     <string name="settings_quick_access_title">Quick access</string>
     <string name="settings_quick_access_summary_empty">No Quick access enabled</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Transferring %1$,d item</item>
+        <item quantity="other">Transferring %1$,d items</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Cancelling</string>
 </resources>

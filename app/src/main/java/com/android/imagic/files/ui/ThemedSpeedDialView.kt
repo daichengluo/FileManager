@@ -85,7 +85,7 @@ class ThemedSpeedDialView : SpeedDialView {
         setMainFabClosedDrawable(mainFabDrawable)
         super.setOnChangeListener(object : OnChangeListener {
             override fun onMainActionSelected(): Boolean =
-                onChangeListener?.onMainActionSelected() ?: false
+                onChangeListener?.onMainActionSelected() == true
 
             override fun onToggleChanged(isOpen: Boolean) {
                 mainFabAnimator?.cancel()
