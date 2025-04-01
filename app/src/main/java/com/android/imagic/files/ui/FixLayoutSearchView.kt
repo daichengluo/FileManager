@@ -10,9 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.toColorInt
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePaddingRelative
+import com.android.imagic.files.R
 import com.android.imagic.files.compat.requireViewByIdCompat
-import com.android.imagic.files.util.dpToDimensionPixelSize
-import com.android.imagic.files.util.getDrawableByAttr
 
 open class FixLayoutSearchView : SearchView {
     constructor(context: Context) : super(context)
@@ -27,6 +26,10 @@ open class FixLayoutSearchView : SearchView {
         // A negative value won't work here because SearchView will use its preferred width as max
         // width instead.
         maxWidth = Int.MAX_VALUE
+        val searchBackBtn =
+            requireViewByIdCompat<ImageView>(androidx.appcompat.R.id.search_mag_icon)
+        searchBackBtn.setImageResource(R.drawable.action_bar_back_icon)
+
         val searchEditFrame = requireViewByIdCompat<View>(androidx.appcompat.R.id.search_edit_frame)
         searchEditFrame.updateLayoutParams<MarginLayoutParams> {
             leftMargin = 0
@@ -36,14 +39,14 @@ open class FixLayoutSearchView : SearchView {
         searchSrcText.setTextColor("#FF262626".toColorInt())
         searchSrcText.setHintTextColor("#80262626".toColorInt())
         searchSrcText.updatePaddingRelative(start = 0, end = 0)
-        val searchCloseBtn =
-            requireViewByIdCompat<ImageView>(androidx.appcompat.R.id.search_close_btn)
-        //searchCloseBtn.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_clear))
-        val searchCloseBtnPaddingHorizontal = searchCloseBtn.context.dpToDimensionPixelSize(12)
-        searchCloseBtn.updatePaddingRelative(
-            start = searchCloseBtnPaddingHorizontal, end = searchCloseBtnPaddingHorizontal
+
+        val searchCloseBtn = requireViewByIdCompat<ImageView>(
+            androidx.appcompat.R.id.search_close_btn
         )
-        searchCloseBtn.background = searchCloseBtn.context
-            .getDrawableByAttr(androidx.appcompat.R.attr.actionBarItemBackground)
+        searchCloseBtn.setImageResource(R.drawable.search_bar_close_icon)
+        searchCloseBtn.updateLayoutParams<MarginLayoutParams> {
+            topMargin = 36
+            bottomMargin = 36
+        }
     }
 }

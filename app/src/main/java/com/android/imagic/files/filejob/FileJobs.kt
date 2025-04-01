@@ -147,7 +147,9 @@ private fun FileJob.postNotification(
                 service, id + 1, intent, pendingIntentFlags
             )
             addAction(
-                R.drawable.close_icon_white_24dp, getString(android.R.string.cancel), pendingIntent
+                R.drawable.close_icon_control_normal,
+                getString(android.R.string.cancel),
+                pendingIntent
             )
         }
     }.build()

@@ -37,7 +37,7 @@
                 android:minHeight="0dp"
                 android:visibility="gone"
                 app:contentInsetStartWithNavigation="0dp"
-                app:navigationIcon="@drawable/close_icon_control_normal_24dp"
+                app:navigationIcon="@drawable/close_icon_control_normal"
                 app:titleTextAppearance="@style/TitleTextAppearance" />
         </FrameLayout>
 
