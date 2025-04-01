@@ -59,10 +59,10 @@
 
             <com.android.imagic.files.ui.DisabledAlphaImageView
                 android:id="@+id/checkImage"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="end"
-                android:layout_margin="10dp"
+                android:layout_margin="8dp"
                 android:duplicateParentState="true"
                 android:src="@drawable/checkable_badge" />
         </FrameLayout>
