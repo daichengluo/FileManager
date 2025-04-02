@@ -158,6 +158,7 @@ class FileListViewModel : ViewModel() {
     val selectedFiles: FileItemSet
         get() = _selectedFilesLiveData.valueCompat
 
+    var adapterFiles: List<FileItem> = emptyList()
     private val _isAllSelectedLiveData = MutableLiveData(false)
     val isAllSelectedLiveData: LiveData<Boolean> = _isAllSelectedLiveData
 
@@ -189,9 +190,7 @@ class FileListViewModel : ViewModel() {
     }
 
     private fun updateAllSelectedState() {
-        var allFiles = fileListStateful.value?.filter {
-            !it.isHidden && it.isSelectable(pickOptions)
-        } ?: return
+        val allFiles = adapterFiles.filter { it.isSelectable(pickOptions) }
         _isAllSelectedLiveData.value = allFiles.isNotEmpty() && selectedFiles.containsAll(allFiles)
     }
 

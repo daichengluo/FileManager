@@ -335,6 +335,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true, binding.swipeRefreshLayout.progressViewEndOffset
             )
         }
+        binding.checkAllLayout.setOnClickListener {
+            if (binding.checkAllLayout.isChecked) {
+                clearSelectedFiles()
+            } else {
+                selectAllFiles()
+            }
+        }
         binding.swipeRefreshLayout.setOnRefreshListener { this.refresh() }
         layoutManager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = layoutManager
@@ -606,7 +613,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         super.onPrepareOptionsMenu(menu)
 
         updateViewSortMenuItems()
-        updateSelectAllMenuItem()
         updateShowHiddenFilesMenuItem()
     }
 
@@ -670,11 +676,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
             R.id.action_refresh -> {
                 refresh()
-                true
-            }
-
-            R.id.action_select_all -> {
-                selectAllFiles()
                 true
             }
 
@@ -907,6 +908,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (!isShowHiddenFiles) {
             files = files.filterNot { it.isHidden }
         }
+        viewModel.adapterFiles = files
         adapter.replaceListAndIsSearching(
             files,
             viewModel.searchState.isSearching,
@@ -965,18 +967,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
         }
         requireActivity().title = title
-        updateSelectAllMenuItem()
         updateOverlayToolbar()
         updateBottomToolbar()
         adapter.pickOptions = pickOptions
-    }
-
-    private fun updateSelectAllMenuItem() {
-        if (!this::menuBinding.isInitialized) {
-            return
-        }
-        val pickOptions = viewModel.pickOptions
-        menuBinding.selectAllItem.isVisible = pickOptions == null || pickOptions.allowMultiple
     }
 
     private fun pickFiles(files: FileItemSet) {
@@ -1027,18 +1020,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             if (overlayActionMode.isActive) {
                 overlayActionMode.finish()
             }
-            binding.checkAllLayout.isVisible = false
             return
-        }
-        binding.checkAllLayout.isVisible = true
-        binding.checkAllLayout.apply {
-            setOnClickListener {
-                if (isChecked) {
-                    clearSelectedFiles()
-                } else {
-                    selectAllFiles()
-                }
-            }
         }
 
         val pickOptions = viewModel.pickOptions
@@ -1053,7 +1035,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
             menu.findItem(R.id.action_open).isVisible = isOpen
             menu.findItem(R.id.action_create).isVisible = !isOpen
-            menu.findItem(R.id.action_select_all).isVisible = pickOptions.allowMultiple
         } else {
             overlayActionMode.title =
                 getString(R.string.file_list_select_title_format_new, files.size)
@@ -1140,11 +1121,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
             R.id.action_share -> {
                 shareFiles(viewModel.selectedFiles)
-                true
-            }
-
-            R.id.action_select_all -> {
-                selectAllFiles()
                 true
             }
 
@@ -1994,7 +1970,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val sortOrderAscendingItem: MenuItem,
         val sortDirectoriesFirstItem: MenuItem,
         val viewSortPathSpecificItem: MenuItem,
-        val selectAllItem: MenuItem,
         val showHiddenFilesItem: MenuItem,
         val exitApp: MenuItem
     ) {
@@ -2013,7 +1988,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     menu.findItem(R.id.action_sort_order_ascending),
                     menu.findItem(R.id.action_sort_directories_first),
                     menu.findItem(R.id.action_view_sort_path_specific),
-                    menu.findItem(R.id.action_select_all),
                     menu.findItem(R.id.action_show_hidden_files),
                     menu.findItem(R.id.action_exit_app)
                 )
