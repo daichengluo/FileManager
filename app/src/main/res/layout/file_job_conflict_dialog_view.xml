@@ -185,8 +185,7 @@
                 android:layout_marginTop="-3dp"
                 android:layout_marginEnd="-3dp"
                 android:layout_marginBottom="-3dp"
-                android:src="@drawable/arrow_end_icon_white_24dp"
-                app:tint="?colorControlNormal" />
+                android:src="@drawable/arrow_end_icon_white_24dp" />
 
             <TextView
                 android:layout_width="match_parent"

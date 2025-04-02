@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <me.zhanghai.android.foregroundcompat.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/two_line_list_item_height"
     android:background="?android:colorBackground"
@@ -50,6 +49,5 @@
         android:layout_marginStart="@dimen/content_start_from_screen_edge_margin_minus_36dp_considering_at_least_8dp"
         android:layout_marginEnd="@dimen/screen_edge_margin_minus_12dp_at_least_8dp"
         android:padding="@dimen/touch_target_icon_padding"
-        android:src="@drawable/drag_handle_icon_white_24dp"
-        app:tint="?colorControlNormal" />
+        android:src="@drawable/drag_handle_icon_white_24dp" />
 </me.zhanghai.android.foregroundcompat.ForegroundLinearLayout>
