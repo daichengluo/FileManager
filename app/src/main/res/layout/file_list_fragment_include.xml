@@ -43,6 +43,8 @@
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+            <include layout="@layout/file_list_fragment_transfer_include" />
+
             <include layout="@layout/file_list_fragment_speed_dial_include" />
 
         </com.android.imagic.files.ui.IgnoreFitsSystemWindowsFullyDraggableDrawerContentLayout>
