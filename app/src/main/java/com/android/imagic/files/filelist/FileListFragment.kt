@@ -99,6 +99,7 @@ import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
+import com.android.imagic.files.ui.CheckableForegroundLinearLayout
 import com.android.imagic.files.ui.CoordinatorAppBarLayout
 import com.android.imagic.files.ui.CrossfadeSubtitleToolbar
 import com.android.imagic.files.ui.DrawerLayoutOnBackPressedCallback
@@ -498,6 +499,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         viewModel.pickOptionsLiveData.observe(viewLifecycleOwner) { onPickOptionsChanged(it) }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
+        viewModel.isAllSelectedLiveData.observe(viewLifecycleOwner) { onAllSelectedChanged(it) }
         viewModel.pasteStateLiveData.observe(viewLifecycleOwner) { onPasteStateChanged(it) }
         Settings.FILE_NAME_ELLIPSIZE.observe(viewLifecycleOwner) { onFileNameEllipsizeChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
@@ -1015,14 +1017,30 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         adapter.replaceSelectedFiles(files)
     }
 
+    private fun onAllSelectedChanged(isChecked: Boolean) {
+        binding.checkAllLayout.isChecked = isChecked
+    }
+
     private fun updateOverlayToolbar() {
         val files = viewModel.selectedFiles
         if (files.isEmpty()) {
             if (overlayActionMode.isActive) {
                 overlayActionMode.finish()
             }
+            binding.checkAllLayout.isVisible = false
             return
         }
+        binding.checkAllLayout.isVisible = true
+        binding.checkAllLayout.apply {
+            setOnClickListener {
+                if (isChecked) {
+                    clearSelectedFiles()
+                } else {
+                    selectAllFiles()
+                }
+            }
+        }
+
         val pickOptions = viewModel.pickOptions
         if (pickOptions != null) {
             overlayActionMode.title =
@@ -1404,7 +1422,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             val hasAppIconBadge = appDirectoryPackageName != null
             isVisible = hasAppIconBadge
             if (hasAppIconBadge) {
-                load(AppIconPackageName(appDirectoryPackageName!!))
+                load(AppIconPackageName(appDirectoryPackageName))
             }
         }
         return binding.dragPlaceholder.apply { isVisible = true }
@@ -1412,6 +1430,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
+        binding.checkAllLayout.isChecked = false
     }
 
     override fun selectFile(file: FileItem, selected: Boolean) {
@@ -1906,6 +1925,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val toolbar: CrossfadeSubtitleToolbar,
         val overlayToolbar: Toolbar,
         val breadcrumbLayout: BreadcrumbLayout,
+        val checkAllLayout: CheckableForegroundLinearLayout,
         val contentLayout: ViewGroup,
         val progress: ProgressBar,
         val errorText: TextView,
@@ -1946,8 +1966,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     bindingRoot, includeBinding.drawerLayout, includeBinding.persistentDrawerLayout,
                     includeBinding.persistentBarLayout, appBarBinding.appBarLayout,
                     appBarBinding.toolbar, appBarBinding.overlayToolbar,
-                    appBarBinding.breadcrumbLayout, contentBinding.contentLayout,
-                    contentBinding.progress, contentBinding.errorText, contentBinding.emptyView,
+                    appBarBinding.breadcrumbLayout, appBarBinding.checkAllLayout,
+                    contentBinding.contentLayout, contentBinding.progress,
+                    contentBinding.errorText, contentBinding.emptyView,
                     contentBinding.swipeRefreshLayout, contentBinding.recyclerView,
                     bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomProgressbar,
                     bottomBarBinding.bottomToolbar, bottomBarBinding.bottomCreateFileNameEdit,

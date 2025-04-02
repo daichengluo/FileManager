@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- app:statusBarBackground is broken when scrolling. -->
     <com.android.imagic.files.ui.CoordinatorAppBarLayout
@@ -41,11 +42,56 @@
                 app:titleTextAppearance="@style/TitleTextAppearance" />
         </FrameLayout>
 
-        <com.android.imagic.files.filelist.BreadcrumbLayout
-            android:id="@+id/breadcrumbLayout"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="11dp" />
+            android:layout_height="wrap_content">
+
+            <com.android.imagic.files.filelist.BreadcrumbLayout
+                android:id="@+id/breadcrumbLayout"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="42dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:paddingHorizontal="11dp">
+
+                <com.android.imagic.files.ui.CheckableForegroundLinearLayout
+                    android:id="@+id/checkAllLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/file_item_background"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:lineHeight="19dp"
+                        android:singleLine="true"
+                        android:text="@string/select_all"
+                        android:textColor="#80262626"
+                        android:textSize="13sp"
+                        tools:ignore="UnusedAttribute" />
+
+                    <Space
+                        android:layout_width="12dp"
+                        android:layout_height="match_parent" />
+
+                    <com.android.imagic.files.ui.DisabledAlphaImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:src="@drawable/checkable_badge" />
+                </com.android.imagic.files.ui.CheckableForegroundLinearLayout>
+            </LinearLayout>
+        </FrameLayout>
     </com.android.imagic.files.ui.CoordinatorAppBarLayout>
 </merge>

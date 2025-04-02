@@ -9,6 +9,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import com.android.imagic.files.R
 
 abstract class ToolbarActionMode(
     private val bar: ViewGroup,
@@ -20,6 +22,7 @@ abstract class ToolbarActionMode(
     private var callback: Callback? = null
 
     init {
+        toolbar.overflowIcon = ContextCompat.getDrawable(toolbar.context, R.drawable.menu_icon)
         toolbar.setNavigationOnClickListener { callback?.onToolbarNavigationIconClicked(this) }
         toolbar.setOnMenuItemClickListener {
             callback?.onToolbarActionModeMenuItemClicked(this, it) == true

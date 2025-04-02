@@ -295,9 +295,7 @@ class FileListAdapter(
             setOnLongClickListener {
                 if (selectedFiles.isEmpty()) {
                     selectFile(file)
-                }/* else {
-                    listener.openFile(file)
-                }*/
+                }
                 true
             }
             setOnFileDragListener(this, file)

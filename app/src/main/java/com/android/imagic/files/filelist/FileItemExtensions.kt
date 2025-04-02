@@ -75,6 +75,17 @@ val FileItem.supportsThumbnail: Boolean
         }
     }
 
+fun FileItem.isSelectable(pickOptions: PickOptions?): Boolean {
+    val pickOptions = pickOptions ?: return true
+    return when (pickOptions.mode) {
+        PickOptions.Mode.OPEN_FILE, PickOptions.Mode.CREATE_FILE ->
+            !attributes.isDirectory &&
+                    pickOptions.mimeTypes.any { it.match(mimeType) }
+
+        PickOptions.Mode.OPEN_DIRECTORY -> attributes.isDirectory
+    }
+}
+
 // @see android.content.pm.parsing.ApkLiteParseUtils.parsePackageSplitNames
 // @see android.content.pm.parsing.ParsingPackageUtils.validateName
 // @see com.android.server.pm.PackageManagerService.getNextCodePath
