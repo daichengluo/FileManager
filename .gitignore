@@ -5,6 +5,7 @@
 /captures/
 /local.properties
 /signing.jks
-/signing.properties
+/signing_pro.properties
+/signing_ibd.properties
 .DS_Store
 *.iml
