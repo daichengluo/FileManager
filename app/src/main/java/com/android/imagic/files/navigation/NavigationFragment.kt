@@ -76,7 +76,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         val viewLifecycleOwner = viewLifecycleOwner
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
-        BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
+//        BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
     }

@@ -252,6 +252,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 )
 
                 when (acton) {
+                    FileJobService.Actions.STARTED.toString(),
                     FileJobService.Actions.PROGRESS.toString(),
                     FileJobService.Actions.CANCELLING.toString() -> {
                         handler.post {
