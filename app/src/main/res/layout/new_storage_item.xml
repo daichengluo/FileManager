@@ -12,7 +12,8 @@
         android:id="@+id/itemLayout"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingVertical="5dp">
 
         <ImageView
             android:id="@+id/iconImage"
@@ -27,18 +28,40 @@
             android:layout_width="3dp"
             android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:ellipsize="marquee"
-            android:lineHeight="19dp"
-            android:singleLine="true"
-            android:textColor="#FF262626"
-            android:textSize="13sp"
-            tools:ignore="UnusedAttribute"
-            tools:text="内部存储空间" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:lineHeight="19dp"
+                android:singleLine="true"
+                android:textColor="#FF262626"
+                android:textSize="13sp"
+                tools:ignore="UnusedAttribute"
+                tools:text="内部存储空间" />
+
+            <com.android.imagic.files.ui.AutoGoneTextView
+                android:id="@+id/subtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:lineHeight="13dp"
+                android:singleLine="true"
+                android:textColor="#80262626"
+                android:textSize="9sp"
+                tools:ignore="SmallSp,UnusedAttribute"
+                tools:text="66 Gb / 128 Gb" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/storageActionImage"

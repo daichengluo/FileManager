@@ -117,6 +117,7 @@ class StorageListAdapter(
         binding.itemLayout.setOnLongClickListener { item.onLongClick(listener) }
         binding.iconImage.setImageDrawable(item.getIcon(binding.iconImage.context))
         binding.titleText.text = item.getTitle(binding.titleText.context)
+        binding.subtitleText.text = item.getSubtitle(binding.subtitleText.context)
     }
 
     companion object {

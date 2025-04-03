@@ -346,7 +346,6 @@ class FileListAdapter(
             }
         }
         holder.nameText.text = file.name
-
         holder.descriptionText?.let {
             val context = it.context
             val descriptionSeparator = context.getString(R.string.file_item_description_separator)
