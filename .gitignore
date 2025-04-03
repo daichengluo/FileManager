@@ -7,5 +7,6 @@
 /signing.jks
 /signing_pro.properties
 /signing_ibd.properties
+/signing_xbh.properties
 .DS_Store
 *.iml

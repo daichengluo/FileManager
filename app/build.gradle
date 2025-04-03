@@ -59,6 +59,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.xbh
+        }
     }
     setProperty("archivesBaseName", "NewFileManager-${defaultConfig.versionName}")
     packagingOptions {
