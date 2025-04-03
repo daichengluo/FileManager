@@ -20,14 +20,14 @@ import com.android.imagic.files.util.startActivitySafe
 import java8.nio.file.Path
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
-    private val openPathLauncher =
-        registerForActivityResult(FileListActivity.OpenDirectoryContract(), ::onOpenPathResult)
+    private val openPathLauncher = registerForActivityResult(
+        FileListActivity.OpenDirectoryContract(), ::onOpenPathResult
+    )
 
     private lateinit var binding: NewNavigationFragmentBinding
 
     private lateinit var storageListAdapter: StorageListAdapter
     private lateinit var quickAccessListAdapter: QuickAccessListAdapter
-    private lateinit var bookmarkListAdapter: BookmarkListAdapter
     private lateinit var settingsListAdapter: SettingsListAdapter
 
     lateinit var listener: Listener
@@ -52,12 +52,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         binding.quickAccessRecyclerView.adapter = quickAccessListAdapter
         binding.quickAccessRecyclerView.setMaxHeight(500)
 
-        binding.bookmarkRecyclerView.layoutManager =
-            GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
-        bookmarkListAdapter = BookmarkListAdapter(this, context)
-        binding.bookmarkRecyclerView.adapter = bookmarkListAdapter
-        binding.bookmarkRecyclerView.setMaxHeight(500)
-
         binding.storageRecyclerView.layoutManager = LinearLayoutManager(context)
         storageListAdapter = StorageListAdapter(this, context)
         binding.storageRecyclerView.adapter = storageListAdapter
@@ -76,7 +70,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         val viewLifecycleOwner = viewLifecycleOwner
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
-//        BookmarkItemListLiveData.observe(viewLifecycleOwner) { onBookmarkItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
     }
@@ -99,11 +92,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         binding.quickAccessRecyclerView.isVisible = navigationItems.isNotEmpty()
     }
 
-    private fun onBookmarkItemsChanged(navigationItems: List<NavigationItem?>) {
-        bookmarkListAdapter.replace(navigationItems)
-        binding.bookmarkRecyclerView.isVisible = navigationItems.isNotEmpty()
-    }
-
     private fun onSettingsItemsChanged(navigationItems: List<NavigationItem?>) {
         settingsListAdapter.replace(navigationItems)
     }
@@ -111,7 +99,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     private fun onCurrentPathChanged(path: Path) {
         storageListAdapter.notifyCheckedChanged()
         quickAccessListAdapter.notifyCheckedChanged()
-        bookmarkListAdapter.notifyCheckedChanged()
     }
 
     override val currentPath: Path

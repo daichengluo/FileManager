@@ -85,16 +85,6 @@
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="11dp" />
 
-            <com.android.imagic.files.ui.MaxHeightRecyclerView
-                android:id="@+id/bookmarkRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="11dp"
-                android:background="@drawable/surface_background"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="11dp"
-                android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/storageLayout"
                 android:layout_width="match_parent"
