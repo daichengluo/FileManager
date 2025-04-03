@@ -29,8 +29,8 @@
 
                 <com.android.imagic.files.ui.DisabledAlphaImageView
                     android:id="@+id/directoryThumbnailImage"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:duplicateParentState="true"
                     android:scaleType="fitCenter"
@@ -38,8 +38,8 @@
 
                 <com.android.imagic.files.ui.DisabledAlphaImageView
                     android:id="@+id/thumbnailIconImage"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:duplicateParentState="true"
                     android:scaleType="centerCrop" />
@@ -55,6 +55,25 @@
                     android:duplicateParentState="true"
                     android:scaleType="centerCrop"
                     app:shapeAppearance="@style/RoundedCornerImageGrid" />
+
+                <FrameLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:duplicateParentState="true">
+
+                    <com.android.imagic.files.ui.DisabledAlphaImageView
+                        android:id="@+id/appIconBadgeImage"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginStart="-0.5dp"
+                        android:layout_marginTop="-0.5dp"
+                        android:layout_marginEnd="-0.5dp"
+                        android:layout_marginBottom="-0.5dp"
+                        android:duplicateParentState="true"
+                        app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+                </FrameLayout>
             </com.android.imagic.files.ui.AspectRatioFrameLayout>
 
             <com.android.imagic.files.ui.DisabledAlphaImageView

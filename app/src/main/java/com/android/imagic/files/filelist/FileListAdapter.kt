@@ -335,7 +335,7 @@ class FileListAdapter(
                 }
             }
         }
-        holder.appIconBadgeImage?.apply {
+        holder.appIconBadgeImage.apply {
             dispose()
             setImageDrawable(null)
             val appDirectoryPackageName = file.appDirectoryPackageName
@@ -539,7 +539,7 @@ class FileListAdapter(
         val directoryThumbnailImage: ImageView?,
         val thumbnailIconImage: ImageView?,
         val thumbnailImage: ImageView,
-        val appIconBadgeImage: ImageView?,
+        val appIconBadgeImage: ImageView,
         val nameText: TextView,
         val descriptionText: TextView?,
         val menuButton: ImageButton?,
@@ -568,7 +568,7 @@ class FileListAdapter(
             binding.directoryThumbnailImage,
             binding.thumbnailIconImage,
             binding.thumbnailImage,
-            null,
+            binding.appIconBadgeImage,
             binding.nameText,
             null,
             null,
