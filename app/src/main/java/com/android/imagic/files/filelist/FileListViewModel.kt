@@ -211,6 +211,7 @@ class FileListViewModel : ViewModel() {
         }
         selectedFiles.clear()
         _selectedFilesLiveData.value = selectedFiles
+        updateAllSelectedState()
     }
 
     val pasteStateLiveData: LiveData<PasteState> = _pasteStateLiveData

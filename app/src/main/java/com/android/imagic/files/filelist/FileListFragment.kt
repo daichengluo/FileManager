@@ -1407,7 +1407,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
-        binding.checkAllLayout.isChecked = false
     }
 
     override fun selectFile(file: FileItem, selected: Boolean) {
