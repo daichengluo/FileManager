@@ -15,10 +15,9 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-        SettingsFragmentBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+    ): View = SettingsFragmentBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
