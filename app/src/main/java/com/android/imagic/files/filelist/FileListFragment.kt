@@ -670,11 +670,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
-            R.id.action_navigate_to -> {
-                showNavigateToPathDialog()
-                true
-            }
-
             R.id.action_refresh -> {
                 refresh()
                 true
@@ -690,13 +685,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
-            R.id.action_add_bookmark -> {
-                addBookmark()
+            R.id.action_create_file -> {
+                showCreateFileDialog()
                 true
             }
 
-            R.id.action_create_shortcut -> {
-                createShortcut()
+            R.id.action_create_directory -> {
+                showCreateDirectoryDialog()
                 true
             }
 
