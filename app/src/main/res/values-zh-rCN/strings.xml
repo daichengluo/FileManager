@@ -657,7 +657,7 @@
         <item quantity="other">复制 %1$,d 项</item>
     </plurals>
     <plurals name="file_list_paste_extract_title_format_new">
-        <item quantity="other">提取% 1$,d 项</item>
+        <item quantity="other">提取 %1$,d 项</item>
     </plurals>
     <string name="file_list_action_view_type_list">列表视图</string>
     <string name="file_list_action_view_type_grid">网格视图</string>

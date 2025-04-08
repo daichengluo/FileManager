@@ -260,7 +260,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                             if (fileTransferAdapter.list.isNotEmpty()) {
                                 fileTransferActionMode.show()
                                 val size = fileTransferAdapter.list.size
-                                binding.transferTitle.text = requireContext().getQuantityString(
+                                binding.transferTitle.text = getQuantityString(
                                     R.plurals.file_transferring_title_format, size, size
                                 )
                             }
@@ -274,7 +274,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                                 fileTransferActionMode.hide()
                             } else {
                                 val size = fileTransferAdapter.list.size
-                                binding.transferTitle.text = requireContext().getQuantityString(
+                                binding.transferTitle.text = getQuantityString(
                                     R.plurals.file_transferring_title_format, size, size
                                 )
                             }
@@ -779,34 +779,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         if (stateful is Success) {
             viewModel.pendingState?.let { layoutManager.onRestoreInstanceState(it) }
-        }
-    }
-
-    private fun getSubtitle(files: List<FileItem>): String {
-        val directoryCount = files.count { it.attributes.isDirectory }
-        val fileCount = files.size - directoryCount
-        val directoryCountText = if (directoryCount > 0) {
-            getQuantityString(
-                R.plurals.file_list_subtitle_directory_count_format, directoryCount, directoryCount
-            )
-        } else {
-            null
-        }
-        val fileCountText = if (fileCount > 0) {
-            getQuantityString(
-                R.plurals.file_list_subtitle_file_count_format, fileCount, fileCount
-            )
-        } else {
-            null
-        }
-        return when {
-            !directoryCountText.isNullOrEmpty() && !fileCountText.isNullOrEmpty() ->
-                (directoryCountText + getString(R.string.file_list_subtitle_separator)
-                        + fileCountText)
-
-            !directoryCountText.isNullOrEmpty() -> directoryCountText
-            !fileCountText.isNullOrEmpty() -> fileCountText
-            else -> getString(R.string.empty)
         }
     }
 
