@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -242,6 +243,22 @@ fun Context.showToast(text: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
         return
     }
     Toast.makeText(this, text, duration).show()
+}
+
+fun Context.hasDefaultAppFor(intent: Intent): Boolean {
+    val pm = packageManager
+    val defaultActivity = intent.resolveActivity(pm) ?: return false
+    val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+    return activities.any { it.activityInfo.packageName == defaultActivity.packageName }
+}
+
+fun Context.isPackageInstalled(packageName: String): Boolean {
+    return try {
+        packageManager.getPackageInfo(packageName, 0)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
+    }
 }
 
 fun Context.startActivitySafe(intent: Intent, options: Bundle? = null) {

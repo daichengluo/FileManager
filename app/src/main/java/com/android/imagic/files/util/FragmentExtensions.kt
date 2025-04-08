@@ -166,6 +166,14 @@ fun Fragment.showToast(text: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
     requireContext().showToast(text, duration)
 }
 
+fun Fragment.hasDefaultAppFor(intent: Intent): Boolean = requireContext().hasDefaultAppFor(intent)
+
+fun Fragment.isPackageAvailable(packageName: String): Boolean =
+    requireContext().isPackageInstalled(packageName)
+
+fun Fragment.isImagicViewerAvailable(): Boolean =
+    isPackageAvailable("com.android.imagic.imageviewer")
+
 fun Fragment.startActivitySafe(intent: Intent, options: Bundle? = null) {
     try {
         startActivity(intent, options)
