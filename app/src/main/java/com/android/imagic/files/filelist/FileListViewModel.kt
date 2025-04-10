@@ -6,10 +6,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.android.imagic.files.file.CategoryWrap
 import com.android.imagic.files.file.FileItem
-import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.filelist.FileSortOptions.By
 import com.android.imagic.files.filelist.FileSortOptions.Order
+import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.CloseableLiveData
@@ -33,9 +34,6 @@ class FileListViewModel : ViewModel() {
     fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) trailLiveData.navigateUp() else false
 
     val currentPathLiveData = trailLiveData.map {
-        if (_mimeTypeCategoryLiveData.value != null) {
-            _mimeTypeCategoryLiveData.value = null
-        }
         it.currentPath
     }
     val currentPath: Path
@@ -62,17 +60,34 @@ class FileListViewModel : ViewModel() {
         _searchStateLiveData.value = SearchState(false, "")
     }
 
-    private val _mimeTypeCategoryLiveData = MutableLiveData<MimeTypeCategory?>(null)
-    val mimeTypeCategoryLiveData: LiveData<MimeTypeCategory?> = _mimeTypeCategoryLiveData
+    private val _categoryWrapLiveData = MutableLiveData<CategoryWrap?>()
+    val categoryWrapLiveData: LiveData<CategoryWrap?> = _categoryWrapLiveData
 
-    fun quickAccessTo(category: MimeTypeCategory?) {
-        _mimeTypeCategoryLiveData.value = category
+    val quickAccessLiveData: LiveData<QuickAccess?> = categoryWrapLiveData.map {
+        it?.quickAccess
+    }
+    val quickAccess: QuickAccess?
+        get() = quickAccessLiveData.valueCompat
+
+    val isInQuickAccess: Boolean
+        get() = quickAccess != null
+
+    fun quickAccessTo(wrap: CategoryWrap) {
+        if (quickAccess != wrap.quickAccess) {
+            _categoryWrapLiveData.value = wrap
+        }
+    }
+
+    fun clearCategoryWrap() {
+        if (isInQuickAccess) {
+            _categoryWrapLiveData.value = null
+        }
     }
 
     private val _fileListLiveData = FileListSwitchMapLiveData(
         currentPathLiveData,
         _searchStateLiveData,
-        _mimeTypeCategoryLiveData
+        _categoryWrapLiveData
     )
     val fileListLiveData: LiveData<Stateful<List<FileItem>>>
         get() = _fileListLiveData
@@ -107,7 +122,10 @@ class FileListViewModel : ViewModel() {
             _searchViewQueryLiveData.value = value
         }
 
-    val breadcrumbLiveData: LiveData<BreadcrumbData> = BreadcrumbLiveData(trailLiveData)
+    val breadcrumbLiveData: LiveData<BreadcrumbData> = BreadcrumbLiveData(
+        trailLiveData,
+        quickAccessLiveData
+    )
     val canNavigateUpBreadcrumb: Boolean
         get() = breadcrumbLiveData.valueCompat.selectedIndex > 0
 
@@ -266,14 +284,14 @@ class FileListViewModel : ViewModel() {
     private class FileListSwitchMapLiveData(
         private val pathLiveData: LiveData<Path>,
         private val searchStateLiveData: LiveData<SearchState>,
-        private val mimeTypeCategoryLiveData: LiveData<MimeTypeCategory?>,
+        private val categoryWrapLiveData: LiveData<CategoryWrap?>
     ) : MediatorLiveData<Stateful<List<FileItem>>>(), Closeable {
         private var liveData: CloseableLiveData<Stateful<List<FileItem>>>? = null
 
         init {
             addSource(pathLiveData) { updateSource() }
             addSource(searchStateLiveData) { updateSource() }
-            addSource(mimeTypeCategoryLiveData) { updateSource() }
+            addSource(categoryWrapLiveData) { updateSource() }
         }
 
         private fun updateSource() {
@@ -282,17 +300,27 @@ class FileListViewModel : ViewModel() {
                 it.close()
             }
             val path = pathLiveData.valueCompat
+            val categoryWrap = categoryWrapLiveData.valueCompat
             val searchState = searchStateLiveData.valueCompat
-            val mimeTypeCategory = mimeTypeCategoryLiveData.valueCompat
-            val liveData = if (searchState.isSearching) {
-                SearchFileListLiveData(path, searchState.query)
-            } else if (mimeTypeCategory != null) {
-                CategoryFileListLiveData(mimeTypeCategory)
-            } else {
-                FileListLiveData(path)
+            val newLiveData = when {
+                categoryWrap != null && categoryWrap.quickAccess != null
+                        && categoryWrap.quickAccess.category != null -> {
+                    CategoryFileListLiveData(
+                        categoryWrap.context,
+                        categoryWrap.quickAccess.category
+                    )
+                }
+
+                searchState.isSearching -> {
+                    SearchFileListLiveData(path, searchState.query)
+                }
+
+                else -> {
+                    FileListLiveData(path)
+                }
             }
-            this.liveData = liveData
-            addSource(liveData) { value = it }
+            this.liveData = newLiveData
+            addSource(newLiveData) { value = it }
         }
 
         fun reload() {

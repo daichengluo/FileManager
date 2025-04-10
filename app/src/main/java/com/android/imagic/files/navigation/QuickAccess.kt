@@ -3,31 +3,16 @@ package com.android.imagic.files.navigation
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.file.Category
 
-data class QuickAccess internal constructor(
+data class QuickAccess(
     @DrawableRes val iconRes: Int,
     @StringRes private val titleRes: Int,
-    private val customTitle: String?,
-    val category: MimeTypeCategory?,
+    private val customTitle: String? = null,
+    val category: Category?,
     val relativePath: String,
-    val isEnabled: Boolean
+    val isEnabled: Boolean = true
 ) {
-    constructor(
-        @DrawableRes iconRes: Int,
-        @StringRes titleRes: Int,
-        category: MimeTypeCategory,
-        relativePath: String,
-        enabled: Boolean
-    ) : this(iconRes, titleRes, null, category, relativePath, enabled)
-
-    constructor(
-        @DrawableRes iconRes: Int,
-        @StringRes titleRes: Int,
-        relativePath: String,
-        enabled: Boolean
-    ) : this(iconRes, titleRes, null, null, relativePath, enabled)
-
     val id: Long
         get() = relativePath.hashCode().toLong()
 

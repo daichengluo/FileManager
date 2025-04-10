@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.smb
 
-import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.file.Category
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.CloseableIterator
 import com.android.imagic.files.provider.common.InvalidFileNameException
@@ -406,7 +406,7 @@ object SmbFileSystemProvider : FileSystemProvider(), PathObservableProvider, Sea
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: MimeTypeCategory?,
+        category: Category?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {

@@ -45,21 +45,21 @@ value class MimeType(val value: String) : Parcelable {
                 && subtype.let { it == "*" || mimeType.subtype == it }
                 && parameters.let { it == null || mimeType.parameters == it }
 
-    val category: MimeTypeCategory
+    val category: Category?
         get() = when (type) {
-            "image" -> MimeTypeCategory.IMAGE
-            "video" -> MimeTypeCategory.VIDEO
-            "audio" -> MimeTypeCategory.AUDIO
+            "image" -> Category.IMAGE
+            "video" -> Category.VIDEO
+            "audio" -> Category.AUDIO
             "application" -> when (subtype) {
                 "pdf", "msword", "vnd.ms-excel", "vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> MimeTypeCategory.DOCUMENT
+                "vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> Category.DOCUMENT
 
-                "vnd.android.package-archive" -> MimeTypeCategory.APK
-                else -> MimeTypeCategory.OTHER
+                "vnd.android.package-archive" -> Category.APK
+                else -> null
             }
 
-            "text" -> MimeTypeCategory.DOCUMENT
-            else -> MimeTypeCategory.OTHER
+            "text" -> Category.DOCUMENT
+            else -> null
         }
 
     companion object {

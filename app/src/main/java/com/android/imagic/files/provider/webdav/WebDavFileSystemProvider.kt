@@ -1,7 +1,7 @@
 package com.android.imagic.files.provider.webdav
 
 import at.bitfire.dav4jvm.exception.DavException
-import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.file.Category
 import com.android.imagic.files.provider.common.ByteString
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.DelegateSchemeFileSystemProvider
@@ -445,7 +445,7 @@ object WebDavFileSystemProvider : FileSystemProvider(), PathObservableProvider, 
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: MimeTypeCategory?,
+        category: Category?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {

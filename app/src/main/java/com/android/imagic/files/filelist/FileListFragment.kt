@@ -69,9 +69,9 @@ import com.android.imagic.files.databinding.FileListFragmentContentIncludeBindin
 import com.android.imagic.files.databinding.FileListFragmentIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentSpeedDialIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentTransferIncludeBinding
+import com.android.imagic.files.file.CategoryWrap
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
-import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.file.asMimeTypeOrNull
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
@@ -92,6 +92,7 @@ import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
+import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.common.isDirectory
@@ -1641,8 +1642,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
     }
 
-    override fun quickAccessTo(category: MimeTypeCategory?) {
-        viewModel.quickAccessTo(category)
+    override fun clearQuickAccessState() {
+        viewModel.clearCategoryWrap()
+    }
+
+    override fun quickAccessTo(quickAccess: QuickAccess) {
+        val categoryWrap = CategoryWrap(requireContext(), quickAccess)
+        viewModel.quickAccessTo(categoryWrap)
     }
 
     override fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit) {

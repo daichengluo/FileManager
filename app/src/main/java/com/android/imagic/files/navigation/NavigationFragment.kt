@@ -11,7 +11,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
-import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
@@ -109,11 +108,12 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     }
 
     override fun navigateToRoot(path: Path) {
+        listener.clearQuickAccessState()
         listener.navigateToRoot(path)
     }
 
-    override fun quickAccessTo(category: MimeTypeCategory?) {
-        listener.quickAccessTo(category)
+    override fun quickAccessTo(quickAccess: QuickAccess) {
+        listener.quickAccessTo(quickAccess)
     }
 
     override fun launchIntent(intent: Intent) {
@@ -133,7 +133,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
-        fun quickAccessTo(category: MimeTypeCategory?)
+        fun clearQuickAccessState()
+        fun quickAccessTo(quickAccess: QuickAccess)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
         fun closeNavigationDrawer()
     }

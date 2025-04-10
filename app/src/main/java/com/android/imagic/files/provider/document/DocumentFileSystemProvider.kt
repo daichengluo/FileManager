@@ -4,8 +4,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.core.net.toUri
+import com.android.imagic.files.file.Category
 import com.android.imagic.files.file.MimeType
-import com.android.imagic.files.file.MimeTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
@@ -452,7 +452,7 @@ object DocumentFileSystemProvider : FileSystemProvider(), PathObservableProvider
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: MimeTypeCategory?,
+        category: Category?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {

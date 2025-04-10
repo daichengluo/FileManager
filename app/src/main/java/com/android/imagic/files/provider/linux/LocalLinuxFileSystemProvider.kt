@@ -1,7 +1,7 @@
 package com.android.imagic.files.provider.linux
 
 import android.system.OsConstants
-import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.file.Category
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathObservable
@@ -369,7 +369,7 @@ class LocalLinuxFileSystemProvider(provider: LinuxFileSystemProvider) : FileSyst
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: MimeTypeCategory?,
+        category: Category?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {

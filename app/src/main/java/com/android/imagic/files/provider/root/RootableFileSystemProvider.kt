@@ -1,12 +1,10 @@
 package com.android.imagic.files.provider.root
 
-import com.android.imagic.files.file.MimeTypeCategory
+import com.android.imagic.files.file.Category
 import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
 import com.android.imagic.files.provider.common.Searchable
-import com.android.imagic.files.provider.common.WalkFileTreeLister
-import com.android.imagic.files.provider.linux.LinuxPath
 import java8.nio.channels.FileChannel
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
@@ -17,7 +15,6 @@ import java8.nio.file.FileSystem
 import java8.nio.file.LinkOption
 import java8.nio.file.OpenOption
 import java8.nio.file.Path
-import java8.nio.file.ProviderMismatchException
 import java8.nio.file.attribute.BasicFileAttributes
 import java8.nio.file.attribute.FileAttribute
 import java8.nio.file.attribute.FileAttributeView
@@ -190,7 +187,7 @@ abstract class RootableFileSystemProvider(
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: MimeTypeCategory?,
+        category: Category?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {
