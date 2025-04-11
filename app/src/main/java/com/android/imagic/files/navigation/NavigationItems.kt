@@ -12,7 +12,6 @@ import com.android.imagic.files.about.AboutActivity
 import com.android.imagic.files.compat.getDescriptionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
 import com.android.imagic.files.compat.pathCompat
-import com.android.imagic.files.file.Category
 import com.android.imagic.files.file.JavaFile
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.ftpserver.FtpServerActivity
@@ -236,6 +235,9 @@ private class QuickAccessItem(
         require(quickAccess.isEnabled)
     }
 
+    override fun isChecked(listener: Listener): Boolean =
+        listener.quickAccessCategory == quickAccess.category
+
     override val id: Long
         get() = quickAccess.id
 
@@ -245,10 +247,7 @@ private class QuickAccessItem(
 
     override fun getTitle(context: Context): String = quickAccess.getTitle(context)
 
-    override fun onClick(listener: Listener) {
-        super.onClick(listener)
-        listener.quickAccessTo(quickAccess)
-    }
+    override fun onClick(listener: Listener) = listener.quickAccessTo(quickAccess)
 
     override fun onLongClick(listener: Listener): Boolean {
         listener.launchIntent(QuickAccessListActivity::class.createIntent())
@@ -272,37 +271,37 @@ private val DEFAULT_QUICK_ACCESSES = listOf(
     QuickAccess(
         iconRes = R.drawable.quick_access_download_icon,
         titleRes = R.string.navigation_standard_directory_downloads,
-        category = null,
+        category = QuickAccessCategory.DOWNLOAD,
         relativePath = Environment.DIRECTORY_DOWNLOADS
     ),
     QuickAccess(
         iconRes = R.drawable.file_image_icon,
         titleRes = R.string.navigation_quick_access_images,
-        category = Category.IMAGE,
+        category = QuickAccessCategory.IMAGE,
         relativePath = Environment.DIRECTORY_PICTURES
     ),
     QuickAccess(
         iconRes = R.drawable.file_video_icon,
         titleRes = R.string.navigation_quick_access_videos,
-        category = Category.VIDEO,
+        category = QuickAccessCategory.VIDEO,
         relativePath = Environment.DIRECTORY_MOVIES
     ),
     QuickAccess(
         iconRes = R.drawable.file_audio_icon,
         titleRes = R.string.navigation_quick_access_audio,
-        category = Category.AUDIO,
+        category = QuickAccessCategory.AUDIO,
         relativePath = Environment.DIRECTORY_MUSIC
     ),
     QuickAccess(
         iconRes = R.drawable.file_document_icon,
         titleRes = R.string.navigation_standard_directory_documents,
-        category = Category.DOCUMENT,
+        category = QuickAccessCategory.DOCUMENT,
         relativePath = Environment.DIRECTORY_DOCUMENTS
     ),
     QuickAccess(
         iconRes = R.drawable.file_apk_icon,
         titleRes = R.string.navigation_quick_access_apk,
-        category = Category.APK,
+        category = QuickAccessCategory.APK,
         relativePath = QuickAccess.QUICK_ACCESS_APK
     )
 )

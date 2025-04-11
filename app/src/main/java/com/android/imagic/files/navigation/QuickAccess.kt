@@ -3,13 +3,12 @@ package com.android.imagic.files.navigation
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.android.imagic.files.file.Category
 
 data class QuickAccess(
     @DrawableRes val iconRes: Int,
     @StringRes private val titleRes: Int,
     private val customTitle: String? = null,
-    val category: Category?,
+    val category: QuickAccessCategory,
     val relativePath: String,
     val isEnabled: Boolean = true
 ) {

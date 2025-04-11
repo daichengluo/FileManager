@@ -1,13 +1,9 @@
 package com.android.imagic.files.file
 
-import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.android.imagic.files.navigation.QuickAccess
 
-data class CategoryWrap(val context: Context, val quickAccess: QuickAccess?)
-
-enum class Category {
+enum class FileTypeCategory {
     IMAGE, VIDEO, AUDIO, DOCUMENT, APK
 }
 
@@ -18,32 +14,32 @@ data class Quadruple<A, B, C, D>(
     val fourth: D
 )
 
-fun Category.getQueryInfo(): Quadruple<Uri, Array<String>, String, Array<String>> {
+fun FileTypeCategory.getQueryInfo(): Quadruple<Uri, Array<String>, String, Array<String>> {
     val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
 
     return when (this) {
-        Category.IMAGE -> Quadruple(
+        FileTypeCategory.IMAGE -> Quadruple(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             "${MediaStore.Images.Media.MIME_TYPE} LIKE ?",
             arrayOf("image/%")
         )
 
-        Category.VIDEO -> Quadruple(
+        FileTypeCategory.VIDEO -> Quadruple(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             projection,
             "${MediaStore.Video.Media.MIME_TYPE} LIKE ?",
             arrayOf("video/%")
         )
 
-        Category.AUDIO -> Quadruple(
+        FileTypeCategory.AUDIO -> Quadruple(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             projection,
             "${MediaStore.Audio.Media.MIME_TYPE} LIKE ?",
             arrayOf("audio/%")
         )
 
-        Category.DOCUMENT -> Quadruple(
+        FileTypeCategory.DOCUMENT -> Quadruple(
             MediaStore.Files.getContentUri("external"),
             projection,
             "${MediaStore.Files.FileColumns.MIME_TYPE} IN (?, ?, ?, ?)",
@@ -55,7 +51,7 @@ fun Category.getQueryInfo(): Quadruple<Uri, Array<String>, String, Array<String>
             )
         )
 
-        Category.APK -> Quadruple(
+        FileTypeCategory.APK -> Quadruple(
             MediaStore.Files.getContentUri("external"),
             projection,
             "${MediaStore.Files.FileColumns.MIME_TYPE} = ?",

@@ -27,6 +27,7 @@ abstract class NavigationItem {
 
     interface Listener {
         val currentPath: Path
+        val quickAccessCategory: QuickAccessCategory?
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun quickAccessTo(quickAccess: QuickAccess)

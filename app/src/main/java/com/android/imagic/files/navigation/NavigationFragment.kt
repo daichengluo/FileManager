@@ -2,6 +2,7 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +72,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
+        listener.observeCurrentCategory(viewLifecycleOwner) { onQuickAccessCategoryChanged(it) }
     }
 
     private fun onOpenPathResult(result: Path?) {
@@ -100,10 +102,19 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         quickAccessListAdapter.notifyCheckedChanged()
     }
 
+    private fun onQuickAccessCategoryChanged(quickAccessCategory: QuickAccessCategory?) {
+        storageListAdapter.notifyCheckedChanged()
+        quickAccessListAdapter.notifyCheckedChanged()
+    }
+
     override val currentPath: Path
         get() = listener.currentPath
 
+    override val quickAccessCategory: QuickAccessCategory?
+        get() = listener.quickAccessCategory
+
     override fun navigateTo(path: Path) {
+        Log.d("chenluo", "navigateTo: $path")
         listener.navigateTo(path)
     }
 
@@ -113,6 +124,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     }
 
     override fun quickAccessTo(quickAccess: QuickAccess) {
+        Log.d("chenluo", "quickAccessTo: ${quickAccess.category}")
         listener.quickAccessTo(quickAccess)
     }
 
@@ -130,12 +142,14 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     interface Listener {
         val currentPath: Path
+        val quickAccessCategory: QuickAccessCategory?
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
         fun clearQuickAccessState()
         fun quickAccessTo(quickAccess: QuickAccess)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
+        fun observeCurrentCategory(owner: LifecycleOwner, observer: (QuickAccessCategory?) -> Unit)
         fun closeNavigationDrawer()
     }
 }

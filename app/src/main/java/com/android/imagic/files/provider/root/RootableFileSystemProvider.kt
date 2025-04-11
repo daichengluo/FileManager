@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.root
 
-import com.android.imagic.files.file.Category
+import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathObservable
 import com.android.imagic.files.provider.common.PathObservableProvider
@@ -187,12 +187,12 @@ abstract class RootableFileSystemProvider(
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: Category?,
+        fileTypeCategory: FileTypeCategory?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {
         callRootable(directory) {
-            (this as Lister).list(directory, category, intervalMillis, listener)
+            (this as Lister).list(directory, fileTypeCategory, intervalMillis, listener)
         }
     }
 

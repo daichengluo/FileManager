@@ -1,16 +1,19 @@
 package com.android.imagic.files.filelist
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import com.android.imagic.files.file.CategoryWrap
 import com.android.imagic.files.file.FileItem
+import com.android.imagic.files.file.FileTypeCategory
+import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.filelist.FileSortOptions.By
 import com.android.imagic.files.filelist.FileSortOptions.Order
 import com.android.imagic.files.navigation.QuickAccess
+import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.CloseableLiveData
@@ -60,34 +63,60 @@ class FileListViewModel : ViewModel() {
         _searchStateLiveData.value = SearchState(false, "")
     }
 
-    private val _categoryWrapLiveData = MutableLiveData<CategoryWrap?>()
-    val categoryWrapLiveData: LiveData<CategoryWrap?> = _categoryWrapLiveData
+    private val _quickAccessWrapLiveData = MutableLiveData<QuickAccessWrap?>()
+    val quickAccessWrapLiveData: LiveData<QuickAccessWrap?> = _quickAccessWrapLiveData
 
-    val quickAccessLiveData: LiveData<QuickAccess?> = categoryWrapLiveData.map {
-        it?.quickAccess
+    fun setQuickAccessWrap(quickAccessWrap: QuickAccessWrap?) {
+        if (quickAccessWrapLiveData != quickAccessWrap) {
+            _quickAccessWrapLiveData.value = quickAccessWrap
+        }
     }
-    val quickAccess: QuickAccess?
-        get() = quickAccessLiveData.valueCompat
+
+    private val _quickAccessCategoryLiveData = MutableLiveData<QuickAccessCategory?>()
+    val quickAccessCategoryLiveData: LiveData<QuickAccessCategory?> = _quickAccessCategoryLiveData
+    val quickAccessCategory: QuickAccessCategory?
+        get() = quickAccessCategoryLiveData.valueCompat
 
     val isInQuickAccess: Boolean
-        get() = quickAccess != null
+        get() = quickAccessCategory != null
 
-    fun quickAccessTo(wrap: CategoryWrap) {
-        if (quickAccess != wrap.quickAccess) {
-            _categoryWrapLiveData.value = wrap
+    fun setQuickAccessCategory(category: QuickAccessCategory?) {
+        if (quickAccessCategory != category) {
+            _quickAccessCategoryLiveData.value = category
         }
     }
 
-    fun clearCategoryWrap() {
-        if (isInQuickAccess) {
-            _categoryWrapLiveData.value = null
+    fun quickAccessTo(
+        context: Context,
+        quickAccess: QuickAccess
+    ) {
+        if (quickAccessCategory == quickAccess.category) return
+
+        val fileTypeCategory = when (quickAccess.category) {
+            QuickAccessCategory.IMAGE -> FileTypeCategory.IMAGE
+            QuickAccessCategory.VIDEO -> FileTypeCategory.VIDEO
+            QuickAccessCategory.AUDIO -> FileTypeCategory.AUDIO
+            QuickAccessCategory.DOCUMENT -> FileTypeCategory.DOCUMENT
+            QuickAccessCategory.APK -> FileTypeCategory.APK
+            QuickAccessCategory.DOWNLOAD -> return
         }
+
+        val title = quickAccess.getTitle(context)
+        val quickAccessWrap = QuickAccessWrap(context, title, fileTypeCategory)
+
+        setQuickAccessCategory(quickAccess.category)
+        setQuickAccessWrap(quickAccessWrap)
+    }
+
+    fun clearQuickAccess() {
+        setQuickAccessCategory(null)
+        setQuickAccessWrap(null)
     }
 
     private val _fileListLiveData = FileListSwitchMapLiveData(
         currentPathLiveData,
         _searchStateLiveData,
-        _categoryWrapLiveData
+        _quickAccessWrapLiveData
     )
     val fileListLiveData: LiveData<Stateful<List<FileItem>>>
         get() = _fileListLiveData
@@ -124,7 +153,7 @@ class FileListViewModel : ViewModel() {
 
     val breadcrumbLiveData: LiveData<BreadcrumbData> = BreadcrumbLiveData(
         trailLiveData,
-        quickAccessLiveData
+        quickAccessWrapLiveData
     )
     val canNavigateUpBreadcrumb: Boolean
         get() = breadcrumbLiveData.valueCompat.selectedIndex > 0
@@ -284,14 +313,14 @@ class FileListViewModel : ViewModel() {
     private class FileListSwitchMapLiveData(
         private val pathLiveData: LiveData<Path>,
         private val searchStateLiveData: LiveData<SearchState>,
-        private val categoryWrapLiveData: LiveData<CategoryWrap?>
+        private val quickAccessWrapLiveData: LiveData<QuickAccessWrap?>
     ) : MediatorLiveData<Stateful<List<FileItem>>>(), Closeable {
         private var liveData: CloseableLiveData<Stateful<List<FileItem>>>? = null
 
         init {
             addSource(pathLiveData) { updateSource() }
             addSource(searchStateLiveData) { updateSource() }
-            addSource(categoryWrapLiveData) { updateSource() }
+            addSource(quickAccessWrapLiveData) { updateSource() }
         }
 
         private fun updateSource() {
@@ -300,14 +329,13 @@ class FileListViewModel : ViewModel() {
                 it.close()
             }
             val path = pathLiveData.valueCompat
-            val categoryWrap = categoryWrapLiveData.valueCompat
+            val quickAccessWrapData = quickAccessWrapLiveData.valueCompat
             val searchState = searchStateLiveData.valueCompat
             val newLiveData = when {
-                categoryWrap != null && categoryWrap.quickAccess != null
-                        && categoryWrap.quickAccess.category != null -> {
+                quickAccessWrapData != null -> {
                     CategoryFileListLiveData(
-                        categoryWrap.context,
-                        categoryWrap.quickAccess.category
+                        quickAccessWrapData.context,
+                        quickAccessWrapData.fileTypeCategory
                     )
                 }
 

@@ -69,7 +69,6 @@ import com.android.imagic.files.databinding.FileListFragmentContentIncludeBindin
 import com.android.imagic.files.databinding.FileListFragmentIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentSpeedDialIncludeBinding
 import com.android.imagic.files.databinding.FileListFragmentTransferIncludeBinding
-import com.android.imagic.files.file.CategoryWrap
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeTypeOrNull
@@ -93,6 +92,8 @@ import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.navigation.QuickAccess
+import com.android.imagic.files.navigation.QuickAccessCategory
+import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.common.isDirectory
@@ -1633,6 +1634,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override val currentPath: Path
         get() = viewModel.currentPath
 
+    override val quickAccessCategory: QuickAccessCategory?
+        get() = viewModel.quickAccessCategory
+
     override fun navigateToRoot(path: Path) {
         collapseSearchView()
         viewModel.resetTo(path)
@@ -1643,16 +1647,30 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun clearQuickAccessState() {
-        viewModel.clearCategoryWrap()
+        viewModel.clearQuickAccess()
     }
 
     override fun quickAccessTo(quickAccess: QuickAccess) {
-        val categoryWrap = CategoryWrap(requireContext(), quickAccess)
-        viewModel.quickAccessTo(categoryWrap)
+        if (quickAccess.category == QuickAccessCategory.DOWNLOAD) {
+            viewModel.clearQuickAccess()
+            val path = Paths.get(getExternalStorageDirectory(quickAccess.relativePath))
+            viewModel.setQuickAccessCategory(quickAccess.category)
+            navigateTo(path)
+            return
+        }
+        collapseSearchView()
+        viewModel.quickAccessTo(requireContext(), quickAccess)
     }
 
     override fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit) {
         viewModel.currentPathLiveData.observe(owner, observer)
+    }
+
+    override fun observeCurrentCategory(
+        owner: LifecycleOwner,
+        observer: (QuickAccessCategory?) -> Unit
+    ) {
+        viewModel.quickAccessCategoryLiveData.observe(owner, observer)
     }
 
     override fun closeNavigationDrawer() {

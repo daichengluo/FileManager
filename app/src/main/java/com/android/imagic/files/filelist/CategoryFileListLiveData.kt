@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.AsyncTask
 import android.provider.MediaStore
 import com.android.imagic.files.compat.pathCompat
-import com.android.imagic.files.file.Category
 import com.android.imagic.files.file.FileItem
+import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.file.StorageEventReceiver
 import com.android.imagic.files.file.getQueryInfo
 import com.android.imagic.files.file.loadFileItem
@@ -25,7 +25,7 @@ import java.util.concurrent.Future
 
 class CategoryFileListLiveData(
     private val context: Context,
-    private val category: Category
+    private val fileTypeCategory: FileTypeCategory
 ) : CloseableLiveData<Stateful<List<FileItem>>>() {
 
     private var future: Future<Unit>? = null
@@ -48,7 +48,7 @@ class CategoryFileListLiveData(
 
             try {
                 val resolver = context.contentResolver
-                val (uri, projection, selection, selectionArgs) = category.getQueryInfo()
+                val (uri, projection, selection, selectionArgs) = fileTypeCategory.getQueryInfo()
 
                 resolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
                     val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA)
@@ -72,10 +72,13 @@ class CategoryFileListLiveData(
         }
     }
 
-    private fun queryMediaStore(context: Context, category: Category): List<FileItem> {
+    private fun queryMediaStore(
+        context: Context,
+        fileTypeCategory: FileTypeCategory
+    ): List<FileItem> {
         val resolver = context.contentResolver
         val fileList = mutableListOf<FileItem>()
-        val (uri, projection, selection, selectionArgs) = category.getQueryInfo()
+        val (uri, projection, selection, selectionArgs) = fileTypeCategory.getQueryInfo()
 
         resolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA)
@@ -93,14 +96,14 @@ class CategoryFileListLiveData(
         return fileList
     }
 
-    private fun queryExternalStorage(category: Category): List<FileItem> {
+    private fun queryExternalStorage(fileTypeCategory: FileTypeCategory): List<FileItem> {
         val fileList = mutableListOf<FileItem>()
         val storagePaths = StorageVolumeListLiveData.valueCompat
             .filter { it.isRemovable }
             .map { Paths.get(it.pathCompat) }
 
         for (storagePath in storagePaths) {
-            storagePath.list(category, INTERVAL_MILLIS) { paths: List<Path> ->
+            storagePath.list(fileTypeCategory, INTERVAL_MILLIS) { paths: List<Path> ->
                 for (path in paths) {
                     try {
                         fileList.add(path.loadFileItem())

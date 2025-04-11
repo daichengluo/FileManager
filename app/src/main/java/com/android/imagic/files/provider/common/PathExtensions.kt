@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.common
 
-import com.android.imagic.files.file.Category
+import com.android.imagic.files.file.FileTypeCategory
 import java8.nio.channels.SeekableByteChannel
 import java8.nio.file.AccessMode
 import java8.nio.file.CopyOption
@@ -341,8 +341,12 @@ fun Path.search(query: String, intervalMillis: Long, listener: (List<Path>) -> U
 }
 
 @Throws(IOException::class)
-fun Path.list(category: Category?, intervalMillis: Long, listener: (List<Path>) -> Unit) {
-    (provider as Lister).list(this, category, intervalMillis, listener)
+fun Path.list(
+    fileTypeCategory: FileTypeCategory?,
+    intervalMillis: Long,
+    listener: (List<Path>) -> Unit
+) {
+    (provider as Lister).list(this, fileTypeCategory, intervalMillis, listener)
 }
 
 @Throws(IOException::class)

@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.common
 
-import com.android.imagic.files.file.Category
+import com.android.imagic.files.file.FileTypeCategory
 import java8.nio.file.FileVisitResult
 import java8.nio.file.FileVisitor
 import java8.nio.file.Files
@@ -13,7 +13,7 @@ object WalkFileTreeLister {
     @Throws(IOException::class)
     fun list(
         directory: Path,
-        category: Category?,
+        fileTypeCategory: FileTypeCategory?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {
@@ -31,7 +31,7 @@ object WalkFileTreeLister {
 
             @Throws(InterruptedIOException::class)
             override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
-                if (matchesCategory(file, category)) {
+                if (matchesCategory(file, fileTypeCategory)) {
                     paths.add(file)
                 }
 
@@ -66,24 +66,24 @@ object WalkFileTreeLister {
         }
     }
 
-    private fun matchesCategory(file: Path, category: Category?): Boolean {
-        if (category == null) return true
+    private fun matchesCategory(file: Path, fileTypeCategory: FileTypeCategory?): Boolean {
+        if (fileTypeCategory == null) return true
 
         val mimeType = Files.probeContentType(file) ?: return false
         val type = mimeType.substringBefore("/")
         val subtype = mimeType.substringAfter("/", "")
 
-        return when (category) {
-            Category.IMAGE -> type == "image"
-            Category.VIDEO -> type == "video"
-            Category.AUDIO -> type == "audio"
-            Category.DOCUMENT -> type == "text" || subtype in setOf(
+        return when (fileTypeCategory) {
+            FileTypeCategory.IMAGE -> type == "image"
+            FileTypeCategory.VIDEO -> type == "video"
+            FileTypeCategory.AUDIO -> type == "audio"
+            FileTypeCategory.DOCUMENT -> type == "text" || subtype in setOf(
                 "pdf", "msword", "vnd.ms-excel",
                 "vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
 
-            Category.APK -> mimeType == "application/vnd.android.package-archive"
+            FileTypeCategory.APK -> mimeType == "application/vnd.android.package-archive"
         }
     }
 

@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.archive
 
-import com.android.imagic.files.file.Category
+import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.FileSystemCache
 import com.android.imagic.files.provider.common.Lister
@@ -293,11 +293,11 @@ object ArchiveFileSystemProvider : FileSystemProvider(), PathObservableProvider,
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: Category?,
+        fileTypeCategory: FileTypeCategory?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {
         directory as? ArchivePath ?: throw ProviderMismatchException(directory.toString())
-        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
+        WalkFileTreeLister.list(directory, fileTypeCategory, intervalMillis, listener)
     }
 }

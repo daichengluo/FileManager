@@ -1,6 +1,6 @@
 package com.android.imagic.files.provider.sftp
 
-import com.android.imagic.files.file.Category
+import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.provider.common.ByteStringPath
 import com.android.imagic.files.provider.common.Lister
 import com.android.imagic.files.provider.common.PathListDirectoryStream
@@ -338,11 +338,11 @@ object SftpFileSystemProvider : FileSystemProvider(), PathObservableProvider, Se
     @Throws(IOException::class)
     override fun list(
         directory: Path,
-        category: Category?,
+        fileTypeCategory: FileTypeCategory?,
         intervalMillis: Long,
         listener: (List<Path>) -> Unit
     ) {
         directory as? SftpPath ?: throw ProviderMismatchException(directory.toString())
-        WalkFileTreeLister.list(directory, category, intervalMillis, listener)
+        WalkFileTreeLister.list(directory, fileTypeCategory, intervalMillis, listener)
     }
 }
