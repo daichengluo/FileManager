@@ -34,15 +34,13 @@
 # For Class.getEnumConstants()
 -keepclassmembers enum * {
     public static **[] values();
+    public static ** valueOf(java.lang.String);
 }
--keepnames class com.android.imagic.files.** implements android.os.Parcelable
+-keep class com.android.imagic.files.** implements android.os.Parcelable { *; }
 
 # Apache FtpServer
--keepclassmembers class * implements org.apache.mina.core.service.IoProcessor {
-    public <init>(java.util.concurrent.ExecutorService);
-    public <init>(java.util.concurrent.Executor);
-    public <init>();
-}
+-keep class org.apache.mina.** { *; }
+-keep interface org.apache.mina.** { *; }
 
 # Bouncy Castle
 -keep class org.bouncycastle.jcajce.provider.** { *; }
@@ -55,3 +53,5 @@
 
 # SMBJ-RPC
 -dontwarn java.rmi.UnmarshalException
+
+-dontwarn javax.security.sasl.**
