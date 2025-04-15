@@ -373,6 +373,7 @@ class FileListAdapter(
         menu?.findItem(R.id.action_rename)?.isVisible = !isReadOnly
         menu?.findItem(R.id.action_extract)?.isVisible = file.isArchiveFile
         menu?.findItem(R.id.action_archive)?.isVisible = !isArchivePath
+        menu?.findItem(R.id.action_add_bookmark)?.isVisible = isDirectory
         holder.popupMenu?.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_open_with -> {
@@ -417,6 +418,16 @@ class FileListAdapter(
 
                 R.id.action_copy_path -> {
                     listener.copyPath(file)
+                    true
+                }
+
+                R.id.action_add_bookmark -> {
+                    listener.addBookmark(file)
+                    true
+                }
+
+                R.id.action_create_shortcut -> {
+                    listener.createShortcut(file)
                     true
                 }
 
