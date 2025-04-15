@@ -773,6 +773,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
         }
         binding.emptyView.fadeToVisibilityUnsafe(stateful is Success && !hasFiles)
+        clearSelectedFiles()
         if (files != null) {
             updateAdapterFileList()
         } else {
