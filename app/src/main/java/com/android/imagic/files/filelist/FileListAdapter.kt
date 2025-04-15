@@ -223,16 +223,20 @@ class FileListAdapter(
         val file = getItem(position)
         val isDirectory = file.attributes.isDirectory
         val isEnabled = isFileSelectable(file) || isDirectory
+        val isGridView = _viewType == FileViewType.LIST
+
         holder.itemLayout.isEnabled = isEnabled
         holder.menuButton?.isEnabled = isEnabled
-        holder.menuButton?.isVisible = selectedFiles.isEmpty() && _viewType == FileViewType.LIST
+        holder.menuButton?.isVisible = selectedFiles.isEmpty() && isGridView
         holder.checkImage.isVisible = selectedFiles.isNotEmpty()
+
         val menu = holder.popupMenu?.menu
         val path = file.path
         val hasPickOptions = pickOptions != null
         val isReadOnly = path.fileSystem.isReadOnly
         menu?.findItem(R.id.action_cut)?.isVisible = !hasPickOptions && !isReadOnly
         menu?.findItem(R.id.action_copy)?.isVisible = !hasPickOptions
+
         val checked = file in selectedFiles
         holder.itemLayout.isChecked = checked
         holder.nameText.apply {
@@ -310,23 +314,18 @@ class FileListAdapter(
         }
         holder.directoryThumbnailImage?.isVisible = isDirectory
         val supportsThumbnail = file.supportsThumbnail
-        val shouldLoadThumbnailIcon = supportsThumbnail && holder.thumbnailIconImage != null &&
-                file.mimeType.isApk
+        val isApk = file.mimeType.isApk
         val attributes = file.attributes
         holder.thumbnailIconImage?.apply {
             dispose()
             isVisible = !isDirectory
             setImageResource(iconRes)
-            if (shouldLoadThumbnailIcon) {
-                load(path to attributes)
-            }
         }
         holder.thumbnailImage.apply {
             dispose()
             setImageDrawable(null)
-            val shouldLoadThumbnail = supportsThumbnail && !shouldLoadThumbnailIcon
-            isVisible = shouldLoadThumbnail
-            if (shouldLoadThumbnail) {
+            isVisible = supportsThumbnail
+            if (supportsThumbnail && !isApk) {
                 load(path to attributes) {
                     listener { _, _ ->
                         val iconImage = holder.thumbnailIconImage ?: holder.iconImage
