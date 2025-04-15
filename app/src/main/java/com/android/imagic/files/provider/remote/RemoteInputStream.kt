@@ -7,7 +7,7 @@ import java.io.InputStream
 
 class RemoteInputStream : InputStream, Parcelable {
     private val localInputStream: InputStream?
-    private val remoteInputStream: com.android.imagic.files.provider.remote.IRemoteInputStream?
+    private val remoteInputStream: IRemoteInputStream?
 
     constructor(inputStream: InputStream) {
         localInputStream = inputStream
@@ -15,12 +15,11 @@ class RemoteInputStream : InputStream, Parcelable {
     }
 
     @Throws(IOException::class)
-    override fun read(): Int =
-        if (remoteInputStream != null) {
-            remoteInputStream.call { exception -> read(exception) }
-        } else {
-            localInputStream!!.read()
-        }
+    override fun read(): Int = if (remoteInputStream != null) {
+        remoteInputStream.call { exception -> read(exception) }
+    } else {
+        localInputStream!!.read()
+    }
 
     @Throws(IOException::class)
     override fun read(buffer: ByteArray, offset: Int, length: Int): Int =
@@ -36,20 +35,18 @@ class RemoteInputStream : InputStream, Parcelable {
         }
 
     @Throws(IOException::class)
-    override fun skip(size: Long): Long =
-        if (remoteInputStream != null) {
-            remoteInputStream.call { exception -> skip(size, exception) }
-        } else {
-            localInputStream!!.skip(size)
-        }
+    override fun skip(size: Long): Long = if (remoteInputStream != null) {
+        remoteInputStream.call { exception -> skip(size, exception) }
+    } else {
+        localInputStream!!.skip(size)
+    }
 
     @Throws(IOException::class)
-    override fun available(): Int =
-        if (remoteInputStream != null) {
-            remoteInputStream.call { exception -> available(exception) }
-        } else {
-            localInputStream!!.available()
-        }
+    override fun available(): Int = if (remoteInputStream != null) {
+        remoteInputStream.call { exception -> available(exception) }
+    } else {
+        localInputStream!!.available()
+    }
 
     @Throws(IOException::class)
     override fun close() {
@@ -60,8 +57,7 @@ class RemoteInputStream : InputStream, Parcelable {
         }
     }
 
-    private class Stub(private val mInputStream: InputStream) :
-        com.android.imagic.files.provider.remote.IRemoteInputStream.Stub() {
+    private class Stub(private val mInputStream: InputStream) : IRemoteInputStream.Stub() {
         override fun read(exception: ParcelableException): Int =
             tryRun(exception) { mInputStream.read() } ?: 0
 
@@ -81,8 +77,7 @@ class RemoteInputStream : InputStream, Parcelable {
 
     private constructor(source: Parcel) {
         localInputStream = null
-        remoteInputStream =
-            com.android.imagic.files.provider.remote.IRemoteInputStream.Stub.asInterface(source.readStrongBinder())
+        remoteInputStream = IRemoteInputStream.Stub.asInterface(source.readStrongBinder())
     }
 
     override fun describeContents(): Int = 0

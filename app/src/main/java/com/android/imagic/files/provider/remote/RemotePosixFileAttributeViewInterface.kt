@@ -8,7 +8,7 @@ import com.android.imagic.files.provider.common.PosixUser
 
 class RemotePosixFileAttributeViewInterface(
     private val attributeView: PosixFileAttributeView
-) : com.android.imagic.files.provider.remote.IRemotePosixFileAttributeView.Stub() {
+) : IRemotePosixFileAttributeView.Stub() {
     override fun readAttributes(exception: ParcelableException): ParcelableObject? =
         tryRun(exception) { attributeView.readAttributes().toParcelable() }
 

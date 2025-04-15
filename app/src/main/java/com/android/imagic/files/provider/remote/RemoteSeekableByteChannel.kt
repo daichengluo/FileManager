@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 
 class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcelable {
     private val localChannel: SeekableByteChannel?
-    private val remoteChannel: com.android.imagic.files.provider.remote.IRemoteSeekableByteChannel?
+    private val remoteChannel: IRemoteSeekableByteChannel?
 
     @Volatile
     private var isRemoteClosed = false
@@ -48,12 +48,11 @@ class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcela
         }
 
     @Throws(IOException::class)
-    override fun position(): Long =
-        if (remoteChannel != null) {
-            remoteChannel.call { exception -> position(exception) }
-        } else {
-            localChannel!!.position()
-        }
+    override fun position(): Long = if (remoteChannel != null) {
+        remoteChannel.call { exception -> position(exception) }
+    } else {
+        localChannel!!.position()
+    }
 
     @Throws(IOException::class)
     override fun position(newPosition: Long): SeekableByteChannel {
@@ -66,12 +65,11 @@ class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcela
     }
 
     @Throws(IOException::class)
-    override fun size(): Long =
-        if (remoteChannel != null) {
-            remoteChannel.call { exception -> size(exception) }
-        } else {
-            localChannel!!.size()
-        }
+    override fun size(): Long = if (remoteChannel != null) {
+        remoteChannel.call { exception -> size(exception) }
+    } else {
+        localChannel!!.size()
+    }
 
     @Throws(IOException::class)
     override fun truncate(size: Long): SeekableByteChannel {
@@ -92,12 +90,11 @@ class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcela
         }
     }
 
-    override fun isOpen(): Boolean =
-        if (remoteChannel != null) {
-            !isRemoteClosed
-        } else {
-            localChannel!!.isOpen
-        }
+    override fun isOpen(): Boolean = if (remoteChannel != null) {
+        !isRemoteClosed
+    } else {
+        localChannel!!.isOpen
+    }
 
     @Throws(IOException::class)
     override fun close() {
@@ -111,7 +108,7 @@ class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcela
 
     private class Stub(
         private val channel: SeekableByteChannel
-    ) : com.android.imagic.files.provider.remote.IRemoteSeekableByteChannel.Stub() {
+    ) : IRemoteSeekableByteChannel.Stub() {
         override fun read(destination: ByteArray, exception: ParcelableException): Int =
             tryRun(exception) { channel.read(ByteBuffer.wrap(destination)) } ?: 0
 
@@ -143,10 +140,9 @@ class RemoteSeekableByteChannel : ForceableChannel, SeekableByteChannel, Parcela
 
     private constructor(source: Parcel) {
         localChannel = null
-        remoteChannel =
-            com.android.imagic.files.provider.remote.IRemoteSeekableByteChannel.Stub.asInterface(
-                source.readStrongBinder()
-            )
+        remoteChannel = IRemoteSeekableByteChannel.Stub.asInterface(
+            source.readStrongBinder()
+        )
     }
 
     override fun describeContents(): Int = 0

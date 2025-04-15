@@ -10,7 +10,7 @@ import java.io.IOException
 
 class RemotePathObservable : PathObservable, Parcelable {
     private val localPathObservable: PathObservable?
-    private val remotePathObservable: com.android.imagic.files.provider.remote.IRemotePathObservable?
+    private val remotePathObservable: IRemotePathObservable?
     private val remoteObservers: MutableSet<() -> Unit>?
     private var isRemoteInitialized = false
     private val remoteLock: Any?
@@ -64,8 +64,7 @@ class RemotePathObservable : PathObservable, Parcelable {
         }
     }
 
-    private class Stub(private val pathObservable: PathObservable) :
-        com.android.imagic.files.provider.remote.IRemotePathObservable.Stub() {
+    private class Stub(private val pathObservable: PathObservable) : IRemotePathObservable.Stub() {
         override fun addObserver(observer: RemoteCallback) {
             pathObservable.addObserver { observer.sendResult(Bundle()) }
         }
@@ -77,8 +76,7 @@ class RemotePathObservable : PathObservable, Parcelable {
 
     private constructor(source: Parcel) {
         localPathObservable = null
-        remotePathObservable =
-            com.android.imagic.files.provider.remote.IRemotePathObservable.Stub.asInterface(source.readStrongBinder())
+        remotePathObservable = IRemotePathObservable.Stub.asInterface(source.readStrongBinder())
         remoteObservers = mutableSetOf()
         remoteLock = Any()
     }

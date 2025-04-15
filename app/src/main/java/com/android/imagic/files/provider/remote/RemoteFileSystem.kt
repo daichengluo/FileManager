@@ -4,7 +4,7 @@ import java8.nio.file.FileSystem
 import java.io.IOException
 
 abstract class RemoteFileSystem(
-    private val remoteInterface: RemoteInterface<com.android.imagic.files.provider.remote.IRemoteFileSystem>
+    private val remoteInterface: RemoteInterface<IRemoteFileSystem>
 ) : FileSystem() {
     @Throws(IOException::class)
     override fun close() {

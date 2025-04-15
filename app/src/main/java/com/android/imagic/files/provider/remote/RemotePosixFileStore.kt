@@ -5,7 +5,7 @@ import java8.nio.file.attribute.FileAttributeView
 import java.io.IOException
 
 abstract class RemotePosixFileStore(
-    private val remoteInterface: RemoteInterface<com.android.imagic.files.provider.remote.IRemotePosixFileStore>
+    private val remoteInterface: RemoteInterface<IRemotePosixFileStore>
 ) : PosixFileStore() {
     override fun refresh() {
         throw AssertionError()

@@ -10,7 +10,7 @@ import java.util.concurrent.Executors
 
 class RemoteFileSystemProviderInterface(
     private val provider: FileSystemProvider
-) : com.android.imagic.files.provider.remote.IRemoteFileSystemProvider.Stub() {
+) : IRemoteFileSystemProvider.Stub() {
     private val executorService = Executors.newCachedThreadPool()
 
     override fun newInputStream(
@@ -149,10 +149,9 @@ class RemoteFileSystemProviderInterface(
         path: ParcelableObject,
         intervalMillis: Long,
         exception: ParcelableException
-    ): RemotePathObservable? =
-        tryRun(exception) {
-            (provider as PathObservableProvider).observe(path.value(), intervalMillis).toRemote()
-        }
+    ): RemotePathObservable? = tryRun(exception) {
+        (provider as PathObservableProvider).observe(path.value(), intervalMillis).toRemote()
+    }
 
     override fun search(
         directory: ParcelableObject,

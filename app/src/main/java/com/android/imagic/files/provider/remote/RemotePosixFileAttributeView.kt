@@ -11,7 +11,7 @@ import java8.nio.file.attribute.FileTime
 import java.io.IOException
 
 abstract class RemotePosixFileAttributeView(
-    private val remoteInterface: RemoteInterface<com.android.imagic.files.provider.remote.IRemotePosixFileAttributeView>
+    private val remoteInterface: RemoteInterface<IRemotePosixFileAttributeView>
 ) : PosixFileAttributeView {
     @Throws(IOException::class)
     override fun readAttributes(): PosixFileAttributes =

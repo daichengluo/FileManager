@@ -4,7 +4,7 @@ import com.android.imagic.files.provider.common.PosixFileStore
 
 class RemotePosixFileStoreInterface(
     private val fileStore: PosixFileStore
-) : com.android.imagic.files.provider.remote.IRemotePosixFileStore.Stub() {
+) : IRemotePosixFileStore.Stub() {
     override fun setReadOnly(readOnly: Boolean, exception: ParcelableException) {
         tryRun(exception) { fileStore.isReadOnly = readOnly }
     }
