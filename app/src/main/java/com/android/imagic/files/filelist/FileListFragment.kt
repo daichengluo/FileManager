@@ -672,6 +672,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
+            R.id.action_navigate_to -> {
+                showNavigateToPathDialog()
+                true
+            }
+
             R.id.action_refresh -> {
                 refresh()
                 true
