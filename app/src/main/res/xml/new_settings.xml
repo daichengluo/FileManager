@@ -53,6 +53,11 @@
             android:summary="@string/settings_quick_access_summary_empty"
             android:title="@string/settings_quick_access_title" />
 
+        <com.android.imagic.files.settings.BookmarkDirectoriesPreference
+            android:summary="@string/settings_bookmark_directories_summary_empty"
+            android:title="@string/settings_bookmark_directories_title"
+            app:isPreferenceVisible="false" />
+
         <com.android.imagic.files.settings.CharsetPreference
             android:defaultValue="@string/pref_default_value_archive_file_name_encoding"
             android:key="@string/pref_key_archive_file_name_encoding"
