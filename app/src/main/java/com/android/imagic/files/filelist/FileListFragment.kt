@@ -131,7 +131,6 @@ import com.android.imagic.files.util.checkSelfPermission
 import com.android.imagic.files.util.copyText
 import com.android.imagic.files.util.create
 import com.android.imagic.files.util.createInstallPackageIntent
-import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.createManageAppAllFilesAccessPermissionIntent
 import com.android.imagic.files.util.createSendStreamIntent
 import com.android.imagic.files.util.createViewIntent
@@ -144,7 +143,6 @@ import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
 import com.android.imagic.files.util.isOrientationLandscape
-import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
 import com.android.imagic.files.util.showToast
 import com.android.imagic.files.util.startActivitySafe
@@ -1466,12 +1464,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
                 .let {
                     if (withChooser) {
-                        it.withChooser(
-                            EditFileActivity::class.createIntent()
-                                .putArgs(EditFileActivity.Args(path, mimeType)),
-                            OpenFileAsDialogActivity::class.createIntent()
-                                .putArgs(OpenFileAsDialogFragment.Args(path))
-                        )
+                        it.withChooser()
                     } else {
                         it
                     }
