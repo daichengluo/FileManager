@@ -2,11 +2,13 @@ package com.android.imagic.files.file
 
 import android.content.ContentProvider
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.ProviderInfo
 import android.database.Cursor
 import android.database.MatrixCursor
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Binder
 import android.os.Build
@@ -20,6 +22,7 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.system.ErrnoException
 import android.system.OsConstants
+import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.storageManager
 import com.android.imagic.files.compat.ProxyFileDescriptorCallbackCompat
 import com.android.imagic.files.compat.openProxyFileDescriptorCompat
@@ -393,10 +396,40 @@ val Path.fileProviderUri: Uri
         val uriPath = Uri.encode(toUri().toString())
         return Uri.Builder()
             .scheme(ContentResolver.SCHEME_CONTENT)
-            .authority(com.android.imagic.files.BuildConfig.FILE_PROVIDIER_AUTHORITY)
+            .authority(BuildConfig.FILE_PROVIDIER_AUTHORITY)
             .path(uriPath)
             .build()
     }
+
+fun Path.mediaStoreUri(context: Context): Uri? {
+    val resolver = context.contentResolver
+    val filePath = this.toAbsolutePath().toString()
+
+    val selectionArgs = arrayOf(filePath)
+
+    MediaScannerConnection.scanFile(
+        context,
+        selectionArgs,
+        null,
+        null
+    )
+
+    val externalUri = MediaStore.Files.getContentUri("external")
+    val projection = arrayOf(MediaStore.MediaColumns._ID)
+    val selection = "${MediaStore.MediaColumns.DATA} = ?"
+
+    try {
+        resolver.query(externalUri, projection, selection, selectionArgs, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+                return ContentUris.withAppendedId(externalUri, id)
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return null
+}
 
 private val Uri.fileProviderPath: Path
     get() {

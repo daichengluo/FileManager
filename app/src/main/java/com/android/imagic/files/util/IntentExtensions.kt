@@ -159,6 +159,7 @@ fun Uri.createViewIntent(mimeType: MimeType): Intent =
     Intent(Intent.ACTION_VIEW)
         // Calling setType() will clear data.
         .setDataAndType(this, mimeType.intentType)
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
 @Suppress("DEPRECATION")

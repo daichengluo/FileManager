@@ -77,6 +77,8 @@ import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
+import com.android.imagic.files.file.isMedia
+import com.android.imagic.files.file.mediaStoreUri
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_INDETERMINATE
@@ -142,6 +144,7 @@ import com.android.imagic.files.util.getDimensionDp
 import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
+import com.android.imagic.files.util.isMediaPlayerAvailable
 import com.android.imagic.files.util.isOrientationLandscape
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
 import com.android.imagic.files.util.showToast
@@ -1456,19 +1459,18 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (path.isArchivePath) {
             FileJobService.open(path, mimeType, withChooser, requireContext())
         } else {
-            val intent = path.fileProviderUri.createViewIntent(mimeType)
+            val uri = if (isMediaPlayerAvailable() && mimeType.isMedia) {
+                path.mediaStoreUri(requireContext()) ?: path.fileProviderUri
+            } else {
+                path.fileProviderUri
+            }
+            val intent = uri.createViewIntent(mimeType)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 .apply {
                     extraPath = path
                     maybeAddImageViewerActivityExtras(this, path, mimeType)
                 }
-                .let {
-                    if (withChooser) {
-                        it.withChooser()
-                    } else {
-                        it
-                    }
-                }
+                .let { if (withChooser) it.withChooser() else it }
             startActivitySafe(intent)
         }
     }
