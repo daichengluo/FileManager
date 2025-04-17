@@ -16,8 +16,10 @@ import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
+import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.CloseableLiveData
 import com.android.imagic.files.util.Stateful
+import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
 import java.io.Closeable
@@ -205,9 +207,19 @@ class FileListViewModel : ViewModel() {
     val selectedFiles: FileItemSet
         get() = _selectedFilesLiveData.valueCompat
 
-    var adapterFiles: List<FileItem> = emptyList()
-    private val _isAllSelectedLiveData = MutableLiveData(false)
-    val isAllSelectedLiveData: LiveData<Boolean> = _isAllSelectedLiveData
+    private fun getSelectableVisibleFiles(): List<FileItem> {
+        val stateful = _fileListLiveData.valueCompat
+        if (stateful !is Success) return emptyList()
+        val files = fileListStateful.value.orEmpty()
+        val isShowHiddenFiles = Settings.FILE_LIST_SHOW_HIDDEN_FILES.valueCompat
+        val visibleFiles = if (isShowHiddenFiles) files else files.filterNot { it.isHidden }
+        return visibleFiles.filter { it.isSelectable(pickOptions) }
+    }
+
+    val isAllSelectedLiveData: LiveData<Boolean> = selectedFilesLiveData.map {
+        val selectableFiles = getSelectableVisibleFiles()
+        selectableFiles.isNotEmpty() && selectedFiles.containsAll(selectableFiles)
+    }
 
     fun selectFile(file: FileItem, selected: Boolean) {
         selectFiles(fileItemSetOf(file), selected)
@@ -232,13 +244,7 @@ class FileListViewModel : ViewModel() {
         }
         if (changed) {
             _selectedFilesLiveData.value = selectedFiles
-            updateAllSelectedState()
         }
-    }
-
-    private fun updateAllSelectedState() {
-        val allFiles = adapterFiles.filter { it.isSelectable(pickOptions) }
-        _isAllSelectedLiveData.value = allFiles.isNotEmpty() && selectedFiles.containsAll(allFiles)
     }
 
     fun replaceSelectedFiles(files: FileItemSet) {
@@ -258,7 +264,6 @@ class FileListViewModel : ViewModel() {
         }
         selectedFiles.clear()
         _selectedFilesLiveData.value = selectedFiles
-        updateAllSelectedState()
     }
 
     val pasteStateLiveData: LiveData<PasteState> = _pasteStateLiveData

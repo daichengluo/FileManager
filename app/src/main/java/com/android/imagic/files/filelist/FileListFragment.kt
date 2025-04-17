@@ -339,11 +339,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true, binding.swipeRefreshLayout.progressViewEndOffset
             )
         }
-        binding.checkAllLayout.setOnClickListener {
-            if (binding.checkAllLayout.isChecked) {
-                clearSelectedFiles()
-            } else {
-                selectAllFiles()
+        binding.checkAllLayout.apply {
+            setOnClickListener {
+                if (isChecked) {
+                    clearSelectedFiles()
+                } else {
+                    selectAllFiles()
+                }
             }
         }
         binding.swipeRefreshLayout.setOnRefreshListener { this.refresh() }
@@ -762,11 +764,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     private fun onFileListChanged(stateful: Stateful<List<FileItem>>) {
         val files = stateful.value
         val isSearching = viewModel.searchState.isSearching
-        /*when {
-            stateful is Failure -> binding.toolbar.setSubtitle(R.string.error)
-            stateful is Loading && !isSearching -> binding.toolbar.setSubtitle(R.string.loading)
-            else -> binding.toolbar.subtitle = getSubtitle(files!!)
-        }*/
         val hasFiles = !files.isNullOrEmpty()
         binding.swipeRefreshLayout.isRefreshing = stateful is Loading && (hasFiles || isSearching)
         binding.progress.fadeToVisibilityUnsafe(stateful is Loading && !(hasFiles || isSearching))
@@ -885,7 +882,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (!isShowHiddenFiles) {
             files = files.filterNot { it.isHidden }
         }
-        viewModel.adapterFiles = files
         adapter.replaceListAndIsSearching(
             files,
             viewModel.searchState.isSearching,
