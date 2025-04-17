@@ -669,4 +669,5 @@
         <item quantity="other">正在传输 %1$,d 项</item>
     </plurals>
     <string name="file_transfer_cancelling">正在取消</string>
+    <string name="press_again_exit">再按一次退出应用</string>
 </resources>

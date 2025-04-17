@@ -220,7 +220,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val handlerThread = HandlerThread("FileTransferReceiverThread").apply { start() }
+    private val handlerThread = HandlerThread("FileTransferThread").apply { start() }
 
     private val workerHandler = Handler(handlerThread.looper)
 
@@ -402,12 +402,30 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 override fun handleOnBackPressed() {
                     viewModel.navigateUp()
                 }
+            }.also { callback ->
+                viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
+                    callback.isEnabled = viewModel.canNavigateUpBreadcrumb
+                }
             }
-                .also { callback ->
-                    viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
-                        callback.isEnabled = viewModel.canNavigateUpBreadcrumb
+        )
+        addOnBackPressedCallback(
+            object : OnBackPressedCallback(false) {
+                private var lastBackPressedTime = 0L
+
+                override fun handleOnBackPressed() {
+                    val currentTime = System.currentTimeMillis()
+                    if (currentTime - lastBackPressedTime < 2000L) {
+                        finish()
+                    } else {
+                        lastBackPressedTime = currentTime
+                        showToast(getString(R.string.press_again_exit))
                     }
                 }
+            }.also { callback ->
+                viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
+                    callback.isEnabled = !viewModel.canNavigateUpBreadcrumb
+                }
+            }
         )
         addOnBackPressedCallback(overlayActionMode.onBackPressedCallback)
         addOnBackPressedCallback(SpeedDialViewOnBackPressedCallback(binding.speedDialView))
