@@ -31,10 +31,9 @@ class StorageListFragment : Fragment(), StorageListAdapter.Listener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-        StorageListFragmentBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+    ): View = StorageListFragmentBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

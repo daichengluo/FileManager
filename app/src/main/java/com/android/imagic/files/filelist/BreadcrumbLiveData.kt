@@ -10,11 +10,13 @@ import java8.nio.file.Path
 
 class BreadcrumbLiveData(
     private val trailLiveData: LiveData<TrailData>,
-    private val quickAccessWrapLiveData: LiveData<QuickAccessWrap?>
+    private val quickAccessWrapLiveData: LiveData<QuickAccessWrap?>,
+    private val cloudPathListLiveData: LiveData<List<CloudPathData>?>
 ) : MediatorLiveData<BreadcrumbData>() {
     init {
         addSource(trailLiveData) { loadValue() }
         addSource(quickAccessWrapLiveData) { loadValue() }
+        addSource(cloudPathListLiveData) { loadValue() }
         addSource(NavigationRootMapLiveData) { loadValue() }
     }
 
@@ -22,6 +24,8 @@ class BreadcrumbLiveData(
         val navigationRootMap = NavigationRootMapLiveData.valueCompat
         val trailData = trailLiveData.valueCompat
         val quickAccessWrapData = quickAccessWrapLiveData.valueCompat
+        val cloudPathList = cloudPathListLiveData.valueCompat
+
         val paths = mutableListOf<Path>()
         val nameProducers = mutableListOf<(Context) -> String>()
         var selectedIndex = 0
@@ -29,24 +33,31 @@ class BreadcrumbLiveData(
         if (quickAccessWrapData != null) {
             nameProducers.add { quickAccessWrapData.title }
             paths.add(trailData.trail.last())
-        } else {
-            selectedIndex = trailData.currentIndex
-            for (path in trailData.trail) {
-                val navigationRoot = navigationRootMap[path]
-                val itemCount = nameProducers.size
-                if (navigationRoot != null && selectedIndex >= itemCount) {
-                    selectedIndex -= itemCount
-                    paths.clear()
-                    paths.add(navigationRoot.path)
-                    nameProducers.clear()
-                    nameProducers.add { navigationRoot.getName(it) }
-                } else {
-                    paths.add(path)
-                    nameProducers.add { path.name }
-                }
-            }
+            value = BreadcrumbData(paths, null, nameProducers, selectedIndex)
+            return
         }
 
-        value = BreadcrumbData(paths, nameProducers, selectedIndex)
+        if (cloudPathList != null) {
+            selectedIndex = cloudPathList.size - 1
+            value = BreadcrumbData(paths, cloudPathList, nameProducers, selectedIndex)
+            return
+        }
+
+        selectedIndex = trailData.currentIndex
+        for (path in trailData.trail) {
+            val navigationRoot = navigationRootMap[path]
+            val itemCount = nameProducers.size
+            if (navigationRoot != null && selectedIndex >= itemCount) {
+                selectedIndex -= itemCount
+                paths.clear()
+                paths.add(navigationRoot.path)
+                nameProducers.clear()
+                nameProducers.add { navigationRoot.getName(it) }
+            } else {
+                paths.add(path)
+                nameProducers.add { path.name }
+            }
+        }
+        value = BreadcrumbData(paths, null, nameProducers, selectedIndex)
     }
 }

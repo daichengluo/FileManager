@@ -444,11 +444,11 @@ class FileListAdapter(
     override fun getPopupText(view: View, position: Int): CharSequence {
         val file = getItem(position)
         return when (sortOptions.by) {
-            FileSortOptions.By.NAME -> file.name.take(1).uppercase(Locale.getDefault())
-            FileSortOptions.By.TYPE -> file.extension.uppercase(Locale.getDefault())
-            FileSortOptions.By.SIZE -> file.attributes.fileSize.formatHumanReadable(view.context)
-            FileSortOptions.By.LAST_MODIFIED ->
-                file.attributes.lastModifiedTime().toInstant().formatShort(view.context)
+            By.NAME -> file.name.take(1).uppercase(Locale.getDefault())
+            By.TYPE -> file.extension.uppercase(Locale.getDefault())
+            By.SIZE -> file.attributes.fileSize.formatHumanReadable(view.context)
+            By.LAST_MODIFIED -> file.attributes.lastModifiedTime().toInstant()
+                .formatShort(view.context)
         }
     }
 

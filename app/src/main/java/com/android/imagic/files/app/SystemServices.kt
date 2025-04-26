@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import com.android.imagic.files.compat.getSystemServiceCompat
 import com.android.imagic.files.compat.mainExecutorCompat
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executor
 
@@ -28,6 +29,8 @@ val defaultSharedPreferences: SharedPreferences by lazy {
 }
 
 val okHttpClient: OkHttpClient by lazy { OkHttpClient() }
+
+val networkJson: Json by lazy { Json { ignoreUnknownKeys = true } }
 
 val inputMethodManager: InputMethodManager by lazy {
     application.getSystemServiceCompat(InputMethodManager::class.java)

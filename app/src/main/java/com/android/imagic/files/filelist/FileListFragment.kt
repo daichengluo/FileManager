@@ -72,6 +72,7 @@ import com.android.imagic.files.databinding.FileListFragmentTransferIncludeBindi
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeTypeOrNull
+import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.iconRes
@@ -86,8 +87,6 @@ import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_M
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_PROGRESS
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TEXT
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TITLE
-import com.android.imagic.files.filelist.FileSortOptions.By
-import com.android.imagic.files.filelist.FileSortOptions.Order
 import com.android.imagic.files.fileproperties.FilePropertiesDialogFragment
 import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
@@ -98,9 +97,13 @@ import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.provider.cloud.sdrive.client.exception.LoginExpiredException
+import com.android.imagic.files.provider.cloud.sdrive.client.exception.SDriveException
 import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
 import com.android.imagic.files.ui.CheckableForegroundLinearLayout
@@ -163,10 +166,12 @@ import me.zhanghai.android.foregroundcompat.ForegroundImageButton
 import kotlin.math.roundToInt
 
 class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.Listener,
-    FileTransferAdapter.Listener, ConfirmReplaceFileDialogFragment.Listener,
-    OpenApkDialogFragment.Listener, ConfirmDeleteFilesDialogFragment.Listener,
+    CloudFileListAdapter.Listener, FileTransferAdapter.Listener,
+    ConfirmReplaceFileDialogFragment.Listener, OpenApkDialogFragment.Listener,
+    ConfirmDeleteFilesDialogFragment.Listener, ConfirmDeleteCloudFilesDialogFragment.Listener,
     CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
-    CreateFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
+    RenameCloudFileDialogFragment.Listener, CreateFileDialogFragment.Listener,
+    CreateDirectoryDialogFragment.Listener, CreateCloudDirectoryDialogFragment.Listener,
     NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
     ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionRationaleDialogFragment.Listener,
@@ -214,7 +219,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private lateinit var layoutManager: GridLayoutManager
 
+    private lateinit var cloudLayoutManager: GridLayoutManager
+
     private lateinit var adapter: FileListAdapter
+
+    private lateinit var cloudFileListAdapter: CloudFileListAdapter
 
     private lateinit var fileTransferAdapter: FileTransferAdapter
 
@@ -348,7 +357,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
             }
         }
-        binding.swipeRefreshLayout.setOnRefreshListener { this.refresh() }
+        binding.swipeRefreshLayout.setOnRefreshListener { refresh() }
         layoutManager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = layoutManager
         adapter = FileListAdapter(this)
@@ -370,6 +379,34 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     if (path.isDirectory()) {
                         dropFileTo(path)
                     }
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        cloudLayoutManager = GridLayoutManager(activity, 1)
+        binding.cloudRecyclerView.layoutManager = cloudLayoutManager
+        cloudFileListAdapter = CloudFileListAdapter(this)
+        binding.cloudRecyclerView.adapter = cloudFileListAdapter
+        val cloudFastScroller = ThemedFastScroller.create(binding.cloudRecyclerView)
+        binding.cloudRecyclerView.setOnApplyWindowInsetsListener(
+            ScrollingViewOnApplyWindowInsetsListener(binding.cloudRecyclerView, cloudFastScroller)
+        )
+        binding.cloudRecyclerView.setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED, DragEvent.ACTION_DRAG_ENTERED,
+                DragEvent.ACTION_DRAG_EXITED, DragEvent.ACTION_DRAG_ENDED,
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    true
+                }
+
+                DragEvent.ACTION_DROP -> {
+                    /*val file = currentCloudFile
+                    if (file.isDirectory) {
+                        dropCloudFileTo(0)
+                    }*/
                     true
                 }
 
@@ -497,6 +534,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 viewModel.pickOptions = pickOptions
             }
         }
+        viewModel.isInCloudStorage.observe(viewLifecycleOwner) { onCloudStorageChanged(it) }
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.searchViewExpandedLiveData.observe(viewLifecycleOwner) {
             onSearchViewExpandedChanged(it)
@@ -530,10 +568,15 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
         viewModel.pickOptionsLiveData.observe(viewLifecycleOwner) { onPickOptionsChanged(it) }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
+        viewModel.selectedCloudFilesLiveData.observe(viewLifecycleOwner) {
+            onSelectedCloudFilesChanged(it)
+        }
         viewModel.isAllSelectedLiveData.observe(viewLifecycleOwner) { onAllSelectedChanged(it) }
         viewModel.pasteStateLiveData.observe(viewLifecycleOwner) { onPasteStateChanged(it) }
+        viewModel.cloudPasteStateLiveData.observe(viewLifecycleOwner) { onCloudPasteStateChanged(it) }
         Settings.FILE_NAME_ELLIPSIZE.observe(viewLifecycleOwner) { onFileNameEllipsizeChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
+        viewModel.cloudFileListLiveData.observe(viewLifecycleOwner) { onCloudFileListChanged(it) }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
             binding.toolbar.setNavButtonEnable(viewModel.canNavigateUpBreadcrumb)
         }
@@ -643,7 +686,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                navigateUp()
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    navigateCloudUp()
+                } else {
+                    navigateUp()
+                }
                 true
             }
 
@@ -770,6 +817,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         updateSpanCount()
     }
 
+    private fun onCloudStorageChanged(isInCloudStorage: Boolean) {
+        if (isInCloudStorage) {
+            binding.recyclerView.isVisible = false
+            binding.cloudRecyclerView.isVisible = true
+        } else {
+            binding.cloudRecyclerView.isVisible = false
+            binding.recyclerView.isVisible = true
+        }
+    }
+
     private fun onCurrentPathChanged(path: Path) {
         updateOverlayToolbar()
         updateBottomToolbar()
@@ -806,9 +863,45 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
+    private fun onCloudFileListChanged(stateful: Stateful<List<CloudFileItem>>) {
+        val cloudFiles = stateful.value
+        val hasFiles = !cloudFiles.isNullOrEmpty()
+        binding.swipeRefreshLayout.isRefreshing = stateful is Loading && hasFiles
+        binding.progress.fadeToVisibilityUnsafe(stateful is Loading && !hasFiles)
+        binding.errorText.fadeToVisibilityUnsafe(stateful is Failure && !hasFiles)
+        val throwable = (stateful as? Failure)?.throwable
+        if (throwable != null) {
+            throwable.printStackTrace()
+            val message = when (throwable) {
+                is LoginExpiredException -> {
+                    Settings.STORAGES.valueCompat.find { it is SDriveServer }?.let {
+                        startActivitySafe(it.createEditIntent())
+                    }
+                    getString(R.string.login_expired)
+                }
+
+                is SDriveException -> throwable.message ?: getString(R.string.server_error_occurred)
+                else -> getString(R.string.network_error)
+            }
+            showToast(message)
+        }
+        binding.emptyView.fadeToVisibilityUnsafe(stateful is Success && !hasFiles)
+        clearSelectedFiles()
+        if (cloudFiles != null) {
+            updateCloudAdapterFileList()
+        } else {
+            // This resets animation as well.
+            cloudFileListAdapter.clear()
+        }
+        if (stateful is Success) {
+            viewModel.pendingState?.let { cloudLayoutManager.onRestoreInstanceState(it) }
+        }
+    }
+
     private fun onViewTypeChanged(viewType: FileViewType) {
         updateSpanCount()
         adapter.viewType = viewType
+        cloudFileListAdapter.viewType = viewType
         updateViewSortMenuItems()
     }
 
@@ -826,10 +919,25 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 (widthDp / 180).coerceAtLeast(2)
             }
         }
+        cloudLayoutManager.spanCount = when (viewModel.viewType) {
+            FileViewType.LIST -> 1
+            FileViewType.GRID -> {
+                var widthDp = resources.configuration.screenWidthDp
+                val persistentDrawerLayout = binding.persistentDrawerLayout
+                if (persistentDrawerLayout != null &&
+                    persistentDrawerLayout.isDrawerOpen(GravityCompat.START)
+                ) {
+                    widthDp -= getDimensionDp(R.dimen.navigation_max_width).roundToInt()
+                }
+                (widthDp / 180).coerceAtLeast(2)
+            }
+        }
     }
 
     private fun onSortOptionsChanged(sortOptions: FileSortOptions) {
+        val cloudFileSortOptions = sortOptions.toCloudFileSortOptions()
         adapter.sortOptions = sortOptions
+        cloudFileListAdapter.sortOptions = cloudFileSortOptions
         updateViewSortMenuItems()
     }
 
@@ -873,6 +981,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.navigateUp()
     }
 
+    private fun navigateCloudUp() {
+        collapseSearchView()
+        viewModel.navigateCloudUp()
+    }
+
     private fun showNavigateToPathDialog() {
         NavigateToPathDialogFragment.show(currentPath, this)
     }
@@ -882,7 +995,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun refresh() {
-        viewModel.reload()
+        if (viewModel.isInCloudStorage.valueCompat) {
+            viewModel.refreshCloud()
+        } else {
+            viewModel.reload()
+        }
     }
 
     private fun setShowHiddenFiles(showHiddenFiles: Boolean) {
@@ -907,6 +1024,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         )
     }
 
+    private fun updateCloudAdapterFileList() {
+        var files = viewModel.cloudFileListStateful.value ?: return
+        cloudFileListAdapter.replace(files, false)
+    }
+
     private fun updateShowHiddenFilesMenuItem() {
         if (!this::menuBinding.isInitialized) {
             return
@@ -927,6 +1049,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         collapseSearchView()
         val state = layoutManager.onSaveInstanceState()
         viewModel.navigateTo(state!!, path)
+    }
+
+    override fun navigateCloudTo(cloudPathData: CloudPathData) {
+        collapseSearchView()
+        viewModel.navigateCloudTo(cloudPathData)
     }
 
     override fun copyPath(path: Path) {
@@ -961,6 +1088,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         updateOverlayToolbar()
         updateBottomToolbar()
         adapter.pickOptions = pickOptions
+        cloudFileListAdapter.pickOptions = pickOptions
     }
 
     private fun pickFiles(files: FileItemSet) {
@@ -1001,13 +1129,20 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         adapter.replaceSelectedFiles(files)
     }
 
+    private fun onSelectedCloudFilesChanged(files: CloudFileItemSet) {
+        updateOverlayToolbar()
+        cloudFileListAdapter.replaceSelectedFiles(files)
+    }
+
     private fun onAllSelectedChanged(isChecked: Boolean) {
         binding.checkAllLayout.isChecked = isChecked
     }
 
     private fun updateOverlayToolbar() {
+        val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
         val files = viewModel.selectedFiles
-        if (files.isEmpty()) {
+        val cloudFiles = viewModel.selectedCloudFiles
+        if (files.isEmpty() && cloudFiles.isEmpty()) {
             if (overlayActionMode.isActive) {
                 overlayActionMode.finish()
             }
@@ -1016,8 +1151,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
         val pickOptions = viewModel.pickOptions
         if (pickOptions != null) {
-            overlayActionMode.title =
-                getString(R.string.file_list_select_title_format_new, files.size)
+            overlayActionMode.title = getString(
+                R.string.file_list_select_title_format_new,
+                if (isInCloudStorage) cloudFiles.size else files.size
+            )
             overlayActionMode.setMenuResource(R.menu.file_list_pick)
             val menu = overlayActionMode.menu
             val isOpen = when (pickOptions.mode) {
@@ -1027,13 +1164,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             menu.findItem(R.id.action_open).isVisible = isOpen
             menu.findItem(R.id.action_create).isVisible = !isOpen
         } else {
-            overlayActionMode.title =
-                getString(R.string.file_list_select_title_format_new, files.size)
+            overlayActionMode.title = getString(
+                R.string.file_list_select_title_format_new,
+                if (isInCloudStorage) cloudFiles.size else files.size
+            )
             overlayActionMode.setMenuResource(R.menu.file_list_select)
             val menu = overlayActionMode.menu
-            val isAnyFileReadOnly = files.any { it.path.fileSystem.isReadOnly }
+            val isAnyFileReadOnly = if (isInCloudStorage) false
+            else files.any { it.path.fileSystem.isReadOnly }
             menu.findItem(R.id.action_cut).isVisible = !isAnyFileReadOnly
-            val areAllFilesArchivePaths = files.all { it.path.isArchivePath }
+            val areAllFilesArchivePaths = if (isInCloudStorage) false
+            else files.all { it.path.isArchivePath }
             menu.findItem(R.id.action_copy)
                 .setIcon(
                     if (areAllFilesArchivePaths) {
@@ -1050,9 +1191,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     }
                 )
             menu.findItem(R.id.action_delete).isVisible = !isAnyFileReadOnly
-            val areAllFilesArchiveFiles = files.all { it.isArchiveFile }
+            val areAllFilesArchiveFiles = if (isInCloudStorage) false
+            else files.all { it.isArchiveFile }
             menu.findItem(R.id.action_extract).isVisible = areAllFilesArchiveFiles
-            val isCurrentPathReadOnly = viewModel.currentPath.fileSystem.isReadOnly
+            val isCurrentPathReadOnly = if (isInCloudStorage) false
+            else viewModel.currentPath.fileSystem.isReadOnly
             menu.findItem(R.id.action_archive).isVisible = !isCurrentPathReadOnly
         }
         if (!overlayActionMode.isActive) {
@@ -1086,17 +1229,29 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_cut -> {
-                cutFiles(viewModel.selectedFiles)
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    cutCloudFiles(viewModel.selectedCloudFiles)
+                } else {
+                    cutFiles(viewModel.selectedFiles)
+                }
                 true
             }
 
             R.id.action_copy -> {
-                copyFiles(viewModel.selectedFiles)
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    copyCloudFiles(viewModel.selectedCloudFiles)
+                } else {
+                    copyFiles(viewModel.selectedFiles)
+                }
                 true
             }
 
             R.id.action_delete -> {
-                confirmDeleteFiles(viewModel.selectedFiles)
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    confirmDeleteCloudFiles(viewModel.selectedCloudFiles)
+                } else {
+                    confirmDeleteFiles(viewModel.selectedFiles)
+                }
                 true
             }
 
@@ -1120,7 +1275,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun onOverlayActionModeFinished() {
         viewModel.clearSelectedFiles()
+        viewModel.clearSelectedCloudFiles()
         adapter.notifyStateChanged()
+        cloudFileListAdapter.notifyStateChanged()
     }
 
     private fun confirmReplaceFile(file: FileItem, setFileName: Boolean = true) {
@@ -1186,10 +1343,19 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun selectAllFiles() {
-        adapter.selectAllFiles()
+        val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
+        if (isInCloudStorage) {
+            cloudFileListAdapter.selectAllFiles()
+        } else {
+            adapter.selectAllFiles()
+        }
     }
 
     private fun onPasteStateChanged(pasteState: PasteState) {
+        updateBottomToolbar()
+    }
+
+    private fun onCloudPasteStateChanged(cloudPasteState: CloudPasteState) {
         updateBottomToolbar()
     }
 
@@ -1238,17 +1404,21 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
             }
         } else {
+            val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
             val pasteState = viewModel.pasteState
+            val cloudPasteState = viewModel.cloudPasteState
             val files = pasteState.files
-            if (files.isEmpty()) {
+            val cloudFiles = cloudPasteState.files
+            if (files.isEmpty() && cloudFiles.isEmpty()) {
                 if (bottomActionMode.isActive) {
                     bottomActionMode.finish()
                 }
                 return
             }
-            val areAllFilesArchivePaths = files.all { it.path.isArchivePath }
+            val areAllFilesArchivePaths = !isInCloudStorage && files.all { it.path.isArchivePath }
+            val fileSize = if (isInCloudStorage) cloudFiles.size else files.size
             bottomActionMode.title = getQuantityString(
-                if (pasteState.copy) {
+                if (pasteState.copy || cloudPasteState.copy) {
                     if (areAllFilesArchivePaths) {
                         R.plurals.file_list_paste_extract_title_format_new
                     } else {
@@ -1256,7 +1426,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     }
                 } else {
                     R.plurals.file_list_paste_move_title_format_new
-                }, files.size, files.size
+                }, fileSize, fileSize
             )
             binding.bottomCreateFileNameEdit.isVisible = false
             bottomActionMode.setMenuResource(R.menu.file_list_paste)
@@ -1265,7 +1435,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 .setTitle(
                     if (areAllFilesArchivePaths) R.string.file_list_paste_action_extract_here else R.string.paste
                 )
-                .isEnabled = !isCurrentPathReadOnly
+                .isEnabled = !isCurrentPathReadOnly || isInCloudStorage
         }
         if (!bottomActionMode.isActive) {
             bottomActionMode.start(object : ToolbarActionMode.Callback {
@@ -1320,7 +1490,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_paste -> {
-                pasteFiles(currentPath)
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    pasteCloudFiles()
+                } else {
+                    pasteFiles(currentPath)
+                }
                 true
             }
 
@@ -1331,6 +1505,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val pickOptions = viewModel.pickOptions
         if (pickOptions == null) {
             viewModel.clearPasteState()
+            viewModel.clearCloudPasteState()
         }
     }
 
@@ -1348,11 +1523,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.clearPasteState()
     }
 
+    private fun pasteCloudFiles() {
+        viewModel.pasteCloudFiles()
+    }
+
     private fun makePathListForJob(files: FileItemSet): List<Path> =
         files.map { it.path }.sortedBy { it.toUri() }
 
     private fun onFileNameEllipsizeChanged(fileNameEllipsize: TextUtils.TruncateAt) {
         adapter.nameEllipsize = fileNameEllipsize
+        cloudFileListAdapter.nameEllipsize = fileNameEllipsize
     }
 
     override fun cancelDragDrop() {
@@ -1397,6 +1577,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
+        viewModel.clearSelectedCloudFiles()
     }
 
     override fun selectFile(file: FileItem, selected: Boolean) {
@@ -1638,7 +1819,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun showCreateDirectoryDialog() {
-        CreateDirectoryDialogFragment.show(this)
+        if (viewModel.isInCloudStorage.valueCompat) {
+            CreateCloudDirectoryDialogFragment.show(this)
+        } else {
+            CreateDirectoryDialogFragment.show(this)
+        }
     }
 
     override fun createDirectory(name: String) {
@@ -1649,16 +1834,28 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override val currentPath: Path
         get() = viewModel.currentPath
 
+    override val authority: Authority?
+        get() = viewModel.authority
+
     override val quickAccessCategory: QuickAccessCategory?
         get() = viewModel.quickAccessCategory
 
+    override fun onCloudStorageClicked(authority: Authority) {
+        viewModel.onCloudStorageClicked(authority)
+    }
+
     override fun navigateToRoot(path: Path) {
         collapseSearchView()
+        viewModel.clearAuthority()
         viewModel.resetTo(path)
     }
 
     override fun navigateToDefaultRoot() {
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
+    }
+
+    override fun clearCloudListState() {
+        viewModel.clearAuthority()
     }
 
     override fun clearQuickAccessState() {
@@ -1865,6 +2062,102 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         binding.transferRecyclerView.isVisible = false
     }
 
+    override fun cancelCloudFileDragDrop() {
+        TODO("Not yet implemented")
+    }
+
+    override fun dropCloudFileTo(targetParentId: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCloudFileDragShadow(file: CloudFileItem): View {
+        binding.iconImage.apply {
+            isVisible = true
+            val iconRes = file.mimeType.iconRes
+            setImageResource(iconRes)
+        }
+        binding.thumbnailImage.apply {
+            dispose()
+            setImageDrawable(null)
+            val supportsThumbnail = !file.thumbUrl.isNullOrEmpty()
+            isVisible = supportsThumbnail
+            if (supportsThumbnail) {
+                load(file.thumbUrl)
+            }
+        }
+        binding.appIconBadgeImage.apply {
+            dispose()
+            setImageDrawable(null)
+        }
+        return binding.dragPlaceholder.apply { isVisible = true }
+    }
+
+    override fun clearSelectedCloudFileFiles() {
+        viewModel.clearSelectedCloudFiles()
+    }
+
+    override fun selectCloudFile(file: CloudFileItem, selected: Boolean) {
+        viewModel.selectCloudFile(file, selected)
+    }
+
+    override fun selectCloudFiles(files: CloudFileItemSet, selected: Boolean) {
+        viewModel.selectCloudFiles(files, selected)
+    }
+
+    override fun openCloudFile(file: CloudFileItem) {
+        if (file.isDirectory) {
+            val cloudPath = CloudPathData(file.id, file.name)
+            viewModel.navigateCloudTo(cloudPath)
+        }
+    }
+
+    override fun cutCloudFile(file: CloudFileItem) {
+        cutCloudFiles(cloudFileItemSetOf(file))
+    }
+
+    override fun copyCloudFile(file: CloudFileItem) {
+        copyCloudFiles(cloudFileItemSetOf(file))
+    }
+
+    override fun confirmDeleteCloudFile(file: CloudFileItem) {
+        confirmDeleteCloudFiles(cloudFileItemSetOf(file))
+    }
+
+    override fun showRenameCloudFileDialog(file: CloudFileItem) {
+        RenameCloudFileDialogFragment.show(file, this)
+    }
+
+    override fun showCloudFilePropertiesDialog(file: CloudFileItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun renameCloudFile(file: CloudFileItem, newName: String) {
+        viewModel.renameCloudFile(file, newName)
+    }
+
+    override fun deleteCloudFiles(files: CloudFileItemSet) {
+        viewModel.deleteCloudFiles(files)
+        viewModel.selectCloudFiles(files, false)
+    }
+
+    override fun createCloudDirectory(name: String) {
+        viewModel.createCloudDirectory(name)
+    }
+
+    private fun cutCloudFiles(files: CloudFileItemSet) {
+        viewModel.addToCloudPasteState(false, files)
+        viewModel.selectCloudFiles(files, false)
+    }
+
+    private fun copyCloudFiles(files: CloudFileItemSet) {
+        viewModel.addToCloudPasteState(true, files)
+        viewModel.selectCloudFiles(files, false)
+    }
+
+    private fun confirmDeleteCloudFiles(files: CloudFileItemSet) {
+        ConfirmDeleteCloudFilesDialogFragment.show(files, this)
+    }
+
     companion object {
         private const val ACTION_VIEW_DOWNLOADS =
             "com.android.imagic.files.intent.action.VIEW_DOWNLOADS"
@@ -1914,6 +2207,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val emptyView: View,
         val swipeRefreshLayout: SwipeRefreshLayout,
         val recyclerView: RecyclerView,
+        val cloudRecyclerView: RecyclerView,
         val bottomBarLayout: ViewGroup,
         val bottomProgressbar: ProgressBar,
         val bottomToolbar: Toolbar,
@@ -1952,10 +2246,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     contentBinding.contentLayout, contentBinding.progress,
                     contentBinding.errorText, contentBinding.emptyView,
                     contentBinding.swipeRefreshLayout, contentBinding.recyclerView,
-                    bottomBarBinding.bottomBarLayout, bottomBarBinding.bottomProgressbar,
-                    bottomBarBinding.bottomToolbar, bottomBarBinding.bottomCreateFileNameEdit,
-                    speedDialBinding.speedDialView, dragBinding.dragPlaceholder,
-                    dragBinding.iconImage, dragBinding.thumbnailImage,
+                    contentBinding.cloudRecyclerView, bottomBarBinding.bottomBarLayout,
+                    bottomBarBinding.bottomProgressbar, bottomBarBinding.bottomToolbar,
+                    bottomBarBinding.bottomCreateFileNameEdit, speedDialBinding.speedDialView,
+                    dragBinding.dragPlaceholder, dragBinding.iconImage, dragBinding.thumbnailImage,
                     dragBinding.appIconBadgeImage, transferBinding.transferRecyclerLayout,
                     transferBinding.transferRecyclerView, transferBinding.transferTitleText,
                     transferBinding.dropDownButton, transferBinding.floatingButton

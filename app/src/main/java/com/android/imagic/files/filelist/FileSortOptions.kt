@@ -3,6 +3,8 @@ package com.android.imagic.files.filelist
 import android.os.Parcelable
 import com.android.imagic.files.compat.reversedCompat
 import com.android.imagic.files.file.FileItem
+import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.sdrive.extension
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -44,16 +46,59 @@ data class FileSortOptions(
         // Same behavior as Nautilus.
         private val NAME_UNIMPORTANT_PREFIXES = listOf(".", "#")
     }
+}
 
-    enum class By {
-        NAME,
-        TYPE,
-        SIZE,
-        LAST_MODIFIED
+@Parcelize
+data class CloudFileSortOptions(
+    val by: By,
+    val order: Order,
+    val isDirectoriesFirst: Boolean
+) : Parcelable {
+    fun createComparator(): Comparator<CloudFileItem> {
+        var comparator = compareBy<CloudFileItem> {
+            NAME_UNIMPORTANT_PREFIXES.any { prefix -> it.name.startsWith(prefix) }
+        }.thenBy { it.nameCollationKey }
+        when (by) {
+            // Nothing to do.
+            By.NAME -> {}
+            By.TYPE ->
+                comparator = compareBy<CloudFileItem, String>(String.CASE_INSENSITIVE_ORDER) {
+                    it.extension
+                }.then(comparator)
+
+            By.SIZE -> comparator = compareBy<CloudFileItem> { it.size }.then(comparator)
+            By.LAST_MODIFIED ->
+                comparator = compareBy<CloudFileItem> { it.modifyTime }.then(comparator)
+        }
+        when (order) {
+            Order.ASCENDING -> {}
+            Order.DESCENDING -> comparator = comparator.reversedCompat()
+        }
+        if (isDirectoriesFirst) {
+            val isDirectoryComparator = compareBy<CloudFileItem> { it.isDirectory }
+                .reversedCompat()
+            comparator = isDirectoryComparator.then(comparator)
+        }
+        return comparator
     }
 
-    enum class Order {
-        ASCENDING,
-        DESCENDING
+    companion object {
+        // Same behavior as Nautilus.
+        private val NAME_UNIMPORTANT_PREFIXES = listOf(".", "#")
     }
 }
+
+enum class By {
+    NAME,
+    TYPE,
+    SIZE,
+    LAST_MODIFIED
+}
+
+enum class Order {
+    ASCENDING,
+    DESCENDING
+}
+
+fun FileSortOptions.toCloudFileSortOptions(): CloudFileSortOptions =
+    CloudFileSortOptions(by, order, isDirectoriesFirst)

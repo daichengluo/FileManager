@@ -15,29 +15,27 @@ enum class PosixFileType(val mode: Int) {
     SOCKET((OsConstants.S_IFSOCK));
 
     companion object {
-        fun fromMode(mode: Int): PosixFileType =
-            when {
-                OsConstants.S_ISDIR(mode) -> DIRECTORY
-                OsConstants.S_ISCHR(mode) -> CHARACTER_DEVICE
-                OsConstants.S_ISBLK(mode) -> BLOCK_DEVICE
-                OsConstants.S_ISREG(mode) -> REGULAR_FILE
-                OsConstants.S_ISFIFO(mode) -> FIFO
-                OsConstants.S_ISLNK(mode) -> SYMBOLIC_LINK
-                OsConstants.S_ISSOCK(mode) -> SOCKET
-                else -> UNKNOWN
-            }
+        fun fromMode(mode: Int): PosixFileType = when {
+            OsConstants.S_ISDIR(mode) -> DIRECTORY
+            OsConstants.S_ISCHR(mode) -> CHARACTER_DEVICE
+            OsConstants.S_ISBLK(mode) -> BLOCK_DEVICE
+            OsConstants.S_ISREG(mode) -> REGULAR_FILE
+            OsConstants.S_ISFIFO(mode) -> FIFO
+            OsConstants.S_ISLNK(mode) -> SYMBOLIC_LINK
+            OsConstants.S_ISSOCK(mode) -> SOCKET
+            else -> UNKNOWN
+        }
     }
 }
 
 val BasicFileAttributes.posixFileType: PosixFileType
-    get() =
-        when (this) {
-            is PosixFileAttributes -> type()
-            else ->
-                when {
-                    isRegularFile -> PosixFileType.REGULAR_FILE
-                    isDirectory -> PosixFileType.DIRECTORY
-                    isSymbolicLink -> PosixFileType.SYMBOLIC_LINK
-                    else -> PosixFileType.UNKNOWN
-                }
-        }
+    get() = when (this) {
+        is PosixFileAttributes -> type()
+        else ->
+            when {
+                isRegularFile -> PosixFileType.REGULAR_FILE
+                isDirectory -> PosixFileType.DIRECTORY
+                isSymbolicLink -> PosixFileType.SYMBOLIC_LINK
+                else -> PosixFileType.UNKNOWN
+            }
+    }

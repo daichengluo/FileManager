@@ -2,8 +2,6 @@ package com.android.imagic.files.filelist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.android.imagic.files.filelist.FileSortOptions.By
-import com.android.imagic.files.filelist.FileSortOptions.Order
 import com.android.imagic.files.settings.PathSettings
 import com.android.imagic.files.settings.SettingLiveData
 import com.android.imagic.files.settings.Settings

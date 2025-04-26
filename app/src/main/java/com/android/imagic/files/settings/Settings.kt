@@ -5,9 +5,11 @@ import android.text.TextUtils
 import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.compat.EnvironmentCompat2
+import com.android.imagic.files.filelist.By
 import com.android.imagic.files.filelist.FileSortOptions
 import com.android.imagic.files.filelist.FileViewType
 import com.android.imagic.files.filelist.OpenApkDefaultAction
+import com.android.imagic.files.filelist.Order
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.QuickAccessSettings
 import com.android.imagic.files.navigation.StandardDirectorySettings
@@ -55,7 +57,7 @@ object Settings {
     val FILE_LIST_SORT_OPTIONS: SettingLiveData<FileSortOptions> =
         ParcelValueSettingLiveData(
             R.string.pref_key_file_list_sort_options,
-            FileSortOptions(FileSortOptions.By.NAME, FileSortOptions.Order.ASCENDING, true)
+            FileSortOptions(By.NAME, Order.ASCENDING, true)
         )
 
     val CREATE_ARCHIVE_TYPE: SettingLiveData<Int> =

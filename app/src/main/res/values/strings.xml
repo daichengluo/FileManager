@@ -636,6 +636,7 @@
     <string name="storage_edit_smb_server_connect_and_add">Connect and add</string>
     <string name="storage_edit_smb_server_add">Add</string>
     <string name="storage_edit_webdav_server_title_edit">Edit WebDAV server</string>
+    <string name="storage_edit_sdrive_server_title_edit">StarBoard Drive</string>
     <string name="storage_edit_webdav_server_title_add">Add WebDAV server</string>
     <string name="storage_edit_webdav_server_host">Hostname</string>
     <string name="storage_edit_webdav_server_host_error_empty">Enter a hostname</string>
@@ -832,4 +833,9 @@
     </plurals>
     <string name="file_transfer_cancelling">Cancelling</string>
     <string name="press_again_exit">Press again to exit</string>
+    <string name="login_expired">The login has expired. Please log in again</string>
+    <string name="server_error_occurred">A server error occurred</string>
+    <string name="network_error">Network anomaly. Please try again later</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Log in to StarBoard Drive</string>
 </resources>

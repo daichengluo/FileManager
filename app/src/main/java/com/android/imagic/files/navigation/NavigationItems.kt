@@ -21,6 +21,7 @@ import com.android.imagic.files.settings.SettingsActivity
 import com.android.imagic.files.settings.StandardDirectoryListActivity
 import com.android.imagic.files.storage.AddStorageDialogActivity
 import com.android.imagic.files.storage.FileSystemRoot
+import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.util.createIntent
@@ -85,11 +86,21 @@ val navigationItems: List<NavigationItem?>
 private val storageItems: List<NavigationItem>
     @Size(min = 0)
     get() = Settings.STORAGES.valueCompat.filter { it.isVisible }.map {
-        if (it.path != null) PathStorageItem(it) else IntentStorageItem(it)
+        if (it.path != null) PathStorageItem(it) else {
+            if (it is SDriveServer) {
+                CloudStorageItem(it)
+            } else {
+                IntentStorageItem(it)
+            }
+        }
     }
 
 private abstract class PathItem(val path: Path) : NavigationItem() {
-    override fun isChecked(listener: Listener): Boolean = listener.currentPath == path
+
+    override fun isChecked(listener: Listener): Boolean {
+        return listener.quickAccessCategory == null && listener.authority == null &&
+                listener.currentPath == path
+    }
 
     override fun onClick(listener: Listener) {
         if (this is NavigationRoot) {
@@ -155,6 +166,34 @@ private class IntentStorageItem(
     }
 }
 
+private class CloudStorageItem(
+    private val storage: SDriveServer
+) : NavigationItem() {
+    init {
+        require(storage.isVisible)
+    }
+
+    override val id: Long
+        get() = storage.id
+
+    override val iconRes: Int
+        @DrawableRes
+        get() = storage.iconRes
+
+    override fun getTitle(context: Context): String = storage.getName(context)
+
+    override fun isChecked(listener: Listener): Boolean = listener.authority == storage.authority
+
+    override fun onClick(listener: Listener) {
+        listener.navigateToCloud(storage.authority)
+    }
+
+    override fun onLongClick(listener: Listener): Boolean {
+        listener.launchIntent(storage.createEditIntent())
+        return true
+    }
+}
+
 private val storageVolumeItems: List<NavigationItem>
     @Size(min = 0)
     get() = StorageVolumeListLiveData.valueCompat.filter { !it.isPrimaryCompat && it.isMounted }
@@ -163,6 +202,7 @@ private val storageVolumeItems: List<NavigationItem>
 private class StorageVolumeItem(
     private val storageVolume: StorageVolume
 ) : PathItem(Paths.get(storageVolume.pathCompat)), NavigationRoot {
+
     override val id: Long
         get() = storageVolume.hashCode().toLong()
 
@@ -230,7 +270,7 @@ val quickAccessItems: List<NavigationItem>
 
 private class QuickAccessItem(
     private val quickAccess: QuickAccess
-) : PathItem(Paths.get(getExternalStorageDirectory(quickAccess.relativePath))) {
+) : NavigationItem() {
     init {
         require(quickAccess.isEnabled)
     }

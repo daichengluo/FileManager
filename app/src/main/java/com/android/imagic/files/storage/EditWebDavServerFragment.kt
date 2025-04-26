@@ -55,10 +55,9 @@ class EditWebDavServerFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-        EditWebdavServerFragmentBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
+    ): View = EditWebdavServerFragmentBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,7 +95,7 @@ class EditWebDavServerFragment : Fragment() {
             UnfilteredArrayAdapter(
                 binding.authenticationTypeEdit.context, R.layout.dropdown_item,
                 objects =
-                getTextArray(R.array.storage_edit_webdav_server_authentication_type_entries)
+                    getTextArray(R.array.storage_edit_webdav_server_authentication_type_entries)
             )
         )
         authenticationType = AuthenticationType.PASSWORD

@@ -17,7 +17,8 @@ import com.android.imagic.files.file.DocumentTreeUri
 import com.android.imagic.files.file.asExternalStorageUriOrNull
 import com.android.imagic.files.file.displayName
 import com.android.imagic.files.file.storageVolume
-import com.android.imagic.files.filelist.FileSortOptions
+import com.android.imagic.files.filelist.By
+import com.android.imagic.files.filelist.Order
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.StandardDirectorySettings
 import com.android.imagic.files.provider.archive.ArchiveFileSystem
@@ -93,8 +94,8 @@ private fun migrateFileSortOptionsSetting1_1_0(sharedPreferences: SharedPreferen
                 oldParcel.unmarshall(oldBytes, 0, oldBytes.size)
                 oldParcel.setDataPosition(0)
                 newParcel.writeString(oldParcel.readString())
-                newParcel.writeString(FileSortOptions.By.entries[oldParcel.readInt()].name)
-                newParcel.writeString(FileSortOptions.Order.entries[oldParcel.readInt()].name)
+                newParcel.writeString(By.entries[oldParcel.readInt()].name)
+                newParcel.writeString(Order.entries[oldParcel.readInt()].name)
                 newParcel.writeInt(oldParcel.readByte().toInt())
             }
             newParcel.marshall()

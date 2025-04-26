@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.android.imagic.files.compat.getDrawableCompat
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import java8.nio.file.Path
 
 abstract class NavigationItem {
@@ -27,7 +28,9 @@ abstract class NavigationItem {
 
     interface Listener {
         val currentPath: Path
+        val authority: Authority?
         val quickAccessCategory: QuickAccessCategory?
+        fun navigateToCloud(authority: Authority)
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun quickAccessTo(quickAccess: QuickAccess)

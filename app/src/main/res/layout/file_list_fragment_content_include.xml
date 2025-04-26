@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -50,16 +49,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:fitsSystemWindows="true"
-                android:paddingHorizontal="11dp"
-                android:paddingTop="11dp"
-                android:paddingBottom="@dimen/list_bottom_padding_with_fab"
-                tools:listitem="@layout/file_item_list" />
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:fitsSystemWindows="true"
+                    android:paddingHorizontal="11dp"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="@dimen/list_bottom_padding_with_fab"
+                    tools:listitem="@layout/file_item_list" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cloudRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:fitsSystemWindows="true"
+                    android:paddingHorizontal="11dp"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="@dimen/list_bottom_padding_with_fab"
+                    android:visibility="gone"
+                    tools:listitem="@layout/file_item_list" />
+            </FrameLayout>
         </androidx.swiperefreshlayout.widget.ThemedSwipeRefreshLayout>
     </com.android.imagic.files.ui.CoordinatorScrollingFrameLayout>
 </merge>

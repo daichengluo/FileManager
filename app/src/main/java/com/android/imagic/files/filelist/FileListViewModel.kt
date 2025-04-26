@@ -2,26 +2,35 @@ package com.android.imagic.files.filelist
 
 import android.content.Context
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.file.QuickAccessWrap
-import com.android.imagic.files.filelist.FileSortOptions.By
-import com.android.imagic.files.filelist.FileSortOptions.Order
+import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.provider.cloud.sdrive.client.Client
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.CloseableLiveData
+import com.android.imagic.files.util.Failure
+import com.android.imagic.files.util.Loading
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
+import kotlinx.coroutines.launch
 import java.io.Closeable
 
 // TODO: Use SavedStateHandle to save state.
@@ -79,8 +88,7 @@ class FileListViewModel : ViewModel() {
     val quickAccessCategory: QuickAccessCategory?
         get() = quickAccessCategoryLiveData.valueCompat
 
-    val isInQuickAccess: Boolean
-        get() = quickAccessCategory != null
+    val isInQuickAccess: Boolean get() = quickAccessCategory != null
 
     fun setQuickAccessCategory(category: QuickAccessCategory?) {
         if (quickAccessCategory != category) {
@@ -88,10 +96,7 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    fun quickAccessTo(
-        context: Context,
-        quickAccess: QuickAccess
-    ) {
+    fun quickAccessTo(context: Context, quickAccess: QuickAccess) {
         if (quickAccessCategory == quickAccess.category) return
 
         val fileTypeCategory = when (quickAccess.category) {
@@ -125,6 +130,134 @@ class FileListViewModel : ViewModel() {
     val fileListStateful: Stateful<List<FileItem>>
         get() = _fileListLiveData.valueCompat
 
+    private val _cloudAuthority = MutableLiveData<Authority?>(null)
+    val cloudAuthority: LiveData<Authority?> = _cloudAuthority
+    val authority: Authority?
+        get() = cloudAuthority.valueCompat
+
+    val isInCloudStorage: LiveData<Boolean> = cloudAuthority.map { it != null }
+
+    private val _cloudPathListLiveData = MutableLiveData<List<CloudPathData>?>(null)
+    val cloudPathListLiveData: LiveData<List<CloudPathData>?> = _cloudPathListLiveData
+    val currentCloudPathLiveData = cloudPathListLiveData.map {
+        it?.lastOrNull()
+    }
+
+    val cloudFileListLiveData: LiveData<Stateful<List<CloudFileItem>>> =
+        currentCloudPathLiveData.switchMap { cloudPath ->
+            liveData {
+                if (authority != null && cloudPath != null) {
+                    emit(Loading(null))
+                    val response = Client.getFileList(cloudPath.directoryId, authority!!)
+                    if (response is ApiOperation.Success) {
+                        emit(Success(response.data))
+                    } else if (response is ApiOperation.Failure) {
+                        emit(Failure(null, response.exception))
+                    }
+                }
+            }
+        }
+    val cloudFileListStateful: Stateful<List<CloudFileItem>>
+        get() = cloudFileListLiveData.valueCompat
+
+    val currentCloudPath: CloudPathData?
+        get() = currentCloudPathLiveData.valueCompat
+
+    fun clearAuthority() {
+        if (authority != null) {
+            _cloudAuthority.value = null
+        }
+        if (_cloudPathListLiveData.valueCompat != null) {
+            _cloudPathListLiveData.value = null
+        }
+    }
+
+    fun refreshCloud() {
+        currentCloudPath?.let { navigateCloudTo(it) }
+    }
+
+    fun onCloudStorageClicked(authority: Authority) = viewModelScope.launch {
+        if (_cloudPathListLiveData.valueCompat == null) {
+            _cloudPathListLiveData.value = listOf(CloudPathData(0, authority.username))
+        }
+        _cloudAuthority.value = authority
+        val rootCloudPath = CloudPathData(0, authority.username)
+        navigateCloudTo(rootCloudPath)
+    }
+
+    fun navigateCloudTo(cloudPathData: CloudPathData) = viewModelScope.launch {
+        if (authority == null) return@launch
+        val cloudPathList = _cloudPathListLiveData.valueCompat ?: emptyList()
+        val index = cloudPathList.indexOfFirst { it.directoryId == cloudPathData.directoryId }
+
+        val newList = if (index == -1) {
+            cloudPathList.plus(cloudPathData)
+        } else {
+            cloudPathList.subList(0, index + 1)
+        }
+        _cloudPathListLiveData.value = newList
+    }
+
+    fun navigateCloudUp() = viewModelScope.launch {
+        if (authority == null) return@launch
+        val cloudPathList = _cloudPathListLiveData.valueCompat ?: return@launch
+        if (cloudPathList.isEmpty()) return@launch
+
+        val newList = cloudPathList.dropLast(1)
+        _cloudPathListLiveData.value = newList
+    }
+
+    fun createCloudDirectory(name: String) = viewModelScope.launch {
+        if (authority == null) return@launch
+        val currentCloudPath = currentCloudPath ?: return@launch
+        Client.createDirectory(name, currentCloudPath.directoryId, authority!!)
+            .onSuccess { refreshCloud() }
+            .onFailure { it.printStackTrace() }
+    }
+
+    fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
+        if (authority == null) return@launch
+        Client.renameFile(newName, file.id, authority!!)
+            .onSuccess { refreshCloud() }
+            .onFailure { it.printStackTrace() }
+    }
+
+    fun deleteCloudFiles(files: CloudFileItemSet) = viewModelScope.launch {
+        if (authority == null || files.isEmpty()) return@launch
+        Client.delete(files.map { it.id }, authority!!)
+            .onSuccess { refreshCloud() }
+            .onFailure { it.printStackTrace() }
+    }
+
+    fun pasteCloudFiles() {
+        val targetCloudPath = currentCloudPath ?: return
+        val files = cloudPasteState.files
+        if (cloudPasteState.copy) {
+            copyCloudFiles(files, targetCloudPath)
+        } else {
+            moveCloudFiles(files, targetCloudPath)
+        }
+        clearCloudPasteState()
+    }
+
+    private fun moveCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
+        viewModelScope.launch {
+            if (authority == null || files.isEmpty()) return@launch
+            Client.move(files.map { it.id }, cloudPath.directoryId, authority!!)
+                .onSuccess { refreshCloud() }
+                .onFailure { it.printStackTrace() }
+        }
+    }
+
+    private fun copyCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
+        viewModelScope.launch {
+            if (authority == null || files.isEmpty()) return@launch
+            Client.copy(files.map { it.id }, cloudPath.directoryId, authority!!)
+                .onSuccess { refreshCloud() }
+                .onFailure { it.printStackTrace() }
+        }
+    }
+
     fun reload() {
         val path = currentPath
         if (path.isArchivePath) {
@@ -155,7 +288,8 @@ class FileListViewModel : ViewModel() {
 
     val breadcrumbLiveData: LiveData<BreadcrumbData> = BreadcrumbLiveData(
         trailLiveData,
-        quickAccessWrapLiveData
+        quickAccessWrapLiveData,
+        cloudPathListLiveData
     )
     val canNavigateUpBreadcrumb: Boolean
         get() = breadcrumbLiveData.valueCompat.selectedIndex > 0
@@ -216,11 +350,6 @@ class FileListViewModel : ViewModel() {
         return visibleFiles.filter { it.isSelectable(pickOptions) }
     }
 
-    val isAllSelectedLiveData: LiveData<Boolean> = selectedFilesLiveData.map {
-        val selectableFiles = getSelectableVisibleFiles()
-        selectableFiles.isNotEmpty() && selectedFiles.containsAll(selectableFiles)
-    }
-
     fun selectFile(file: FileItem, selected: Boolean) {
         selectFiles(fileItemSetOf(file), selected)
     }
@@ -266,6 +395,81 @@ class FileListViewModel : ViewModel() {
         _selectedFilesLiveData.value = selectedFiles
     }
 
+    private val _selectedCloudFilesLiveData = MutableLiveData(cloudFileItemSetOf())
+    val selectedCloudFilesLiveData: LiveData<CloudFileItemSet>
+        get() = _selectedCloudFilesLiveData
+    val selectedCloudFiles: CloudFileItemSet
+        get() = _selectedCloudFilesLiveData.valueCompat
+
+    fun selectCloudFile(file: CloudFileItem, selected: Boolean) {
+        selectCloudFiles(cloudFileItemSetOf(file), selected)
+    }
+
+    fun selectCloudFiles(files: CloudFileItemSet, selected: Boolean) {
+        Log.d("chengluo", "selectCloudFiles: $files $selected")
+        val selectedCloudFiles = _selectedCloudFilesLiveData.valueCompat
+        if (selectedCloudFiles === files) {
+            if (!selected && selectedCloudFiles.isNotEmpty()) {
+                selectedCloudFiles.clear()
+                _selectedCloudFilesLiveData.value = selectedCloudFiles
+            }
+            return
+        }
+        var changed = false
+        for (file in files) {
+            changed = changed or if (selected) {
+                selectedCloudFiles.add(file)
+            } else {
+                selectedCloudFiles.remove(file)
+            }
+        }
+        if (changed) {
+            _selectedCloudFilesLiveData.value = selectedCloudFiles
+        }
+    }
+
+    fun clearSelectedCloudFiles() {
+        val selectedCloudFiles = _selectedCloudFilesLiveData.valueCompat
+        if (selectedCloudFiles.isEmpty()) {
+            return
+        }
+        selectedCloudFiles.clear()
+        _selectedCloudFilesLiveData.value = selectedCloudFiles
+    }
+
+    val isAllSelectedLiveData = MediatorLiveData<Boolean>().apply {
+        val compute = {
+            val authority = cloudAuthority.value
+            if (authority != null) {
+                val stateful = cloudFileListLiveData.value
+                if (stateful !is Success) {
+                    value = false
+                }
+
+                val files = stateful?.value.orEmpty()
+                value = files.isNotEmpty() && selectedCloudFiles.containsAll(files)
+            } else {
+                val stateful = _fileListLiveData.value
+                if (stateful !is Success) {
+                    value = false
+                }
+
+                val files = stateful?.value.orEmpty()
+                val isShowHidden = Settings.FILE_LIST_SHOW_HIDDEN_FILES.valueCompat
+                val visibleFiles = if (isShowHidden) files else files.filterNot { it.isHidden }
+                val selectableFiles = visibleFiles.filter { it.isSelectable(pickOptions) }
+
+                value = selectableFiles.isNotEmpty() && selectedFiles.containsAll(selectableFiles)
+            }
+        }
+
+        addSource(cloudAuthority) { compute() }
+        addSource(_selectedFilesLiveData) { compute() }
+        addSource(_fileListLiveData) { compute() }
+        addSource(_selectedCloudFilesLiveData) { compute() }
+        addSource(cloudFileListLiveData) { compute() }
+    }
+
     val pasteStateLiveData: LiveData<PasteState> = _pasteStateLiveData
     val pasteState: PasteState
         get() = _pasteStateLiveData.valueCompat
@@ -293,6 +497,33 @@ class FileListViewModel : ViewModel() {
         _pasteStateLiveData.value = pasteState
     }
 
+    val cloudPasteStateLiveData: LiveData<CloudPasteState> = _cloudPasteStateLiveData
+    val cloudPasteState: CloudPasteState
+        get() = _cloudPasteStateLiveData.valueCompat
+
+    fun addToCloudPasteState(copy: Boolean, files: CloudFileItemSet) {
+        val cloudPasteState = _cloudPasteStateLiveData.valueCompat
+        var changed = false
+        if (cloudPasteState.copy != copy) {
+            changed = cloudPasteState.files.isNotEmpty()
+            cloudPasteState.files.clear()
+            cloudPasteState.copy = copy
+        }
+        changed = changed or cloudPasteState.files.addAll(files)
+        if (changed) {
+            _cloudPasteStateLiveData.value = cloudPasteState
+        }
+    }
+
+    fun clearCloudPasteState() {
+        val cloudPasteState = _cloudPasteStateLiveData.valueCompat
+        if (cloudPasteState.files.isEmpty()) {
+            return
+        }
+        cloudPasteState.files.clear()
+        _cloudPasteStateLiveData.value = cloudPasteState
+    }
+
     private val _isRequestingStorageAccessLiveData = MutableLiveData(false)
     var isStorageAccessRequested: Boolean
         get() = _isRequestingStorageAccessLiveData.valueCompat
@@ -313,6 +544,7 @@ class FileListViewModel : ViewModel() {
 
     companion object {
         private val _pasteStateLiveData = MutableLiveData(PasteState())
+        private val _cloudPasteStateLiveData = MutableLiveData(CloudPasteState())
     }
 
     private class FileListSwitchMapLiveData(

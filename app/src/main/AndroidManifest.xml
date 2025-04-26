@@ -230,6 +230,11 @@
             android:theme="@style/Theme.Files" />
 
         <activity
+            android:name="com.android.imagic.files.storage.EditSDriveServerActivity"
+            android:label="@string/storage_edit_sdrive_server_title_edit"
+            android:theme="@style/Theme.Files" />
+
+        <activity
             android:name="com.android.imagic.files.navigation.EditBookmarkDirectoryDialogActivity"
             android:label="@string/navigation_edit_bookmark_directory_title"
             android:theme="@style/Theme.Files.Translucent" />

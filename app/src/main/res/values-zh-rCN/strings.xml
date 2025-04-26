@@ -499,6 +499,7 @@
     <string name="storage_edit_smb_server_connect_and_add">连接并添加</string>
     <string name="storage_edit_smb_server_add">添加</string>
     <string name="storage_edit_webdav_server_title_edit">编辑 WebDAV 服务器</string>
+    <string name="storage_edit_sdrive_server_title_edit">StarBoard Drive</string>
     <string name="storage_edit_webdav_server_title_add">添加 WebDAV 服务器</string>
     <string name="storage_edit_webdav_server_host">主机名</string>
     <string name="storage_edit_webdav_server_host_error_empty">输入主机名</string>
@@ -670,4 +671,9 @@
     </plurals>
     <string name="file_transfer_cancelling">正在取消</string>
     <string name="press_again_exit">再按一次退出应用</string>
+    <string name="login_expired">登录已过期，请重新登录</string>
+    <string name="server_error_occurred">发生了服务端错误</string>
+    <string name="network_error">网络异常，请稍后重试</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">登录 StarBoard Drive</string>
 </resources>

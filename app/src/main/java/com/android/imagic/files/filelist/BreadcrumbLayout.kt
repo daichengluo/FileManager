@@ -145,10 +145,11 @@ class BreadcrumbLayout : HorizontalScrollView {
     private fun inflateItemViews() {
         // HACK: Remove/add views at the front so that ripple remains correct, as we are potentially
         // collapsing/expanding breadcrumbs at the front.
-        for (index in data.paths.size..<itemsLayout.childCount) {
+        val size = data.cloudPaths?.size ?: data.paths.size
+        for (index in size..<itemsLayout.childCount) {
             itemsLayout.removeViewAt(0)
         }
-        for (index in itemsLayout.childCount..<data.paths.size) {
+        for (index in itemsLayout.childCount..<size) {
             val binding = BreadcrumbItemBinding.inflate(context.layoutInflater, itemsLayout, false)
             val menu = PopupMenu(popupContext, binding.root)
                 .apply { inflate(R.menu.file_list_breadcrumb) }
@@ -164,6 +165,30 @@ class BreadcrumbLayout : HorizontalScrollView {
     }
 
     private fun bindItemViews() {
+        val cloudPaths = data.cloudPaths
+        if (cloudPaths != null) {
+            for (index in cloudPaths.indices) {
+                @Suppress("UNCHECKED_CAST")
+                val tag = itemsLayout.getChildAt(index).tag
+                        as Pair<BreadcrumbItemBinding, PopupMenu>
+                val (binding, _) = tag
+                binding.text.text = data.cloudPaths!![index].name
+                binding.arrowImage.isVisible = index < data.selectedIndex
+                binding.root.isActivated = index == data.selectedIndex
+                binding.root.isEnabled = index != data.selectedIndex
+                binding.root.isVisible = index <= data.selectedIndex
+                val cloudPath = data.cloudPaths!![index]
+                binding.root.setOnClickListener {
+                    if (data.selectedIndex == index) {
+                        scrollToSelectedItem()
+                    } else {
+                        listener.navigateCloudTo(cloudPath)
+                    }
+                }
+            }
+            return
+        }
+
         for (index in data.paths.indices) {
             @Suppress("UNCHECKED_CAST")
             val tag = itemsLayout.getChildAt(index).tag as Pair<BreadcrumbItemBinding, PopupMenu>
@@ -201,6 +226,7 @@ class BreadcrumbLayout : HorizontalScrollView {
 
     interface Listener {
         fun navigateTo(path: Path)
+        fun navigateCloudTo(cloudPathData: CloudPathData)
         fun copyPath(path: Path)
         fun openInNewTask(path: Path)
     }

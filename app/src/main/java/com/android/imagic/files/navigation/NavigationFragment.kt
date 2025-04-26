@@ -12,16 +12,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.filelist.FileListActivity
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
+import com.android.imagic.files.util.viewModels
 import java8.nio.file.Path
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private val openPathLauncher = registerForActivityResult(
         FileListActivity.OpenDirectoryContract(), ::onOpenPathResult
     )
+
+    private val viewModel by viewModels { { NavigationViewModel() } }
 
     private lateinit var binding: NewNavigationFragmentBinding
 
@@ -85,6 +89,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     private fun onStorageItemsChanged(navigationItems: List<NavigationItem?>) {
         storageListAdapter.replace(navigationItems)
+        storageListAdapter.notifyCheckedChanged()
+        quickAccessListAdapter.notifyCheckedChanged()
     }
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {
@@ -109,19 +115,28 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     override val currentPath: Path
         get() = listener.currentPath
 
+    override val authority: Authority?
+        get() = listener.authority
+
     override val quickAccessCategory: QuickAccessCategory?
         get() = listener.quickAccessCategory
+
+    override fun navigateToCloud(authority: Authority) {
+        listener.onCloudStorageClicked(authority)
+    }
 
     override fun navigateTo(path: Path) {
         listener.navigateTo(path)
     }
 
     override fun navigateToRoot(path: Path) {
+        listener.clearCloudListState()
         listener.clearQuickAccessState()
         listener.navigateToRoot(path)
     }
 
     override fun quickAccessTo(quickAccess: QuickAccess) {
+        listener.clearCloudListState()
         listener.quickAccessTo(quickAccess)
     }
 
@@ -139,10 +154,13 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     interface Listener {
         val currentPath: Path
+        val authority: Authority?
         val quickAccessCategory: QuickAccessCategory?
+        fun onCloudStorageClicked(authority: Authority)
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
+        fun clearCloudListState()
         fun clearQuickAccessState()
         fun quickAccessTo(quickAccess: QuickAccess)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
