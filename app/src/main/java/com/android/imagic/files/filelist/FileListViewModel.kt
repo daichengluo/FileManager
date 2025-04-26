@@ -2,7 +2,6 @@ package com.android.imagic.files.filelist
 
 import android.content.Context
 import android.os.Parcelable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -406,7 +405,6 @@ class FileListViewModel : ViewModel() {
     }
 
     fun selectCloudFiles(files: CloudFileItemSet, selected: Boolean) {
-        Log.d("chengluo", "selectCloudFiles: $files $selected")
         val selectedCloudFiles = _selectedCloudFilesLiveData.valueCompat
         if (selectedCloudFiles === files) {
             if (!selected && selectedCloudFiles.isNotEmpty()) {

@@ -17,15 +17,12 @@ import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
-import com.android.imagic.files.util.viewModels
 import java8.nio.file.Path
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private val openPathLauncher = registerForActivityResult(
         FileListActivity.OpenDirectoryContract(), ::onOpenPathResult
     )
-
-    private val viewModel by viewModels { { NavigationViewModel() } }
 
     private lateinit var binding: NewNavigationFragmentBinding
 
@@ -122,6 +119,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         get() = listener.quickAccessCategory
 
     override fun navigateToCloud(authority: Authority) {
+        listener.clearQuickAccessState()
         listener.onCloudStorageClicked(authority)
     }
 

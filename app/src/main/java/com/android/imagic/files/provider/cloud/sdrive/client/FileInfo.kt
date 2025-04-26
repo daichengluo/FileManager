@@ -7,6 +7,7 @@ import com.android.imagic.files.file.cloud.sdrive.CloudFileType
 import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.filelist.getCollationKeyForFileName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.text.Collator
 
@@ -23,7 +24,8 @@ data class FileInfo(
     val modifyTime: String? = null,
     val fileSize: Double? = null,
     val filePath: String? = null,
-    val expand5: String? = null,
+    @SerialName("expand5")
+    val childrenCount: String? = null,
     val state: Int,
     val fileHash: String? = null
 )
@@ -50,7 +52,7 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
         createTime = createTime,
         modifyTime = modifyTime,
         fileHash = fileHash,
-        childrenCount = expand5?.toInt()
+        childrenCount = childrenCount?.toInt()
     )
 }
 
