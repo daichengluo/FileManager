@@ -3,6 +3,7 @@ package com.android.imagic.files.util
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
+import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.compat.DocumentsContractCompat
 import com.android.imagic.files.storage.createOrLog
 import java8.nio.file.Path
@@ -10,8 +11,7 @@ import java8.nio.file.Paths
 import java.io.Serializable
 import java.net.URI
 
-private const val EXTRA_PATH_URI =
-    "${com.android.imagic.files.BuildConfig.APPLICATION_ID}.extra.PATH_URI"
+private const val EXTRA_PATH_URI = "${BuildConfig.APPLICATION_ID}.extra.PATH_URI"
 
 var Intent.extraPath: Path?
     get() {
@@ -34,12 +34,11 @@ var Intent.extraPath: Path?
 
 val Intent.saveAsPath: Path?
     get() {
-        val uri =
-            when (action) {
-                Intent.ACTION_VIEW -> data
-                Intent.ACTION_SEND -> getParcelableExtraSafe(Intent.EXTRA_STREAM) as? Uri
-                else -> null
-            }
+        val uri = when (action) {
+            Intent.ACTION_VIEW -> data
+            Intent.ACTION_SEND -> getParcelableExtraSafe(Intent.EXTRA_STREAM) as? Uri
+            else -> null
+        }
         return uri?.toPathOrNull()
     }
 
@@ -57,8 +56,7 @@ private fun Uri.toPathOrNull(): Path? =
         else -> null
     }
 
-private const val EXTRA_PATH_URI_LIST =
-    "${com.android.imagic.files.BuildConfig.APPLICATION_ID}.extra.PATH_URI_LIST"
+private const val EXTRA_PATH_URI_LIST = "${BuildConfig.APPLICATION_ID}.extra.PATH_URI_LIST"
 
 var Intent.extraPathList: List<Path>
     get() {
@@ -72,4 +70,13 @@ var Intent.extraPathList: List<Path>
         // We cannot put Path into intent here, otherwise we will crash other apps unmarshalling it.
         val pathUris = value.map { it.toUri() }
         putExtra(EXTRA_PATH_URI_LIST, pathUris as Serializable)
+    }
+
+private const val EXTRA_URI_STRING_LIST = "${BuildConfig.APPLICATION_ID}.extra.URI_STRING_LIST"
+
+var Intent.extraUrlStringList: List<String>
+    @Suppress("UNCHECKED_CAST")
+    get() = (getSerializableExtra(EXTRA_URI_STRING_LIST) as List<String>?) ?: emptyList()
+    set(value) {
+        putExtra(EXTRA_URI_STRING_LIST, value as Serializable)
     }

@@ -39,6 +39,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePaddingRelative
@@ -46,6 +47,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -76,6 +78,7 @@ import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.iconRes
+import com.android.imagic.files.file.intentType
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
@@ -158,6 +161,7 @@ import com.android.imagic.files.util.valueCompat
 import com.android.imagic.files.util.viewModels
 import com.android.imagic.files.util.withChooser
 import com.android.imagic.files.viewer.image.ImageViewerActivity
+import com.android.imagic.files.viewer.video.VideoPlayerActivity
 import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
 import java8.nio.file.Paths
@@ -171,7 +175,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     ConfirmDeleteFilesDialogFragment.Listener, ConfirmDeleteCloudFilesDialogFragment.Listener,
     CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
     RenameCloudFileDialogFragment.Listener, CreateFileDialogFragment.Listener,
-    CreateDirectoryDialogFragment.Listener, CreateCloudDirectoryDialogFragment.Listener,
+    CreateCloudFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
+    CreateCloudDirectoryDialogFragment.Listener, ConfirmDownloadCloudFileDialogFragment.Listener,
     NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
     ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionRationaleDialogFragment.Listener,
@@ -267,32 +272,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     FileJobService.Actions.STARTED.toString(),
                     FileJobService.Actions.PROGRESS.toString(),
                     FileJobService.Actions.CANCELLING.toString() -> {
-                        handler.post {
-                            fileTransferAdapter.updateItem(fileTransfer)
-                            if (fileTransferAdapter.list.isNotEmpty()) {
-                                fileTransferActionMode.show()
-                                val size = fileTransferAdapter.list.size
-                                binding.transferTitle.text = getQuantityString(
-                                    R.plurals.file_transferring_title_format, size, size
-                                )
-                            }
-                        }
+                        handler.post { updateTransferProgress(fileTransfer) }
                     }
 
                     FileJobService.Actions.CANCELLED.toString() -> {
-                        handler.post {
-                            fileTransferAdapter.removeItem(id)
-                            if (fileTransferAdapter.list.isEmpty()) {
-                                fileTransferActionMode.hide()
-                            } else {
-                                val size = fileTransferAdapter.list.size
-                                binding.transferTitle.text = getQuantityString(
-                                    R.plurals.file_transferring_title_format, size, size
-                                )
-                            }
-                            refresh()
-                        }
-                        return@post
+                        handler.post { removeTransferItem(id) }
                     }
 
                     else -> return@post
@@ -301,10 +285,46 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
+    private fun updateTransferProgress(fileTransfer: FileTransfer) {
+        fileTransferAdapter.updateItem(fileTransfer)
+        if (fileTransferAdapter.list.isNotEmpty()) {
+            fileTransferActionMode.show()
+            val size = fileTransferAdapter.list.size
+            binding.transferTitle.text = getQuantityString(
+                R.plurals.file_transferring_title_format, size, size
+            )
+        }
+    }
+
+    private fun removeTransferItem(id: Int) {
+        fileTransferAdapter.removeItem(id)
+        if (fileTransferAdapter.list.isEmpty()) {
+            fileTransferActionMode.hide()
+        } else {
+            val size = fileTransferAdapter.list.size
+            binding.transferTitle.text = getQuantityString(
+                R.plurals.file_transferring_title_format, size, size
+            )
+        }
+        refresh()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.fileTransferState.collect { transfer ->
+                when (transfer.status) {
+                    FileTransfer.Status.TRANSFERRING,
+                    FileTransfer.Status.CANCELLING -> updateTransferProgress(transfer)
+
+                    FileTransfer.Status.FINISHED,
+                    FileTransfer.Status.FAILED -> removeTransferItem(transfer.id)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -761,7 +781,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_create_file -> {
-                showCreateFileDialog()
+                if (viewModel.isInCloudStorage.valueCompat) {
+                    showCreateCloudFileDialog()
+                } else {
+                    showCreateFileDialog()
+                }
                 true
             }
 
@@ -1813,6 +1837,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         CreateFileDialogFragment.show(this)
     }
 
+    private fun showCreateCloudFileDialog() {
+        CreateCloudFileDialogFragment.show(this)
+    }
+
     override fun createFile(name: String) {
         val path = currentPath.resolve(name)
         FileJobService.create(path, false, requireContext())
@@ -2105,10 +2133,34 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun openCloudFile(file: CloudFileItem) {
+        val mimeType = file.mimeType
         if (file.isDirectory) {
             val cloudPath = CloudPathData(file.id, file.name)
             viewModel.navigateCloudTo(cloudPath)
+            return
         }
+        val url = file.url ?: return
+        if (mimeType.isImage) {
+            val intent = Intent(Intent.ACTION_VIEW)
+                .setDataAndType(url.toUri(), mimeType.intentType)
+                .addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            startActivitySafe(intent)
+            return
+        }
+        if (mimeType.isMedia) {
+            val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
+                .setDataAndType(url.toUri(), mimeType.intentType)
+                .addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            startActivitySafe(intent)
+            return
+        }
+        ConfirmDownloadCloudFileDialogFragment.show(file, this)
     }
 
     override fun cutCloudFile(file: CloudFileItem) {
@@ -2156,6 +2208,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun confirmDeleteCloudFiles(files: CloudFileItemSet) {
         ConfirmDeleteCloudFilesDialogFragment.show(files, this)
+    }
+
+    override fun createCloudFile(name: String) {
+        viewModel.createCloudFile(requireContext(), name)
+    }
+
+    override fun downloadToLocal(file: CloudFileItem) {
+        viewModel.downloadToLocal(file, requireContext())
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package com.android.imagic.files.provider.cloud.sdrive.client
 
+import android.util.Log
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
@@ -7,10 +8,14 @@ import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCall
 import com.android.imagic.files.util.safeApiCallHandled
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java8.nio.file.Files
+import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
 import java.io.File
 
@@ -30,16 +35,26 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
 
     override suspend fun getContentLength(url: String): ApiOperation<Long> {
         return safeApiCall {
-            val headers = network.getContentLength(url).headers()
-            headers["Content-Length"]?.toLong() ?: 0
+            network.getContentLength(url).headers()["Content-Length"]?.toLong() ?: 0L
         }
     }
 
-    override suspend fun downloadFile(url: String, file: File): Flow<TransferStatus> {
-        val downloadedBytes = if (file.exists()) file.length() else 0L
+    override suspend fun downloadFile(url: String, path: Path): Flow<TransferStatus> {
+        val response = getContentLength(url)
+        val totalBytes = if (response is ApiOperation.Success) {
+            response.data
+        } else {
+            0L
+        }
+        val downloadedBytes = Files.size(path)
+        Log.d(
+            "chengluo",
+            "downloadFile url: $url path: $path downloadedBytes: $downloadedBytes totalBytes: $totalBytes"
+        )
+
         return network.downloadFile(
             url, "bytes=$downloadedBytes-"
-        ).saveFile(file, downloadedBytes)
+        ).saveFile(path, downloadedBytes, totalBytes)
     }
 
     override suspend fun getFileList(directoryId: Int): ApiOperation<List<CloudFileItem>> {
@@ -57,12 +72,16 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }.mapSuccess { true }
     }
 
-    override suspend fun uploadFile(userId: Int, file: File) {
-
+    override suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo> {
+        return safeApiCallHandled {
+            val body = file.toMultipartBody()
+            network.uploadFile(userId.toString(), body)
+        }
     }
 
-    override suspend fun uploadFileInfo(body: FileInfoBody): ApiOperation<Boolean> =
-        safeApiCallHandled { network.uploadFileInfo(body) }
+    override suspend fun uploadFileInfo(body: FileInfoBody): ApiOperation<Boolean> {
+        return safeApiCallHandled { network.uploadFileInfo(body) }.mapSuccess { true }
+    }
 
     override suspend fun renameFile(newName: String, fileId: Int): ApiOperation<Boolean> {
         return safeApiCallHandled {
@@ -99,3 +118,9 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }
     }
 }
+
+fun File.toMultipartBody(): MultipartBody.Part = MultipartBody.Part.createFormData(
+    "file",
+    name,
+    asRequestBody("application/octet-stream".toMediaType())
+)

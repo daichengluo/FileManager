@@ -1,5 +1,8 @@
 package com.android.imagic.files.provider.cloud.sdrive.client
 
+import java8.nio.file.Files
+import java8.nio.file.Path
+import java8.nio.file.StandardOpenOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -8,24 +11,42 @@ import kotlinx.coroutines.flow.flowOn
 import okhttp3.ResponseBody
 import okio.buffer
 import okio.sink
-import java.io.File
 
-fun ResponseBody.saveFile(file: File, downloadedBytes: Long): Flow<TransferStatus> =
+fun ResponseBody.saveFile(
+    path: Path,
+    downloadedBytes: Long,
+    totalBytes: Long
+): Flow<TransferStatus> =
     flow {
-        try {
-            val totalBytes = contentLength() + downloadedBytes
-            var progressBytes = downloadedBytes
+        if (totalBytes > 0 && downloadedBytes >= totalBytes) {
+            emit(TransferStatus.Finished)
+            return@flow
+        }
 
-            emit(TransferStatus.Transferring(((progressBytes * 100) / totalBytes).toInt()))
+        try {
+            var progressBytes = downloadedBytes
+            var lastEmitBytes = downloadedBytes
+            val emitInterval = 2048 * 1024L
+
+            emit(TransferStatus.Transferring(progressBytes, totalBytes))
 
             source().use { source ->
-                file.sink(append = true).buffer().use { sink ->
+                val outputStream = Files.newOutputStream(
+                    path,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.APPEND
+                )
+                outputStream.sink().buffer().use { sink ->
                     var bytesRead: Long
-                    while ((source.read(sink.buffer, 8192).also { bytesRead = it }) != -1L) {
+                    while ((source.read(sink.buffer, 4096).also { bytesRead = it }) != -1L) {
                         progressBytes += bytesRead
                         sink.emit()
 
-                        emit(TransferStatus.Transferring(((progressBytes * 100) / totalBytes).toInt()))
+                        if (progressBytes - lastEmitBytes >= emitInterval || progressBytes == totalBytes) {
+                            emit(TransferStatus.Transferring(progressBytes, totalBytes))
+                            lastEmitBytes = progressBytes
+                        }
                     }
                     sink.flush()
                 }

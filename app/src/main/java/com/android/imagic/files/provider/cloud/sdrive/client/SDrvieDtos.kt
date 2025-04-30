@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UploadFileInfo(
-    val name: String,
-    val url: String,
+    val name: String?,
+    val url: String?,
     val fileSizeInMB: Int
 )
 

@@ -1,12 +1,7 @@
 package com.android.imagic.files.provider.cloud.sdrive.client
 
 import com.android.imagic.files.util.ApiResponse
-import java8.nio.file.Path
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -36,7 +31,14 @@ interface SDriveNetworkApi {
     @Multipart
     @POST("api/OSSService/UploadFileAndGetUrl")
     suspend fun uploadFile(
-        @Part("GroupID") userId: Int,
+        @Query("GroupID") groupId: String,
+        @Part file: MultipartBody.Part
+    ): ApiResponse<UploadFileInfo>
+
+    @Multipart
+    @POST("api/OSSService/UploadChunkOss/uploadChunk")
+    suspend fun uploadChunks(
+        @Query("GroupID") groupId: String,
         @Part file: MultipartBody.Part
     ): ApiResponse<UploadFileInfo>
 
@@ -44,7 +46,7 @@ interface SDriveNetworkApi {
     suspend fun createDirectory(@Body body: NewFolderBody): ApiResponse<FileInfo>
 
     @POST("api/NetDisk/UploadUserFile")
-    suspend fun uploadFileInfo(@Body body: FileInfoBody): ApiResponse<Boolean>
+    suspend fun uploadFileInfo(@Body body: FileInfoBody): ApiResponse<FileInfo>
 
     @PUT("api/NetDisk/ReNameUserFolderOrFile")
     suspend fun renameFile(@Body body: RenameBody): ApiResponse<Boolean>
@@ -61,13 +63,4 @@ interface SDriveNetworkApi {
         @Query("Type") type: Int,
         @Query("TargetID") directoryId: Int
     ): ApiResponse<Boolean>
-}
-
-fun String.toRequestBody(mediaType: MediaType = "text/plain".toMediaType()): RequestBody =
-    RequestBody.create(mediaType, this)
-
-fun Path.toMultipartBody(): MultipartBody.Part {
-    val file = this.toFile()
-    val requestFile = file.asRequestBody("application/octet-stream".toMediaType())
-    return MultipartBody.Part.createFormData("file", file.name, requestFile)
 }

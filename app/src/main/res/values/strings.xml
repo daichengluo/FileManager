@@ -838,4 +838,6 @@
     <string name="network_error">Network anomaly. Please try again later</string>
     <string name="starboard_drive">StarBoard Drive</string>
     <string name="storage_add_storage_sdrive_server">Log in to StarBoard Drive</string>
+    <string name="video_player_title">Video player</string>
+    <string name="cloud_file_download_dialog_message">This file type cannot be previewed. Would you like to download it to a local folder?</string>
 </resources>

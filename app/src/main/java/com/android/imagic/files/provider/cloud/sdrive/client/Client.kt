@@ -3,12 +3,12 @@ package com.android.imagic.files.provider.cloud.sdrive.client
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.util.ApiOperation
+import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 
 object Client {
@@ -20,13 +20,9 @@ object Client {
             var client = clients[authority]
             if (client == null) {
                 val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(authority)
-                val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
                 val okHttpClient = okHttpClient.newBuilder()
                     .followRedirects(false)
                     .addNetworkInterceptor(authenticatorInterceptor)
-                    .addInterceptor(httpLoggingInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()
                 client = SDriveNetworkClient(okHttpClient)
@@ -48,12 +44,31 @@ object Client {
         authority: Authority
     ): ApiOperation<Boolean> = getClient(authority).renameFile(newName, fileId)
 
-    suspend fun uploadFile(file: File, parentId: Int, authority: Authority) {
-        //SDriveResourceImpl(getClient(authority)).upload(file, parentId)
+    suspend fun uploadFile(
+        userId: Int,
+        file: File,
+        targetDirectoryId: Int,
+        authority: Authority
+    ): ApiOperation<Boolean> {
+        val response = getClient(authority).uploadFile(userId, file)
+        return when (response) {
+            is ApiOperation.Failure -> response as ApiOperation.Failure<Boolean>
+            is ApiOperation.Success -> {
+                val fileInfo = response.data
+                val body = FileInfoBody(
+                    ctFileName = file.name,
+                    fileSize = file.length().toInt(),
+                    filePath = fileInfo.url ?: "",
+                    fileHash = "",
+                    targetID = targetDirectoryId
+                )
+                getClient(authority).uploadFileInfo(body)
+            }
+        }
     }
 
-    suspend fun downloadFile(url: String, file: File, authority: Authority): Flow<TransferStatus> =
-        getClient(authority).downloadFile(url, file)
+    suspend fun downloadFile(url: String, path: Path, authority: Authority): Flow<TransferStatus> =
+        getClient(authority).downloadFile(url, path)
 
     suspend fun delete(fileIds: List<Int>, authority: Authority): ApiOperation<Boolean> =
         getClient(authority).deleteFiles(fileIds.joinToString(","))

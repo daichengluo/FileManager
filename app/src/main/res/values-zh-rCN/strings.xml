@@ -676,4 +676,6 @@
     <string name="network_error">网络异常，请稍后重试</string>
     <string name="starboard_drive">StarBoard Drive</string>
     <string name="storage_add_storage_sdrive_server">登录 StarBoard Drive</string>
+    <string name="video_player_title">视频播放器</string>
+    <string name="cloud_file_download_dialog_message">该网盘文件类型无法预览，是否下载到本地文件夹？</string>
 </resources>

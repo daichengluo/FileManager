@@ -101,7 +101,9 @@ class FileTransferAdapter(
             }
         }
         holder.titleText.apply {
-            text = transfer.title
+            if (text != transfer.title) {
+                text = transfer.title
+            }
         }
         holder.subText.apply {
             text = if (status == FileTransfer.Status.CANCELLING) {

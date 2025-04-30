@@ -35,7 +35,11 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
     val nameCollationKey = Collator.getInstance().getCollationKeyForFileName(name)
     val type = if (fType == 1) CloudFileType.FILE else CloudFileType.DIRECTORY
     val size = fileSize?.toLong() ?: 0L
-    val mimeType = MimeType.guessFromPath(name).value.asMimeType()
+    val mimeType = if (fType == 2) {
+        MimeType.DIRECTORY.value
+    } else {
+        MimeType.guessFromPath(name).value
+    }.asMimeType()
     val thumbUrl = if (mimeType.isImage && thumbURL == null) filePath else thumbURL
     val modifyTime = modifyTime ?: createTime
     return CloudFileItem(
@@ -55,11 +59,3 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
         childrenCount = childrenCount?.toInt()
     )
 }
-
-fun FileInfo.toFileInfoBody() = FileInfoBody(
-    ctFileName = fName ?: "",
-    fileSize = fileSize?.div(1024 * 1024)?.toInt() ?: 0,
-    filePath = filePath ?: "",
-    fileHash = fileHash,
-    targetID = parentID
-)

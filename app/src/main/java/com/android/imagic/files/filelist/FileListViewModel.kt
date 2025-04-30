@@ -1,7 +1,9 @@
 package com.android.imagic.files.filelist
 
 import android.content.Context
+import android.os.Environment
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,16 +12,22 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.FileTypeCategory
 import com.android.imagic.files.file.QuickAccessWrap
+import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.navigation.QuickAccessCategory
+import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.provider.cloud.sdrive.client.Client
+import com.android.imagic.files.provider.cloud.sdrive.client.TransferStatus
+import com.android.imagic.files.provider.common.createFile
+import com.android.imagic.files.provider.common.exists
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.CloseableLiveData
@@ -29,8 +37,13 @@ import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
+import java8.nio.file.Paths
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.Closeable
+import java.io.File
+import java.io.IOException
 
 // TODO: Use SavedStateHandle to save state.
 class FileListViewModel : ViewModel() {
@@ -176,9 +189,6 @@ class FileListViewModel : ViewModel() {
     }
 
     fun onCloudStorageClicked(authority: Authority) = viewModelScope.launch {
-        if (_cloudPathListLiveData.valueCompat == null) {
-            _cloudPathListLiveData.value = listOf(CloudPathData(0, authority.username))
-        }
         _cloudAuthority.value = authority
         val rootCloudPath = CloudPathData(0, authority.username)
         navigateCloudTo(rootCloudPath)
@@ -190,7 +200,7 @@ class FileListViewModel : ViewModel() {
         val index = cloudPathList.indexOfFirst { it.directoryId == cloudPathData.directoryId }
 
         val newList = if (index == -1) {
-            cloudPathList.plus(cloudPathData)
+            cloudPathList + cloudPathData
         } else {
             cloudPathList.subList(0, index + 1)
         }
@@ -214,6 +224,30 @@ class FileListViewModel : ViewModel() {
             .onFailure { it.printStackTrace() }
     }
 
+    fun createCloudFile(context: Context, name: String) = viewModelScope.launch {
+        if (authority == null) return@launch
+        val currentCloudPath = currentCloudPath ?: return@launch
+        try {
+            val tempFile = File(context.cacheDir, name)
+            tempFile.deleteOnExit()
+            tempFile.createNewFile()
+
+            Client.uploadFile(
+                authority!!.userId,
+                tempFile,
+                currentCloudPath.directoryId,
+                authority!!
+            )
+                .onSuccess {
+                    refreshCloud()
+                    tempFile.deleteOnExit()
+                }
+                .onFailure { it.printStackTrace() }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
         if (authority == null) return@launch
         Client.renameFile(newName, file.id, authority!!)
@@ -228,13 +262,91 @@ class FileListViewModel : ViewModel() {
             .onFailure { it.printStackTrace() }
     }
 
+    fun downloadToLocal(file: CloudFileItem, context: Context) {
+        val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
+        val path = downloadPath.resolve(file.name)
+        downloadCloudFile(file, path, context)
+    }
+
+    private val _fileTransferState = MutableSharedFlow<FileTransfer>()
+    val fileTransferState: SharedFlow<FileTransfer> = _fileTransferState
+
+    fun downloadCloudFile(file: CloudFileItem, path: Path, context: Context) =
+        viewModelScope.launch {
+            Log.d("chengluo", "downloadCloudFile file: $file path: $path")
+            try {
+                if (!path.exists()) path.createFile()
+                if (authority == null || file.url == null) return@launch
+                val id = file.hashCode()
+                Client.downloadFile(file.url, path, authority!!).collect { status ->
+                    Log.d("chengluo", "downloadCloudFile status: $status")
+                    val transfer = when (status) {
+                        is TransferStatus.Transferring -> {
+                            val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                            val transferredSizeString =
+                                status.transferred.asFileSize().formatHumanReadable(context)
+                            val text = context.getString(
+                                R.string.file_job_transfer_size_notification_text_one_format,
+                                transferredSizeString,
+                                sizeString
+                            )
+                            FileTransfer(
+                                id = id,
+                                title = file.name,
+                                text = text,
+                                max = status.total.toInt(),
+                                progress = status.transferred.toInt(),
+                                indeterminate = false,
+                                status = FileTransfer.Status.TRANSFERRING
+                            )
+                        }
+
+                        is TransferStatus.Finished -> FileTransfer(
+                            id = id,
+                            title = file.name,
+                            text = "Completed",
+                            max = 100,
+                            progress = 100,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FINISHED
+                        )
+
+                        is TransferStatus.Failed -> FileTransfer(
+                            id = id,
+                            title = file.name,
+                            text = "Failed: ${status.exception.message}",
+                            max = 100,
+                            progress = 0,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FAILED
+                        )
+                    }
+                    _fileTransferState.emit(transfer)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                _fileTransferState.emit(
+                    FileTransfer(
+                        id = file.hashCode(),
+                        title = file.name,
+                        text = "Failed: ${e.message}",
+                        max = 100,
+                        progress = 0,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FAILED
+                    )
+                )
+            }
+        }
+
     fun pasteCloudFiles() {
         val targetCloudPath = currentCloudPath ?: return
-        val files = cloudPasteState.files
+        val files = pasteState.files
+        val cloudFiles = cloudPasteState.files
         if (cloudPasteState.copy) {
-            copyCloudFiles(files, targetCloudPath)
+            copyCloudFiles(cloudFiles, targetCloudPath)
         } else {
-            moveCloudFiles(files, targetCloudPath)
+            moveCloudFiles(cloudFiles, targetCloudPath)
         }
         clearCloudPasteState()
     }
