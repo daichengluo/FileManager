@@ -11,13 +11,16 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
+import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.filelist.FileListActivity
+import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
 import java8.nio.file.Path
+import java8.nio.file.Paths
 
 class NavigationFragment : Fragment(), NavigationItem.Listener {
     private val openPathLauncher = registerForActivityResult(
@@ -72,7 +75,11 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
-        listener.observeCurrentCategory(viewLifecycleOwner) { onQuickAccessCategoryChanged(it) }
+        listener.observeCurrentQuickAccessCategory(viewLifecycleOwner) {
+            onQuickAccessCategoryChanged(
+                it
+            )
+        }
     }
 
     private fun onOpenPathResult(result: Path?) {
@@ -112,15 +119,11 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     override val currentPath: Path
         get() = listener.currentPath
 
-    override val authority: Authority?
-        get() = listener.authority
-
-    override val quickAccessCategory: QuickAccessCategory?
-        get() = listener.quickAccessCategory
+    override val currentFileMode: FileModeState
+        get() = listener.currentFileMode
 
     override fun navigateToCloud(authority: Authority) {
-        listener.clearQuickAccessState()
-        listener.onCloudStorageClicked(authority)
+        listener.setFileModeState(FileModeState.Cloud(authority))
     }
 
     override fun navigateTo(path: Path) {
@@ -128,14 +131,16 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
     }
 
     override fun navigateToRoot(path: Path) {
-        listener.clearCloudListState()
-        listener.clearQuickAccessState()
         listener.navigateToRoot(path)
     }
 
     override fun quickAccessTo(quickAccess: QuickAccess) {
-        listener.clearCloudListState()
-        listener.quickAccessTo(quickAccess)
+        if (quickAccess.category == QuickAccessCategory.DOWNLOAD) {
+            val path = Paths.get(getExternalStorageDirectory(quickAccess.relativePath))
+            navigateToRoot(path)
+        }
+        val quickAccessWrap = QuickAccessWrap(quickAccess, requireContext())
+        listener.setFileModeState(FileModeState.QuickAccess(quickAccessWrap))
     }
 
     override fun launchIntent(intent: Intent) {
@@ -152,17 +157,17 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
 
     interface Listener {
         val currentPath: Path
-        val authority: Authority?
-        val quickAccessCategory: QuickAccessCategory?
-        fun onCloudStorageClicked(authority: Authority)
+        val currentFileMode: FileModeState
+        fun setFileModeState(mode: FileModeState)
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
-        fun clearCloudListState()
-        fun clearQuickAccessState()
-        fun quickAccessTo(quickAccess: QuickAccess)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
-        fun observeCurrentCategory(owner: LifecycleOwner, observer: (QuickAccessCategory?) -> Unit)
+        fun observeCurrentQuickAccessCategory(
+            owner: LifecycleOwner,
+            observer: (QuickAccessCategory?) -> Unit
+        )
+
         fun closeNavigationDrawer()
     }
 }

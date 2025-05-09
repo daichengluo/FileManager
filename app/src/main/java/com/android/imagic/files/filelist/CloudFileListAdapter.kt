@@ -26,6 +26,7 @@ import com.android.imagic.files.databinding.FileItemListBinding
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.file.cloud.sdrive.extension
+import com.android.imagic.files.file.cloud.sdrive.toCloudPathData
 import com.android.imagic.files.file.cloud.sdrive.toInstant
 import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.iconRes
@@ -260,7 +261,7 @@ class CloudFileListAdapter(
 
                 DragEvent.ACTION_DROP -> {
                     if (isDirectory) {
-                        listener.dropCloudFileTo(file.id)
+                        listener.dropCloudFileTo(file.toCloudPathData!!)
                     }
                     true
                 }
@@ -506,7 +507,7 @@ class CloudFileListAdapter(
 
     interface Listener {
         fun cancelCloudFileDragDrop()
-        fun dropCloudFileTo(targetParentId: Int)
+        fun dropCloudFileTo(targetCloudPath: CloudPathData)
         fun getCloudFileDragShadow(file: CloudFileItem): View
         fun clearSelectedCloudFileFiles()
         fun selectCloudFile(file: CloudFileItem, selected: Boolean)

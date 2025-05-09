@@ -14,6 +14,7 @@ import com.android.imagic.files.compat.isPrimaryCompat
 import com.android.imagic.files.compat.pathCompat
 import com.android.imagic.files.file.JavaFile
 import com.android.imagic.files.file.asFileSize
+import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.ftpserver.FtpServerActivity
 import com.android.imagic.files.settings.QuickAccessListActivity
 import com.android.imagic.files.settings.Settings
@@ -98,8 +99,7 @@ private val storageItems: List<NavigationItem>
 private abstract class PathItem(val path: Path) : NavigationItem() {
 
     override fun isChecked(listener: Listener): Boolean {
-        return listener.quickAccessCategory == null && listener.authority == null &&
-                listener.currentPath == path
+        return listener.currentFileMode is FileModeState.Local && listener.currentPath == path
     }
 
     override fun onClick(listener: Listener) {
@@ -182,7 +182,12 @@ private class CloudStorageItem(
 
     override fun getTitle(context: Context): String = storage.getName(context)
 
-    override fun isChecked(listener: Listener): Boolean = listener.authority == storage.authority
+    override fun isChecked(listener: Listener): Boolean {
+        val mode = listener.currentFileMode
+        return if (mode is FileModeState.Cloud) {
+            mode.authority == storage.authority
+        } else false
+    }
 
     override fun onClick(listener: Listener) {
         listener.navigateToCloud(storage.authority)
@@ -275,8 +280,13 @@ private class QuickAccessItem(
         require(quickAccess.isEnabled)
     }
 
-    override fun isChecked(listener: Listener): Boolean =
-        listener.quickAccessCategory == quickAccess.category
+    override fun isChecked(listener: Listener): Boolean {
+        val mode = listener.currentFileMode
+        return if (mode is FileModeState.QuickAccess) {
+            val currentQuickAccess = mode.quickAccessWrap.quickAccess
+            currentQuickAccess == quickAccess
+        } else false
+    }
 
     override val id: Long
         get() = quickAccess.id

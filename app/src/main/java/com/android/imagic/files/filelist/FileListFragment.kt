@@ -95,12 +95,9 @@ import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
-import com.android.imagic.files.navigation.QuickAccess
 import com.android.imagic.files.navigation.QuickAccessCategory
-import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.provider.cloud.sdrive.client.exception.LoginExpiredException
 import com.android.imagic.files.provider.cloud.sdrive.client.exception.SDriveException
 import com.android.imagic.files.provider.common.isDirectory
@@ -554,7 +551,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 viewModel.pickOptions = pickOptions
             }
         }
-        viewModel.isInCloudStorage.observe(viewLifecycleOwner) { onCloudStorageChanged(it) }
+        viewModel.currentFileModeStateLiveData.observe(viewLifecycleOwner) {
+            onFileModeStateChanged(
+                it
+            )
+        }
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.searchViewExpandedLiveData.observe(viewLifecycleOwner) {
             onSearchViewExpandedChanged(it)
@@ -706,7 +707,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
+                if (viewModel.isCloudFileMode) {
                     navigateCloudUp()
                 } else {
                     navigateUp()
@@ -781,7 +782,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_create_file -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
+                if (viewModel.isCloudFileMode) {
                     showCreateCloudFileDialog()
                 } else {
                     showCreateFileDialog()
@@ -841,8 +842,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         updateSpanCount()
     }
 
-    private fun onCloudStorageChanged(isInCloudStorage: Boolean) {
-        if (isInCloudStorage) {
+    private fun onFileModeStateChanged(mode: FileModeState) {
+        if (mode is FileModeState.Cloud) {
+            requireActivity().title = getString(R.string.starboard_drive)
             binding.recyclerView.isVisible = false
             binding.cloudRecyclerView.isVisible = true
         } else {
@@ -1019,7 +1021,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun refresh() {
-        if (viewModel.isInCloudStorage.valueCompat) {
+        if (viewModel.isCloudFileMode) {
             viewModel.refreshCloud()
         } else {
             viewModel.reload()
@@ -1163,7 +1165,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun updateOverlayToolbar() {
-        val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
+        val isInCloudStorage = viewModel.isCloudFileMode
         val files = viewModel.selectedFiles
         val cloudFiles = viewModel.selectedCloudFiles
         if (files.isEmpty() && cloudFiles.isEmpty()) {
@@ -1253,25 +1255,19 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_cut -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
-                    cutCloudFiles(viewModel.selectedCloudFiles)
-                } else {
-                    cutFiles(viewModel.selectedFiles)
-                }
+                cutCloudFiles(viewModel.selectedCloudFiles)
+                cutFiles(viewModel.selectedFiles)
                 true
             }
 
             R.id.action_copy -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
-                    copyCloudFiles(viewModel.selectedCloudFiles)
-                } else {
-                    copyFiles(viewModel.selectedFiles)
-                }
+                copyCloudFiles(viewModel.selectedCloudFiles)
+                copyFiles(viewModel.selectedFiles)
                 true
             }
 
             R.id.action_delete -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
+                if (viewModel.isCloudFileMode) {
                     confirmDeleteCloudFiles(viewModel.selectedCloudFiles)
                 } else {
                     confirmDeleteFiles(viewModel.selectedFiles)
@@ -1367,7 +1363,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun selectAllFiles() {
-        val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
+        val isInCloudStorage = viewModel.isCloudFileMode
         if (isInCloudStorage) {
             cloudFileListAdapter.selectAllFiles()
         } else {
@@ -1428,7 +1424,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
             }
         } else {
-            val isInCloudStorage = viewModel.isInCloudStorage.valueCompat
             val pasteState = viewModel.pasteState
             val cloudPasteState = viewModel.cloudPasteState
             val files = pasteState.files
@@ -1439,8 +1434,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
                 return
             }
-            val areAllFilesArchivePaths = !isInCloudStorage && files.all { it.path.isArchivePath }
-            val fileSize = if (isInCloudStorage) cloudFiles.size else files.size
+            val areAllFilesArchivePaths =
+                cloudFiles.isEmpty() && files.all { it.path.isArchivePath }
+            val fileSize = cloudFiles.size + files.size
             bottomActionMode.title = getQuantityString(
                 if (pasteState.copy || cloudPasteState.copy) {
                     if (areAllFilesArchivePaths) {
@@ -1454,12 +1450,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             )
             binding.bottomCreateFileNameEdit.isVisible = false
             bottomActionMode.setMenuResource(R.menu.file_list_paste)
-            val isCurrentPathReadOnly = viewModel.currentPath.fileSystem.isReadOnly
+            val isCurrentPathReadOnly =
+                viewModel.currentPath.fileSystem.isReadOnly && cloudFiles.isEmpty()
             bottomActionMode.menu.findItem(R.id.action_paste)
                 .setTitle(
                     if (areAllFilesArchivePaths) R.string.file_list_paste_action_extract_here else R.string.paste
                 )
-                .isEnabled = !isCurrentPathReadOnly || isInCloudStorage
+                .isEnabled = !isCurrentPathReadOnly || cloudFiles.isNotEmpty()
         }
         if (!bottomActionMode.isActive) {
             bottomActionMode.start(object : ToolbarActionMode.Callback {
@@ -1514,10 +1511,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_paste -> {
-                if (viewModel.isInCloudStorage.valueCompat) {
-                    pasteCloudFiles()
+                if (viewModel.isCloudFileMode && viewModel.currentCloudPath != null) {
+                    pasteFiles(targetCloudPath = viewModel.currentCloudPath)
                 } else {
-                    pasteFiles(currentPath)
+                    pasteFiles(targetDirectory = currentPath)
                 }
                 true
             }
@@ -1533,22 +1530,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
-    private fun pasteFiles(targetDirectory: Path) {
-        val pasteState = viewModel.pasteState
-        if (viewModel.pasteState.copy) {
-            FileJobService.copy(
-                makePathListForJob(pasteState.files), targetDirectory, requireContext()
-            )
-        } else {
-            FileJobService.move(
-                makePathListForJob(pasteState.files), targetDirectory, requireContext()
-            )
+    private fun pasteFiles(targetDirectory: Path? = null, targetCloudPath: CloudPathData? = null) {
+        val context = requireContext()
+        if (targetDirectory != null) {
+            viewModel.pasteToLocal(targetDirectory, context)
         }
-        viewModel.clearPasteState()
-    }
-
-    private fun pasteCloudFiles() {
-        viewModel.pasteCloudFiles()
+        if (targetCloudPath != null) {
+            viewModel.pasteToCloud(targetCloudPath, context)
+        }
     }
 
     private fun makePathListForJob(files: FileItemSet): List<Path> =
@@ -1847,7 +1836,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun showCreateDirectoryDialog() {
-        if (viewModel.isInCloudStorage.valueCompat) {
+        if (viewModel.isCloudFileMode) {
             CreateCloudDirectoryDialogFragment.show(this)
         } else {
             CreateDirectoryDialogFragment.show(this)
@@ -1862,55 +1851,38 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override val currentPath: Path
         get() = viewModel.currentPath
 
-    override val authority: Authority?
-        get() = viewModel.authority
+    override val currentFileMode: FileModeState
+        get() = viewModel.currentFileMode
 
-    override val quickAccessCategory: QuickAccessCategory?
-        get() = viewModel.quickAccessCategory
-
-    override fun onCloudStorageClicked(authority: Authority) {
-        viewModel.onCloudStorageClicked(authority)
+    override fun setFileModeState(mode: FileModeState) {
+        viewModel.setFileModeState(mode)
     }
 
     override fun navigateToRoot(path: Path) {
         collapseSearchView()
-        viewModel.clearAuthority()
         viewModel.resetTo(path)
+        setFileModeState(FileModeState.Local)
     }
 
     override fun navigateToDefaultRoot() {
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
     }
 
-    override fun clearCloudListState() {
-        viewModel.clearAuthority()
-    }
-
-    override fun clearQuickAccessState() {
-        viewModel.clearQuickAccess()
-    }
-
-    override fun quickAccessTo(quickAccess: QuickAccess) {
-        if (quickAccess.category == QuickAccessCategory.DOWNLOAD) {
-            viewModel.clearQuickAccess()
-            val path = Paths.get(getExternalStorageDirectory(quickAccess.relativePath))
-            viewModel.setQuickAccessCategory(quickAccess.category)
-            navigateTo(path)
-            return
-        }
-        collapseSearchView()
-        viewModel.quickAccessTo(requireContext(), quickAccess)
-    }
-
     override fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit) {
         viewModel.currentPathLiveData.observe(owner, observer)
     }
 
-    override fun observeCurrentCategory(
+    override fun observeCurrentQuickAccessCategory(
         owner: LifecycleOwner,
         observer: (QuickAccessCategory?) -> Unit
     ) {
-        viewModel.quickAccessCategoryLiveData.observe(owner, observer)
+        viewModel.currentFileModeStateLiveData.observe(owner) { fileModeState ->
+            if (fileModeState is FileModeState.QuickAccess) {
+                observer(fileModeState.quickAccessWrap.quickAccess.category)
+            } else {
+                observer(null)
+            }
+        }
     }
 
     override fun closeNavigationDrawer() {
@@ -2091,11 +2063,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun cancelCloudFileDragDrop() {
-        TODO("Not yet implemented")
+        viewModel.clearCloudPasteState()
+        binding.dragPlaceholder.isVisible = false
     }
 
-    override fun dropCloudFileTo(targetParentId: Int) {
-        TODO("Not yet implemented")
+    override fun dropCloudFileTo(targetCloudPath: CloudPathData) {
+        pasteFiles(targetCloudPath = targetCloudPath)
+        binding.dragPlaceholder.isVisible = false
     }
 
     override fun getCloudFileDragShadow(file: CloudFileItem): View {
@@ -2157,6 +2131,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     Intent.FLAG_ACTIVITY_NEW_TASK or
                             Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
+            VideoPlayerActivity.putExtras(intent, file.name)
             startActivitySafe(intent)
             return
         }
@@ -2211,7 +2186,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun createCloudFile(name: String) {
-        viewModel.createCloudFile(requireContext(), name)
+        viewModel.createCloudFile(name, requireContext())
     }
 
     override fun downloadToLocal(file: CloudFileItem) {

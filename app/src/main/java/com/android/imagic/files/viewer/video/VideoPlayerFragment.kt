@@ -62,6 +62,8 @@ class VideoPlayerFragment : Fragment() {
         // Our app bar will draw the status bar background.
         activity.window.statusBarColor = Color.TRANSPARENT
         binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
+        activity.title = args.name
+        binding.toolbar.subtitle = null
         systemUiHelper = SystemUiHelper(
             activity, SystemUiHelper.LEVEL_IMMERSIVE, SystemUiHelper.FLAG_IMMERSIVE_STICKY
         ) { visible: Boolean ->
@@ -75,6 +77,7 @@ class VideoPlayerFragment : Fragment() {
         // This will set up window flags.
         systemUiHelper.show()
 
+        binding.playerView.setOnClickListener { systemUiHelper.toggle() }
         binding.playerView.player = player
         val mediaItem = MediaItem.fromUri(uri)
         player.setMediaItem(mediaItem)
@@ -97,17 +100,18 @@ class VideoPlayerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putState(State(uri))
+        outState.putState(State(uri, args.name))
     }
 
     private fun updateTitle() {
-        requireActivity().title = "Video"
-        binding.toolbar.subtitle = "Video"
+        requireActivity().title = args.name
+        binding.toolbar.subtitle = null
     }
 
     @Parcelize
-    class Args(val intent: Intent, val uri: Uri) : ParcelableArgs
+    class Args(val intent: Intent, val uri: Uri, val name: String) : ParcelableArgs
 
     @Parcelize
-    private class State(val uri: @WriteWith<ParcelableParceler> Uri) : ParcelableState
+    private class State(val uri: @WriteWith<ParcelableParceler> Uri, val name: String) :
+        ParcelableState
 }

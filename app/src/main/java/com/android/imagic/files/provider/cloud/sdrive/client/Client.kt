@@ -9,7 +9,8 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import java.io.File
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
 object Client {
 
@@ -21,7 +22,15 @@ object Client {
             if (client == null) {
                 val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(authority)
                 val okHttpClient = okHttpClient.newBuilder()
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
                     .followRedirects(false)
+                    .addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.HEADERS
+                        }
+                    )
                     .addNetworkInterceptor(authenticatorInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()
@@ -44,28 +53,19 @@ object Client {
         authority: Authority
     ): ApiOperation<Boolean> = getClient(authority).renameFile(newName, fileId)
 
-    suspend fun uploadFile(
-        userId: Int,
-        file: File,
-        targetDirectoryId: Int,
+    suspend fun uploadFileInfo(
+        name: String,
+        size: Int,
+        url: String,
+        directoryId: Int,
         authority: Authority
-    ): ApiOperation<Boolean> {
-        val response = getClient(authority).uploadFile(userId, file)
-        return when (response) {
-            is ApiOperation.Failure -> response as ApiOperation.Failure<Boolean>
-            is ApiOperation.Success -> {
-                val fileInfo = response.data
-                val body = FileInfoBody(
-                    ctFileName = file.name,
-                    fileSize = file.length().toInt(),
-                    filePath = fileInfo.url ?: "",
-                    fileHash = "",
-                    targetID = targetDirectoryId
-                )
-                getClient(authority).uploadFileInfo(body)
-            }
-        }
-    }
+    ): ApiOperation<Boolean> = getClient(authority).uploadFileInfo(name, size, url, directoryId)
+
+    suspend fun uploadFile(path: Path, authority: Authority): ApiOperation<UploadFileInfo> =
+        getClient(authority).uploadFile(authority.userId, path)
+
+    suspend fun uploadChunks(path: Path, authority: Authority): Flow<TransferStatus> =
+        getClient(authority).uploadChunks(authority.userId, path)
 
     suspend fun downloadFile(url: String, path: Path, authority: Authority): Flow<TransferStatus> =
         getClient(authority).downloadFile(url, path)

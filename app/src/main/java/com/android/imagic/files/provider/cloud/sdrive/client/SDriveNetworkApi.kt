@@ -2,6 +2,7 @@ package com.android.imagic.files.provider.cloud.sdrive.client
 
 import com.android.imagic.files.util.ApiResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -31,14 +32,17 @@ interface SDriveNetworkApi {
     @Multipart
     @POST("api/OSSService/UploadFileAndGetUrl")
     suspend fun uploadFile(
-        @Query("GroupID") groupId: String,
+        @Query("GroupID") userId: String,
         @Part file: MultipartBody.Part
     ): ApiResponse<UploadFileInfo>
 
     @Multipart
     @POST("api/OSSService/UploadChunkOss/uploadChunk")
     suspend fun uploadChunks(
-        @Query("GroupID") groupId: String,
+        @Part("id") userId: RequestBody,
+        @Part("chunkIndex") chunkIndex: RequestBody,
+        @Part("totalChunks") totalChunks: RequestBody,
+        @Part("fileName") fileName: RequestBody,
         @Part file: MultipartBody.Part
     ): ApiResponse<UploadFileInfo>
 

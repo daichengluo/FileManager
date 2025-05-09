@@ -14,11 +14,9 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
-import com.android.imagic.files.file.FileTypeCategory
-import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
-import com.android.imagic.files.navigation.QuickAccess
+import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.archiveRefresh
@@ -28,6 +26,7 @@ import com.android.imagic.files.provider.cloud.sdrive.client.Client
 import com.android.imagic.files.provider.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.provider.common.createFile
 import com.android.imagic.files.provider.common.exists
+import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.CloseableLiveData
@@ -42,7 +41,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.Closeable
-import java.io.File
 import java.io.IOException
 
 // TODO: Use SavedStateHandle to save state.
@@ -58,6 +56,33 @@ class FileListViewModel : ViewModel() {
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
 
     fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) trailLiveData.navigateUp() else false
+
+    private val _currentFileModeStateLiveData = MutableLiveData<FileModeState>(FileModeState.Local)
+    val currentFileModeStateLiveData: LiveData<FileModeState> = _currentFileModeStateLiveData
+    val currentFileMode: FileModeState
+        get() = currentFileModeStateLiveData.valueCompat
+
+    val isCloudFileMode: Boolean
+        get() = currentFileModeStateLiveData.valueCompat is FileModeState.Cloud
+
+    fun setFileModeState(mode: FileModeState) {
+        if (_currentFileModeStateLiveData.valueCompat != mode) {
+            _currentFileModeStateLiveData.value = mode
+        }
+        when (mode) {
+            FileModeState.Local -> Unit
+            is FileModeState.QuickAccess -> Unit
+
+            is FileModeState.Cloud -> {
+                val authority = mode.authority
+                if (_cloudAuthority.valueCompat != authority) {
+                    _cloudAuthority.value = authority
+                }
+                val rootCloudPath = CloudPathData(0, authority.username)
+                navigateCloudTo(rootCloudPath)
+            }
+        }
+    }
 
     val currentPathLiveData = trailLiveData.map {
         it.currentPath
@@ -86,56 +111,18 @@ class FileListViewModel : ViewModel() {
         _searchStateLiveData.value = SearchState(false, "")
     }
 
-    private val _quickAccessWrapLiveData = MutableLiveData<QuickAccessWrap?>()
-    val quickAccessWrapLiveData: LiveData<QuickAccessWrap?> = _quickAccessWrapLiveData
-
-    fun setQuickAccessWrap(quickAccessWrap: QuickAccessWrap?) {
-        if (quickAccessWrapLiveData != quickAccessWrap) {
-            _quickAccessWrapLiveData.value = quickAccessWrap
+    val currentQuickAccessCategory: QuickAccessCategory?
+        get() {
+            val fileModeState = currentFileModeStateLiveData.valueCompat
+            return if (fileModeState is FileModeState.QuickAccess) {
+                fileModeState.quickAccessWrap.quickAccess.category
+            } else null
         }
-    }
-
-    private val _quickAccessCategoryLiveData = MutableLiveData<QuickAccessCategory?>()
-    val quickAccessCategoryLiveData: LiveData<QuickAccessCategory?> = _quickAccessCategoryLiveData
-    val quickAccessCategory: QuickAccessCategory?
-        get() = quickAccessCategoryLiveData.valueCompat
-
-    val isInQuickAccess: Boolean get() = quickAccessCategory != null
-
-    fun setQuickAccessCategory(category: QuickAccessCategory?) {
-        if (quickAccessCategory != category) {
-            _quickAccessCategoryLiveData.value = category
-        }
-    }
-
-    fun quickAccessTo(context: Context, quickAccess: QuickAccess) {
-        if (quickAccessCategory == quickAccess.category) return
-
-        val fileTypeCategory = when (quickAccess.category) {
-            QuickAccessCategory.IMAGE -> FileTypeCategory.IMAGE
-            QuickAccessCategory.VIDEO -> FileTypeCategory.VIDEO
-            QuickAccessCategory.AUDIO -> FileTypeCategory.AUDIO
-            QuickAccessCategory.DOCUMENT -> FileTypeCategory.DOCUMENT
-            QuickAccessCategory.APK -> FileTypeCategory.APK
-            QuickAccessCategory.DOWNLOAD -> return
-        }
-
-        val title = quickAccess.getTitle(context)
-        val quickAccessWrap = QuickAccessWrap(context, title, fileTypeCategory)
-
-        setQuickAccessCategory(quickAccess.category)
-        setQuickAccessWrap(quickAccessWrap)
-    }
-
-    fun clearQuickAccess() {
-        setQuickAccessCategory(null)
-        setQuickAccessWrap(null)
-    }
 
     private val _fileListLiveData = FileListSwitchMapLiveData(
+        currentFileModeStateLiveData,
         currentPathLiveData,
-        _searchStateLiveData,
-        _quickAccessWrapLiveData
+        _searchStateLiveData
     )
     val fileListLiveData: LiveData<Stateful<List<FileItem>>>
         get() = _fileListLiveData
@@ -146,8 +133,6 @@ class FileListViewModel : ViewModel() {
     val cloudAuthority: LiveData<Authority?> = _cloudAuthority
     val authority: Authority?
         get() = cloudAuthority.valueCompat
-
-    val isInCloudStorage: LiveData<Boolean> = cloudAuthority.map { it != null }
 
     private val _cloudPathListLiveData = MutableLiveData<List<CloudPathData>?>(null)
     val cloudPathListLiveData: LiveData<List<CloudPathData>?> = _cloudPathListLiveData
@@ -175,23 +160,8 @@ class FileListViewModel : ViewModel() {
     val currentCloudPath: CloudPathData?
         get() = currentCloudPathLiveData.valueCompat
 
-    fun clearAuthority() {
-        if (authority != null) {
-            _cloudAuthority.value = null
-        }
-        if (_cloudPathListLiveData.valueCompat != null) {
-            _cloudPathListLiveData.value = null
-        }
-    }
-
     fun refreshCloud() {
         currentCloudPath?.let { navigateCloudTo(it) }
-    }
-
-    fun onCloudStorageClicked(authority: Authority) = viewModelScope.launch {
-        _cloudAuthority.value = authority
-        val rootCloudPath = CloudPathData(0, authority.username)
-        navigateCloudTo(rootCloudPath)
     }
 
     fun navigateCloudTo(cloudPathData: CloudPathData) = viewModelScope.launch {
@@ -224,28 +194,10 @@ class FileListViewModel : ViewModel() {
             .onFailure { it.printStackTrace() }
     }
 
-    fun createCloudFile(context: Context, name: String) = viewModelScope.launch {
-        if (authority == null) return@launch
-        val currentCloudPath = currentCloudPath ?: return@launch
-        try {
-            val tempFile = File(context.cacheDir, name)
-            tempFile.deleteOnExit()
-            tempFile.createNewFile()
-
-            Client.uploadFile(
-                authority!!.userId,
-                tempFile,
-                currentCloudPath.directoryId,
-                authority!!
-            )
-                .onSuccess {
-                    refreshCloud()
-                    tempFile.deleteOnExit()
-                }
-                .onFailure { it.printStackTrace() }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    fun createCloudFile(name: String, context: Context) {
+        val path = Paths.get(context.cacheDir.absolutePath, name)
+        if (!path.exists()) return
+        uploadFile(path, true, context)
     }
 
     fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
@@ -265,21 +217,103 @@ class FileListViewModel : ViewModel() {
     fun downloadToLocal(file: CloudFileItem, context: Context) {
         val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
         val path = downloadPath.resolve(file.name)
-        downloadCloudFile(file, path, context)
+        downloadFile(file, path, false, context)
+    }
+
+    fun uploadFile(path: Path, isMove: Boolean, context: Context) = viewModelScope.launch {
+        Log.d("chengluo", "uploadFile path: $path isMove: $isMove")
+        if (authority == null) return@launch
+        val directoryId = currentCloudPath?.directoryId ?: return@launch
+        val name = path.fileName.toString()
+        val size = path.size()
+        val isBigFile = size > 1024 * 1024 * 5
+        if (isBigFile) {
+            val id = path.toString().hashCode()
+            Client.uploadChunks(path, authority!!).collect { status ->
+                Log.d("chengluo", "uploadFile status: $status")
+                val transfer = when (status) {
+                    is TransferStatus.Failed -> FileTransfer(
+                        id = id,
+                        title = name,
+                        text = "Failed: ${status.exception.message}",
+                        max = 100,
+                        progress = 0,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FAILED
+                    )
+
+                    is TransferStatus.Finished -> {
+                        val url = status.data ?: return@collect
+                        Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
+                            .onSuccess {
+                                refreshCloud()
+                                if (isMove) {
+                                    FileJobService.delete(listOf(path), context)
+                                }
+                            }
+                            .onFailure { it.printStackTrace() }
+                        FileTransfer(
+                            id = id,
+                            title = name,
+                            text = "Completed",
+                            max = 100,
+                            progress = 100,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FINISHED
+                        )
+                    }
+
+                    is TransferStatus.Transferring -> {
+                        val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                        val transferredSizeString =
+                            status.transferred.asFileSize().formatHumanReadable(context)
+                        val text = context.getString(
+                            R.string.file_job_transfer_size_notification_text_one_format,
+                            transferredSizeString,
+                            sizeString
+                        )
+                        FileTransfer(
+                            id = id,
+                            title = name,
+                            text = text,
+                            max = status.total.toInt(),
+                            progress = status.transferred.toInt(),
+                            indeterminate = false,
+                            status = FileTransfer.Status.TRANSFERRING
+                        )
+                    }
+                }
+                _fileTransferState.emit(transfer)
+            }
+        } else {
+            val response = Client.uploadFile(path, authority!!)
+            if (response is ApiOperation.Success) {
+                val url = response.data.url ?: ""
+                val size = path.size().toInt()
+                Client.uploadFileInfo(name, size, url, directoryId, authority!!)
+                    .onSuccess {
+                        refreshCloud()
+                        if (isMove) {
+                            FileJobService.delete(listOf(path), context)
+                        }
+                    }
+                    .onFailure { it.printStackTrace() }
+            }
+        }
     }
 
     private val _fileTransferState = MutableSharedFlow<FileTransfer>()
     val fileTransferState: SharedFlow<FileTransfer> = _fileTransferState
 
-    fun downloadCloudFile(file: CloudFileItem, path: Path, context: Context) =
+    fun downloadFile(file: CloudFileItem, path: Path, isMove: Boolean, context: Context) =
         viewModelScope.launch {
-            Log.d("chengluo", "downloadCloudFile file: $file path: $path")
+            Log.d("chengluo", "downloadFile file: $file path: $path isMove: $isMove")
             try {
                 if (!path.exists()) path.createFile()
                 if (authority == null || file.url == null) return@launch
                 val id = file.hashCode()
                 Client.downloadFile(file.url, path, authority!!).collect { status ->
-                    Log.d("chengluo", "downloadCloudFile status: $status")
+                    Log.d("chengluo", "downloadFile status: $status")
                     val transfer = when (status) {
                         is TransferStatus.Transferring -> {
                             val sizeString = status.total.asFileSize().formatHumanReadable(context)
@@ -301,15 +335,20 @@ class FileListViewModel : ViewModel() {
                             )
                         }
 
-                        is TransferStatus.Finished -> FileTransfer(
-                            id = id,
-                            title = file.name,
-                            text = "Completed",
-                            max = 100,
-                            progress = 100,
-                            indeterminate = false,
-                            status = FileTransfer.Status.FINISHED
-                        )
+                        is TransferStatus.Finished -> {
+                            if (isMove) {
+                                deleteCloudFiles(cloudFileItemSetOf(file))
+                            }
+                            FileTransfer(
+                                id = id,
+                                title = file.name,
+                                text = "Completed",
+                                max = 100,
+                                progress = 100,
+                                indeterminate = false,
+                                status = FileTransfer.Status.FINISHED
+                            )
+                        }
 
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
@@ -339,9 +378,31 @@ class FileListViewModel : ViewModel() {
             }
         }
 
-    fun pasteCloudFiles() {
-        val targetCloudPath = currentCloudPath ?: return
-        val files = pasteState.files
+    fun pasteToLocal(targetDirectory: Path, context: Context) {
+        val cloudFiles = cloudPasteState.files
+        if (cloudPasteState.copy) {
+            cloudFiles.forEach { file ->
+                val path = targetDirectory.resolve(file.name)
+                downloadFile(file, path, false, context)
+            }
+        } else {
+            cloudFiles.forEach { file ->
+                val path = targetDirectory.resolve(file.name)
+                downloadFile(file, path, true, context)
+            }
+        }
+        clearCloudPasteState()
+
+        val files = pasteState.files.map { it.path }.sortedBy { it.toUri() }
+        if (pasteState.copy) {
+            FileJobService.copy(files, targetDirectory, context)
+        } else {
+            FileJobService.move(files, targetDirectory, context)
+        }
+        clearPasteState()
+    }
+
+    fun pasteToCloud(targetCloudPath: CloudPathData, context: Context) {
         val cloudFiles = cloudPasteState.files
         if (cloudPasteState.copy) {
             copyCloudFiles(cloudFiles, targetCloudPath)
@@ -349,6 +410,14 @@ class FileListViewModel : ViewModel() {
             moveCloudFiles(cloudFiles, targetCloudPath)
         }
         clearCloudPasteState()
+
+        val files = pasteState.files
+        if (pasteState.copy) {
+            files.forEach { uploadFile(it.path, false, context) }
+        } else {
+            files.forEach { uploadFile(it.path, true, context) }
+        }
+        clearPasteState()
     }
 
     private fun moveCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
@@ -398,8 +467,8 @@ class FileListViewModel : ViewModel() {
         }
 
     val breadcrumbLiveData: LiveData<BreadcrumbData> = BreadcrumbLiveData(
+        currentFileModeStateLiveData,
         trailLiveData,
-        quickAccessWrapLiveData,
         cloudPathListLiveData
     )
     val canNavigateUpBreadcrumb: Boolean
@@ -658,16 +727,16 @@ class FileListViewModel : ViewModel() {
     }
 
     private class FileListSwitchMapLiveData(
+        private val fileModeStateLiveData: LiveData<FileModeState>,
         private val pathLiveData: LiveData<Path>,
-        private val searchStateLiveData: LiveData<SearchState>,
-        private val quickAccessWrapLiveData: LiveData<QuickAccessWrap?>
+        private val searchStateLiveData: LiveData<SearchState>
     ) : MediatorLiveData<Stateful<List<FileItem>>>(), Closeable {
         private var liveData: CloseableLiveData<Stateful<List<FileItem>>>? = null
 
         init {
+            addSource(fileModeStateLiveData) { updateSource() }
             addSource(pathLiveData) { updateSource() }
             addSource(searchStateLiveData) { updateSource() }
-            addSource(quickAccessWrapLiveData) { updateSource() }
         }
 
         private fun updateSource() {
@@ -676,14 +745,19 @@ class FileListViewModel : ViewModel() {
                 it.close()
             }
             val path = pathLiveData.valueCompat
-            val quickAccessWrapData = quickAccessWrapLiveData.valueCompat
+            val fileModeState = fileModeStateLiveData.valueCompat
             val searchState = searchStateLiveData.valueCompat
             val newLiveData = when {
-                quickAccessWrapData != null -> {
-                    CategoryFileListLiveData(
-                        quickAccessWrapData.context,
-                        quickAccessWrapData.fileTypeCategory
-                    )
+                fileModeState is FileModeState.QuickAccess -> {
+                    val quickAccessWrap = fileModeState.quickAccessWrap
+                    if (quickAccessWrap.category == null) {
+                        FileListLiveData(path)
+                    } else {
+                        CategoryFileListLiveData(
+                            quickAccessWrap.context,
+                            quickAccessWrap.category!!
+                        )
+                    }
                 }
 
                 searchState.isSearching -> {

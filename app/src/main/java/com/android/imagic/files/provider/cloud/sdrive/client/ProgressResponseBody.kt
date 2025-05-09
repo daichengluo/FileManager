@@ -19,7 +19,7 @@ fun ResponseBody.saveFile(
 ): Flow<TransferStatus> =
     flow {
         if (totalBytes > 0 && downloadedBytes >= totalBytes) {
-            emit(TransferStatus.Finished)
+            emit(TransferStatus.Finished())
             return@flow
         }
 
@@ -51,7 +51,7 @@ fun ResponseBody.saveFile(
                     sink.flush()
                 }
             }
-            emit(TransferStatus.Finished)
+            emit(TransferStatus.Finished())
         } catch (e: Exception) {
             emit(TransferStatus.Failed(e))
         }

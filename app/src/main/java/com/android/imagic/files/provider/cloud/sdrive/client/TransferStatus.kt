@@ -3,5 +3,5 @@ package com.android.imagic.files.provider.cloud.sdrive.client
 sealed interface TransferStatus {
     data class Transferring(val transferred: Long, val total: Long) : TransferStatus
     data class Failed(val exception: Exception) : TransferStatus
-    data object Finished : TransferStatus
+    data class Finished(val data: String? = null) : TransferStatus
 }
