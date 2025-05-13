@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:description="@string/app_name"
+    android:initialLayout="@layout/widget_launcher_login"
+    android:minWidth="180dp"
+    android:minHeight="80dp"
+    android:previewLayout="@layout/widget_launcher_login"
+    android:resizeMode="none"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen"
+    tools:ignore="UnusedAttribute" />

@@ -678,4 +678,8 @@
     <string name="storage_add_storage_sdrive_server">登录 StarBoard Drive</string>
     <string name="video_player_title">视频播放器</string>
     <string name="cloud_file_download_dialog_message">该网盘文件类型无法预览，是否下载到本地文件夹？</string>
+    <string name="widget_launcher_login_button_text">登录</string>
+    <string name="widget_launcher_login_tip_text">请登录您的账户。</string>
+    <string name="qrcode_login_tip_text">扫码登录</string>
+    <string name="use_other_login_methods">使用其他登录方式</string>
 </resources>

@@ -840,4 +840,8 @@
     <string name="storage_add_storage_sdrive_server">Log in to StarBoard Drive</string>
     <string name="video_player_title">Video player</string>
     <string name="cloud_file_download_dialog_message">This file type cannot be previewed. Would you like to download it to a local folder?</string>
+    <string name="widget_launcher_login_button_text">Log in</string>
+    <string name="widget_launcher_login_tip_text">Please log in to your account.</string>
+    <string name="qrcode_login_tip_text">Scan the code to log in</string>
+    <string name="use_other_login_methods">Use other login methods</string>
 </resources>

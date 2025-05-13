@@ -25,7 +25,6 @@ import com.android.imagic.files.provider.webdav.client.Client as WebDavClient
 
 val appInitializers = listOf(
     ::disableHiddenApiChecks,
-    ::initializeWebViewDebugging,
     ::initializeCoil,
     ::initializeFileSystemProviders,
     ::upgradeApp,

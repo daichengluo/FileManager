@@ -1,0 +1,51 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="60"
+    android:viewportHeight="60">
+
+    <path
+        android:fillAlpha="0.8032397"
+        android:fillColor="#0066FF"
+        android:fillType="evenOdd"
+        android:pathData="M0,0L44,0C52.837,-0 60,7.163 60,16L60,60L60,60L0,0Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+
+    <group>
+
+        <clip-path android:pathData="M0,0L44,0C52.837,-0 60,7.163 60,16L60,60L60,60L0,0Z" />
+
+        <path
+            android:fillAlpha="0"
+            android:fillColor="#FFFFFF"
+            android:fillType="nonZero"
+            android:pathData="M20,8h31.988v31.956h-31.988z"
+            android:strokeWidth="1"
+            android:strokeAlpha="0"
+            android:strokeColor="#00000000" />
+
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillType="nonZero"
+            android:pathData="M49.503,12.775L49.503,30.064L22.54,30.064L22.54,12.775L49.503,12.775M50.128,10.278L21.916,10.278C20.883,10.278 20.044,11.118 20.044,12.151L20.044,30.688C20.044,31.721 20.883,32.56 21.916,32.56L50.128,32.56C51.161,32.56 52,31.721 52,30.688L52,12.151C52,11.118 51.161,10.278 50.128,10.278Z"
+            android:strokeWidth="1"
+            android:strokeColor="#00000000" />
+
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillType="nonZero"
+            android:pathData="M36.259,32.56L36.259,34.776L35.782,34.776L35.782,32.56L36.259,32.56M36.883,30.064L35.157,30.064C34.124,30.064 33.285,30.903 33.285,31.936L33.285,35.4C33.285,36.433 34.124,37.272 35.157,37.272L36.883,37.272C37.916,37.272 38.756,36.433 38.756,35.4L38.756,31.936C38.756,30.903 37.916,30.064 36.883,30.064Z"
+            android:strokeWidth="1"
+            android:strokeColor="#00000000" />
+
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillType="nonZero"
+            android:pathData="M42.607,34.776L29.437,34.776C28.747,34.776 28.189,35.335 28.189,36.024C28.189,36.714 28.747,37.272 29.437,37.272L42.607,37.272C43.296,37.272 43.855,36.714 43.855,36.024C43.855,35.335 43.296,34.776 42.607,34.776Z"
+            android:strokeWidth="1"
+            android:strokeColor="#00000000" />
+
+    </group>
+
+</vector>

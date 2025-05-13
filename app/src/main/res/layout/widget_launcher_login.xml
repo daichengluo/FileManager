@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="247dp"
+    android:layout_height="83dp"
+    android:background="@drawable/bg_widget_launcher_login"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_widget_launcher_login_button"
+            android:fontFamily="sans-serif-medium"
+            android:foreground="@drawable/fg_widget_launcher_login_button"
+            android:gravity="center"
+            android:lineHeight="19dp"
+            android:minWidth="68dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="0dp"
+            android:text="@string/widget_launcher_login_button_text"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            tools:ignore="UnusedAttribute" />
+
+        <TextView
+            android:id="@+id/loginTipText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="8dp"
+            android:lineHeight="17dp"
+            android:text="@string/widget_launcher_login_tip_text"
+            android:textColor="#FF999999"
+            android:textSize="12sp"
+            tools:ignore="UnusedAttribute" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/loginActonButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:contentDescription="@string/widget_launcher_login_button_text"
+        android:foreground="@drawable/fg_widget_launcher_login_action_button"
+        android:src="@drawable/widget_launcher_login_action" />
+</LinearLayout>

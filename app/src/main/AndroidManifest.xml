@@ -381,6 +381,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.android.imagic.files.appwidget.QrCodeLoginActivity"
+            android:autoRemoveFromRecents="true"
+            android:theme="@style/QrCodeFragment.Dialog" />
+
         <service
             android:name="com.android.imagic.files.filejob.FileJobService"
             android:foregroundServiceType="dataSync" />
@@ -427,8 +432,17 @@
 
         <receiver android:name="com.android.imagic.files.ftpserver.FtpServerReceiver" />
 
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
+        <receiver
+            android:name="com.android.imagic.files.appwidget.receiver.LauncherLoginWidget"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launcher_login" />
+        </receiver>
     </application>
 </manifest>
