@@ -280,7 +280,7 @@ class FileListAdapter(
 
                 DragEvent.ACTION_DROP -> {
                     if (isDirectory) {
-                        listener.dropFileTo(path)
+                        listener.dropToLocal(path)
                     }
                     true
                 }
@@ -578,7 +578,7 @@ class FileListAdapter(
 
     interface Listener {
         fun cancelDragDrop()
-        fun dropFileTo(targetPath: Path)
+        fun dropToLocal(directoryPath: Path)
         fun getDragShadow(file: FileItem): View
         fun clearSelectedFiles()
         fun selectFile(file: FileItem, selected: Boolean)

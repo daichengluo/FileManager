@@ -15,6 +15,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import android.view.DragEvent
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
@@ -396,7 +397,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 DragEvent.ACTION_DROP -> {
                     val path = currentPath
                     if (path.isDirectory()) {
-                        dropFileTo(path)
+                        dropToLocal(path)
                     }
                     true
                 }
@@ -422,10 +423,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
 
                 DragEvent.ACTION_DROP -> {
-                    /*val file = currentCloudFile
-                    if (file.isDirectory) {
-                        dropCloudFileTo(0)
-                    }*/
+                    val cloudDirectoryPath = viewModel.currentCloudPath
+                        ?: return@setOnDragListener false
+                    dropToCloud(cloudDirectoryPath)
                     true
                 }
 
@@ -1557,6 +1557,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun pasteFiles(targetDirectory: Path? = null, targetCloudPath: CloudPathData? = null) {
+        Log.d(
+            "chengluo",
+            "pasteFiles targetDirectory: $targetDirectory targetCloudPath: $targetCloudPath"
+        )
         val context = requireContext()
         if (targetDirectory != null) {
             viewModel.pasteToLocal(targetDirectory, context)
@@ -1576,12 +1580,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun cancelDragDrop() {
         viewModel.clearPasteState()
-        binding.dragPlaceholder.isVisible = false
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
-    override fun dropFileTo(targetPath: Path) {
-        pasteFiles(targetPath)
-        binding.dragPlaceholder.isVisible = false
+    override fun dropToLocal(directoryPath: Path) {
+        Log.d("chengluo", "dropToLocal directoryPath: $directoryPath")
+        pasteFiles(directoryPath)
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
     override fun getDragShadow(file: FileItem): View {
@@ -2090,12 +2095,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun cancelCloudFileDragDrop() {
         viewModel.clearCloudPasteState()
-        binding.dragPlaceholder.isVisible = false
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
-    override fun dropCloudFileTo(targetCloudPath: CloudPathData) {
-        pasteFiles(targetCloudPath = targetCloudPath)
-        binding.dragPlaceholder.isVisible = false
+    override fun dropToCloud(cloudDirectoryPath: CloudPathData) {
+        Log.d("chengluo", "dropToCloud cloudDirectoryPath: $cloudDirectoryPath")
+        pasteFiles(targetCloudPath = cloudDirectoryPath)
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
     override fun getCloudFileDragShadow(file: CloudFileItem): View {
@@ -2198,11 +2204,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun cutCloudFiles(files: CloudFileItemSet) {
+        Log.d("chengluo", "cutCloudFiles: $files")
         viewModel.addToCloudPasteState(false, files)
         viewModel.selectCloudFiles(files, false)
     }
 
     private fun copyCloudFiles(files: CloudFileItemSet) {
+        Log.d("chengluo", "copyCloudFiles: $files")
         viewModel.addToCloudPasteState(true, files)
         viewModel.selectCloudFiles(files, false)
     }

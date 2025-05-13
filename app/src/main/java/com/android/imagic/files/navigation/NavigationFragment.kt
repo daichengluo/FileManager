@@ -76,9 +76,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
         listener.observeCurrentQuickAccessCategory(viewLifecycleOwner) {
-            onQuickAccessCategoryChanged(
-                it
-            )
+            onQuickAccessCategoryChanged(it)
         }
     }
 

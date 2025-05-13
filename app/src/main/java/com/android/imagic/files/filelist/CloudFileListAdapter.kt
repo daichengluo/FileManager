@@ -261,7 +261,7 @@ class CloudFileListAdapter(
 
                 DragEvent.ACTION_DROP -> {
                     if (isDirectory) {
-                        listener.dropCloudFileTo(file.toCloudPathData!!)
+                        listener.dropToCloud(file.toCloudPathData!!)
                     }
                     true
                 }
@@ -507,7 +507,7 @@ class CloudFileListAdapter(
 
     interface Listener {
         fun cancelCloudFileDragDrop()
-        fun dropCloudFileTo(targetCloudPath: CloudPathData)
+        fun dropToCloud(cloudDirectoryPath: CloudPathData)
         fun getCloudFileDragShadow(file: CloudFileItem): View
         fun clearSelectedCloudFileFiles()
         fun selectCloudFile(file: CloudFileItem, selected: Boolean)

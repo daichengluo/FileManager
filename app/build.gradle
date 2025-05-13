@@ -63,7 +63,6 @@ android {
         }
         debug {
             buildConfigField 'String', 'STB_API_URL', '"https://dev.starboard-online.com/stbapi/"'
-            signingConfig signingConfigs.xbh
         }
     }
     setProperty("archivesBaseName", "NewFileManager-${defaultConfig.versionName}")

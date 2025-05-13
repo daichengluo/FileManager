@@ -211,7 +211,10 @@ class FileListViewModel : ViewModel() {
     }
 
     fun uploadFile(path: Path, isMove: Boolean, context: Context) = viewModelScope.launch {
-        Log.d("chengluo", "uploadFile path: $path isMove: $isMove")
+        Log.d(
+            "chengluo",
+            "uploadFile path: $path currentCloudPath: $currentCloudPath isMove: $isMove"
+        )
         if (authority == null) return@launch
         val directoryId = currentCloudPath?.directoryId ?: return@launch
         val name = path.fileName.toString()
@@ -370,6 +373,7 @@ class FileListViewModel : ViewModel() {
 
     fun pasteToLocal(targetDirectory: Path, context: Context) {
         val cloudFiles = cloudPasteState.files
+        Log.d("chengluo", "pasteToLocal targetDirectory: $targetDirectory cloudFiles: $cloudFiles")
         if (cloudPasteState.copy) {
             cloudFiles.forEach { file ->
                 val path = targetDirectory.resolve(file.name)
@@ -394,6 +398,7 @@ class FileListViewModel : ViewModel() {
 
     fun pasteToCloud(targetCloudPath: CloudPathData, context: Context) {
         val cloudFiles = cloudPasteState.files
+        Log.d("chengluo", "pasteToCloud targetCloudPath: $targetCloudPath cloudFiles: $cloudFiles")
         if (cloudPasteState.copy) {
             copyCloudFiles(cloudFiles, targetCloudPath)
         } else {
