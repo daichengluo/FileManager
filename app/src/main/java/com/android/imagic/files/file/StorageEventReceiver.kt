@@ -6,20 +6,11 @@ import android.content.Intent
 import android.content.IntentFilter
 
 class StorageEventReceiver(private val onStorageChanged: () -> Unit) {
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                Intent.ACTION_MEDIA_MOUNTED,
-                Intent.ACTION_MEDIA_UNMOUNTED,
-                Intent.ACTION_MEDIA_REMOVED,
-                Intent.ACTION_MEDIA_BAD_REMOVAL -> {
-                    onStorageChanged()
-                }
-            }
-        }
-    }
+    private var isRegistered = false
+    private var receiver: BroadcastReceiver? = null
 
     fun register(context: Context) {
+        if (isRegistered) return
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_MEDIA_MOUNTED)
             addAction(Intent.ACTION_MEDIA_UNMOUNTED)
@@ -27,10 +18,30 @@ class StorageEventReceiver(private val onStorageChanged: () -> Unit) {
             addAction(Intent.ACTION_MEDIA_BAD_REMOVAL)
             addDataScheme("file")
         }
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Intent.ACTION_MEDIA_UNMOUNTED,
+                    Intent.ACTION_MEDIA_REMOVED,
+                    Intent.ACTION_MEDIA_BAD_REMOVAL -> {
+                        onStorageChanged()
+                    }
+                }
+            }
+        }
         context.registerReceiver(receiver, filter)
+        isRegistered = true
     }
 
     fun unregister(context: Context) {
-        context.unregisterReceiver(receiver)
+        if (!isRegistered) return
+        try {
+            context.unregisterReceiver(receiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
+        isRegistered = false
+        receiver = null
     }
 }

@@ -733,6 +733,7 @@ class FileListViewModel : ViewModel() {
             liveData?.let {
                 removeSource(it)
                 it.close()
+                liveData = null
             }
             val path = pathLiveData.valueCompat
             val fileModeState = fileModeStateLiveData.valueCompat
@@ -758,7 +759,7 @@ class FileListViewModel : ViewModel() {
                     }
                 }
             }
-            this.liveData = newLiveData
+            liveData = newLiveData
             addSource(newLiveData) { value = it }
         }
 
@@ -774,7 +775,7 @@ class FileListViewModel : ViewModel() {
             liveData?.let {
                 removeSource(it)
                 it.close()
-                this.liveData = null
+                liveData = null
             }
         }
     }
