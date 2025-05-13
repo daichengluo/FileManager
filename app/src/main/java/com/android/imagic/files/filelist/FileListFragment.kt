@@ -141,6 +141,7 @@ import com.android.imagic.files.util.createSendStreamIntent
 import com.android.imagic.files.util.createViewIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.extraPathList
+import com.android.imagic.files.util.fadeToVisibility
 import com.android.imagic.files.util.fadeToVisibilityUnsafe
 import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.getDimensionDp
@@ -162,6 +163,7 @@ import com.android.imagic.files.viewer.video.VideoPlayerActivity
 import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
 import java8.nio.file.Paths
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import me.zhanghai.android.foregroundcompat.ForegroundImageButton
 import kotlin.math.roundToInt
@@ -552,9 +554,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
         }
         viewModel.currentFileModeStateLiveData.observe(viewLifecycleOwner) {
-            onFileModeStateChanged(
-                it
-            )
+            onFileModeStateChanged(it)
         }
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.searchViewExpandedLiveData.observe(viewLifecycleOwner) {
@@ -596,6 +596,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.pasteStateLiveData.observe(viewLifecycleOwner) { onPasteStateChanged(it) }
         viewModel.cloudPasteStateLiveData.observe(viewLifecycleOwner) { onCloudPasteStateChanged(it) }
         Settings.FILE_NAME_ELLIPSIZE.observe(viewLifecycleOwner) { onFileNameEllipsizeChanged(it) }
+        viewModel.currentFileModeStateLiveData.observe(viewLifecycleOwner) {
+            onCurrentFileModeStateChanged(it)
+        }
+        viewModel.currentCloudPathLiveData.observe(viewLifecycleOwner) { onCloudPathListChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
         viewModel.cloudFileListLiveData.observe(viewLifecycleOwner) { onCloudFileListChanged(it) }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
@@ -845,12 +849,15 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     private fun onFileModeStateChanged(mode: FileModeState) {
         if (mode is FileModeState.Cloud) {
             requireActivity().title = getString(R.string.starboard_drive)
-            binding.recyclerView.isVisible = false
-            binding.cloudRecyclerView.isVisible = true
+            switchViewWithFade(binding.cloudRecyclerView, binding.recyclerView)
         } else {
-            binding.cloudRecyclerView.isVisible = false
-            binding.recyclerView.isVisible = true
+            switchViewWithFade(binding.recyclerView, binding.cloudRecyclerView)
         }
+    }
+
+    private fun switchViewWithFade(showView: View, hideView: View) = lifecycleScope.launch {
+        hideView.fadeToVisibility(false)
+        showView.fadeToVisibility(true)
     }
 
     private fun onCurrentPathChanged(path: Path) {
@@ -860,6 +867,25 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun onSearchViewExpandedChanged(expanded: Boolean) {
         updateViewSortMenuItems()
+    }
+
+    private fun onCurrentFileModeStateChanged(mode: FileModeState) {
+        when (mode) {
+            FileModeState.Local -> Unit
+            is FileModeState.QuickAccess -> Unit
+
+            is FileModeState.Cloud -> {
+                val authority = mode.authority
+                viewModel.setCloudAuthority(authority)
+                val pathData = CloudPathData(0, authority.username)
+                navigateCloudTo(pathData)
+            }
+        }
+    }
+
+    private fun onCloudPathListChanged(pathData: CloudPathData?) {
+        if (pathData == null) return
+        viewModel.loadCloudFileList(pathData)
     }
 
     private fun onFileListChanged(stateful: Stateful<List<FileItem>>) {

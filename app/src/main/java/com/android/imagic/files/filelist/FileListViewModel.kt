@@ -8,9 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.R
 import com.android.imagic.files.file.FileItem
@@ -69,19 +67,6 @@ class FileListViewModel : ViewModel() {
         if (_currentFileModeStateLiveData.valueCompat != mode) {
             _currentFileModeStateLiveData.value = mode
         }
-        when (mode) {
-            FileModeState.Local -> Unit
-            is FileModeState.QuickAccess -> Unit
-
-            is FileModeState.Cloud -> {
-                val authority = mode.authority
-                if (_cloudAuthority.valueCompat != authority) {
-                    _cloudAuthority.value = authority
-                }
-                val rootCloudPath = CloudPathData(0, authority.username)
-                navigateCloudTo(rootCloudPath)
-            }
-        }
     }
 
     val currentPathLiveData = trailLiveData.map {
@@ -134,26 +119,21 @@ class FileListViewModel : ViewModel() {
     val authority: Authority?
         get() = cloudAuthority.valueCompat
 
+    fun setCloudAuthority(authority: Authority) {
+        if (_cloudAuthority != authority) {
+            _cloudAuthority.value = authority
+        }
+    }
+
     private val _cloudPathListLiveData = MutableLiveData<List<CloudPathData>?>(null)
     val cloudPathListLiveData: LiveData<List<CloudPathData>?> = _cloudPathListLiveData
     val currentCloudPathLiveData = cloudPathListLiveData.map {
         it?.lastOrNull()
     }
 
-    val cloudFileListLiveData: LiveData<Stateful<List<CloudFileItem>>> =
-        currentCloudPathLiveData.switchMap { cloudPath ->
-            liveData {
-                if (authority != null && cloudPath != null) {
-                    emit(Loading(null))
-                    val response = Client.getFileList(cloudPath.directoryId, authority!!)
-                    if (response is ApiOperation.Success) {
-                        emit(Success(response.data))
-                    } else if (response is ApiOperation.Failure) {
-                        emit(Failure(null, response.exception))
-                    }
-                }
-            }
-        }
+    private val _cloudFileListLiveData = MutableLiveData<Stateful<List<CloudFileItem>>>()
+    val cloudFileListLiveData: LiveData<Stateful<List<CloudFileItem>>> = _cloudFileListLiveData
+
     val cloudFileListStateful: Stateful<List<CloudFileItem>>
         get() = cloudFileListLiveData.valueCompat
 
@@ -164,23 +144,33 @@ class FileListViewModel : ViewModel() {
         currentCloudPath?.let { navigateCloudTo(it) }
     }
 
-    fun navigateCloudTo(cloudPathData: CloudPathData) = viewModelScope.launch {
-        if (authority == null) return@launch
+    fun navigateCloudTo(pathData: CloudPathData) {
+        if (authority == null) return
         val cloudPathList = _cloudPathListLiveData.valueCompat ?: emptyList()
-        val index = cloudPathList.indexOfFirst { it == cloudPathData }
+        val index = cloudPathList.indexOfFirst { it == pathData }
 
         val newList = if (index == -1) {
-            cloudPathList + cloudPathData
+            cloudPathList + pathData
         } else {
             cloudPathList.subList(0, index + 1)
         }
         _cloudPathListLiveData.value = newList
     }
 
-    fun navigateCloudUp() = viewModelScope.launch {
-        if (authority == null) return@launch
-        val cloudPathList = _cloudPathListLiveData.valueCompat ?: return@launch
-        if (cloudPathList.isEmpty()) return@launch
+    fun loadCloudFileList(path: CloudPathData) = viewModelScope.launch {
+        val currentAuthority = authority ?: return@launch
+        _cloudFileListLiveData.value = Loading(null)
+        val response = Client.getFileList(path.directoryId, currentAuthority)
+        _cloudFileListLiveData.value = when (response) {
+            is ApiOperation.Success -> Success(response.data)
+            is ApiOperation.Failure -> Failure(null, response.exception)
+        }
+    }
+
+    fun navigateCloudUp() {
+        if (authority == null) return
+        val cloudPathList = _cloudPathListLiveData.valueCompat ?: return
+        if (cloudPathList.isEmpty()) return
 
         val newList = cloudPathList.dropLast(1)
         _cloudPathListLiveData.value = newList
@@ -747,25 +737,25 @@ class FileListViewModel : ViewModel() {
             val path = pathLiveData.valueCompat
             val fileModeState = fileModeStateLiveData.valueCompat
             val searchState = searchStateLiveData.valueCompat
-            val newLiveData = when {
-                fileModeState is FileModeState.QuickAccess -> {
-                    val quickAccessWrap = fileModeState.quickAccessWrap
-                    if (quickAccessWrap.category == null) {
-                        FileListLiveData(path)
-                    } else {
-                        CategoryFileListLiveData(
-                            quickAccessWrap.context,
-                            quickAccessWrap.category!!
-                        )
+
+            val newLiveData = if (searchState.isSearching) {
+                SearchFileListLiveData(path, searchState.query)
+            } else {
+                when (fileModeState) {
+                    FileModeState.Local -> FileListLiveData(path)
+                    is FileModeState.Cloud -> return
+                    is FileModeState.QuickAccess -> {
+                        val quickAccessWrap = fileModeState.quickAccessWrap
+                        if (quickAccessWrap.category == null) {
+                            // Download category use path
+                            FileListLiveData(path)
+                        } else {
+                            CategoryFileListLiveData(
+                                quickAccessWrap.context,
+                                quickAccessWrap.category!!
+                            )
+                        }
                     }
-                }
-
-                searchState.isSearching -> {
-                    SearchFileListLiveData(path, searchState.query)
-                }
-
-                else -> {
-                    FileListLiveData(path)
                 }
             }
             this.liveData = newLiveData
