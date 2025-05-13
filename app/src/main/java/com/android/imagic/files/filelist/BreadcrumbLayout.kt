@@ -3,7 +3,6 @@ package com.android.imagic.files.filelist
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import androidx.annotation.AttrRes
@@ -129,7 +128,7 @@ class BreadcrumbLayout : HorizontalScrollView {
             return
         }
         val selectedItemView = itemsLayout.getChildAt(data.selectedIndex)
-        val scrollX = if (layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+        val scrollX = if (layoutDirection == LAYOUT_DIRECTION_LTR) {
             selectedItemView.left - itemsLayout.paddingStart
         } else {
             selectedItemView.right - width + itemsLayout.paddingStart
@@ -153,10 +152,10 @@ class BreadcrumbLayout : HorizontalScrollView {
             val binding = BreadcrumbItemBinding.inflate(context.layoutInflater, itemsLayout, false)
             val menu = PopupMenu(popupContext, binding.root)
                 .apply { inflate(R.menu.file_list_breadcrumb) }
-            binding.root.setOnLongClickListener {
+            /*binding.root.setOnLongClickListener {
                 menu.show()
                 true
-            }
+            }*/
             binding.text.setTextColor(itemColor)
             binding.arrowImage.imageTintList = itemColor
             binding.root.tag = binding to menu
@@ -192,7 +191,7 @@ class BreadcrumbLayout : HorizontalScrollView {
         for (index in data.paths.indices) {
             @Suppress("UNCHECKED_CAST")
             val tag = itemsLayout.getChildAt(index).tag as Pair<BreadcrumbItemBinding, PopupMenu>
-            val (binding, menu) = tag
+            val (binding, _) = tag
             binding.text.text = data.nameProducers[index](binding.text.context)
             binding.arrowImage.isVisible = index < data.selectedIndex
             binding.root.isActivated = index == data.selectedIndex
@@ -206,7 +205,7 @@ class BreadcrumbLayout : HorizontalScrollView {
                     listener.navigateTo(path)
                 }
             }
-            menu.setOnMenuItemClickListener {
+            /*menu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.action_copy_path -> {
                         listener.copyPath(path)
@@ -220,7 +219,7 @@ class BreadcrumbLayout : HorizontalScrollView {
 
                     else -> false
                 }
-            }
+            }*/
         }
     }
 
