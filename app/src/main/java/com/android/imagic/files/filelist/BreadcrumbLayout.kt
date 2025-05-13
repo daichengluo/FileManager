@@ -7,7 +7,6 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.BreadcrumbItemBinding
@@ -142,24 +141,19 @@ class BreadcrumbLayout : HorizontalScrollView {
     }
 
     private fun inflateItemViews() {
-        // HACK: Remove/add views at the front so that ripple remains correct, as we are potentially
-        // collapsing/expanding breadcrumbs at the front.
         val size = data.cloudPaths?.size ?: data.paths.size
-        for (index in size..<itemsLayout.childCount) {
-            itemsLayout.removeViewAt(0)
+
+        for (i in itemsLayout.childCount - 1 downTo size) {
+            itemsLayout.removeViewAt(i)
         }
-        for (index in itemsLayout.childCount..<size) {
+
+        for (i in itemsLayout.childCount until size) {
             val binding = BreadcrumbItemBinding.inflate(context.layoutInflater, itemsLayout, false)
-            val menu = PopupMenu(popupContext, binding.root)
-                .apply { inflate(R.menu.file_list_breadcrumb) }
-            /*binding.root.setOnLongClickListener {
-                menu.show()
-                true
-            }*/
+
             binding.text.setTextColor(itemColor)
             binding.arrowImage.imageTintList = itemColor
-            binding.root.tag = binding to menu
-            itemsLayout.addView(binding.root, 0)
+            binding.root.tag = binding
+            itemsLayout.addView(binding.root)
         }
     }
 
@@ -168,9 +162,7 @@ class BreadcrumbLayout : HorizontalScrollView {
         if (cloudPaths != null) {
             for (index in cloudPaths.indices) {
                 @Suppress("UNCHECKED_CAST")
-                val tag = itemsLayout.getChildAt(index).tag
-                        as Pair<BreadcrumbItemBinding, PopupMenu>
-                val (binding, _) = tag
+                val binding = itemsLayout.getChildAt(index).tag as BreadcrumbItemBinding
                 binding.text.text = data.cloudPaths!![index].name
                 binding.arrowImage.isVisible = index < data.selectedIndex
                 binding.root.isActivated = index == data.selectedIndex
@@ -190,8 +182,7 @@ class BreadcrumbLayout : HorizontalScrollView {
 
         for (index in data.paths.indices) {
             @Suppress("UNCHECKED_CAST")
-            val tag = itemsLayout.getChildAt(index).tag as Pair<BreadcrumbItemBinding, PopupMenu>
-            val (binding, _) = tag
+            val binding = itemsLayout.getChildAt(index).tag as BreadcrumbItemBinding
             binding.text.text = data.nameProducers[index](binding.text.context)
             binding.arrowImage.isVisible = index < data.selectedIndex
             binding.root.isActivated = index == data.selectedIndex
@@ -205,21 +196,6 @@ class BreadcrumbLayout : HorizontalScrollView {
                     listener.navigateTo(path)
                 }
             }
-            /*menu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_copy_path -> {
-                        listener.copyPath(path)
-                        true
-                    }
-
-                    R.id.action_open_in_new_task -> {
-                        listener.openInNewTask(path)
-                        true
-                    }
-
-                    else -> false
-                }
-            }*/
         }
     }
 

@@ -167,7 +167,7 @@ class FileListViewModel : ViewModel() {
     fun navigateCloudTo(cloudPathData: CloudPathData) = viewModelScope.launch {
         if (authority == null) return@launch
         val cloudPathList = _cloudPathListLiveData.valueCompat ?: emptyList()
-        val index = cloudPathList.indexOfFirst { it.directoryId == cloudPathData.directoryId }
+        val index = cloudPathList.indexOfFirst { it == cloudPathData }
 
         val newList = if (index == -1) {
             cloudPathList + cloudPathData
