@@ -62,7 +62,7 @@ abstract class FilePropertiesTabFragment : Fragment() {
         }
     }
 
-    protected class ViewBuilder(val linearLayout: LinearLayout) {
+    class ViewBuilder(val linearLayout: LinearLayout) {
         private val scrapViews = mutableMapOf<Class<out ViewBinding>, MutableList<ViewBinding>>()
 
         init {

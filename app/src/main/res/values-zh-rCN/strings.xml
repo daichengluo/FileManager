@@ -682,4 +682,5 @@
     <string name="widget_launcher_login_tip_text">请登录您的账户。</string>
     <string name="qrcode_login_tip_text">扫码登录</string>
     <string name="use_other_login_methods">使用其他登录方式</string>
+    <string name="cloud_file_properties_download_url">下载链接</string>
 </resources>

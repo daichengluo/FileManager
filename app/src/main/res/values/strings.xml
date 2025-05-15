@@ -844,4 +844,5 @@
     <string name="widget_launcher_login_tip_text">Please log in to your account.</string>
     <string name="qrcode_login_tip_text">Scan the code to log in</string>
     <string name="use_other_login_methods">Use other login methods</string>
+    <string name="cloud_file_properties_download_url">Download Url</string>
 </resources>
