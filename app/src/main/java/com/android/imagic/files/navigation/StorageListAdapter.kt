@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.RippleDrawable
+import android.util.Log
+import android.view.DragEvent
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.RecyclerView
@@ -14,15 +16,19 @@ import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.obtainStyledAttributesCompat
 import com.android.imagic.files.compat.use
 import com.android.imagic.files.databinding.NewStorageItemBinding
+import com.android.imagic.files.filelist.CloudPathData
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.ui.AutoMirrorDrawable
 import com.android.imagic.files.ui.SimpleAdapter
 import com.android.imagic.files.util.layoutInflater
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
+import java8.nio.file.Path
 
 class StorageListAdapter(
     private val listener: NavigationItem.Listener,
+    private val dragDropListener: Listener,
     context: Context
 ) : SimpleAdapter<NavigationItem?, RecyclerView.ViewHolder>() {
     @SuppressLint("PrivateResource", "RestrictedApi")
@@ -113,6 +119,58 @@ class StorageListAdapter(
         if (payloads.isNotEmpty()) {
             return
         }
+        binding.itemLayout.setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    binding.itemLayout.isChecked = true
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    binding.itemLayout.isChecked = false
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    dragDropListener.cancelDragDrop()
+                    binding.itemLayout.isChecked = false
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    true
+                }
+
+                DragEvent.ACTION_DROP -> {
+                    Log.d("chengluo", "StorageListAdapter ACTION_DROP: ")
+                    val storageItem = item
+                    if (storageItem is PathItem) {
+                        Log.d(
+                            "chengluo",
+                            "StorageListAdapter ACTION_DROP storageItem: $storageItem"
+                        )
+                        dragDropListener.dropToLocal(item.path)
+                    }
+                    if (storageItem is CloudStorageItem) {
+                        Log.d(
+                            "chengluo",
+                            "StorageListAdapter ACTION_DROP storageItem: $storageItem"
+                        )
+                        val storage = storageItem.storage
+                        val authority = storage.authority
+                        val pathData = CloudPathData(0, authority.username)
+                        dragDropListener.dropToCloud(pathData, authority)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
         binding.itemLayout.setOnClickListener { item.onClick(listener) }
         binding.itemLayout.setOnLongClickListener { item.onLongClick(listener) }
         binding.iconImage.setImageDrawable(item.getIcon(binding.iconImage.context))
@@ -132,4 +190,10 @@ class StorageListAdapter(
     private class ItemHolder(val binding: NewStorageItemBinding) : RecyclerView.ViewHolder(
         binding.root
     )
+
+    interface Listener {
+        fun cancelDragDrop()
+        fun dropToLocal(directoryPath: Path)
+        fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
+    }
 }

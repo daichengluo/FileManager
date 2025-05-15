@@ -91,6 +91,7 @@ import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_M
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_PROGRESS
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TEXT
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_TITLE
+import com.android.imagic.files.fileproperties.CloudFilePropertiesDialogFragment
 import com.android.imagic.files.fileproperties.FilePropertiesDialogFragment
 import com.android.imagic.files.navigation.BookmarkDirectories
 import com.android.imagic.files.navigation.BookmarkDirectory
@@ -99,6 +100,7 @@ import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.provider.cloud.sdrive.client.exception.LoginExpiredException
 import com.android.imagic.files.provider.cloud.sdrive.client.exception.SDriveException
 import com.android.imagic.files.provider.common.isDirectory
@@ -1538,9 +1540,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
             R.id.action_paste -> {
                 if (viewModel.isCloudFileMode && viewModel.currentCloudPath != null) {
-                    pasteFiles(targetCloudPath = viewModel.currentCloudPath)
+                    pasteFiles(cloudDirectoryPath = viewModel.currentCloudPath)
                 } else {
-                    pasteFiles(targetDirectory = currentPath)
+                    pasteFiles(localDirectory = currentPath)
                 }
                 true
             }
@@ -1556,17 +1558,20 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
-    private fun pasteFiles(targetDirectory: Path? = null, targetCloudPath: CloudPathData? = null) {
+    private fun pasteFiles(
+        localDirectory: Path? = null,
+        cloudDirectoryPath: CloudPathData? = null
+    ) {
         Log.d(
             "chengluo",
-            "pasteFiles targetDirectory: $targetDirectory targetCloudPath: $targetCloudPath"
+            "pasteFiles localDirectory: $localDirectory cloudDirectoryPath: $cloudDirectoryPath"
         )
         val context = requireContext()
-        if (targetDirectory != null) {
-            viewModel.pasteToLocal(targetDirectory, context)
+        if (localDirectory != null) {
+            viewModel.pasteToLocal(localDirectory, context)
         }
-        if (targetCloudPath != null) {
-            viewModel.pasteToCloud(targetCloudPath, context)
+        if (cloudDirectoryPath != null) {
+            viewModel.pasteToCloud(cloudDirectoryPath, context)
         }
     }
 
@@ -1586,6 +1591,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun dropToLocal(directoryPath: Path) {
         Log.d("chengluo", "dropToLocal directoryPath: $directoryPath")
         pasteFiles(directoryPath)
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+    }
+
+    override fun dropToCloud(
+        cloudDirectoryPath: CloudPathData,
+        authority: Authority
+    ) {
+        Log.d("chengluo", "dropToCloud cloudDirectoryPath: $cloudDirectoryPath")
+        viewModel.setCloudAuthority(authority)
+        pasteFiles(cloudDirectoryPath = cloudDirectoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
@@ -2100,7 +2115,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun dropToCloud(cloudDirectoryPath: CloudPathData) {
         Log.d("chengluo", "dropToCloud cloudDirectoryPath: $cloudDirectoryPath")
-        pasteFiles(targetCloudPath = cloudDirectoryPath)
+        pasteFiles(cloudDirectoryPath = cloudDirectoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
@@ -2187,7 +2202,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun showCloudFilePropertiesDialog(file: CloudFileItem) {
-        TODO("Not yet implemented")
+        CloudFilePropertiesDialogFragment.show(file, this)
     }
 
     override fun renameCloudFile(file: CloudFileItem, newName: String) {

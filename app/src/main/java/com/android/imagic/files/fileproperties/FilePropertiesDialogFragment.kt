@@ -17,7 +17,6 @@ import com.android.imagic.files.fileproperties.audio.FilePropertiesAudioTabFragm
 import com.android.imagic.files.fileproperties.basic.FilePropertiesBasicTabFragment
 import com.android.imagic.files.fileproperties.checksum.FilePropertiesChecksumTabFragment
 import com.android.imagic.files.fileproperties.image.FilePropertiesImageTabFragment
-import com.android.imagic.files.fileproperties.permission.FilePropertiesPermissionTabFragment
 import com.android.imagic.files.fileproperties.video.FilePropertiesVideoTabFragment
 import com.android.imagic.files.ui.TabFragmentPagerAdapter
 import com.android.imagic.files.util.ParcelableArgs
@@ -61,12 +60,6 @@ class FilePropertiesDialogFragment : AppCompatDialogFragment() {
         val tabs = mutableListOf<Pair<Int, () -> Fragment>>()
             .apply {
                 add(R.string.file_properties_basic to { FilePropertiesBasicTabFragment() })
-                if (FilePropertiesPermissionTabFragment.isAvailable(args.file)) {
-                    add(
-                        R.string.file_properties_permission
-                                to { FilePropertiesPermissionTabFragment() }
-                    )
-                }
                 if (FilePropertiesImageTabFragment.isAvailable(args.file)) {
                     add(
                         R.string.file_properties_image to {

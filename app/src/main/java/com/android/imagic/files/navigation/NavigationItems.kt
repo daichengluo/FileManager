@@ -96,7 +96,7 @@ private val storageItems: List<NavigationItem>
         }
     }
 
-private abstract class PathItem(val path: Path) : NavigationItem() {
+internal abstract class PathItem(val path: Path) : NavigationItem() {
 
     override fun isChecked(listener: Listener): Boolean {
         return listener.currentFileMode is FileModeState.Local && listener.currentPath == path
@@ -166,8 +166,8 @@ private class IntentStorageItem(
     }
 }
 
-private class CloudStorageItem(
-    private val storage: SDriveServer
+internal class CloudStorageItem(
+    val storage: SDriveServer
 ) : NavigationItem() {
     init {
         require(storage.isVisible)
@@ -204,7 +204,7 @@ private val storageVolumeItems: List<NavigationItem>
     get() = StorageVolumeListLiveData.valueCompat.filter { !it.isPrimaryCompat && it.isMounted }
         .map { StorageVolumeItem(it) }
 
-private class StorageVolumeItem(
+internal class StorageVolumeItem(
     private val storageVolume: StorageVolume
 ) : PathItem(Paths.get(storageVolume.pathCompat)), NavigationRoot {
 

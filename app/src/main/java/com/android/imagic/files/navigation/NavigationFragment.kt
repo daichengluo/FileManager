@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.file.QuickAccessWrap
+import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
@@ -22,7 +23,7 @@ import com.android.imagic.files.util.startActivitySafe
 import java8.nio.file.Path
 import java8.nio.file.Paths
 
-class NavigationFragment : Fragment(), NavigationItem.Listener {
+class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapter.Listener {
     private val openPathLauncher = registerForActivityResult(
         FileListActivity.OpenDirectoryContract(), ::onOpenPathResult
     )
@@ -56,7 +57,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         binding.quickAccessRecyclerView.setMaxHeight(500)
 
         binding.storageRecyclerView.layoutManager = LinearLayoutManager(context)
-        storageListAdapter = StorageListAdapter(this, context)
+        storageListAdapter = StorageListAdapter(this, this, context)
         binding.storageRecyclerView.adapter = storageListAdapter
         binding.storageRecyclerView.setMaxHeight(600)
 
@@ -153,6 +154,21 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         openPathLauncher.launchSafe(currentPath, this)
     }
 
+    override fun cancelDragDrop() {
+        listener.cancelDragDrop()
+    }
+
+    override fun dropToLocal(directoryPath: Path) {
+        listener.dropToLocal(directoryPath)
+    }
+
+    override fun dropToCloud(
+        cloudDirectoryPath: CloudPathData,
+        authority: Authority
+    ) {
+        listener.dropToCloud(cloudDirectoryPath, authority)
+    }
+
     interface Listener {
         val currentPath: Path
         val currentFileMode: FileModeState
@@ -167,5 +183,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener {
         )
 
         fun closeNavigationDrawer()
+        fun cancelDragDrop()
+        fun dropToLocal(directoryPath: Path)
+        fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
     }
 }
