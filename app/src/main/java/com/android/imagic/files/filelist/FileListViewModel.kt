@@ -54,7 +54,14 @@ class FileListViewModel : ViewModel() {
 
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
 
-    fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) trailLiveData.navigateUp() else false
+    fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) {
+        if (isCloudFileMode) {
+            navigateCloudUp()
+            true
+        } else {
+            trailLiveData.navigateUp()
+        }
+    } else false
 
     private val _currentFileModeStateLiveData = MutableLiveData<FileModeState>(FileModeState.Local)
     val currentFileModeStateLiveData: LiveData<FileModeState> = _currentFileModeStateLiveData
