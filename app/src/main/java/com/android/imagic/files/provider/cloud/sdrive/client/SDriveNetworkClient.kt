@@ -21,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
+import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
 import kotlin.math.min
@@ -73,6 +74,15 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
             val body = NewFolderBody(name, parentId)
             network.createDirectory(body)
         }.mapSuccess { true }
+    }
+
+    override suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo> {
+        return safeApiCallHandled {
+            if (!file.exists()) file.createNewFile()
+            val requestBody = file.asRequestBody("application/octet-stream".toMediaType())
+            val partBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
+            network.uploadFile(userId.toString(), partBody)
+        }
     }
 
     override suspend fun uploadFile(userId: Int, path: Path): ApiOperation<UploadFileInfo> {

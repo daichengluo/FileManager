@@ -10,6 +10,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 object Client {
@@ -60,6 +61,9 @@ object Client {
         directoryId: Int,
         authority: Authority
     ): ApiOperation<Boolean> = getClient(authority).uploadFileInfo(name, size, url, directoryId)
+
+    suspend fun uploadFile(file: File, authority: Authority): ApiOperation<UploadFileInfo> =
+        getClient(authority).uploadFile(authority.userId, file)
 
     suspend fun uploadFile(path: Path, authority: Authority): ApiOperation<UploadFileInfo> =
         getClient(authority).uploadFile(authority.userId, path)

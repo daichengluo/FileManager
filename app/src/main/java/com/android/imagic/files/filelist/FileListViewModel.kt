@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.Closeable
+import java.io.File
 import java.io.IOException
 
 // TODO: Use SavedStateHandle to save state.
@@ -185,9 +186,13 @@ class FileListViewModel : ViewModel() {
     }
 
     fun createCloudFile(name: String, context: Context) {
-        val path = Paths.get(context.cacheDir.absolutePath, name)
-        if (!path.exists()) return
-        uploadFile(path, true, context)
+        try {
+            val newFile = File(context.cacheDir, name)
+            newFile.deleteOnExit()
+            uploadFile(newFile)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
@@ -292,6 +297,21 @@ class FileListViewModel : ViewModel() {
                     }
                     .onFailure { it.printStackTrace() }
             }
+        }
+    }
+
+    fun uploadFile(file: File) = viewModelScope.launch {
+        if (authority == null) return@launch
+        val directoryId = currentCloudPath?.directoryId ?: return@launch
+        val response = Client.uploadFile(file, authority!!)
+        if (response is ApiOperation.Success) {
+            val url = response.data.url ?: ""
+            val size = file.length().toInt()
+            Client.uploadFileInfo(file.name, size, url, directoryId, authority!!)
+                .onSuccess {
+                    refreshCloud()
+                }
+                .onFailure { it.printStackTrace() }
         }
     }
 
