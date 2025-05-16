@@ -130,6 +130,7 @@ class FileListViewModel : ViewModel() {
     fun setCloudAuthority(authority: Authority) {
         if (_cloudAuthority != authority) {
             _cloudAuthority.value = authority
+            _cloudPathListLiveData.value = null
         }
     }
 
