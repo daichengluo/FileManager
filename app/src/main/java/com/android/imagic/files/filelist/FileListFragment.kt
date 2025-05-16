@@ -1289,8 +1289,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             R.id.action_copy -> {
-                copyCloudFiles(viewModel.selectedCloudFiles)
-                copyFiles(viewModel.selectedFiles)
+                if (viewModel.selectedCloudFiles.isNotEmpty()) {
+                    copyCloudFiles(viewModel.selectedCloudFiles)
+                }
+                if (viewModel.selectedFiles.isNotEmpty()) {
+                    copyFiles(viewModel.selectedFiles)
+                }
                 true
             }
 
