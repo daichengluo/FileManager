@@ -223,90 +223,121 @@ class FileListViewModel : ViewModel() {
         downloadFile(file, path, false, context)
     }
 
-    fun uploadFile(path: Path, isMove: Boolean, context: Context) = viewModelScope.launch {
-        Log.d(
-            "chengluo",
-            "uploadFile path: $path currentCloudPath: $currentCloudPath isMove: $isMove"
-        )
-        if (authority == null) return@launch
-        val directoryId = currentCloudPath?.directoryId ?: return@launch
-        val name = path.fileName.toString()
-        val size = path.size()
-        val isBigFile = size > 1024 * 1024 * 5
-        if (isBigFile) {
-            val id = path.toString().hashCode()
-            Client.uploadChunks(path, authority!!).collect { status ->
-                Log.d("chengluo", "uploadFile status: $status")
-                val transfer = when (status) {
-                    is TransferStatus.Failed -> FileTransfer(
-                        id = id,
-                        title = name,
-                        text = "Failed: ${status.exception.message}",
-                        max = 100,
-                        progress = 0,
-                        indeterminate = false,
-                        status = FileTransfer.Status.FAILED
-                    )
+    /*suspend fun uploadFolderRecursively(
+        path: Path,
+        parentDirectoryId: Int,
+        isMove: Boolean,
+        context: Context
+    ) {
+        if (authority == null) return
 
-                    is TransferStatus.Finished -> {
-                        val url = status.data ?: return@collect
-                        Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
-                            .onSuccess {
-                                refreshCloud()
-                                if (isMove) {
-                                    FileJobService.delete(listOf(path), context)
-                                }
-                            }
-                            .onFailure { it.printStackTrace() }
-                        FileTransfer(
-                            id = id,
-                            title = name,
-                            text = "Completed",
-                            max = 100,
-                            progress = 100,
-                            indeterminate = false,
-                            status = FileTransfer.Status.FINISHED
-                        )
-                    }
+        if (path.isDirectory()) {
+            val folderName = path.fileName.toString()
 
-                    is TransferStatus.Transferring -> {
-                        val sizeString = status.total.asFileSize().formatHumanReadable(context)
-                        val transferredSizeString =
-                            status.transferred.asFileSize().formatHumanReadable(context)
-                        val text = context.getString(
-                            R.string.file_job_transfer_size_notification_text_one_format,
-                            transferredSizeString,
-                            sizeString
-                        )
-                        FileTransfer(
-                            id = id,
-                            title = name,
-                            text = text,
-                            max = status.total.toInt(),
-                            progress = status.transferred.toInt(),
-                            indeterminate = false,
-                            status = FileTransfer.Status.TRANSFERRING
-                        )
-                    }
-                }
-                _fileTransferState.emit(transfer)
+            val response = Client.createDirectory(folderName, parentDirectoryId, authority!!)
+            val newDirectoryId = if (response is ApiOperation.Success) {
+                response.data
             }
+            if (newDirectoryId == null) {
+                Log.e("chengluo", "Failed to create remote folder: $folderName")
+                return
+            }
+
+            path.newDirectoryStream().use { directoryStream ->
+                for (child in directoryStream) {
+                    uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                }
+            }
+
+            if (isMove) {
+                FileJobService.delete(listOf(path), context)
+            }
+
         } else {
-            val response = Client.uploadFile(path, authority!!)
-            if (response is ApiOperation.Success) {
-                val url = response.data.url ?: ""
-                val size = path.size().toInt()
-                Client.uploadFileInfo(name, size, url, directoryId, authority!!)
-                    .onSuccess {
-                        refreshCloud()
-                        if (isMove) {
-                            FileJobService.delete(listOf(path), context)
+            uploadFile(path, parentDirectoryId, isMove, context)
+        }
+    }*/
+
+    fun uploadFile(localFile: Path, directoryId: Int, isMove: Boolean, context: Context) =
+        viewModelScope.launch {
+            if (authority == null) return@launch
+            val name = localFile.fileName.toString()
+            val size = localFile.size()
+            val isBigFile = size > 1024 * 1024 * 5
+            val id = localFile.toString().hashCode()
+
+            if (isBigFile) {
+                Client.uploadChunks(localFile, authority!!).collect { status ->
+                    Log.d("chengluo", "uploadFile status: $status")
+                    val transfer = when (status) {
+                        is TransferStatus.Failed -> FileTransfer(
+                            id = id,
+                            title = name,
+                            text = "Failed: ${status.exception.message}",
+                            max = 100,
+                            progress = 0,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FAILED
+                        )
+
+                        is TransferStatus.Finished -> {
+                            val url = status.data ?: return@collect
+                            Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
+                                .onSuccess {
+                                    refreshCloud()
+                                    if (isMove) {
+                                        FileJobService.delete(listOf(localFile), context)
+                                    }
+                                }
+                                .onFailure { it.printStackTrace() }
+                            FileTransfer(
+                                id = id,
+                                title = name,
+                                text = "Completed",
+                                max = 100,
+                                progress = 100,
+                                indeterminate = false,
+                                status = FileTransfer.Status.FINISHED
+                            )
+                        }
+
+                        is TransferStatus.Transferring -> {
+                            val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                            val transferredSizeString =
+                                status.transferred.asFileSize().formatHumanReadable(context)
+                            val text = context.getString(
+                                R.string.file_job_transfer_size_notification_text_one_format,
+                                transferredSizeString,
+                                sizeString
+                            )
+                            FileTransfer(
+                                id = id,
+                                title = name,
+                                text = text,
+                                max = status.total.toInt(),
+                                progress = status.transferred.toInt(),
+                                indeterminate = false,
+                                status = FileTransfer.Status.TRANSFERRING
+                            )
                         }
                     }
-                    .onFailure { it.printStackTrace() }
+                    _fileTransferState.emit(transfer)
+                }
+            } else {
+                val response = Client.uploadFile(localFile, authority!!)
+                if (response is ApiOperation.Success) {
+                    val url = response.data.url ?: ""
+                    Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
+                        .onSuccess {
+                            refreshCloud()
+                            if (isMove) {
+                                FileJobService.delete(listOf(localFile), context)
+                            }
+                        }
+                        .onFailure { it.printStackTrace() }
+                }
             }
         }
-    }
 
     fun uploadFile(file: File) = viewModelScope.launch {
         if (authority == null) return@launch
@@ -471,10 +502,11 @@ class FileListViewModel : ViewModel() {
         clearCloudPasteState()
 
         val files = pasteState.files
+        val directoryId = currentCloudPath?.directoryId ?: 0
         if (pasteState.copy) {
-            files.forEach { uploadFile(it.path, false, context) }
+            files.forEach { uploadFile(it.path, directoryId, false, context) }
         } else {
-            files.forEach { uploadFile(it.path, true, context) }
+            files.forEach { uploadFile(it.path, directoryId, true, context) }
         }
         clearPasteState()
     }
