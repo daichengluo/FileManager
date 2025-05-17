@@ -1593,7 +1593,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun dropToLocal(directoryPath: Path) {
-        Log.d("chengluo", "dropToLocal directoryPath: $directoryPath")
         pasteFiles(directoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
@@ -1602,7 +1601,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
-        Log.d("chengluo", "dropToCloud cloudDirectoryPath: $cloudDirectoryPath")
         viewModel.setCloudAuthority(authority)
         pasteFiles(cloudDirectoryPath = cloudDirectoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
@@ -2118,7 +2116,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun dropToCloud(cloudDirectoryPath: CloudPathData) {
-        Log.d("chengluo", "dropToCloud cloudDirectoryPath: $cloudDirectoryPath")
         pasteFiles(cloudDirectoryPath = cloudDirectoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
@@ -2223,13 +2220,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun cutCloudFiles(files: CloudFileItemSet) {
-        Log.d("chengluo", "cutCloudFiles: $files")
         viewModel.addToCloudPasteState(false, files)
         viewModel.selectCloudFiles(files, false)
     }
 
     private fun copyCloudFiles(files: CloudFileItemSet) {
-        Log.d("chengluo", "copyCloudFiles: $files")
         viewModel.addToCloudPasteState(true, files)
         viewModel.selectCloudFiles(files, false)
     }

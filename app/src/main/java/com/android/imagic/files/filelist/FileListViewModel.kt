@@ -22,8 +22,8 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.provider.cloud.sdrive.client.Client
 import com.android.imagic.files.provider.cloud.sdrive.client.TransferStatus
+import com.android.imagic.files.provider.common.createDirectory
 import com.android.imagic.files.provider.common.createFile
-import com.android.imagic.files.provider.common.exists
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.ApiOperation
@@ -326,15 +326,51 @@ class FileListViewModel : ViewModel() {
     private val _fileTransferState = MutableSharedFlow<FileTransfer>()
     val fileTransferState: SharedFlow<FileTransfer> = _fileTransferState
 
-    fun downloadFile(file: CloudFileItem, path: Path, isMove: Boolean, context: Context) =
+    suspend fun downloadCloudRecursively(
+        cloudFile: CloudFileItem,
+        path: Path,
+        isMove: Boolean,
+        context: Context
+    ) {
+        val currentAuthority = authority ?: return
+        if (cloudFile.isDirectory) {
+            val localDir = path.resolve(cloudFile.name)
+            localDir.createDirectory()
+
+            val response = Client.getFileList(cloudFile.id, currentAuthority)
+
+            when (response) {
+                is ApiOperation.Success -> {
+                    val children = response.data
+                    for (child in children) {
+                        downloadCloudRecursively(child, localDir, isMove, context)
+                    }
+                    if (isMove) {
+                        deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                    }
+                }
+
+                is ApiOperation.Failure -> {
+                    Log.e(
+                        "chengluo",
+                        "Failed to list children for folder: ${cloudFile.name}",
+                        response.exception
+                    )
+                }
+            }
+        } else {
+            downloadFile(cloudFile, path, isMove, context)
+        }
+    }
+
+    fun downloadFile(cloudFile: CloudFileItem, path: Path, isMove: Boolean, context: Context) =
         viewModelScope.launch {
-            Log.d("chengluo", "downloadFile file: $file path: $path isMove: $isMove")
             try {
-                if (!path.exists()) path.createFile()
-                if (authority == null || file.url == null) return@launch
-                val id = file.hashCode()
-                Client.downloadFile(file.url, path, authority!!).collect { status ->
-                    Log.d("chengluo", "downloadFile status: $status")
+                val localFile = path.resolve(cloudFile.name)
+                localFile.createFile()
+                if (authority == null || cloudFile.url == null) return@launch
+                val id = cloudFile.hashCode()
+                Client.downloadFile(cloudFile.url, localFile, authority!!).collect { status ->
                     val transfer = when (status) {
                         is TransferStatus.Transferring -> {
                             val sizeString = status.total.asFileSize().formatHumanReadable(context)
@@ -347,7 +383,7 @@ class FileListViewModel : ViewModel() {
                             )
                             FileTransfer(
                                 id = id,
-                                title = file.name,
+                                title = cloudFile.name,
                                 text = text,
                                 max = status.total.toInt(),
                                 progress = status.transferred.toInt(),
@@ -358,11 +394,11 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             if (isMove) {
-                                deleteCloudFiles(cloudFileItemSetOf(file))
+                                deleteCloudFiles(cloudFileItemSetOf(cloudFile))
                             }
                             FileTransfer(
                                 id = id,
-                                title = file.name,
+                                title = cloudFile.name,
                                 text = "Completed",
                                 max = 100,
                                 progress = 100,
@@ -373,7 +409,7 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
-                            title = file.name,
+                            title = cloudFile.name,
                             text = "Failed: ${status.exception.message}",
                             max = 100,
                             progress = 0,
@@ -387,8 +423,8 @@ class FileListViewModel : ViewModel() {
                 e.printStackTrace()
                 _fileTransferState.emit(
                     FileTransfer(
-                        id = file.hashCode(),
-                        title = file.name,
+                        id = cloudFile.hashCode(),
+                        title = cloudFile.name,
                         text = "Failed: ${e.message}",
                         max = 100,
                         progress = 0,
@@ -399,34 +435,34 @@ class FileListViewModel : ViewModel() {
             }
         }
 
-    fun pasteToLocal(targetDirectory: Path, context: Context) {
+    fun pasteToLocal(targetLocalDir: Path, context: Context) {
         val cloudFiles = cloudPasteState.files
-        Log.d("chengluo", "pasteToLocal targetDirectory: $targetDirectory cloudFiles: $cloudFiles")
         if (cloudPasteState.copy) {
-            cloudFiles.forEach { file ->
-                val path = targetDirectory.resolve(file.name)
-                downloadFile(file, path, false, context)
+            cloudFiles.forEach { cloudFile ->
+                viewModelScope.launch {
+                    downloadCloudRecursively(cloudFile, targetLocalDir, false, context)
+                }
             }
         } else {
-            cloudFiles.forEach { file ->
-                val path = targetDirectory.resolve(file.name)
-                downloadFile(file, path, true, context)
+            cloudFiles.forEach { cloudFile ->
+                viewModelScope.launch {
+                    downloadCloudRecursively(cloudFile, targetLocalDir, true, context)
+                }
             }
         }
         clearCloudPasteState()
 
         val files = pasteState.files.map { it.path }.sortedBy { it.toUri() }
         if (pasteState.copy) {
-            FileJobService.copy(files, targetDirectory, context)
+            FileJobService.copy(files, targetLocalDir, context)
         } else {
-            FileJobService.move(files, targetDirectory, context)
+            FileJobService.move(files, targetLocalDir, context)
         }
         clearPasteState()
     }
 
     fun pasteToCloud(targetCloudPath: CloudPathData, context: Context) {
         val cloudFiles = cloudPasteState.files
-        Log.d("chengluo", "pasteToCloud targetCloudPath: $targetCloudPath cloudFiles: $cloudFiles")
         if (cloudPasteState.copy) {
             copyCloudFiles(cloudFiles, targetCloudPath)
         } else {

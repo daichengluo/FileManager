@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.RippleDrawable
-import android.util.Log
 import android.view.DragEvent
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
@@ -146,20 +145,11 @@ class StorageListAdapter(
                 }
 
                 DragEvent.ACTION_DROP -> {
-                    Log.d("chengluo", "StorageListAdapter ACTION_DROP: ")
                     val storageItem = item
                     if (storageItem is PathItem) {
-                        Log.d(
-                            "chengluo",
-                            "StorageListAdapter ACTION_DROP storageItem: $storageItem"
-                        )
                         dragDropListener.dropToLocal(item.path)
                     }
                     if (storageItem is CloudStorageItem) {
-                        Log.d(
-                            "chengluo",
-                            "StorageListAdapter ACTION_DROP storageItem: $storageItem"
-                        )
                         val storage = storageItem.storage
                         val authority = storage.authority
                         val pathData = CloudPathData(0, authority.username)
