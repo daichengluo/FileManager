@@ -24,6 +24,8 @@ import com.android.imagic.files.provider.cloud.sdrive.client.Client
 import com.android.imagic.files.provider.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.provider.common.createDirectory
 import com.android.imagic.files.provider.common.createFile
+import com.android.imagic.files.provider.common.isDirectory
+import com.android.imagic.files.provider.common.newDirectoryStream
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.ApiOperation
@@ -223,7 +225,7 @@ class FileListViewModel : ViewModel() {
         downloadFile(file, path, false, context)
     }
 
-    /*suspend fun uploadFolderRecursively(
+    suspend fun uploadFolderRecursively(
         path: Path,
         parentDirectoryId: Int,
         isMove: Boolean,
@@ -236,8 +238,9 @@ class FileListViewModel : ViewModel() {
 
             val response = Client.createDirectory(folderName, parentDirectoryId, authority!!)
             val newDirectoryId = if (response is ApiOperation.Success) {
-                response.data
-            }
+                refreshCloud()
+                response.data.id
+            } else null
             if (newDirectoryId == null) {
                 Log.e("chengluo", "Failed to create remote folder: $folderName")
                 return
@@ -252,11 +255,10 @@ class FileListViewModel : ViewModel() {
             if (isMove) {
                 FileJobService.delete(listOf(path), context)
             }
-
         } else {
             uploadFile(path, parentDirectoryId, isMove, context)
         }
-    }*/
+    }
 
     fun uploadFile(localFile: Path, directoryId: Int, isMove: Boolean, context: Context) =
         viewModelScope.launch {
@@ -504,9 +506,17 @@ class FileListViewModel : ViewModel() {
         val files = pasteState.files
         val directoryId = currentCloudPath?.directoryId ?: 0
         if (pasteState.copy) {
-            files.forEach { uploadFile(it.path, directoryId, false, context) }
+            files.forEach {
+                viewModelScope.launch {
+                    uploadFolderRecursively(it.path, directoryId, false, context)
+                }
+            }
         } else {
-            files.forEach { uploadFile(it.path, directoryId, true, context) }
+            files.forEach {
+                viewModelScope.launch {
+                    uploadFolderRecursively(it.path, directoryId, true, context)
+                }
+            }
         }
         clearPasteState()
     }

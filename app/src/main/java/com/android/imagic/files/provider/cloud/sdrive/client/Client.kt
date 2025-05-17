@@ -46,7 +46,7 @@ object Client {
         name: String,
         parentId: Int,
         authority: Authority
-    ): ApiOperation<Boolean> = getClient(authority).createDirectory(name, parentId)
+    ): ApiOperation<CloudFileItem> = getClient(authority).createDirectory(name, parentId)
 
     suspend fun renameFile(
         newName: String,

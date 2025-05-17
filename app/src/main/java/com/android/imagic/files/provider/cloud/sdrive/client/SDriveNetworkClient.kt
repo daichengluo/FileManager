@@ -69,11 +69,11 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }
     }
 
-    override suspend fun createDirectory(name: String, parentId: Int): ApiOperation<Boolean> {
+    override suspend fun createDirectory(name: String, parentId: Int): ApiOperation<CloudFileItem> {
         return safeApiCallHandled {
             val body = NewFolderBody(name, parentId)
             network.createDirectory(body)
-        }.mapSuccess { true }
+        }.mapSuccess { it.toCloudFileItem() }
     }
 
     override suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo> {
@@ -106,40 +106,44 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
             val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
             val fileName = path.fileName.toString()
 
-            Files.newByteChannel(path).use { channel ->
-                for (chunkIndex in 0 until totalChunks) {
-                    val bufferSize = min(chunkSize, fileSize - chunkIndex * chunkSize).toInt()
-                    val buffer = ByteBuffer.allocate(bufferSize)
-                    channel.read(buffer)
-                    buffer.flip()
+            try {
+                Files.newByteChannel(path).use { channel ->
+                    for (chunkIndex in 0 until totalChunks) {
+                        val bufferSize = min(chunkSize, fileSize - chunkIndex * chunkSize).toInt()
+                        val buffer = ByteBuffer.allocate(bufferSize)
+                        channel.read(buffer)
+                        buffer.flip()
 
-                    val byteArray = ByteArray(buffer.remaining())
-                    buffer.get(byteArray)
+                        val byteArray = ByteArray(buffer.remaining())
+                        buffer.get(byteArray)
 
-                    val response = uploadChunkWithRetry(
-                        userId = userId,
-                        chunkIndex = chunkIndex,
-                        totalChunks = totalChunks,
-                        fileName = fileName,
-                        byteArray = byteArray,
-                    )
-                    when (response) {
-                        is ApiOperation.Failure -> emit(TransferStatus.Failed(response.exception))
-                        is ApiOperation.Success -> {
-                            val url = response.data.url
-                            if (url == null) {
-                                emit(
-                                    TransferStatus.Transferring(
-                                        chunkSize * (chunkIndex + 1),
-                                        fileSize
+                        val response = uploadChunkWithRetry(
+                            userId = userId,
+                            chunkIndex = chunkIndex,
+                            totalChunks = totalChunks,
+                            fileName = fileName,
+                            byteArray = byteArray,
+                        )
+                        when (response) {
+                            is ApiOperation.Failure -> emit(TransferStatus.Failed(response.exception))
+                            is ApiOperation.Success -> {
+                                val url = response.data.url
+                                if (url == null) {
+                                    emit(
+                                        TransferStatus.Transferring(
+                                            chunkSize * (chunkIndex + 1),
+                                            fileSize
+                                        )
                                     )
-                                )
-                            } else {
-                                emit(TransferStatus.Finished(url))
+                                } else {
+                                    emit(TransferStatus.Finished(url))
+                                }
                             }
                         }
                     }
                 }
+            } catch (e: IOException) {
+                emit(TransferStatus.Failed(e))
             }
         }
 
