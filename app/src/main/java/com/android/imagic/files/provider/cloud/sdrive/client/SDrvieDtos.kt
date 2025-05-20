@@ -17,7 +17,7 @@ data class NewFolderBody(
 @Serializable
 data class FileInfoBody(
     val ctFileName: String,
-    val fileSize: Int,
+    val fileSize: Long,
     val filePath: String,
     val fileHash: String? = null,
     val targetID: Int

@@ -16,7 +16,7 @@ interface SDriveDataSource {
     suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus>
     suspend fun uploadFileInfo(
         name: String,
-        size: Int,
+        size: Long,
         url: String,
         targetId: Int
     ): ApiOperation<Boolean>

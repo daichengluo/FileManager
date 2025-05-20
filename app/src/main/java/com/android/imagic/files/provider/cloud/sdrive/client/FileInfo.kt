@@ -48,7 +48,7 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
         name = name,
         nameCollationKey = nameCollationKey,
         type = type,
-        size = size,
+        size = size * 1024,
         url = filePath,
         isHidden = false,
         mimeType = mimeType,

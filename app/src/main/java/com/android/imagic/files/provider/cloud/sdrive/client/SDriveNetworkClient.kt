@@ -189,7 +189,7 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
 
     override suspend fun uploadFileInfo(
         name: String,
-        size: Int,
+        size: Long,
         url: String,
         directoryId: Int
     ): ApiOperation<Boolean> = safeApiCallHandled {

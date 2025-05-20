@@ -264,8 +264,9 @@ class FileListViewModel : ViewModel() {
         viewModelScope.launch {
             if (authority == null) return@launch
             val name = localFile.fileName.toString()
-            val size = localFile.size()
-            val isBigFile = size > 1024 * 1024 * 5
+            val sizeInBytes = localFile.size()
+            val sizeInKB = sizeInBytes / 1024
+            val isBigFile = sizeInKB > 1024 * 5
             val id = localFile.toString().hashCode()
 
             if (isBigFile) {
@@ -284,7 +285,7 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             val url = status.data ?: return@collect
-                            Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
+                            Client.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
                                 .onSuccess {
                                     refreshCloud()
                                     if (isMove) {
@@ -329,7 +330,8 @@ class FileListViewModel : ViewModel() {
                 val response = Client.uploadFile(localFile, authority!!)
                 if (response is ApiOperation.Success) {
                     val url = response.data.url ?: ""
-                    Client.uploadFileInfo(name, size.toInt(), url, directoryId, authority!!)
+                    Log.d("chengluo", "uploadFile file size: $sizeInKB")
+                    Client.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
                         .onSuccess {
                             refreshCloud()
                             if (isMove) {
@@ -347,8 +349,9 @@ class FileListViewModel : ViewModel() {
         val response = Client.uploadFile(file, authority!!)
         if (response is ApiOperation.Success) {
             val url = response.data.url ?: ""
-            val size = file.length().toInt()
-            Client.uploadFileInfo(file.name, size, url, directoryId, authority!!)
+            val sizeInKB = file.length() / 1024
+            Log.d("chengluo", "uploadFile file size: $sizeInKB")
+            Client.uploadFileInfo(file.name, sizeInKB, url, directoryId, authority!!)
                 .onSuccess {
                     refreshCloud()
                 }

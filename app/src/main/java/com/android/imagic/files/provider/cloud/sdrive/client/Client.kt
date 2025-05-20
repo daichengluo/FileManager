@@ -56,7 +56,7 @@ object Client {
 
     suspend fun uploadFileInfo(
         name: String,
-        size: Int,
+        size: Long,
         url: String,
         directoryId: Int,
         authority: Authority
