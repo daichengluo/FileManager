@@ -11,9 +11,11 @@ import com.android.imagic.files.util.safeApiCallHandled
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java8.nio.file.Files
 import java8.nio.file.Path
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -95,57 +97,63 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }
     }
 
-    override suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus> =
-        flow {
-            val fileSize = path.size()
-            val chunkSize = when {
-                fileSize < 20 * 1024 * 1024 -> 1 * 1024 * 1024L  // <20MB，1MB
-                fileSize < 100 * 1024 * 1024 -> 2 * 1024 * 1024L // <100MB，2MB
-                else -> 4 * 1024 * 1024L                         // >100MB，4MB
-            }
-            val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
-            val fileName = path.fileName.toString()
+    override suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus> = flow {
+        val fileSize = path.size()
+        val chunkSize = calculateChunkSize(fileSize)
+        val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
+        val fileName = path.fileName.toString()
 
-            try {
-                Files.newByteChannel(path).use { channel ->
-                    for (chunkIndex in 0 until totalChunks) {
-                        val bufferSize = min(chunkSize, fileSize - chunkIndex * chunkSize).toInt()
-                        val buffer = ByteBuffer.allocate(bufferSize)
-                        channel.read(buffer)
-                        buffer.flip()
+        Files.newByteChannel(path).use { channel ->
+            repeat(totalChunks) { chunkIndex ->
+                try {
+                    val offset = chunkIndex * chunkSize
+                    val bufferSize = min(chunkSize, fileSize - offset).toInt()
 
-                        val byteArray = ByteArray(buffer.remaining())
-                        buffer.get(byteArray)
+                    val byteArray = ByteArray(bufferSize)
+                    val buffer = ByteBuffer.wrap(byteArray)
+                    channel.read(buffer)
 
-                        val response = uploadChunkWithRetry(
-                            userId = userId,
-                            chunkIndex = chunkIndex,
-                            totalChunks = totalChunks,
-                            fileName = fileName,
-                            byteArray = byteArray,
-                        )
-                        when (response) {
-                            is ApiOperation.Failure -> emit(TransferStatus.Failed(response.exception))
-                            is ApiOperation.Success -> {
-                                val url = response.data.url
-                                if (url == null) {
-                                    emit(
-                                        TransferStatus.Transferring(
-                                            chunkSize * (chunkIndex + 1),
-                                            fileSize
-                                        )
+                    val response = uploadChunkWithRetry(
+                        userId = userId,
+                        chunkIndex = chunkIndex,
+                        totalChunks = totalChunks,
+                        fileName = fileName,
+                        byteArray = byteArray,
+                    )
+
+                    when (response) {
+                        is ApiOperation.Failure -> {
+                            emit(TransferStatus.Failed(response.exception))
+                            return@flow
+                        }
+
+                        is ApiOperation.Success -> {
+                            val url = response.data.url
+                            if (url != null) {
+                                emit(TransferStatus.Finished(url))
+                                return@flow
+                            } else {
+                                emit(
+                                    TransferStatus.Transferring(
+                                        chunkSize * (chunkIndex + 1),
+                                        fileSize
                                     )
-                                } else {
-                                    emit(TransferStatus.Finished(url))
-                                }
+                                )
                             }
                         }
                     }
+                } catch (e: IOException) {
+                    emit(TransferStatus.Failed(e))
                 }
-            } catch (e: IOException) {
-                emit(TransferStatus.Failed(e))
             }
         }
+    }
+
+    private fun calculateChunkSize(fileSize: Long): Long = when {
+        fileSize < 20 * 1024 * 1024 -> 1 * 1024 * 1024L
+        fileSize < 100 * 1024 * 1024 -> 2 * 1024 * 1024L
+        else -> 4 * 1024 * 1024L
+    }
 
     private suspend fun uploadChunkWithRetry(
         userId: Int,
@@ -154,8 +162,8 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         fileName: String,
         byteArray: ByteArray,
         maxRetry: Int = 10,
-        baseDelayMillis: Long = 1000L // 初始延迟 0.5 秒
-    ): ApiOperation<UploadFileInfo> {
+        baseDelayMillis: Long = 1000L
+    ): ApiOperation<UploadFileInfo> = withContext(Dispatchers.IO) {
         val requestBody = byteArray.toRequestBody("application/octet-stream".toMediaType())
         val partBody = MultipartBody.Part.createFormData("file", fileName, requestBody)
 
@@ -175,16 +183,18 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
                 )
             }
             if (response is ApiOperation.Success) {
-                return response
+                return@withContext response
             }
             if (attempt < maxRetry) {
                 val delayTime = baseDelayMillis * (2.0.pow(attempt - 1)).toLong()
-                    .coerceAtMost(60_000L) // 最长延迟 30 秒
+                    .coerceAtMost(60_000L)
                 delay(delayTime)
             }
         }
 
-        return ApiOperation.Failure(IOException("The upload failed after retrying $maxRetry several times"))
+        return@withContext ApiOperation.Failure(
+            IOException("The upload failed after retrying $maxRetry several times")
+        )
     }
 
     override suspend fun uploadFileInfo(

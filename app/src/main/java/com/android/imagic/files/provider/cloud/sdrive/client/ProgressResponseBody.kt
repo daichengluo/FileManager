@@ -16,43 +16,42 @@ fun ResponseBody.saveFile(
     path: Path,
     downloadedBytes: Long,
     totalBytes: Long
-): Flow<TransferStatus> =
-    flow {
-        if (totalBytes > 0 && downloadedBytes >= totalBytes) {
-            emit(TransferStatus.Finished())
-            return@flow
-        }
+): Flow<TransferStatus> = flow {
+    if (totalBytes > 0 && downloadedBytes >= totalBytes) {
+        emit(TransferStatus.Finished())
+        return@flow
+    }
 
-        try {
-            var progressBytes = downloadedBytes
-            var lastEmitBytes = downloadedBytes
-            val emitInterval = 2048 * 1024L
+    try {
+        var progressBytes = downloadedBytes
+        var lastEmitBytes = downloadedBytes
+        val emitInterval = 2048 * 1024L
 
-            emit(TransferStatus.Transferring(progressBytes, totalBytes))
+        emit(TransferStatus.Transferring(progressBytes, totalBytes))
 
-            source().use { source ->
-                val outputStream = Files.newOutputStream(
-                    path,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.WRITE,
-                    StandardOpenOption.APPEND
-                )
-                outputStream.sink().buffer().use { sink ->
-                    var bytesRead: Long
-                    while ((source.read(sink.buffer, 4096).also { bytesRead = it }) != -1L) {
-                        progressBytes += bytesRead
-                        sink.emit()
+        source().use { source ->
+            val outputStream = Files.newOutputStream(
+                path,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE,
+                StandardOpenOption.APPEND
+            )
+            outputStream.sink().buffer().use { sink ->
+                var bytesRead: Long
+                while ((source.read(sink.buffer, 4096).also { bytesRead = it }) != -1L) {
+                    progressBytes += bytesRead
+                    sink.emit()
 
-                        if (progressBytes - lastEmitBytes >= emitInterval || progressBytes == totalBytes) {
-                            emit(TransferStatus.Transferring(progressBytes, totalBytes))
-                            lastEmitBytes = progressBytes
-                        }
+                    if (progressBytes - lastEmitBytes >= emitInterval || progressBytes == totalBytes) {
+                        emit(TransferStatus.Transferring(progressBytes, totalBytes))
+                        lastEmitBytes = progressBytes
                     }
-                    sink.flush()
                 }
+                sink.flush()
             }
-            emit(TransferStatus.Finished())
-        } catch (e: Exception) {
-            emit(TransferStatus.Failed(e))
         }
-    }.flowOn(Dispatchers.IO).distinctUntilChanged()
+        emit(TransferStatus.Finished())
+    } catch (e: Exception) {
+        emit(TransferStatus.Failed(e))
+    }
+}.flowOn(Dispatchers.IO).distinctUntilChanged()
