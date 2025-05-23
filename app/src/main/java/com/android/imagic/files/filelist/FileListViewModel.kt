@@ -228,8 +228,7 @@ class FileListViewModel : ViewModel() {
 
     fun downloadToLocal(file: CloudFileItem, context: Context) {
         val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
-        val path = downloadPath.resolve(file.name)
-        downloadFile(file, path, false, context)
+        downloadFile(file, downloadPath, false, context)
     }
 
     suspend fun uploadFolderRecursively(
@@ -406,10 +405,15 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    fun downloadFile(cloudFile: CloudFileItem, path: Path, isMove: Boolean, context: Context) =
+    fun downloadFile(
+        cloudFile: CloudFileItem,
+        directoryPath: Path,
+        isMove: Boolean,
+        context: Context
+    ) =
         viewModelScope.launch {
             try {
-                val localFile = path.resolve(cloudFile.name)
+                val localFile = directoryPath.resolve(cloudFile.name)
                 localFile.createFile()
                 if (authority == null || cloudFile.url == null) return@launch
                 val id = cloudFile.hashCode()
