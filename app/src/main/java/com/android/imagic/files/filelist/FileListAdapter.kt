@@ -504,12 +504,7 @@ class FileListAdapter(
     }
 
     private fun startDragAndDrop(file: FileItem, view: View) {
-        // drag moved clearSelectedFiles
-        listener.clearSelectedFiles()
-        notifyStateChanged()
-
-        // copy file
-        listener.copyFile(file)
+        listener.dragDropCopyFile(file)
 
         val data = ClipData.newPlainText("filePath", file.path.toString())
         val shadowView = listener.getDragShadow(file)
@@ -580,6 +575,7 @@ class FileListAdapter(
         fun cancelDragDrop()
         fun dropToLocal(directoryPath: Path)
         fun getDragShadow(file: FileItem): View
+        fun dragDropCopyFile(file: FileItem)
         fun clearSelectedFiles()
         fun selectFile(file: FileItem, selected: Boolean)
         fun selectFiles(files: FileItemSet, selected: Boolean)

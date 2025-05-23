@@ -430,12 +430,7 @@ class CloudFileListAdapter(
     }
 
     private fun startDragAndDrop(file: CloudFileItem, view: View) {
-        // drag moved clearSelectedFiles
-        listener.clearSelectedCloudFileFiles()
-        notifyStateChanged()
-
-        // copy file
-        listener.copyCloudFile(file)
+        listener.dragDropCopyCloudFile(file)
 
         val data = ClipData.newPlainText("cloudFileId", file.id.toString())
         val shadowView = listener.getCloudFileDragShadow(file)
@@ -509,6 +504,7 @@ class CloudFileListAdapter(
         fun cancelCloudFileDragDrop()
         fun dropToCloud(cloudDirectoryPath: CloudPathData)
         fun getCloudFileDragShadow(file: CloudFileItem): View
+        fun dragDropCopyCloudFile(file: CloudFileItem)
         fun clearSelectedCloudFileFiles()
         fun selectCloudFile(file: CloudFileItem, selected: Boolean)
         fun selectCloudFiles(files: CloudFileItemSet, selected: Boolean)

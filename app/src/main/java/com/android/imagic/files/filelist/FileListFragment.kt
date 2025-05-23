@@ -1645,6 +1645,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         return binding.dragPlaceholder.apply { isVisible = true }
     }
 
+    override fun dragDropCopyFile(file: FileItem) {
+        if (viewModel.selectedFiles.isNotEmpty()) {
+            copyFiles(viewModel.selectedFiles)
+        } else {
+            copyFile(file)
+        }
+    }
+
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
         viewModel.clearSelectedCloudFiles()
@@ -2149,6 +2157,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             setImageDrawable(null)
         }
         return binding.dragPlaceholder.apply { isVisible = true }
+    }
+
+    override fun dragDropCopyCloudFile(file: CloudFileItem) {
+        if (viewModel.selectedCloudFiles.isNotEmpty()) {
+            copyCloudFiles(viewModel.selectedCloudFiles)
+        } else {
+            copyCloudFile(file)
+        }
     }
 
     override fun clearSelectedCloudFileFiles() {
