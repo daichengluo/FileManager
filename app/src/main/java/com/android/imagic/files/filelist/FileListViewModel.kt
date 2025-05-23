@@ -729,8 +729,7 @@ class FileListViewModel : ViewModel() {
 
     val isAllSelectedLiveData = MediatorLiveData<Boolean>().apply {
         val compute = {
-            val authority = cloudAuthority.value
-            if (authority != null) {
+            if (isCloudFileMode) {
                 val stateful = cloudFileListLiveData.value
                 if (stateful !is Success) {
                     value = false
