@@ -253,7 +253,7 @@ private fun getStorageSubtitle(linuxPath: String, context: Context): String? {
     )
 }
 
-private class AddStorageItem : NavigationItem() {
+internal class AddStorageItem : NavigationItem() {
     override val id: Long = R.string.navigation_add_storage.toLong()
 
     @DrawableRes

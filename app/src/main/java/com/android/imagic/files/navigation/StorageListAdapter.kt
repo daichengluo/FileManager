@@ -118,47 +118,49 @@ class StorageListAdapter(
         if (payloads.isNotEmpty()) {
             return
         }
-        binding.itemLayout.setOnDragListener { _, event ->
-            when (event.action) {
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    binding.itemLayout.isChecked = true
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    binding.itemLayout.isChecked = false
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    dragDropListener.cancelDragDrop()
-                    binding.itemLayout.isChecked = false
-                    true
-                }
-
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    true
-                }
-
-                DragEvent.ACTION_DROP -> {
-                    val storageItem = item
-                    if (storageItem is PathItem) {
-                        dragDropListener.dropToLocal(item.path)
+        if (item !is AddStorageItem) {
+            binding.itemLayout.setOnDragListener { _, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        true
                     }
-                    if (storageItem is CloudStorageItem) {
-                        val storage = storageItem.storage
-                        val authority = storage.authority
-                        val pathData = CloudPathData(0, authority.username)
-                        dragDropListener.dropToCloud(pathData, authority)
-                    }
-                    true
-                }
 
-                else -> false
+                    DragEvent.ACTION_DRAG_ENTERED -> {
+                        binding.itemLayout.isChecked = true
+                        true
+                    }
+
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        binding.itemLayout.isChecked = false
+                        true
+                    }
+
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        dragDropListener.cancelDragDrop()
+                        binding.itemLayout.isChecked = false
+                        true
+                    }
+
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        true
+                    }
+
+                    DragEvent.ACTION_DROP -> {
+                        val storageItem = item
+                        if (storageItem is PathItem) {
+                            dragDropListener.dropToLocal(item.path)
+                        }
+                        if (storageItem is CloudStorageItem) {
+                            val storage = storageItem.storage
+                            val authority = storage.authority
+                            val pathData = CloudPathData(0, authority.username)
+                            dragDropListener.dropToCloud(pathData, authority)
+                        }
+                        true
+                    }
+
+                    else -> false
+                }
             }
         }
         binding.itemLayout.setOnClickListener { item.onClick(listener) }
