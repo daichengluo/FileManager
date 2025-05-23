@@ -1,38 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentContainer"
+    android:layout_width="247dp"
+    android:layout_height="253dp"
+    android:background="@drawable/bg_navigation_login">
+    <!--android:background="@drawable/bg_qrcode_login_fragment"-->
 
-    <com.android.imagic.files.ui.CoordinatorAppBarLayout
+
+    <ImageButton
+        android:id="@+id/loginSwitchButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:background="@null"
+        android:contentDescription="@string/use_password_login"
+        android:src="@drawable/password_login_method" />
+
+    <LinearLayout
+        android:id="@+id/userAgreementLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorAppBarSurface"
-        android:theme="?actionBarTheme"
-        app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/scrollView">
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <ImageButton
+            android:id="@+id/userAgreementButton"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@null"
+            android:contentDescription="@string/user_agreement"
+            android:src="@drawable/useragreement_unchecked_grey" />
+
+        <TextView
+            android:id="@+id/userAgreementText"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:popupTheme="?actionBarPopupTheme" />
-    </com.android.imagic.files.ui.CoordinatorAppBarLayout>
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:lineHeight="11dp"
+            android:paddingHorizontal="5dp"
+            android:text="@string/user_agreement_text"
+            android:textColor="#B3272628"
+            android:textSize="8sp"
+            tools:ignore="SmallSp,UnusedAttribute" />
+    </LinearLayout>
 
-    <com.android.imagic.files.ui.CoordinatorScrollingLinearLayout
+    <TextView
+        android:id="@+id/qrcodeUserAgreementText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <WebView
-                android:id="@+id/webView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
-    </com.android.imagic.files.ui.CoordinatorScrollingLinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="start"
+        android:lineHeight="11dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="8dp"
+        android:text="@string/qrcode_login_user_agreement_text"
+        android:textColor="#B3272628"
+        android:textSize="8sp"
+        tools:ignore="SmallSp,UnusedAttribute" />
+</FrameLayout>

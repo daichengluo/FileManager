@@ -38,5 +38,5 @@ class SDriveServer(
         get() = null
 
     override fun createEditIntent(): Intent =
-        EditSDriveServerActivity::class.createIntent().putArgs(EditSDriveServerFragment.Args(this))
+        CloudLogoutDialogActivity::class.createIntent().putArgs(CloudLogoutFragment.Args(this))
 }

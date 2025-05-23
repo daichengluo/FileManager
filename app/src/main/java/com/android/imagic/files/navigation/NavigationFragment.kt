@@ -16,6 +16,8 @@ import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.storage.CloudLogoutFragment
+import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
@@ -169,6 +171,14 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         listener.dropToCloud(cloudDirectoryPath, authority)
     }
 
+    override fun logout(server: SDriveServer) {
+        CloudLogoutFragment.show(server, this)
+    }
+
+    fun logout(authority: Authority) {
+        listener.logout(authority)
+    }
+
     interface Listener {
         val currentPath: Path
         val currentFileMode: FileModeState
@@ -186,5 +196,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         fun cancelDragDrop()
         fun dropToLocal(directoryPath: Path)
         fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
+        fun logout(authority: Authority)
     }
 }

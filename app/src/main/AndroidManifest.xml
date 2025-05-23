@@ -230,9 +230,26 @@
             android:theme="@style/Theme.Files" />
 
         <activity
-            android:name="com.android.imagic.files.storage.EditSDriveServerActivity"
+            android:name="com.android.imagic.files.appwidget.WidgetLoginLaunchActivity"
+            android:excludeFromRecents="true"
             android:label="@string/storage_edit_sdrive_server_title_edit"
-            android:theme="@style/Theme.Files" />
+            android:launchMode="singleTask"
+            android:taskAffinity="com.android.imagic.files.dialog"
+            android:theme="@style/Theme.Fragment.Dialog" />
+
+        <activity
+            android:name="com.android.imagic.files.storage.EditSDriveServerActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/storage_edit_sdrive_server_title_edit"
+            android:theme="@style/Theme.Fragment.Dialog" />
+
+        <activity
+            android:name="com.android.imagic.files.storage.CloudLogoutDialogActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/log_out"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.android.imagic.files.dialog"
+            android:theme="@style/Theme.Files.Translucent" />
 
         <activity
             android:name="com.android.imagic.files.navigation.EditBookmarkDirectoryDialogActivity"
@@ -380,11 +397,6 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.android.imagic.files.appwidget.QrCodeLoginActivity"
-            android:autoRemoveFromRecents="true"
-            android:theme="@style/QrCodeFragment.Dialog" />
 
         <service
             android:name="com.android.imagic.files.filejob.FileJobService"

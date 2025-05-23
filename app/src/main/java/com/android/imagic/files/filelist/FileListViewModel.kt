@@ -129,10 +129,17 @@ class FileListViewModel : ViewModel() {
     val authority: Authority?
         get() = cloudAuthority.valueCompat
 
-    fun setCloudAuthority(authority: Authority) {
+    fun setCloudAuthority(authority: Authority?) {
         if (_cloudAuthority != authority) {
             _cloudAuthority.value = authority
             _cloudPathListLiveData.value = null
+        }
+    }
+
+    fun logout(authority: Authority) {
+        if (_cloudAuthority.valueCompat == authority) {
+            setFileModeState(FileModeState.Local)
+            setCloudAuthority(null)
         }
     }
 

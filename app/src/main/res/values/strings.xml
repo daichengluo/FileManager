@@ -843,6 +843,20 @@
     <string name="widget_launcher_login_button_text">Log in</string>
     <string name="widget_launcher_login_tip_text">Please log in to your account.</string>
     <string name="qrcode_login_tip_text">Scan the code to log in</string>
-    <string name="use_other_login_methods">Use other login methods</string>
+    <string name="use_password_login">Log in with a password</string>
+    <string name="use_qrcode_login">Log in by scanning the code</string>
     <string name="cloud_file_properties_download_url">Download Url</string>
+    <string name="logout_cloud_drive_dialog_message">Are you sure you want to log out?</string>
+    <string name="login_in">Log in</string>
+    <string name="log_out">Log Out</string>
+    <string name="login_google_account">Continue with Google</string>
+    <string name="login_microsoft_account">Continue with Microsoft</string>
+    <string name="login_wechat_account">Continue with WeChat</string>
+    <string name="message_logout">Are you sure you want to log out? You will no longer be able to access your cloud files until you log in again.</string>
+    <string name="qrcode_login_scan_tip">Log in to Google Drive or Microsoft OneDrive by scanning the QR code with your mobile phone.</string>
+    <string name="user_agreement_text">I have read and agree to the %1$s and %2$s.</string>
+    <string name="user_agreement">User Agreement</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="check_agreement_first">Please check the User Agreement</string>
+    <string name="qrcode_login_user_agreement_text">By logging in with QR code, you agree to the %1$s and %2$s.</string>
 </resources>

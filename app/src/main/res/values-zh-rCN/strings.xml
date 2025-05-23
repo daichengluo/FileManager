@@ -681,6 +681,20 @@
     <string name="widget_launcher_login_button_text">登录</string>
     <string name="widget_launcher_login_tip_text">请登录您的账户。</string>
     <string name="qrcode_login_tip_text">扫码登录</string>
-    <string name="use_other_login_methods">使用其他登录方式</string>
+    <string name="use_password_login">使用密码登录</string>
+    <string name="use_qrcode_login">使用扫码登录</string>
     <string name="cloud_file_properties_download_url">下载链接</string>
+    <string name="logout_cloud_drive_dialog_message">确定退出当前账号吗？</string>
+    <string name="login_in">登录</string>
+    <string name="log_out">退出登录</string>
+    <string name="login_google_account">使用谷歌登录</string>
+    <string name="login_microsoft_account">使用微软登录</string>
+    <string name="login_wechat_account">使用微信登录</string>
+    <string name="message_logout">你确定要退出登录吗？退出后将无法访问云端文件，直到你重新登录。</string>
+    <string name="qrcode_login_scan_tip">使用手机扫描二维码登录谷歌 Drive 或者微软 OneDrive</string>
+    <string name="user_agreement_text">我已阅读并同意%1$s和%2$s。</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="check_agreement_first">请勾选用户协议</string>
+    <string name="qrcode_login_user_agreement_text">使用扫码登录，表示你同意%1$s和%2$s。</string>
 </resources>

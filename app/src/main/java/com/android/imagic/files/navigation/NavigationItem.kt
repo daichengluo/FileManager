@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import com.android.imagic.files.compat.getDrawableCompat
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.storage.SDriveServer
 import java8.nio.file.Path
 
 abstract class NavigationItem {
@@ -37,5 +38,6 @@ abstract class NavigationItem {
         fun launchIntent(intent: Intent)
         fun closeNavigationDrawer()
         fun addBookmark()
+        fun logout(server: SDriveServer)
     }
 }

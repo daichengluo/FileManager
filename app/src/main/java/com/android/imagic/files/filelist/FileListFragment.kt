@@ -59,6 +59,7 @@ import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
+import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_CLOUD_AUTHORITY
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
@@ -153,6 +154,7 @@ import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
 import com.android.imagic.files.util.isMediaPlayerAvailable
 import com.android.imagic.files.util.isOrientationLandscape
+import com.android.imagic.files.util.parcelable
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
 import com.android.imagic.files.util.showToast
 import com.android.imagic.files.util.startActivitySafe
@@ -553,6 +555,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             viewModel.resetTo(path)
             if (pickOptions != null) {
                 viewModel.pickOptions = pickOptions
+            }
+            intent.parcelable<Authority>(EXTRA_CLOUD_AUTHORITY)?.let {
+                setFileModeState(FileModeState.Cloud(it))
             }
         }
         viewModel.currentFileModeStateLiveData.observe(viewLifecycleOwner) {
@@ -1604,6 +1609,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.setCloudAuthority(authority)
         pasteFiles(cloudDirectoryPath = cloudDirectoryPath)
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+    }
+
+    override fun logout(authority: Authority) {
+        viewModel.logout(authority)
     }
 
     override fun getDragShadow(file: FileItem): View {

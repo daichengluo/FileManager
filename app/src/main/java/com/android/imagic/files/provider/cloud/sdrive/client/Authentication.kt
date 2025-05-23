@@ -16,6 +16,7 @@ interface AuthenticatorInterceptor : Authenticator, Interceptor
 
 @Parcelize
 data object SDriveAuthentication : Authentication() {
+
     override fun createAuthenticatorInterceptor(authority: Authority): AuthenticatorInterceptor =
         object : AuthenticatorInterceptor {
             override fun authenticate(route: Route?, response: Response): Request? = null

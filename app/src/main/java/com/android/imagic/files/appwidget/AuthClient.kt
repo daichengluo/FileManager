@@ -2,6 +2,7 @@ package com.android.imagic.files.appwidget
 
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.app.okHttpClient
+import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCall
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -23,17 +24,37 @@ internal interface AuthClient {
 @Serializable
 data class AccessTokenData(
     val id: Int,
-    val mac: String,
     val access_token: String,
-    val email: String,
     val refresh_token: String,
+    val mac: String,
+    val status: Int,
+    val state: String,
     val sub: String,
     val givenname: String?,
     val familyname: String,
     val picture: String,
+    val email: String,
+    val unionid: String?,
     val expires_in: Long,
     val ext_expires_in: Long,
-    val state: String
+    val type: Int
+)
+
+fun AccessTokenData.toAuthority(): Authority = Authority(
+    openId = unionid ?: sub,
+    accessToken = access_token,
+    userId = id,
+    username = givenname + familyname,
+    headerImageUrl = picture
+)
+
+fun AccessTokenData.toAuthInfoBody(headerImagerUrl: String? = null): AuthInfoBody = AuthInfoBody(
+    login_type = type.toString(),
+    email = email,
+    unionid = unionid ?: sub,
+    refresh_token = refresh_token,
+    nickname = givenname + familyname,
+    headimgurl = headerImagerUrl ?: picture
 )
 
 object AuthClientImpl : AuthClient {
@@ -43,7 +64,7 @@ object AuthClientImpl : AuthClient {
     private val client = okHttpClient.newBuilder()
         .addInterceptor(
             HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
+                level = HttpLoggingInterceptor.Level.HEADERS
             }
         )
         .build()

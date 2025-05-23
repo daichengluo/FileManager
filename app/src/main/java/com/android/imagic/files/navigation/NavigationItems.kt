@@ -194,7 +194,7 @@ internal class CloudStorageItem(
     }
 
     override fun onLongClick(listener: Listener): Boolean {
-        listener.launchIntent(storage.createEditIntent())
+        listener.logout(storage)
         return true
     }
 }

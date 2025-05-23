@@ -165,3 +165,11 @@ fun Uri.createInstallPackageIntent(): Intent = Intent(Intent.ACTION_INSTALL_PACK
 
 fun Uri.createCaptureImage(): Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
     .putExtra(MediaStore.EXTRA_OUTPUT, this)
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? =
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        getParcelableExtra(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getParcelableExtra(key) as? T
+    }
