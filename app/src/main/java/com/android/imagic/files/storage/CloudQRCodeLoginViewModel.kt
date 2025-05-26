@@ -16,8 +16,8 @@ import com.android.imagic.files.appwidget.CloudClient
 import com.android.imagic.files.appwidget.QrcodeLoginStatus
 import com.android.imagic.files.appwidget.toAuthInfoBody
 import com.android.imagic.files.appwidget.toAuthority
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
-import com.android.imagic.files.provider.cloud.sdrive.client.Client.OkHttpAuthenticatorInterceptor
+import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.Client.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.NetworkUtil
 import com.android.imagic.files.util.QrcodeUtil

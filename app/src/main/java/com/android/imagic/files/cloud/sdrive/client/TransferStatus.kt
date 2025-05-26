@@ -1,4 +1,4 @@
-package com.android.imagic.files.provider.cloud.sdrive.client
+package com.android.imagic.files.cloud.sdrive.client
 
 sealed interface TransferStatus {
     data class Transferring(val transferred: Long, val total: Long) : TransferStatus

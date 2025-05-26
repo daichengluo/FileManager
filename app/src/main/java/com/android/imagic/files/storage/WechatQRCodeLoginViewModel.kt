@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import kotlinx.coroutines.launch
 
 class WechatQRCodeLoginViewModel : ViewModel() {

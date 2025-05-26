@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.compat.getDrawableCompat
 import com.android.imagic.files.filelist.FileModeState
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.storage.SDriveServer
 import java8.nio.file.Path
 

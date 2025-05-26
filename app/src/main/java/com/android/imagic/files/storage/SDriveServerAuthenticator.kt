@@ -1,9 +1,9 @@
 package com.android.imagic.files.storage
 
-import com.android.imagic.files.provider.cloud.sdrive.client.Authentication
-import com.android.imagic.files.provider.cloud.sdrive.client.Authenticator
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
-import com.android.imagic.files.provider.cloud.sdrive.client.SDriveAuthentication
+import com.android.imagic.files.cloud.sdrive.client.Authentication
+import com.android.imagic.files.cloud.sdrive.client.Authenticator
+import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.SDriveAuthentication
 
 object SDriveServerAuthenticator : Authenticator {
     private val transientServers = mutableSetOf<SDriveServer>()

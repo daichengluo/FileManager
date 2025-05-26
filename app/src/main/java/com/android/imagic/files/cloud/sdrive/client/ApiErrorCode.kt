@@ -1,4 +1,4 @@
-package com.android.imagic.files.provider.cloud.sdrive.client
+package com.android.imagic.files.cloud.sdrive.client
 
 enum class ApiErrorCode(val code: String) {
     LOGIN_EXPIRED("A0002"),

@@ -60,6 +60,9 @@ import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
 import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_CLOUD_AUTHORITY
+import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.exception.LoginExpiredException
+import com.android.imagic.files.cloud.sdrive.client.exception.SDriveException
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
@@ -101,9 +104,6 @@ import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
-import com.android.imagic.files.provider.cloud.sdrive.client.exception.LoginExpiredException
-import com.android.imagic.files.provider.cloud.sdrive.client.exception.SDriveException
 import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings

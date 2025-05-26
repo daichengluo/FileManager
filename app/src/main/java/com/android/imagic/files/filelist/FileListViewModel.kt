@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.Client
+import com.android.imagic.files.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
@@ -19,9 +22,6 @@ import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.archiveRefresh
 import com.android.imagic.files.provider.archive.isArchivePath
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
-import com.android.imagic.files.provider.cloud.sdrive.client.Client
-import com.android.imagic.files.provider.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.provider.common.createDirectory
 import com.android.imagic.files.provider.common.createFile
 import com.android.imagic.files.provider.common.isDirectory

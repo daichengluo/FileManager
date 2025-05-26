@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <permission
+        android:name="com.android.imagic.files.READ_AUTHORITY"
+        android:protectionLevel="signature" />
+
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
@@ -439,6 +443,12 @@
             android:authorities="@string/file_provider_authority"
             android:exported="false"
             android:grantUriPermissions="true" />
+
+        <provider
+            android:name="com.android.imagic.files.cloud.AuthProvider"
+            android:authorities="@string/auth_provider_authority"
+            android:exported="true"
+            android:permission="com.android.imagic.files.READ_AUTHORITY" />
 
         <receiver android:name="com.android.imagic.files.filejob.FileJobReceiver" />
 

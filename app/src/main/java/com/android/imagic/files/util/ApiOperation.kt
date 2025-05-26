@@ -1,8 +1,8 @@
 package com.android.imagic.files.util
 
-import com.android.imagic.files.provider.cloud.sdrive.client.ApiErrorCode
-import com.android.imagic.files.provider.cloud.sdrive.client.exception.LoginExpiredException
-import com.android.imagic.files.provider.cloud.sdrive.client.exception.UnknownApiException
+import com.android.imagic.files.cloud.sdrive.client.ApiErrorCode
+import com.android.imagic.files.cloud.sdrive.client.exception.LoginExpiredException
+import com.android.imagic.files.cloud.sdrive.client.exception.UnknownApiException
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,4 +1,4 @@
-package com.android.imagic.files.provider.cloud.sdrive.client
+package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
 import com.android.imagic.files.util.ApiOperation

@@ -1,4 +1,4 @@
-package com.android.imagic.files.provider.cloud.sdrive.client
+package com.android.imagic.files.cloud.sdrive.client
 
 import java8.nio.file.Files
 import java8.nio.file.Path

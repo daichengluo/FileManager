@@ -11,12 +11,12 @@ import android.view.DragEvent
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.RecyclerView
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.obtainStyledAttributesCompat
 import com.android.imagic.files.compat.use
 import com.android.imagic.files.databinding.NewStorageItemBinding
 import com.android.imagic.files.filelist.CloudPathData
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.ui.AutoMirrorDrawable
 import com.android.imagic.files.ui.SimpleAdapter
 import com.android.imagic.files.util.layoutInflater

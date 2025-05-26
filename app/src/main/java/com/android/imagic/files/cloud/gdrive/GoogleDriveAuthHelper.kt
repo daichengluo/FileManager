@@ -1,4 +1,4 @@
-package com.android.imagic.files.provider.cloud.gdrive
+package com.android.imagic.files.cloud.gdrive
 
 import android.app.Activity
 import android.content.Context

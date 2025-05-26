@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
 import com.android.imagic.files.storage.CloudLogoutFragment
 import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.util.createIntent

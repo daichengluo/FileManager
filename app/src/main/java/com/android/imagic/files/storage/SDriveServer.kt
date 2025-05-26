@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import com.android.imagic.files.R
-import com.android.imagic.files.provider.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
 import java8.nio.file.Path
