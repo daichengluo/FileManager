@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.file.QuickAccessWrap
@@ -17,7 +18,9 @@ import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.storage.CloudLogoutFragment
+import com.android.imagic.files.storage.EditSDriveServerActivity
 import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
@@ -37,6 +40,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     private lateinit var settingsListAdapter: SettingsListAdapter
 
     lateinit var listener: Listener
+
+    private var sDriveServer: SDriveServer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,9 +73,12 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         binding.settingsRecyclerView.adapter = settingsListAdapter
         binding.settingsRecyclerView.setMaxHeight(500)
 
-        binding.loginLayout.isVisible = false
         binding.loginLayout.setOnClickListener {
-            // todo login action
+            if (sDriveServer == null) {
+                launchIntent(EditSDriveServerActivity::class.createIntent())
+            } else {
+                logout(sDriveServer!!)
+            }
         }
 
         val viewLifecycleOwner = viewLifecycleOwner
@@ -96,6 +104,22 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         storageListAdapter.replace(navigationItems)
         storageListAdapter.notifyCheckedChanged()
         quickAccessListAdapter.notifyCheckedChanged()
+
+        navigationItems.forEach { item ->
+            if (item is CloudStorageItem) {
+                sDriveServer = item.storage
+                val authority = sDriveServer!!.authority
+                authority.headerImageUrl?.let { url ->
+                    if (url != Constants.MS_GRAPH_PHOTO) {
+                        binding.userHeaderImage.apply {
+                            load(url)
+                        }
+                    }
+                }
+                binding.username.text = authority.username
+                return
+            }
+        }
     }
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {

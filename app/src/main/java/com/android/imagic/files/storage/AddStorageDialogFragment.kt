@@ -35,8 +35,6 @@ class AddStorageDialogFragment : AppCompatDialogFragment() {
 
     companion object {
         private val STORAGE_TYPES = listOfNotNull(
-            R.string.storage_add_storage_sdrive_server to
-                    EditSDriveServerActivity::class.createIntent(),
             R.string.storage_add_storage_ftp_server to
                     EditFtpServerActivity::class.createIntent()
                         .putArgs(EditFtpServerFragment.Args()),

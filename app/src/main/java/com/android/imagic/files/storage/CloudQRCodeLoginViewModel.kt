@@ -19,6 +19,7 @@ import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.Client.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.util.ApiOperation
+import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.NetworkUtil
 import com.android.imagic.files.util.QrcodeUtil
 import com.android.imagic.files.util.valueCompat
@@ -152,7 +153,7 @@ class CloudQRCodeLoginViewModel : ViewModel() {
     suspend fun getUserHeaderImage(accessToken: String): File? = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
-                .url("https://graph.microsoft.com/v1.0/me/photo/\$value")
+                .url(Constants.MS_GRAPH_PHOTO)
                 .addHeader("Authorization", "Bearer $accessToken")
                 .get()
                 .build()

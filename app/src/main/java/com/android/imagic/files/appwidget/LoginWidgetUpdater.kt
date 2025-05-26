@@ -53,7 +53,7 @@ object LoginWidgetUpdater {
         )
 
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login).apply {
-            setOnClickPendingIntent(R.id.loginButton, loginPendingIntent)
+            setOnClickPendingIntent(R.id.widgetLoginButton, loginPendingIntent)
         }
 
         remoteViews.setViewVisibility(

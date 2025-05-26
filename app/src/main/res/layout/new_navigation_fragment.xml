@@ -54,7 +54,7 @@
                     android:src="@drawable/nav_user_header_img" />
 
                 <TextView
-                    android:id="@+id/loginTipText"
+                    android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -68,7 +68,7 @@
                     tools:ignore="UnusedAttribute" />
 
                 <ImageView
-                    android:id="@+id/loginButton"
+                    android:id="@+id/loginActionButton"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
                     android:layout_margin="11dp"
