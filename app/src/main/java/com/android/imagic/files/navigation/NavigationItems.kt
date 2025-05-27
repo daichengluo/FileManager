@@ -182,6 +182,16 @@ internal class CloudStorageItem(
 
     override fun getTitle(context: Context): String = storage.getName(context)
 
+    override fun getSubtitle(context: Context): String? {
+        val freeSpace = storage.authority.freeSpace * 1024
+        val totalSpace = storage.authority.totalSpace * 1024
+        val freeSpaceString = freeSpace.asFileSize().formatHumanReadable(context)
+        val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+        return context.getString(
+            R.string.navigation_storage_subtitle_format, freeSpaceString, totalSpaceString
+        )
+    }
+
     override fun isChecked(listener: Listener): Boolean {
         val mode = listener.currentFileMode
         return if (mode is FileModeState.Cloud) {

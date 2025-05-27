@@ -126,7 +126,7 @@ class CloudQRCodeLoginViewModel : ViewModel() {
         val okHttpClient = okHttpClient.newBuilder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
+                    level = HttpLoggingInterceptor.Level.HEADERS
                 }
             )
             .addNetworkInterceptor(authenticatorInterceptor)
@@ -144,39 +144,62 @@ class CloudQRCodeLoginViewModel : ViewModel() {
 
         client.getUserInfo(data.toAuthInfoBody(headerImagerUrl)).onSuccess {
             Log.d("chengluo", "updateUserInfo Success: $it")
-            val updatedAuthority = it.toAuthority()
-            Storages.addOrReplace(SDriveServer(null, null, updatedAuthority))
-            _authority.value = updatedAuthority
+            val newAuthority = getSpaceUsageInfo(it.toAuthority())
+            Storages.addOrReplace(SDriveServer(null, null, newAuthority))
+            _authority.value = newAuthority
         }
     }
 
-    suspend fun getUserHeaderImage(accessToken: String): File? = withContext(Dispatchers.IO) {
-        try {
-            val request = Request.Builder()
-                .url(Constants.MS_GRAPH_PHOTO)
-                .addHeader("Authorization", "Bearer $accessToken")
-                .get()
-                .build()
+    private suspend fun getSpaceUsageInfo(authority: Authority): Authority {
+        Log.d("chengluo", "getSpaceUsageInfo ")
+        val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(authority)
+        val okHttpClient = okHttpClient.newBuilder()
+            .addNetworkInterceptor(authenticatorInterceptor)
+            .authenticator(authenticatorInterceptor)
+            .build()
+        val client = CloudClient(okHttpClient)
+        return when (val response = client.getSpaceUsageInfo()) {
+            is ApiOperation.Success -> {
+                val data = response.data
+                Log.d("chengluo", "getSpaceUsageInfo Success: $data")
+                authority.copy(
+                    freeSpace = data.remainingSpace,
+                    totalSpace = data.totalSpace
+                )
+            }
 
-            val response = okHttpClient.newCall(request).execute()
-            if (!response.isSuccessful) {
+            is ApiOperation.Failure -> authority
+        }
+    }
+
+    private suspend fun getUserHeaderImage(accessToken: String): File? =
+        withContext(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(Constants.MS_GRAPH_PHOTO)
+                    .addHeader("Authorization", "Bearer $accessToken")
+                    .get()
+                    .build()
+
+                val response = okHttpClient.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    response.close()
+                    return@withContext null
+                }
+
+                val bytes = response.body?.bytes()
                 response.close()
-                return@withContext null
-            }
 
-            val bytes = response.body?.bytes()
-            response.close()
-
-            if (bytes != null) {
-                val file = File.createTempFile("userHeaderImage", ".jpg")
-                FileOutputStream(file).use { it.write(bytes) }
-                return@withContext file
+                if (bytes != null) {
+                    val file = File.createTempFile("userHeaderImage", ".jpg")
+                    FileOutputStream(file).use { it.write(bytes) }
+                    return@withContext file
+                }
+            } catch (e: Exception) {
+                Log.e("chengluo", "getUserHeaderImage: ", e)
             }
-        } catch (e: Exception) {
-            Log.e("chengluo", "getUserHeaderImage: ", e)
+            return@withContext null
         }
-        return@withContext null
-    }
 
     fun cancelJob() {
         getStateJob?.cancel()

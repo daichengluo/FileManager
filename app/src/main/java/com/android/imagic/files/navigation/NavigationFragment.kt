@@ -2,6 +2,7 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -141,6 +142,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     }
 
     private fun onSDriveServerChanged(server: SDriveServer?) {
+        Log.d("chengluo", "onSDriveServerChanged server: $server")
         if (server == null) {
             binding.userHeaderImage.setImageResource(R.drawable.nav_user_header_img)
             binding.username.text = getString(R.string.navigation_login_account_tip)

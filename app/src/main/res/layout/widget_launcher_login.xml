@@ -22,6 +22,7 @@
             android:layout_marginStart="11dp"
             android:background="@drawable/bg_widget_user_header_image"
             android:clipToOutline="true"
+            android:contentDescription="user header image"
             android:scaleType="centerCrop"
             android:src="@drawable/nav_user_header_img"
             tools:ignore="UnusedAttribute" />
@@ -50,8 +51,6 @@
                 android:layout_width="107dp"
                 android:layout_height="3dp"
                 android:layout_marginTop="11dp"
-                android:max="100"
-                android:progress="50"
                 android:progressDrawable="@drawable/widget_storage_space_progress" />
 
             <TextView
@@ -60,7 +59,6 @@
                 android:layout_height="9dp"
                 android:layout_marginTop="4dp"
                 android:lineHeight="9dp"
-                android:text="12Gb / 128Gb"
                 android:textColor="#FF757575"
                 android:textSize="7sp"
                 tools:ignore="SmallSp,UnusedAttribute" />

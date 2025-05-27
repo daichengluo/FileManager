@@ -19,6 +19,7 @@ internal interface CloudAuth {
     suspend fun doLogin(code: String, state: String): ApiOperation<LoginInfo>
     suspend fun getUserInfo(body: AuthInfoBody): ApiOperation<LoginInfo>
     suspend fun uploadFileService(file: File): ApiOperation<String?>
+    suspend fun getSpaceUsageInfo(): ApiOperation<SpaceInfo>
 }
 
 @Serializable
@@ -48,6 +49,13 @@ data class LoginInfo(
     val name: String?,
     val nickname: String,
     val headimgurl: String
+)
+
+@Serializable
+data class SpaceInfo(
+    val remainingSpace: Long,
+    val usedSpace: Long,
+    val totalSpace: Long
 )
 
 fun LoginInfo.toAuthority(): Authority = Authority(
@@ -94,4 +102,7 @@ class CloudClient(client: OkHttpClient) : CloudAuth {
             network.uploadFile(multipart)
         }.mapSuccess { it.firstOrNull() }
     }
+
+    override suspend fun getSpaceUsageInfo(): ApiOperation<SpaceInfo> =
+        safeApiCallHandled { network.getSpaceUsageInfo() }
 }

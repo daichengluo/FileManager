@@ -13,6 +13,7 @@ import coil.Coil
 import coil.request.ImageRequest
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.receiver.LauncherLoginWidget
+import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.CloudLogoutDialogActivity
@@ -88,6 +89,18 @@ object LoginWidgetUpdater {
             )
             remoteViews.setOnClickPendingIntent(R.id.gotToDriveButton, goToCloudListPendingIntent)
             remoteViews.setOnClickPendingIntent(R.id.logoutButton, logoutPendingIntent)
+
+            val max = authority.totalSpace.toInt()
+            val used = authority.usedSpace.toInt()
+            Log.d("chengluo", "updateWidgets setProgressbar max: $max used: $used")
+            remoteViews.setProgressBar(R.id.progressbar, max, used, false)
+
+            val usedSpace = authority.usedSpace * 1024
+            val totalSpace = authority.totalSpace * 1024
+            val usedSpaceString = usedSpace.asFileSize().formatHumanReadable(context)
+            val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+            val spaceText = "$usedSpaceString / $totalSpaceString"
+            remoteViews.setTextViewText(R.id.storageSpaceText, spaceText)
 
             appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
 

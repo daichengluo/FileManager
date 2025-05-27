@@ -26,4 +26,7 @@ internal interface CloudApi {
     @Multipart
     @POST("api/FileUploadServices/UploadFile")
     suspend fun uploadFile(@Part file: MultipartBody.Part): ApiResponse<List<String>>
+
+    @GET("api/NetDisk/Getstoragespace")
+    suspend fun getSpaceUsageInfo(): ApiResponse<SpaceInfo>
 }

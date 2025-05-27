@@ -11,8 +11,14 @@ data class Authority(
     val accessToken: String,
     val userId: Int,
     val username: String,
-    val headerImageUrl: String? = null
+    val headerImageUrl: String? = null,
+    val freeSpace: Long = 5242880,
+    val totalSpace: Long = 5242880
 ) : Parcelable {
+
+    val usedSpace: Long
+        get() = totalSpace - freeSpace
+
     val signTimestamp: Pair<String, String>
         get() = generateSign()
 
