@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.android.imagic.files.R
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.file.QuickAccessWrap
@@ -25,10 +26,15 @@ import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.startActivitySafe
+import com.android.imagic.files.util.valueCompat
+import com.android.imagic.files.util.viewModels
 import java8.nio.file.Path
 import java8.nio.file.Paths
 
 class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapter.Listener {
+
+    private val viewModel by viewModels { { NavigationViewModel() } }
+
     private val openPathLauncher = registerForActivityResult(
         FileListActivity.OpenDirectoryContract(), ::onOpenPathResult
     )
@@ -40,8 +46,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     private lateinit var settingsListAdapter: SettingsListAdapter
 
     lateinit var listener: Listener
-
-    private var sDriveServer: SDriveServer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,10 +78,11 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         binding.settingsRecyclerView.setMaxHeight(500)
 
         binding.loginLayout.setOnClickListener {
+            val sDriveServer = viewModel.sDriveServer.valueCompat
             if (sDriveServer == null) {
                 launchIntent(EditSDriveServerActivity::class.createIntent())
             } else {
-                logout(sDriveServer!!)
+                logout(sDriveServer)
             }
         }
 
@@ -85,6 +90,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
+        viewModel.sDriveServer.observe(viewLifecycleOwner) { onSDriveServerChanged(it) }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
         listener.observeCurrentQuickAccessCategory(viewLifecycleOwner) {
             onQuickAccessCategoryChanged(it)
@@ -107,19 +113,12 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
 
         navigationItems.forEach { item ->
             if (item is CloudStorageItem) {
-                sDriveServer = item.storage
-                val authority = sDriveServer!!.authority
-                authority.headerImageUrl?.let { url ->
-                    if (url != Constants.MS_GRAPH_PHOTO) {
-                        binding.userHeaderImage.apply {
-                            load(url)
-                        }
-                    }
-                }
-                binding.username.text = authority.username
+                viewModel.updateServer(item.storage)
                 return
             }
         }
+
+        viewModel.updateServer(null)
     }
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {
@@ -139,6 +138,23 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     private fun onQuickAccessCategoryChanged(quickAccessCategory: QuickAccessCategory?) {
         storageListAdapter.notifyCheckedChanged()
         quickAccessListAdapter.notifyCheckedChanged()
+    }
+
+    private fun onSDriveServerChanged(server: SDriveServer?) {
+        if (server == null) {
+            binding.userHeaderImage.setImageResource(R.drawable.nav_user_header_img)
+            binding.username.text = getString(R.string.navigation_login_account_tip)
+        } else {
+            val authority = server.authority
+            authority.headerImageUrl?.let { url ->
+                if (url != Constants.MS_GRAPH_PHOTO) {
+                    binding.userHeaderImage.apply {
+                        load(url)
+                    }
+                }
+            }
+            binding.username.text = authority.username
+        }
     }
 
     override val currentPath: Path

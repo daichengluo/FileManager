@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,8 +51,13 @@
                     android:layout_width="53dp"
                     android:layout_height="53dp"
                     android:layout_margin="11dp"
+                    android:background="@drawable/bg_widget_user_header_image"
+                    android:clipToOutline="true"
                     android:contentDescription="@string/navigation_login_account_tip"
-                    android:src="@drawable/nav_user_header_img" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/nav_user_header_img"
+                    app:shapeAppearanceOverlay="@style/RoundedCornerImage"
+                    tools:ignore="UnusedAttribute" />
 
                 <TextView
                     android:id="@+id/username"
