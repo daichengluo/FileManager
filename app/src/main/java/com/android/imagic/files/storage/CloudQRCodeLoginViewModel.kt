@@ -146,6 +146,9 @@ class CloudQRCodeLoginViewModel : ViewModel() {
             Log.d("chengluo", "updateUserInfo Success: $it")
             val newAuthority = getSpaceUsageInfo(it.toAuthority())
             Storages.addOrReplace(SDriveServer(null, null, newAuthority))
+
+            val gDriveServer = GDriveServer(null, null, it.access_token)
+            Storages.addOrReplace(gDriveServer)
             _authority.value = newAuthority
         }
     }

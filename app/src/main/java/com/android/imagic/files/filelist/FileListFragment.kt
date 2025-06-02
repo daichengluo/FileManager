@@ -80,7 +80,7 @@ import com.android.imagic.files.databinding.FileListFragmentTransferIncludeBindi
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeTypeOrNull
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.file.extension
 import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.iconRes
@@ -1943,6 +1943,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun navigateToDefaultRoot() {
         navigateToRoot(Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat)
+    }
+
+    override fun navigateToGoogleDrive(accessToken: String) {
+        //viewModel.getGoogleDriveRootDirectoryFiles(accessToken)
+        viewModel.createGoogleDriveFolder(accessToken, "chengluo")
     }
 
     override fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit) {

@@ -26,7 +26,7 @@ class SDriveServer(
 
     override val iconRes: Int
         @DrawableRes
-        get() = R.drawable.computer_icon_white_24dp
+        get() = R.drawable.computer_icon_white_25dp
 
     override fun getDefaultName(context: Context): String =
         context.getString(R.string.starboard_drive)

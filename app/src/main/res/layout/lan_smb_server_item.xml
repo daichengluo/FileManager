@@ -15,7 +15,7 @@
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:scaleType="centerCrop"
-        android:src="@drawable/computer_icon_white_24dp" />
+        android:src="@drawable/computer_icon_white_25dp" />
 
     <LinearLayout
         android:layout_width="0dp"

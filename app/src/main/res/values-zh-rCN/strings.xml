@@ -690,4 +690,5 @@
     <string name="privacy_policy">隐私政策</string>
     <string name="check_agreement_first">请勾选用户协议</string>
     <string name="qrcode_login_user_agreement_text">使用扫码登录，表示你同意%1$s和%2$s。</string>
+    <string name="google_drive">谷歌网盘</string>
 </resources>

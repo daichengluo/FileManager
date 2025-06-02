@@ -24,10 +24,10 @@ import com.android.imagic.files.compat.isSingleLineCompat
 import com.android.imagic.files.databinding.FileItemGridBinding
 import com.android.imagic.files.databinding.FileItemListBinding
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
-import com.android.imagic.files.file.cloud.sdrive.extension
-import com.android.imagic.files.file.cloud.sdrive.toCloudPathData
-import com.android.imagic.files.file.cloud.sdrive.toInstant
+import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.file.cloud.extension
+import com.android.imagic.files.file.cloud.toCloudPathData
+import com.android.imagic.files.file.cloud.toInstant
 import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk

@@ -2,7 +2,7 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.provider.common.createFile
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation

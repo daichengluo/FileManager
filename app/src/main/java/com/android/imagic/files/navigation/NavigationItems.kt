@@ -22,6 +22,7 @@ import com.android.imagic.files.settings.SettingsActivity
 import com.android.imagic.files.settings.StandardDirectoryListActivity
 import com.android.imagic.files.storage.AddStorageDialogActivity
 import com.android.imagic.files.storage.FileSystemRoot
+import com.android.imagic.files.storage.GDriveServer
 import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.storage.StorageVolumeListLiveData
@@ -88,10 +89,10 @@ private val storageItems: List<NavigationItem>
     @Size(min = 0)
     get() = Settings.STORAGES.valueCompat.filter { it.isVisible }.map {
         if (it.path != null) PathStorageItem(it) else {
-            if (it is SDriveServer) {
-                CloudStorageItem(it)
-            } else {
-                IntentStorageItem(it)
+            when (it) {
+                is SDriveServer -> CloudStorageItem(it)
+                is GDriveServer -> GoogleDriveItem(it)
+                else -> IntentStorageItem(it)
             }
         }
     }
@@ -205,6 +206,34 @@ internal class CloudStorageItem(
 
     override fun onLongClick(listener: Listener): Boolean {
         listener.logout(storage)
+        return true
+    }
+}
+
+internal class GoogleDriveItem(
+    val storage: GDriveServer
+) : NavigationItem() {
+    init {
+        require(storage.isVisible)
+    }
+
+    override val id: Long
+        get() = storage.id
+
+    override val iconRes: Int
+        @DrawableRes
+        get() = storage.iconRes
+
+    override fun getTitle(context: Context): String = storage.getName(context)
+
+    override fun getSubtitle(context: Context): String? = null
+
+
+    override fun onClick(listener: Listener) {
+        listener.navigateToGoogleDrive(storage.accessToken)
+    }
+
+    override fun onLongClick(listener: Listener): Boolean {
         return true
     }
 }

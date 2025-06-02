@@ -3,8 +3,8 @@ package com.android.imagic.files.filelist
 import android.os.Parcelable
 import com.android.imagic.files.compat.reversedCompat
 import com.android.imagic.files.file.FileItem
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
-import com.android.imagic.files.file.cloud.sdrive.extension
+import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.file.cloud.extension
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

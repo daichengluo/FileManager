@@ -2,8 +2,8 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeType
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
-import com.android.imagic.files.file.cloud.sdrive.CloudFileType
+import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileType
 import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.filelist.getCollationKeyForFileName

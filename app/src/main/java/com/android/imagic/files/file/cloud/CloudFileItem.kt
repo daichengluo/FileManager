@@ -1,4 +1,4 @@
-package com.android.imagic.files.file.cloud.sdrive
+package com.android.imagic.files.file.cloud
 
 import android.os.Parcelable
 import com.android.imagic.files.file.MimeType

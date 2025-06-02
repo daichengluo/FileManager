@@ -25,7 +25,7 @@ internal interface AuthClient {
 data class AccessTokenData(
     val id: Int,
     val access_token: String,
-    val refresh_token: String,
+    val refresh_token: String?,
     val mac: String,
     val status: Int,
     val state: String,
@@ -52,7 +52,7 @@ fun AccessTokenData.toAuthInfoBody(headerImagerUrl: String? = null): AuthInfoBod
     login_type = type.toString(),
     email = email,
     unionid = unionid ?: sub,
-    refresh_token = refresh_token,
+    refresh_token = refresh_token ?: "",
     nickname = givenname + familyname,
     headimgurl = headerImagerUrl ?: picture
 )
@@ -64,7 +64,7 @@ object AuthClientImpl : AuthClient {
     private val client = okHttpClient.newBuilder()
         .addInterceptor(
             HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.HEADERS
+                level = HttpLoggingInterceptor.Level.BODY
             }
         )
         .build()

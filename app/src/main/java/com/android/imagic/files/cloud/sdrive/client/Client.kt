@@ -1,7 +1,7 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.app.okHttpClient
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.util.ApiOperation
 import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow

@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import com.android.imagic.files.R
 import com.android.imagic.files.databinding.CloudFilePropertiesDialogBinding
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
-import com.android.imagic.files.file.cloud.sdrive.extension
-import com.android.imagic.files.file.cloud.sdrive.toInstant
+import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.file.cloud.extension
+import com.android.imagic.files.file.cloud.toInstant
 import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.getName
 import com.android.imagic.files.fileproperties.FilePropertiesTabFragment.ViewBuilder

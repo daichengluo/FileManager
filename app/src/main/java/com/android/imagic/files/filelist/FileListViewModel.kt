@@ -11,12 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.gdrive.GoogleDriveClient
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.Client
 import com.android.imagic.files.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
@@ -37,6 +38,7 @@ import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
 import java8.nio.file.Paths
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -551,6 +553,21 @@ class FileListViewModel : ViewModel() {
                 .onSuccess { refreshCloud() }
                 .onFailure { it.printStackTrace() }
         }
+    }
+
+    fun getGoogleDriveRootDirectoryFiles(accessToken: String) = viewModelScope.launch {
+        Log.d("chengluo", "getGoogleDriveRootDirectoryFiles accessToken: $accessToken")
+        GoogleDriveClient.getRootDirectoryFiles(accessToken)
+    }
+
+    fun createGoogleDriveFolder(accessToken: String, folderName: String) = viewModelScope.launch {
+        Log.d(
+            "chengluo",
+            "createGoogleDriveFolder folderName: $folderName accessToken: $accessToken"
+        )
+        GoogleDriveClient.createFolder(accessToken, folderName)
+        delay(3000)
+        getGoogleDriveRootDirectoryFiles(accessToken)
     }
 
     fun reload() {

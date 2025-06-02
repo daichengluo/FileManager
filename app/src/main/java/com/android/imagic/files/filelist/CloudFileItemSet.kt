@@ -3,7 +3,7 @@ package com.android.imagic.files.filelist
 import android.os.Parcel
 import android.os.Parcelable
 import com.android.imagic.files.compat.writeParcelableListCompat
-import com.android.imagic.files.file.cloud.sdrive.CloudFileItem
+import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.util.LinkedMapSet
 import com.android.imagic.files.util.readParcelableListCompat
 
