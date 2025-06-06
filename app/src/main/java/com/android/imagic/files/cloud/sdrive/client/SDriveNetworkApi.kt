@@ -27,7 +27,7 @@ interface SDriveNetworkApi {
     suspend fun downloadFile(@Url url: String, @Header("Range") range: String): ResponseBody
 
     @GET("api/NetDisk/GetUserFileList")
-    suspend fun getFileList(@Query("TargetID") directoryId: Int): ApiResponse<List<FileInfo>>
+    suspend fun getFileList(@Query("TargetID") directoryId: String): ApiResponse<List<FileInfo>>
 
     @Multipart
     @POST("api/OSSService/UploadFileAndGetUrl")
@@ -65,6 +65,6 @@ interface SDriveNetworkApi {
     suspend fun moveOrCopyFiles(
         @Query("ArrayStr") ids: String,
         @Query("Type") type: Int,
-        @Query("TargetID") directoryId: Int
+        @Query("TargetID") directoryId: String
     ): ApiResponse<Boolean>
 }

@@ -664,7 +664,7 @@
     </plurals>
     <string name="file_transfer_cancelling">正在取消</string>
     <string name="press_again_exit">再按一次退出应用</string>
-    <string name="login_expired">登录已过期，请重新登录</string>
+    <string name="login_expired">登录过期，请重新登录</string>
     <string name="server_error_occurred">发生了服务端错误</string>
     <string name="network_error">网络异常，请稍后重试</string>
     <string name="starboard_drive">StarBoard Drive</string>

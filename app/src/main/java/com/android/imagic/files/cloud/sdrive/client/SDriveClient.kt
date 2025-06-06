@@ -1,7 +1,7 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.app.okHttpClient
-import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.util.ApiOperation
 import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-object Client {
+object SDriveClient {
 
     private val clients = mutableMapOf<Authority, SDriveNetworkClient>()
 
@@ -44,13 +44,13 @@ object Client {
 
     suspend fun createDirectory(
         name: String,
-        parentId: Int,
+        parentId: String,
         authority: Authority
     ): ApiOperation<CloudFileItem> = getClient(authority).createDirectory(name, parentId)
 
     suspend fun renameFile(
         newName: String,
-        fileId: Int,
+        fileId: String,
         authority: Authority
     ): ApiOperation<Boolean> = getClient(authority).renameFile(newName, fileId)
 
@@ -58,7 +58,7 @@ object Client {
         name: String,
         size: Long,
         url: String,
-        directoryId: Int,
+        directoryId: String,
         authority: Authority
     ): ApiOperation<Boolean> = getClient(authority).uploadFileInfo(name, size, url, directoryId)
 
@@ -74,17 +74,17 @@ object Client {
     suspend fun downloadFile(url: String, path: Path, authority: Authority): Flow<TransferStatus> =
         getClient(authority).downloadFile(url, path)
 
-    suspend fun delete(fileIds: List<Int>, authority: Authority): ApiOperation<Boolean> =
+    suspend fun delete(fileIds: List<String>, authority: Authority): ApiOperation<Boolean> =
         getClient(authority).deleteFiles(fileIds.joinToString(","))
 
-    suspend fun move(fileIds: List<Int>, targetId: Int, authority: Authority) =
+    suspend fun moveFile(fileIds: List<String>, targetId: String, authority: Authority) =
         getClient(authority).moveFiles(fileIds.joinToString(","), targetId)
 
-    suspend fun copy(fileIds: List<Int>, targetId: Int, authority: Authority) =
+    suspend fun copyFile(fileIds: List<String>, targetId: String, authority: Authority) =
         getClient(authority).copyFiles(fileIds.joinToString(","), targetId)
 
     suspend fun getFileList(
-        parentId: Int,
+        parentId: String,
         authority: Authority
     ): ApiOperation<List<CloudFileItem>> = getClient(authority).getFileList(parentId)
 

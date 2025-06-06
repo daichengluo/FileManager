@@ -9,11 +9,10 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.extension
 import com.android.imagic.files.databinding.CloudFilePropertiesDialogBinding
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.CloudFileItem
-import com.android.imagic.files.file.cloud.extension
-import com.android.imagic.files.file.cloud.toInstant
 import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.getName
 import com.android.imagic.files.fileproperties.FilePropertiesTabFragment.ViewBuilder
@@ -69,8 +68,7 @@ class CloudFilePropertiesDialogFragment : AppCompatDialogFragment() {
                 addItemView(R.string.file_properties_basic_size, getSizeText(file))
             }
 
-            val lastModificationTime =
-                file.modifyTime?.toInstant()?.formatShort(requireContext()) ?: ""
+            val lastModificationTime = file.modifyTime?.formatShort(requireContext()) ?: ""
             addItemView(R.string.file_properties_basic_last_modification_time, lastModificationTime)
 
             file.url?.let {

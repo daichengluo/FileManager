@@ -1,4 +1,4 @@
-package com.android.imagic.files.file.cloud
+package com.android.imagic.files.cloud
 
 import android.os.Parcelable
 import com.android.imagic.files.file.MimeType
@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter
 
 @Parcelize
 data class CloudFileItem(
-    val id: Int,
-    val parentId: Int,
+    val id: String,
+    val parentId: String,
     val name: String,
     val nameCollationKey: @WriteWith<ParcelableParceler> CollationKey,
     val type: CloudFileType,
@@ -25,8 +25,8 @@ data class CloudFileItem(
     val isHidden: Boolean,
     val mimeType: MimeType,
     val thumbUrl: String? = null,
-    val createTime: String? = null,
-    val modifyTime: String? = null,
+    val createTime: Instant? = null,
+    val modifyTime: Instant? = null,
     var childrenCount: Int? = null,
     val fileHash: String? = null
 ) : Parcelable {

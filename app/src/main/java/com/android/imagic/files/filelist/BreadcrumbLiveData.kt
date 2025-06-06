@@ -50,13 +50,6 @@ class BreadcrumbLiveData(
                 value = BreadcrumbData(paths, null, nameProducers, selectedIndex)
             }
 
-            is FileModeState.Cloud -> {
-                if (cloudPathList != null) {
-                    selectedIndex = cloudPathList.size - 1
-                    value = BreadcrumbData(paths, cloudPathList, nameProducers, selectedIndex)
-                }
-            }
-
             is FileModeState.QuickAccess -> {
                 val quickAccessWrap = fileModeState.quickAccessWrap
                 if (quickAccessWrap.quickAccess.category == QuickAccessCategory.DOWNLOAD) {
@@ -80,6 +73,12 @@ class BreadcrumbLiveData(
                     nameProducers.add { quickAccessWrap.title }
                     paths.add(trailData.trail.last())
                     value = BreadcrumbData(paths, null, nameProducers, selectedIndex)
+                }
+            }
+            is FileModeState.Cloud, is FileModeState.GoogleDrive -> {
+                if (cloudPathList != null) {
+                    selectedIndex = cloudPathList.size - 1
+                    value = BreadcrumbData(paths, cloudPathList, nameProducers, selectedIndex)
                 }
             }
         }

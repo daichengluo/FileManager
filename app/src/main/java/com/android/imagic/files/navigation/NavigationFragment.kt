@@ -170,7 +170,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     }
 
     override fun navigateToGoogleDrive(accessToken: String) {
-        listener.navigateToGoogleDrive(accessToken)
+        listener.setFileModeState(FileModeState.GoogleDrive(accessToken))
     }
 
     override fun navigateTo(path: Path) {
@@ -232,7 +232,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun navigateToDefaultRoot()
-        fun navigateToGoogleDrive(accessToken: String)
         fun observeCurrentPath(owner: LifecycleOwner, observer: (Path) -> Unit)
         fun observeCurrentQuickAccessCategory(
             owner: LifecycleOwner,

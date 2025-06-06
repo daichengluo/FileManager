@@ -11,7 +11,7 @@ data class UploadFileInfo(
 @Serializable
 data class NewFolderBody(
     val newFolderName: String,
-    val newParentID: Int
+    val newParentID: String
 )
 
 @Serializable
@@ -20,18 +20,18 @@ data class FileInfoBody(
     val fileSize: Long,
     val filePath: String,
     val fileHash: String? = null,
-    val targetID: Int
+    val targetID: String
 )
 
 @Serializable
 data class RenameBody(
-    val id: Int,
+    val id: String,
     val newName: String
 )
 
 @Serializable
 data class DirTreeBody(
-    val id: Int
+    val id: String
 )
 
 @Serializable

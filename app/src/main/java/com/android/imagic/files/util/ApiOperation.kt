@@ -13,12 +13,17 @@ data class ApiResponse<T>(
     val data: T? = null
 )
 
+class HttpStatusException(val code: Int, cause: Throwable? = null) : Exception("HTTP $code", cause)
 
 inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
     return try {
         ApiOperation.Success(data = apiCall())
     } catch (e: Exception) {
-        ApiOperation.Failure(exception = e)
+        val mappedException = when (e) {
+            is retrofit2.HttpException -> HttpStatusException(e.code(), e)
+            else -> e
+        }
+        ApiOperation.Failure(mappedException)
     }
 }
 

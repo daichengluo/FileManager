@@ -153,7 +153,7 @@ class StorageListAdapter(
                         if (storageItem is CloudStorageItem) {
                             val storage = storageItem.storage
                             val authority = storage.authority
-                            val pathData = CloudPathData(0, authority.username)
+                            val pathData = CloudPathData("0", authority.username)
                             dragDropListener.dropToCloud(pathData, authority)
                         }
                         true

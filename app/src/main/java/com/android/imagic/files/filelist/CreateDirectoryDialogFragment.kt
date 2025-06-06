@@ -12,6 +12,15 @@ class CreateDirectoryDialogFragment : FileNameDialogFragment() {
     @StringRes
     override val titleRes: Int = R.string.file_create_directory_title
 
+    override fun isNameValid(name: String): Boolean {
+        val containsEmoji = name.containsEmoji()
+        val isNameValid = super.isNameValid(name)
+        if (containsEmoji) {
+            binding.nameLayout.error = getString(R.string.file_name_error_invalid)
+        }
+        return isNameValid && !containsEmoji
+    }
+
     override fun onOk(name: String) {
         listener.createDirectory(name)
     }
@@ -25,4 +34,14 @@ class CreateDirectoryDialogFragment : FileNameDialogFragment() {
     interface Listener : FileNameDialogFragment.Listener {
         fun createDirectory(name: String)
     }
+}
+
+private fun String.containsEmoji(): Boolean {
+    for (char in this) {
+        val type = Character.getType(char)
+        if (type == Character.SURROGATE.toInt() || type == Character.OTHER_SYMBOL.toInt()) {
+            return true
+        }
+    }
+    return false
 }

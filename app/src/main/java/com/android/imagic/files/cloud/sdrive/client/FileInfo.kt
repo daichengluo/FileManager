@@ -1,9 +1,10 @@
 package com.android.imagic.files.cloud.sdrive.client
 
+import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.toInstant
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeType
-import com.android.imagic.files.file.cloud.CloudFileItem
-import com.android.imagic.files.file.cloud.CloudFileType
 import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.filelist.getCollationKeyForFileName
@@ -13,10 +14,10 @@ import java.text.Collator
 
 @Serializable
 data class FileInfo(
-    val id: Int,
+    val id: String,
     val fName: String? = null,
     val fType: Int,
-    val parentID: Int,
+    val parentID: String,
     val thumbURL: String? = null,
     val groupID: String? = null,
     val createUser: String? = null,
@@ -41,7 +42,8 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
         MimeType.guessFromPath(name).value
     }.asMimeType()
     val thumbUrl = if (mimeType.isImage && thumbURL == null) filePath else thumbURL
-    val modifyTime = modifyTime ?: createTime
+    val createTime = createTime?.toInstant()
+    val modifyTime = modifyTime?.toInstant() ?: createTime
     return CloudFileItem(
         id = id,
         parentId = parentID,

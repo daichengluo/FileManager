@@ -2,7 +2,9 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
-import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.file.MimeType
+import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.provider.common.createFile
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
@@ -56,14 +58,14 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         } else {
             0L
         }
-        val downloadedBytes = Files.size(path)
+        val downloadedBytes = path.size()
 
         return network.downloadFile(
             url, "bytes=$downloadedBytes-"
         ).saveFile(path, downloadedBytes, totalBytes)
     }
 
-    override suspend fun getFileList(directoryId: Int): ApiOperation<List<CloudFileItem>> {
+    override suspend fun getFileList(directoryId: String): ApiOperation<List<CloudFileItem>> {
         return safeApiCallHandled {
             network.getFileList(directoryId)
         }.mapSuccess { list ->
@@ -71,31 +73,32 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }
     }
 
-    override suspend fun createDirectory(name: String, parentId: Int): ApiOperation<CloudFileItem> {
-        return safeApiCallHandled {
-            val body = NewFolderBody(name, parentId)
-            network.createDirectory(body)
-        }.mapSuccess { it.toCloudFileItem() }
-    }
+    override suspend fun createDirectory(
+        name: String,
+        parentId: String
+    ): ApiOperation<CloudFileItem> = safeApiCallHandled {
+        val body = NewFolderBody(name, parentId)
+        network.createDirectory(body)
+    }.mapSuccess { it.toCloudFileItem() }
 
-    override suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo> {
-        return safeApiCallHandled {
+    override suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo> =
+        safeApiCallHandled {
             if (!file.exists()) file.createNewFile()
-            val requestBody = file.asRequestBody("application/octet-stream".toMediaType())
-            val partBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
-            network.uploadFile(userId.toString(), partBody)
+            val mimeType = MimeType.guessFromPath(file.path).value
+            val requestBody = file.asRequestBody(mimeType.toMediaType())
+            val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
+            network.uploadFile(userId.toString(), filePart)
         }
-    }
 
-    override suspend fun uploadFile(userId: Int, path: Path): ApiOperation<UploadFileInfo> {
-        return safeApiCallHandled {
+    override suspend fun uploadFile(userId: Int, path: Path): ApiOperation<UploadFileInfo> =
+        safeApiCallHandled {
             if (!Files.exists(path)) path.createFile()
             val file = path.toFile()
-            val requestBody = file.asRequestBody("application/octet-stream".toMediaType())
-            val partBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
-            network.uploadFile(userId.toString(), partBody)
+            val mimeType = MimeType.guessFromPath(file.path).value
+            val requestBody = file.asRequestBody(mimeType.toMediaType())
+            val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
+            network.uploadFile(userId.toString(), filePart)
         }
-    }
 
     override suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus> = flow {
         val fileSize = path.size()
@@ -201,20 +204,20 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         name: String,
         size: Long,
         url: String,
-        directoryId: Int
+        directoryId: String
     ): ApiOperation<Boolean> = safeApiCallHandled {
         val body = FileInfoBody(name, size, url, "", directoryId)
         network.uploadFileInfo(body)
     }.mapSuccess { true }
 
-    override suspend fun renameFile(newName: String, fileId: Int): ApiOperation<Boolean> {
+    override suspend fun renameFile(newName: String, fileId: String): ApiOperation<Boolean> {
         return safeApiCallHandled {
             val body = RenameBody(fileId, newName)
             network.renameFile(body)
         }
     }
 
-    override suspend fun getDirTree(directoryId: Int): ApiOperation<List<CloudFileItem>> {
+    override suspend fun getDirTree(directoryId: String): ApiOperation<List<CloudFileItem>> {
         return safeApiCallHandled {
             val body = DirTreeBody(directoryId)
             network.getDirTree(body)
@@ -230,13 +233,13 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
         }.mapSuccess { it > 0 }
     }
 
-    override suspend fun moveFiles(fileIds: String, targetId: Int): ApiOperation<Boolean> {
+    override suspend fun moveFiles(fileIds: String, targetId: String): ApiOperation<Boolean> {
         return safeApiCallHandled {
             network.moveOrCopyFiles(fileIds, 2, targetId)
         }
     }
 
-    override suspend fun copyFiles(fileIds: String, targetId: Int): ApiOperation<Boolean> {
+    override suspend fun copyFiles(fileIds: String, targetId: String): ApiOperation<Boolean> {
         return safeApiCallHandled {
             network.moveOrCopyFiles(fileIds, 1, targetId)
         }

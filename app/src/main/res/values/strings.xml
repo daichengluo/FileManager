@@ -826,7 +826,7 @@
     </plurals>
     <string name="file_transfer_cancelling">Cancelling</string>
     <string name="press_again_exit">Press again to exit</string>
-    <string name="login_expired">The login has expired. Please sign in again</string>
+    <string name="login_expired">Login expired. Please sign in again</string>
     <string name="server_error_occurred">A server error occurred</string>
     <string name="network_error">Network anomaly. Please try again later</string>
     <string name="starboard_drive">StarBoard Drive</string>

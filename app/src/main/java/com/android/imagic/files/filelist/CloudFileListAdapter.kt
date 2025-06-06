@@ -18,16 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.dispose
 import coil.load
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.extension
+import com.android.imagic.files.cloud.toCloudPathData
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.getDrawableCompat
 import com.android.imagic.files.compat.isSingleLineCompat
 import com.android.imagic.files.databinding.FileItemGridBinding
 import com.android.imagic.files.databinding.FileItemListBinding
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.CloudFileItem
-import com.android.imagic.files.file.cloud.extension
-import com.android.imagic.files.file.cloud.toCloudPathData
-import com.android.imagic.files.file.cloud.toInstant
 import com.android.imagic.files.file.formatShort
 import com.android.imagic.files.file.iconRes
 import com.android.imagic.files.file.isApk
@@ -74,7 +73,7 @@ class CloudFileListAdapter(
 
     private val selectedFiles = cloudFileItemSetOf()
 
-    private val filePositionMap = mutableMapOf<Int, Int>()
+    private val filePositionMap = mutableMapOf<String, Int>()
 
     private lateinit var _nameEllipsize: TextUtils.TruncateAt
     var nameEllipsize: TextUtils.TruncateAt
@@ -323,7 +322,7 @@ class CloudFileListAdapter(
             val context = it.context
             val childrenCount = file.childrenCount ?: 0
             val descriptionSeparator = context.getString(R.string.file_item_description_separator)
-            val lastModificationTime = file.modifyTime?.toInstant()?.formatShort(context) ?: ""
+            val lastModificationTime = file.modifyTime?.formatShort(context) ?: ""
 
             it.text = if (isDirectory) {
                 val childrenCountText = context.getQuantityString(
@@ -373,8 +372,7 @@ class CloudFileListAdapter(
             By.NAME -> file.name.take(1).uppercase(Locale.getDefault())
             By.TYPE -> file.extension.uppercase(Locale.getDefault())
             By.SIZE -> file.size.asFileSize().formatHumanReadable(view.context)
-            By.LAST_MODIFIED ->
-                file.modifyTime?.toInstant()?.formatShort(view.context) ?: ""
+            By.LAST_MODIFIED -> file.modifyTime?.formatShort(view.context) ?: ""
         }
     }
 

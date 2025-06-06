@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.android.imagic.files.R
-import com.android.imagic.files.file.cloud.CloudFileItem
+import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs

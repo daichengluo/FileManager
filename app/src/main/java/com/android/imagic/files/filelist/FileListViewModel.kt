@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.gdrive.GoogleDriveClient
 import com.android.imagic.files.cloud.sdrive.client.Authority
-import com.android.imagic.files.cloud.sdrive.client.Client
+import com.android.imagic.files.cloud.sdrive.client.SDriveClient
 import com.android.imagic.files.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.file.FileItem
 import com.android.imagic.files.file.asFileSize
-import com.android.imagic.files.file.cloud.CloudFileItem
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.navigation.QuickAccessCategory
 import com.android.imagic.files.navigation.getExternalStorageDirectory
@@ -38,7 +38,6 @@ import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
 import java8.nio.file.Path
 import java8.nio.file.Paths
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -73,7 +72,7 @@ class FileListViewModel : ViewModel() {
         get() = currentFileModeStateLiveData.valueCompat
 
     val isCloudFileMode: Boolean
-        get() = currentFileModeStateLiveData.valueCompat is FileModeState.Cloud
+        get() = currentFileMode is FileModeState.Cloud || currentFileMode is FileModeState.GoogleDrive
 
     fun setFileModeState(mode: FileModeState) {
         if (_currentFileModeStateLiveData.valueCompat != mode) {
@@ -126,20 +125,20 @@ class FileListViewModel : ViewModel() {
     val fileListStateful: Stateful<List<FileItem>>
         get() = _fileListLiveData.valueCompat
 
-    private val _cloudAuthority = MutableLiveData<Authority?>(null)
-    val cloudAuthority: LiveData<Authority?> = _cloudAuthority
+    private val _cloudAuthorityLiveData = MutableLiveData<Authority?>(null)
+    val cloudAuthorityLiveData: LiveData<Authority?> = _cloudAuthorityLiveData
     val authority: Authority?
-        get() = cloudAuthority.valueCompat
+        get() = cloudAuthorityLiveData.valueCompat
 
     fun setCloudAuthority(authority: Authority?) {
-        if (_cloudAuthority != authority) {
-            _cloudAuthority.value = authority
+        if (_cloudAuthorityLiveData != authority) {
+            _cloudAuthorityLiveData.value = authority
             _cloudPathListLiveData.value = null
         }
     }
 
     fun logout(authority: Authority) {
-        if (_cloudAuthority.valueCompat == authority) {
+        if (_cloudAuthorityLiveData.valueCompat == authority) {
             setFileModeState(FileModeState.Local)
             setCloudAuthority(null)
         }
@@ -165,7 +164,10 @@ class FileListViewModel : ViewModel() {
     }
 
     fun navigateCloudTo(pathData: CloudPathData) {
-        if (authority == null) return
+        updateCloudPath(pathData)
+    }
+
+    private fun updateCloudPath(pathData: CloudPathData) {
         val cloudPathList = _cloudPathListLiveData.valueCompat ?: emptyList()
         val index = cloudPathList.indexOfFirst { it == pathData }
 
@@ -178,17 +180,29 @@ class FileListViewModel : ViewModel() {
     }
 
     fun loadCloudFileList(path: CloudPathData) = viewModelScope.launch {
-        val currentAuthority = authority ?: return@launch
-        _cloudFileListLiveData.value = Loading(null)
-        val response = Client.getFileList(path.directoryId, currentAuthority)
-        _cloudFileListLiveData.value = when (response) {
-            is ApiOperation.Success -> Success(response.data)
-            is ApiOperation.Failure -> Failure(null, response.exception)
+        if (currentFileMode is FileModeState.Cloud) {
+            authority?.let {
+                _cloudFileListLiveData.value = Loading(null)
+                val response = SDriveClient.getFileList(path.directoryId, it)
+                _cloudFileListLiveData.value = when (response) {
+                    is ApiOperation.Success -> Success(response.data)
+                    is ApiOperation.Failure -> Failure(null, response.exception)
+                }
+            }
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            accessToken?.let {
+                _cloudFileListLiveData.value = Loading(null)
+                val response = GoogleDriveClient.getFileList(path.directoryId, it)
+                _cloudFileListLiveData.value = when (response) {
+                    is ApiOperation.Success -> Success(response.data)
+                    is ApiOperation.Failure -> Failure(null, response.exception)
+                }
+            }
         }
     }
 
-    fun navigateCloudUp() {
-        if (authority == null) return
+    private fun navigateCloudUp() {
         val cloudPathList = _cloudPathListLiveData.valueCompat ?: return
         if (cloudPathList.isEmpty()) return
 
@@ -197,45 +211,81 @@ class FileListViewModel : ViewModel() {
     }
 
     fun createCloudDirectory(name: String) = viewModelScope.launch {
-        if (authority == null) return@launch
         val currentCloudPath = currentCloudPath ?: return@launch
-        Client.createDirectory(name, currentCloudPath.directoryId, authority!!)
-            .onSuccess { refreshCloud() }
-            .onFailure { it.printStackTrace() }
-    }
-
-    fun createCloudFile(name: String, context: Context) {
-        try {
-            val newFile = File(context.cacheDir, name)
-            newFile.deleteOnExit()
-            uploadFile(newFile)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (currentFileMode is FileModeState.Cloud) {
+            authority?.let {
+                SDriveClient.createDirectory(name, currentCloudPath.directoryId, it)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            accessToken?.let {
+                GoogleDriveClient.createDirectory(name, currentCloudPath.directoryId, it)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
         }
     }
 
+    fun createCloudFile(name: String, context: Context) {
+        val file = File(context.cacheDir, name)
+        file.deleteOnExit()
+        uploadFile(file)
+    }
+
     fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
-        if (authority == null) return@launch
-        Client.renameFile(newName, file.id, authority!!)
-            .onSuccess { refreshCloud() }
-            .onFailure { it.printStackTrace() }
+        if (currentFileMode is FileModeState.Cloud) {
+            authority?.let {
+                SDriveClient.renameFile(newName, file.id, it)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            accessToken?.let {
+                GoogleDriveClient.renameFile(file.id, newName, it)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
+        }
     }
 
     fun deleteCloudFiles(files: CloudFileItemSet) = viewModelScope.launch {
-        if (authority == null || files.isEmpty()) return@launch
-        Client.delete(files.map { it.id }, authority!!)
-            .onSuccess { refreshCloud() }
-            .onFailure { it.printStackTrace() }
+        if (files.isEmpty()) return@launch
+        if (currentFileMode is FileModeState.Cloud) {
+            authority?.let {
+                SDriveClient.delete(files.map { it.id }, authority!!)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            accessToken?.let {
+                files.forEach { file ->
+                    viewModelScope.launch {
+                        GoogleDriveClient.deleteFileById(file.id, it)
+                            .onSuccess { refreshCloud() }
+                            .onFailure { it.printStackTrace() }
+                    }
+                }
+            }
+        }
     }
 
     fun downloadToLocal(file: CloudFileItem, context: Context) {
         val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
-        downloadFile(file, downloadPath, false, context)
+        if (currentFileMode is FileModeState.Cloud) {
+            downloadFile(file, downloadPath, false, context)
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            downloadGoogleDriveFile(file, downloadPath, false, context)
+        }
     }
 
     suspend fun uploadFolderRecursively(
         path: Path,
-        parentDirectoryId: Int,
+        parentDirectoryId: String,
         isMove: Boolean,
         context: Context
     ) {
@@ -244,7 +294,7 @@ class FileListViewModel : ViewModel() {
         if (path.isDirectory()) {
             val folderName = path.fileName.toString()
 
-            val response = Client.createDirectory(folderName, parentDirectoryId, authority!!)
+            val response = SDriveClient.createDirectory(folderName, parentDirectoryId, authority!!)
             val newDirectoryId = if (response is ApiOperation.Success) {
                 refreshCloud()
                 response.data.id
@@ -268,7 +318,7 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    fun uploadFile(localFile: Path, directoryId: Int, isMove: Boolean, context: Context) =
+    fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) =
         viewModelScope.launch {
             if (authority == null) return@launch
             val name = localFile.fileName.toString()
@@ -278,7 +328,7 @@ class FileListViewModel : ViewModel() {
             val id = localFile.toString().hashCode()
 
             if (isBigFile) {
-                Client.uploadChunks(localFile, authority!!).collect { status ->
+                SDriveClient.uploadChunks(localFile, authority!!).collect { status ->
                     Log.d("chengluo", "uploadFile status: $status")
                     val transfer = when (status) {
                         is TransferStatus.Failed -> FileTransfer(
@@ -293,7 +343,13 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             val url = status.data ?: return@collect
-                            Client.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
+                            SDriveClient.uploadFileInfo(
+                                name,
+                                sizeInKB,
+                                url,
+                                directoryId,
+                                authority!!
+                            )
                                 .onSuccess {
                                     refreshCloud()
                                     if (isMove) {
@@ -335,11 +391,11 @@ class FileListViewModel : ViewModel() {
                     _fileTransferState.emit(transfer)
                 }
             } else {
-                val response = Client.uploadFile(localFile, authority!!)
+                val response = SDriveClient.uploadFile(localFile, authority!!)
                 if (response is ApiOperation.Success) {
                     val url = response.data.url ?: ""
                     Log.d("chengluo", "uploadFile file size: $sizeInKB")
-                    Client.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
+                    SDriveClient.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
                         .onSuccess {
                             refreshCloud()
                             if (isMove) {
@@ -352,18 +408,26 @@ class FileListViewModel : ViewModel() {
         }
 
     fun uploadFile(file: File) = viewModelScope.launch {
-        if (authority == null) return@launch
         val directoryId = currentCloudPath?.directoryId ?: return@launch
-        val response = Client.uploadFile(file, authority!!)
-        if (response is ApiOperation.Success) {
-            val url = response.data.url ?: ""
-            val sizeInKB = file.length() / 1024
-            Log.d("chengluo", "uploadFile file size: $sizeInKB")
-            Client.uploadFileInfo(file.name, sizeInKB, url, directoryId, authority!!)
-                .onSuccess {
-                    refreshCloud()
+        if (currentFileMode is FileModeState.Cloud) {
+            authority?.let {
+                val response = SDriveClient.uploadFile(file, it)
+                if (response is ApiOperation.Success) {
+                    val url = response.data.url ?: ""
+                    val sizeInKB = file.length() / 1024
+                    Log.d("chengluo", "uploadFile file size: $sizeInKB")
+                    SDriveClient.uploadFileInfo(file.name, sizeInKB, url, directoryId, it)
+                        .onSuccess { refreshCloud() }
+                        .onFailure { it.printStackTrace() }
                 }
-                .onFailure { it.printStackTrace() }
+            }
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            accessToken?.let {
+                GoogleDriveClient.uploadFile(file, directoryId, it)
+                    .onSuccess { refreshCloud() }
+                    .onFailure { it.printStackTrace() }
+            }
         }
     }
 
@@ -381,7 +445,7 @@ class FileListViewModel : ViewModel() {
             val localDir = path.resolve(cloudFile.name)
             localDir.createDirectory()
 
-            val response = Client.getFileList(cloudFile.id, currentAuthority)
+            val response = SDriveClient.getFileList(cloudFile.id, currentAuthority)
 
             when (response) {
                 is ApiOperation.Success -> {
@@ -412,14 +476,90 @@ class FileListViewModel : ViewModel() {
         directoryPath: Path,
         isMove: Boolean,
         context: Context
-    ) =
-        viewModelScope.launch {
-            try {
-                val localFile = directoryPath.resolve(cloudFile.name)
-                localFile.createFile()
-                if (authority == null || cloudFile.url == null) return@launch
-                val id = cloudFile.hashCode()
-                Client.downloadFile(cloudFile.url, localFile, authority!!).collect { status ->
+    ) = viewModelScope.launch {
+        try {
+            val localFile = directoryPath.resolve(cloudFile.name)
+            localFile.createFile()
+            if (authority == null || cloudFile.url == null) return@launch
+            val id = cloudFile.hashCode()
+            SDriveClient.downloadFile(cloudFile.url, localFile, authority!!).collect { status ->
+                val transfer = when (status) {
+                    is TransferStatus.Transferring -> {
+                        val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                        val transferredSizeString =
+                            status.transferred.asFileSize().formatHumanReadable(context)
+                        val text = context.getString(
+                            R.string.file_job_transfer_size_notification_text_one_format,
+                            transferredSizeString,
+                            sizeString
+                        )
+                        FileTransfer(
+                            id = id,
+                            title = cloudFile.name,
+                            text = text,
+                            max = status.total.toInt(),
+                            progress = status.transferred.toInt(),
+                            indeterminate = false,
+                            status = FileTransfer.Status.TRANSFERRING
+                        )
+                    }
+
+                    is TransferStatus.Finished -> {
+                        if (isMove) {
+                            deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                        }
+                        FileTransfer(
+                            id = id,
+                            title = cloudFile.name,
+                            text = "Completed",
+                            max = 100,
+                            progress = 100,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FINISHED
+                        )
+                    }
+
+                    is TransferStatus.Failed -> FileTransfer(
+                        id = id,
+                        title = cloudFile.name,
+                        text = "Failed: ${status.exception.message}",
+                        max = 100,
+                        progress = 0,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FAILED
+                    )
+                }
+                _fileTransferState.emit(transfer)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            _fileTransferState.emit(
+                FileTransfer(
+                    id = cloudFile.hashCode(),
+                    title = cloudFile.name,
+                    text = "Failed: ${e.message}",
+                    max = 100,
+                    progress = 0,
+                    indeterminate = false,
+                    status = FileTransfer.Status.FAILED
+                )
+            )
+        }
+    }
+
+    fun downloadGoogleDriveFile(
+        cloudFile: CloudFileItem,
+        directoryPath: Path,
+        isMove: Boolean,
+        context: Context
+    ) = viewModelScope.launch {
+        try {
+            val localFile = directoryPath.resolve(cloudFile.name)
+            localFile.createFile()
+            if (accessToken == null) return@launch
+            val id = cloudFile.hashCode()
+            GoogleDriveClient.downloadFile(cloudFile.id, cloudFile.size, localFile, accessToken!!)
+                .collect { status ->
                     val transfer = when (status) {
                         is TransferStatus.Transferring -> {
                             val sizeString = status.total.asFileSize().formatHumanReadable(context)
@@ -468,21 +608,50 @@ class FileListViewModel : ViewModel() {
                     }
                     _fileTransferState.emit(transfer)
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                _fileTransferState.emit(
-                    FileTransfer(
-                        id = cloudFile.hashCode(),
-                        title = cloudFile.name,
-                        text = "Failed: ${e.message}",
-                        max = 100,
-                        progress = 0,
-                        indeterminate = false,
-                        status = FileTransfer.Status.FAILED
-                    )
+        } catch (e: IOException) {
+            e.printStackTrace()
+            _fileTransferState.emit(
+                FileTransfer(
+                    id = cloudFile.hashCode(),
+                    title = cloudFile.name,
+                    text = "Failed: ${e.message}",
+                    max = 100,
+                    progress = 0,
+                    indeterminate = false,
+                    status = FileTransfer.Status.FAILED
                 )
-            }
+            )
         }
+    }
+
+    private val _accessTokenLiveData = MutableLiveData<String?>(null)
+    val accessTokenLiveData: LiveData<String?> = _accessTokenLiveData
+    val accessToken: String?
+        get() = accessTokenLiveData.valueCompat
+
+    fun setAccessToken(accessToken: String?) {
+        if (_accessTokenLiveData.valueCompat != accessToken) {
+            _accessTokenLiveData.value = accessToken
+            _cloudPathListLiveData.value = null
+        }
+    }
+
+    fun logoutGoogleDrive(accessToken: String?) {
+        if (_accessTokenLiveData.valueCompat == accessToken) {
+            setFileModeState(FileModeState.Local)
+            setAccessToken(null)
+        }
+    }
+
+    fun pasteFiles(context: Context) {
+        if (isCloudFileMode) {
+            val targetCloudPath = currentCloudPath ?: return
+            pasteToCloud(targetCloudPath, context)
+        } else {
+            val targetLocalDir = currentPath
+            pasteToLocal(targetLocalDir, context)
+        }
+    }
 
     fun pasteToLocal(targetLocalDir: Path, context: Context) {
         val cloudFiles = cloudPasteState.files
@@ -520,7 +689,7 @@ class FileListViewModel : ViewModel() {
         clearCloudPasteState()
 
         val files = pasteState.files
-        val directoryId = currentCloudPath?.directoryId ?: 0
+        val directoryId = currentCloudPath?.directoryId ?: "0"
         if (pasteState.copy) {
             files.forEach {
                 viewModelScope.launch {
@@ -539,43 +708,66 @@ class FileListViewModel : ViewModel() {
 
     private fun moveCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
         viewModelScope.launch {
-            if (authority == null || files.isEmpty()) return@launch
-            Client.move(files.map { it.id }, cloudPath.directoryId, authority!!)
-                .onSuccess { refreshCloud() }
-                .onFailure { it.printStackTrace() }
+            if (files.isEmpty()) return@launch
+            if (currentFileMode is FileModeState.Cloud) {
+                authority?.let {
+                    SDriveClient.moveFile(files.map { it.id }, cloudPath.directoryId, authority!!)
+                        .onSuccess { refreshCloud() }
+                        .onFailure { it.printStackTrace() }
+                }
+            }
+            if (currentFileMode is FileModeState.GoogleDrive) {
+                accessToken?.let {
+                    files.forEach { file ->
+                        viewModelScope.launch {
+                            GoogleDriveClient.moveFile(
+                                file.id,
+                                cloudPath.directoryId,
+                                file.parentId,
+                                it
+                            )
+                                .onSuccess { refreshCloud() }
+                                .onFailure { it.printStackTrace() }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun copyCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
+    private fun copyCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) =
         viewModelScope.launch {
-            if (authority == null || files.isEmpty()) return@launch
-            Client.copy(files.map { it.id }, cloudPath.directoryId, authority!!)
-                .onSuccess { refreshCloud() }
-                .onFailure { it.printStackTrace() }
+            if (files.isEmpty()) return@launch
+            if (currentFileMode is FileModeState.Cloud) {
+                authority?.let {
+                    SDriveClient.copyFile(files.map { it.id }, cloudPath.directoryId, it)
+                        .onSuccess { refreshCloud() }
+                        .onFailure { it.printStackTrace() }
+                }
+            }
+            if (currentFileMode is FileModeState.GoogleDrive) {
+                accessToken?.let {
+                    files.forEach { file ->
+                        viewModelScope.launch {
+                            GoogleDriveClient.copyFile(file.id, cloudPath.directoryId, it)
+                                .onSuccess { refreshCloud() }
+                                .onFailure { it.printStackTrace() }
+                        }
+                    }
+                }
+            }
         }
-    }
-
-    fun getGoogleDriveRootDirectoryFiles(accessToken: String) = viewModelScope.launch {
-        Log.d("chengluo", "getGoogleDriveRootDirectoryFiles accessToken: $accessToken")
-        GoogleDriveClient.getRootDirectoryFiles(accessToken)
-    }
-
-    fun createGoogleDriveFolder(accessToken: String, folderName: String) = viewModelScope.launch {
-        Log.d(
-            "chengluo",
-            "createGoogleDriveFolder folderName: $folderName accessToken: $accessToken"
-        )
-        GoogleDriveClient.createFolder(accessToken, folderName)
-        delay(3000)
-        getGoogleDriveRootDirectoryFiles(accessToken)
-    }
 
     fun reload() {
-        val path = currentPath
-        if (path.isArchivePath) {
-            path.archiveRefresh()
+        if (isCloudFileMode) {
+            refreshCloud()
+        } else {
+            val path = currentPath
+            if (path.isArchivePath) {
+                path.archiveRefresh()
+            }
+            _fileListLiveData.reload()
         }
-        _fileListLiveData.reload()
     }
 
     val searchViewExpandedLiveData = MutableLiveData(false)
@@ -773,7 +965,7 @@ class FileListViewModel : ViewModel() {
             }
         }
 
-        addSource(cloudAuthority) { compute() }
+        addSource(cloudAuthorityLiveData) { compute() }
         addSource(_selectedFilesLiveData) { compute() }
         addSource(_fileListLiveData) { compute() }
         addSource(_selectedCloudFilesLiveData) { compute() }
@@ -885,7 +1077,7 @@ class FileListViewModel : ViewModel() {
             } else {
                 when (fileModeState) {
                     FileModeState.Local -> FileListLiveData(path)
-                    is FileModeState.Cloud -> return
+
                     is FileModeState.QuickAccess -> {
                         val quickAccessWrap = fileModeState.quickAccessWrap
                         if (quickAccessWrap.category == null) {
@@ -898,6 +1090,8 @@ class FileListViewModel : ViewModel() {
                             )
                         }
                     }
+
+                    is FileModeState.GoogleDrive, is FileModeState.Cloud -> return
                 }
             }
             liveData = newLiveData
