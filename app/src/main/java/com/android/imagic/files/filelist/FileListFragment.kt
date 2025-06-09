@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -1642,6 +1643,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 load(AppIconPackageName(appDirectoryPackageName))
             }
         }
+        val fileCount = if (viewModel.isCloudFileMode) {
+            viewModel.cloudPasteState.files.size
+        } else {
+            viewModel.pasteState.files.size
+        }
+        binding.fileCountTextView.apply {
+            text = fileCount.toString()
+        }
+        binding.fileCountLayout.apply {
+            isVisible = fileCount > 1
+        }
         return binding.dragPlaceholder.apply { isVisible = true }
     }
 
@@ -2325,6 +2337,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val iconImage: ImageView,
         val thumbnailImage: ImageView,
         val appIconBadgeImage: ImageView,
+        val fileCountLayout: LinearLayout,
+        val fileCountTextView: TextView,
         val transferRecyclerLayout: FileTransferFloatingLayout,
         val transferRecyclerView: RecyclerView,
         val transferTitle: TextView,
@@ -2358,7 +2372,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     bottomBarBinding.bottomProgressbar, bottomBarBinding.bottomToolbar,
                     bottomBarBinding.bottomCreateFileNameEdit, speedDialBinding.speedDialView,
                     dragBinding.dragPlaceholder, dragBinding.iconImage, dragBinding.thumbnailImage,
-                    dragBinding.appIconBadgeImage, transferBinding.transferRecyclerLayout,
+                    dragBinding.appIconBadgeImage, dragBinding.fileCountLayout,
+                    dragBinding.fileCountTextView, transferBinding.transferRecyclerLayout,
                     transferBinding.transferRecyclerView, transferBinding.transferTitleText,
                     transferBinding.dropDownButton, transferBinding.floatingButton
                 )
