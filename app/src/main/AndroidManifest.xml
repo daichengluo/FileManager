@@ -415,7 +415,8 @@
             android:exported="true"
             android:icon="@drawable/file_directory_icon"
             android:label="@string/ftp_server_title"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            tools:ignore="NewApi">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>

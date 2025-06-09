@@ -1,6 +1,7 @@
-
 package com.android.imagic.files.compat
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.os.Build
 import com.android.imagic.files.util.lazyReflectedField
@@ -76,4 +77,14 @@ var RotateDrawable.pivotYCompat: Float
                 invalidateSelf()
             }
         }
+    }
+
+var RotateDrawable.drawableCompat: Drawable?
+    // The get/setDrawable() methods were on RotateDrawable and are now on DrawableWrapper, so this
+    // is fine because both are classes and invoke-virtual works for both.
+    @SuppressLint("NewApi")
+    get() = drawable
+    @SuppressLint("NewApi")
+    set(value) {
+        drawable = value
     }

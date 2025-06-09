@@ -21,6 +21,8 @@ import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.android.imagic.files.compat.createCompat
+import com.android.imagic.files.compat.drawableCompat
+import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.setTextAppearanceCompat
 import com.android.imagic.files.util.ParcelableState
 import com.android.imagic.files.util.asColor
@@ -78,7 +80,7 @@ class ThemedSpeedDialView : SpeedDialView {
         }
         // Always use our own animation to fix the library issue that ripple is rotated as well.
         val mainFabDrawable = RotateDrawable::class.createCompat().apply {
-            drawable = mainFab.drawable
+            drawableCompat = mainFab.drawable
             toDegrees = mainFabAnimationRotateAngle
         }
         mainFabAnimationRotateAngle = 0f
@@ -184,7 +186,7 @@ class ThemedSpeedDialView : SpeedDialView {
                 labelBackground.apply {
                     useCompatPadding = false
                     setContentPadding(0, 0, 0, 0)
-                    foreground = null
+                    foregroundCompat = null
                     (getChildAt(0) as TextView).apply {
                         setTextAppearanceCompat(
                             context.getResourceIdByAttr(
