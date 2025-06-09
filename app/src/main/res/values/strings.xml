@@ -795,7 +795,7 @@
         <item quantity="one">%1$,d item</item>
         <item quantity="other">%1$,d items</item>
     </plurals>
-    <string name="navigation_login_account_tip">Login account</string>
+    <string name="navigation_login_account_tip">Sign In</string>
     <string name="navigation_internal_storage_name">Internal storage</string>
     <string name="navigation_quick_access_images">Images</string>
     <string name="navigation_quick_access_videos">Videos</string>
@@ -826,30 +826,30 @@
     </plurals>
     <string name="file_transfer_cancelling">Cancelling</string>
     <string name="press_again_exit">Press again to exit</string>
-    <string name="login_expired">The login has expired. Please log in again</string>
+    <string name="login_expired">The login has expired. Please sign in again</string>
     <string name="server_error_occurred">A server error occurred</string>
     <string name="network_error">Network anomaly. Please try again later</string>
     <string name="starboard_drive">StarBoard Drive</string>
     <string name="storage_add_storage_sdrive_server">Log in to StarBoard Drive</string>
     <string name="video_player_title">Video player</string>
     <string name="cloud_file_download_dialog_message">This file type cannot be previewed. Would you like to download it to a local folder?</string>
-    <string name="widget_launcher_login_button_text">Log in</string>
-    <string name="widget_launcher_login_tip_text">Please log in to your account.</string>
-    <string name="qrcode_login_tip_text">Scan the code to log in</string>
-    <string name="use_password_login">Log in with a password</string>
-    <string name="use_qrcode_login">Log in by scanning the code</string>
+    <string name="widget_launcher_login_button_text">Sign in</string>
+    <string name="widget_launcher_login_tip_text">Please sign in to your account.</string>
+    <string name="qrcode_login_tip_text">Scan the code to sign in</string>
+    <string name="use_password_login">Sign in with a password</string>
+    <string name="use_qrcode_login">Sign in by scanning the code</string>
     <string name="cloud_file_properties_download_url">Download Url</string>
-    <string name="logout_cloud_drive_dialog_message">Are you sure you want to log out?</string>
-    <string name="login_in">Log in</string>
-    <string name="log_out">Log Out</string>
+    <string name="logout_cloud_drive_dialog_message">Are you sure you want to Sign out?</string>
+    <string name="login_in">Sign in</string>
+    <string name="log_out">Sign Out</string>
     <string name="login_google_account">Continue with Google</string>
     <string name="login_microsoft_account">Continue with Microsoft</string>
     <string name="login_wechat_account">Continue with WeChat</string>
-    <string name="message_logout">Are you sure you want to log out? You will no longer be able to access your cloud files until you log in again.</string>
-    <string name="qrcode_login_scan_tip">Log in to Google Drive or Microsoft OneDrive by scanning the QR code with your mobile phone.</string>
+    <string name="message_logout">Are you sure you want to sign out? You will no longer be able to access your cloud files until you sign in again.</string>
+    <string name="qrcode_login_scan_tip">Sign in to Google Drive or Microsoft OneDrive by scanning the QR code with your mobile phone.</string>
     <string name="user_agreement_text">I have read and agree to the %1$s and %2$s.</string>
     <string name="user_agreement">User Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="check_agreement_first">Please check the User Agreement</string>
-    <string name="qrcode_login_user_agreement_text">By logging in with QR code, you agree to the %1$s and %2$s.</string>
+    <string name="qrcode_login_user_agreement_text">By Signing in with QR code, you agree to the %1$s and %2$s.</string>
 </resources>
