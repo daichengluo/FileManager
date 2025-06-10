@@ -1717,6 +1717,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun viewApk(file: FileItem) {
+        if (viewModel.currentFileMode is FileModeState.QuickAccess) {
+            viewModel.setFileModeState(FileModeState.Local)
+            navigateTo(file.path.parent)
+        }
         navigateTo(file.listablePath)
     }
 
