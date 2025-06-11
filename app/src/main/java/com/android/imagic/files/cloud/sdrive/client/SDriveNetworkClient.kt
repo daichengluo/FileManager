@@ -100,9 +100,12 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
             network.uploadFile(userId.toString(), filePart)
         }
 
-    override suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus> = flow {
+    override suspend fun uploadChunks(
+        userId: Int,
+        path: Path,
+        chunkSize: Long
+    ): Flow<TransferStatus> = flow {
         val fileSize = path.size()
-        val chunkSize = calculateChunkSize(fileSize)
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
         val fileName = path.fileName.toString()
 
@@ -114,7 +117,12 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
 
                     val byteArray = ByteArray(bufferSize)
                     val buffer = ByteBuffer.wrap(byteArray)
-                    channel.read(buffer)
+                    var totalRead = 0
+                    while (buffer.hasRemaining()) {
+                        val read = channel.read(buffer)
+                        if (read < 0) break
+                        totalRead += read
+                    }
 
                     val response = uploadChunkWithRetry(
                         userId = userId,
@@ -150,12 +158,6 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
                 }
             }
         }
-    }
-
-    private fun calculateChunkSize(fileSize: Long): Long = when {
-        fileSize < 20 * 1024 * 1024 -> 1 * 1024 * 1024L
-        fileSize < 100 * 1024 * 1024 -> 2 * 1024 * 1024L
-        else -> 4 * 1024 * 1024L
     }
 
     private suspend fun uploadChunkWithRetry(

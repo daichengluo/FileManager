@@ -13,7 +13,7 @@ interface SDriveDataSource {
     suspend fun createDirectory(name: String, parentId: String): ApiOperation<CloudFileItem>
     suspend fun uploadFile(userId: Int, file: File): ApiOperation<UploadFileInfo>
     suspend fun uploadFile(userId: Int, path: Path): ApiOperation<UploadFileInfo>
-    suspend fun uploadChunks(userId: Int, path: Path): Flow<TransferStatus>
+    suspend fun uploadChunks(userId: Int, path: Path, chunkSize: Long): Flow<TransferStatus>
     suspend fun uploadFileInfo(
         name: String,
         size: Long,

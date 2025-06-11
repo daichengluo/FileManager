@@ -289,123 +289,221 @@ class FileListViewModel : ViewModel() {
         isMove: Boolean,
         context: Context
     ) {
-        if (authority == null) return
-
         if (path.isDirectory()) {
             val folderName = path.fileName.toString()
 
-            val response = SDriveClient.createDirectory(folderName, parentDirectoryId, authority!!)
-            val newDirectoryId = if (response is ApiOperation.Success) {
-                refreshCloud()
-                response.data.id
-            } else null
-            if (newDirectoryId == null) {
-                Log.e("chengluo", "Failed to create remote folder: $folderName")
-                return
-            }
-
-            path.newDirectoryStream().use { directoryStream ->
-                for (child in directoryStream) {
-                    uploadFolderRecursively(child, newDirectoryId, isMove, context)
+            if (currentFileMode is FileModeState.Cloud) {
+                authority?.let {
+                    val response = SDriveClient.createDirectory(folderName, parentDirectoryId, it)
+                    val newDirectoryId = if (response is ApiOperation.Success) {
+                        refreshCloud()
+                        response.data.id
+                    } else null
+                    if (newDirectoryId == null) {
+                        Log.e("chengluo", "Failed to create remote folder: $folderName")
+                        return
+                    }
+                    path.newDirectoryStream().use { directoryStream ->
+                        for (child in directoryStream) {
+                            uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                        }
+                    }
+                    if (isMove) {
+                        FileJobService.delete(listOf(path), context)
+                    }
                 }
             }
-
-            if (isMove) {
-                FileJobService.delete(listOf(path), context)
+            if (currentFileMode is FileModeState.GoogleDrive) {
+                accessToken?.let {
+                    val response =
+                        GoogleDriveClient.createDirectory(folderName, parentDirectoryId, it)
+                    val newDirectoryId = if (response is ApiOperation.Success) {
+                        refreshCloud()
+                        response.data
+                    } else null
+                    if (newDirectoryId == null) {
+                        Log.e("chengluo", "Failed to create remote folder: $folderName")
+                        return
+                    }
+                    path.newDirectoryStream().use { directoryStream ->
+                        for (child in directoryStream) {
+                            uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                        }
+                    }
+                    if (isMove) {
+                        FileJobService.delete(listOf(path), context)
+                    }
+                }
             }
         } else {
             uploadFile(path, parentDirectoryId, isMove, context)
         }
     }
 
-    fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) =
-        viewModelScope.launch {
-            if (authority == null) return@launch
-            val name = localFile.fileName.toString()
-            val sizeInBytes = localFile.size()
-            val sizeInKB = sizeInBytes / 1024
-            val isBigFile = sizeInKB > 1024 * 5
-            val id = localFile.toString().hashCode()
+    fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) {
+        if (currentFileMode is FileModeState.Cloud) {
+            uploadCloudFile(localFile, directoryId, isMove, context)
+        }
+        if (currentFileMode is FileModeState.GoogleDrive) {
+            uploadGoogleDriveFile(localFile, directoryId, isMove, context)
+        }
+    }
 
-            if (isBigFile) {
-                SDriveClient.uploadChunks(localFile, authority!!).collect { status ->
-                    Log.d("chengluo", "uploadFile status: $status")
-                    val transfer = when (status) {
-                        is TransferStatus.Failed -> FileTransfer(
+    private fun uploadCloudFile(
+        localFile: Path,
+        directoryId: String,
+        isMove: Boolean,
+        context: Context
+    ) = viewModelScope.launch {
+        if (authority == null) return@launch
+        val name = localFile.fileName.toString()
+        val sizeInBytes = localFile.size()
+        val sizeInKB = sizeInBytes / 1024
+        val isBigFile = sizeInKB > 1024 * 5
+        val id = localFile.toString().hashCode()
+
+        if (isBigFile) {
+            SDriveClient.uploadChunks(localFile, authority!!).collect { status ->
+                Log.d("chengluo", "uploadFile status: $status")
+                val transfer = when (status) {
+                    is TransferStatus.Failed -> FileTransfer(
+                        id = id,
+                        title = name,
+                        text = "Failed: ${status.exception.message}",
+                        max = 100,
+                        progress = 0,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FAILED
+                    )
+
+                    is TransferStatus.Finished -> {
+                        val url = status.data ?: return@collect
+                        SDriveClient.uploadFileInfo(
+                            name,
+                            sizeInKB,
+                            url,
+                            directoryId,
+                            authority!!
+                        )
+                            .onSuccess {
+                                refreshCloud()
+                                if (isMove) {
+                                    FileJobService.delete(listOf(localFile), context)
+                                }
+                            }
+                            .onFailure { it.printStackTrace() }
+                        FileTransfer(
                             id = id,
                             title = name,
-                            text = "Failed: ${status.exception.message}",
+                            text = "Completed",
                             max = 100,
-                            progress = 0,
+                            progress = 100,
                             indeterminate = false,
-                            status = FileTransfer.Status.FAILED
+                            status = FileTransfer.Status.FINISHED
                         )
+                    }
 
-                        is TransferStatus.Finished -> {
-                            val url = status.data ?: return@collect
-                            SDriveClient.uploadFileInfo(
-                                name,
-                                sizeInKB,
-                                url,
-                                directoryId,
-                                authority!!
-                            )
-                                .onSuccess {
-                                    refreshCloud()
-                                    if (isMove) {
-                                        FileJobService.delete(listOf(localFile), context)
-                                    }
-                                }
-                                .onFailure { it.printStackTrace() }
-                            FileTransfer(
-                                id = id,
-                                title = name,
-                                text = "Completed",
-                                max = 100,
-                                progress = 100,
-                                indeterminate = false,
-                                status = FileTransfer.Status.FINISHED
-                            )
-                        }
-
-                        is TransferStatus.Transferring -> {
-                            val sizeString = status.total.asFileSize().formatHumanReadable(context)
-                            val transferredSizeString =
-                                status.transferred.asFileSize().formatHumanReadable(context)
-                            val text = context.getString(
-                                R.string.file_job_transfer_size_notification_text_one_format,
-                                transferredSizeString,
-                                sizeString
-                            )
-                            FileTransfer(
-                                id = id,
-                                title = name,
-                                text = text,
-                                max = status.total.toInt(),
-                                progress = status.transferred.toInt(),
-                                indeterminate = false,
-                                status = FileTransfer.Status.TRANSFERRING
-                            )
+                    is TransferStatus.Transferring -> {
+                        val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                        val transferredSizeString =
+                            status.transferred.asFileSize().formatHumanReadable(context)
+                        val text = context.getString(
+                            R.string.file_job_transfer_size_notification_text_one_format,
+                            transferredSizeString,
+                            sizeString
+                        )
+                        FileTransfer(
+                            id = id,
+                            title = name,
+                            text = text,
+                            max = status.total.toInt(),
+                            progress = status.transferred.toInt(),
+                            indeterminate = false,
+                            status = FileTransfer.Status.TRANSFERRING
+                        )
+                    }
+                }
+                _fileTransferState.emit(transfer)
+            }
+        } else {
+            val response = SDriveClient.uploadFile(localFile, authority!!)
+            if (response is ApiOperation.Success) {
+                val url = response.data.url ?: ""
+                Log.d("chengluo", "uploadFile file size: $sizeInKB")
+                SDriveClient.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
+                    .onSuccess {
+                        refreshCloud()
+                        if (isMove) {
+                            FileJobService.delete(listOf(localFile), context)
                         }
                     }
-                    _fileTransferState.emit(transfer)
-                }
-            } else {
-                val response = SDriveClient.uploadFile(localFile, authority!!)
-                if (response is ApiOperation.Success) {
-                    val url = response.data.url ?: ""
-                    Log.d("chengluo", "uploadFile file size: $sizeInKB")
-                    SDriveClient.uploadFileInfo(name, sizeInKB, url, directoryId, authority!!)
-                        .onSuccess {
-                            refreshCloud()
-                            if (isMove) {
-                                FileJobService.delete(listOf(localFile), context)
-                            }
-                        }
-                        .onFailure { it.printStackTrace() }
-                }
+                    .onFailure { it.printStackTrace() }
             }
         }
+    }
+
+    private fun uploadGoogleDriveFile(
+        localFile: Path,
+        directoryId: String,
+        isMove: Boolean,
+        context: Context
+    ) = viewModelScope.launch {
+        if (accessToken == null) return@launch
+
+        val id = localFile.toString().hashCode()
+        val name = localFile.fileName.toString()
+
+        GoogleDriveClient.uploadFile(localFile, directoryId, accessToken!!).collect { status ->
+            Log.d("chengluo", "uploadFile status: $status")
+            val transfer = when (status) {
+                is TransferStatus.Failed -> FileTransfer(
+                    id = id,
+                    title = name,
+                    text = "Failed: ${status.exception.message}",
+                    max = 100,
+                    progress = 0,
+                    indeterminate = false,
+                    status = FileTransfer.Status.FAILED
+                )
+
+                is TransferStatus.Finished -> {
+                    if (isMove) {
+                        FileJobService.delete(listOf(localFile), context)
+                    }
+                    FileTransfer(
+                        id = id,
+                        title = name,
+                        text = "Completed",
+                        max = 100,
+                        progress = 100,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FINISHED
+                    )
+                }
+
+                is TransferStatus.Transferring -> {
+                    val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                    val transferredSizeString =
+                        status.transferred.asFileSize().formatHumanReadable(context)
+                    val text = context.getString(
+                        R.string.file_job_transfer_size_notification_text_one_format,
+                        transferredSizeString,
+                        sizeString
+                    )
+                    FileTransfer(
+                        id = id,
+                        title = name,
+                        text = text,
+                        max = status.total.toInt(),
+                        progress = status.transferred.toInt(),
+                        indeterminate = false,
+                        status = FileTransfer.Status.TRANSFERRING
+                    )
+                }
+            }
+            _fileTransferState.emit(transfer)
+        }
+    }
 
     fun uploadFile(file: File) = viewModelScope.launch {
         val directoryId = currentCloudPath?.directoryId ?: return@launch

@@ -7,8 +7,11 @@ import com.android.imagic.files.cloud.sdrive.client.TransferStatus
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
 import java8.nio.file.Path
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -33,7 +36,7 @@ object GoogleDriveClient {
                     .followRedirects(false)
                     .addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
+                            level = HttpLoggingInterceptor.Level.HEADERS
                         }
                     )
                     .addNetworkInterceptor(authenticatorInterceptor)
@@ -75,18 +78,21 @@ object GoogleDriveClient {
             when (response) {
                 is ApiOperation.Success -> {
                     response.data?.let {
-
+                        Log.d("chengluo", "uploadFile resumableUploadUrl: $it")
+                        client.uploadFileInChunks(it, path).collect { emit(it) }
                     }
                 }
 
                 is ApiOperation.Failure -> {
                     Log.e("chengluo", "uploadFile: ", response.exception)
+                    emit(TransferStatus.Failed(response.exception))
                 }
             }
         } else {
             client.uploadFile(path, parentId)
+            emit(TransferStatus.Finished())
         }
-    }
+    }.flowOn(Dispatchers.IO).distinctUntilChanged()
 
     suspend fun downloadFile(
         fileId: String,

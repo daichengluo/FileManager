@@ -13,16 +13,22 @@ import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCall
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java8.nio.file.Files
 import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import java.io.File
+import java.nio.ByteBuffer
+import kotlin.math.min
 
 class GoogleDriveServiceClient(val client: OkHttpClient) {
 
@@ -100,6 +106,70 @@ class GoogleDriveServiceClient(val client: OkHttpClient) {
             )
             network.initiateResumableUpload(mimeType, body).headers()["Location"]
         }
+
+    fun uploadFileInChunks(
+        uploadUrl: String,
+        path: Path,
+        chunkSize: Long = 256 * 1024L
+    ): Flow<TransferStatus> = flow {
+        val fileSize = path.size()
+        val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
+        Files.newByteChannel(path).use { channel ->
+            repeat(totalChunks) { chunkIndex ->
+                try {
+                    val offset = chunkIndex * chunkSize
+                    val bufferSize = min(chunkSize, fileSize - offset).toInt()
+                    val byteArray = ByteArray(bufferSize)
+                    val buffer = ByteBuffer.wrap(byteArray)
+
+                    // 确保完整读取
+                    var totalRead = 0
+                    while (buffer.hasRemaining()) {
+                        val read = channel.read(buffer)
+                        if (read < 0) break
+                        totalRead += read
+                    }
+
+                    if (totalRead <= 0) return@repeat
+
+                    val start = offset
+                    val end = offset + totalRead - 1
+
+                    val request = Request.Builder()
+                        .url(uploadUrl)
+                        .addHeader("Content-Length", totalRead.toString())
+                        .addHeader("Content-Range", "bytes $start-$end/$fileSize")
+                        .put(RequestBody.create(null, byteArray.copyOf(totalRead)))
+                        .build()
+
+                    val response = client.newCall(request).execute()
+                    response.use {
+                        when {
+                            it.isSuccessful -> {
+                                emit(TransferStatus.Finished())
+                                return@flow // 上传完成，提前结束 flow
+                            }
+
+                            it.code == 308 -> { // Resume Incomplete
+                                emit(
+                                    TransferStatus.Transferring(end + 1, fileSize)
+                                )
+                            }
+
+                            else -> {
+                                emit(TransferStatus.Failed(Exception("Upload failed: ${it.code}")))
+                                return@flow
+                            }
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    emit(TransferStatus.Failed(e))
+                    return@flow
+                }
+            }
+        }
+    }
 
     suspend fun renameFile(fileId: String, newName: String): ApiOperation<String> =
         safeApiCall {
