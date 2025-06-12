@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.AuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.util.ApiOperation
 import java8.nio.file.Path
@@ -14,11 +15,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-object SDriveClient {
+object StarBoardDriveClient {
 
-    private val clients = mutableMapOf<Authority, SDriveNetworkClient>()
+    private val clients = mutableMapOf<Authority, StarBoardDriveNetwork>()
 
-    private fun getClient(authority: Authority): SDriveNetworkClient {
+    private fun getClient(authority: Authority): StarBoardDriveNetwork {
         synchronized(clients) {
             var client = clients[authority]
             if (client == null) {
@@ -36,7 +37,7 @@ object SDriveClient {
                     .addNetworkInterceptor(authenticatorInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()
-                client = SDriveNetworkClient(okHttpClient)
+                client = StarBoardDriveNetwork(okHttpClient)
                 clients[authority] = client
             }
             return client

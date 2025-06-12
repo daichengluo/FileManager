@@ -64,7 +64,7 @@ import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_CLOUD_AUTHORI
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.exception.LoginExpiredException
-import com.android.imagic.files.cloud.sdrive.client.exception.SDriveException
+import com.android.imagic.files.cloud.sdrive.client.exception.StarBoardDriveException
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
@@ -109,7 +109,7 @@ import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
-import com.android.imagic.files.storage.GDriveServer
+import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.storage.Storages
@@ -578,7 +578,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 viewModel.pickOptions = pickOptions
             }
             intent.parcelable<Authority>(EXTRA_CLOUD_AUTHORITY)?.let {
-                setFileModeState(FileModeState.Cloud(it))
+                setFileModeState(FileModeState.StarBoardDrive(it))
             }
         }
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
@@ -879,36 +879,36 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         updateViewSortMenuItems()
     }
 
-    private fun onCurrentFileModeStateChanged(mode: FileModeState) {
-        when (mode) {
-            is FileModeState.Cloud -> {
-                requireActivity().title = getString(R.string.starboard_drive)
+    private fun onCurrentFileModeStateChanged(cloudMode: FileModeState) {
+
+        val context = requireContext()
+
+        when (cloudMode) {
+            is FileModeState.StarBoardDrive -> {
+                val authority = cloudMode.authority
+
+                requireActivity().title = authority.getTitle(context)
                 switchViewWithFade(binding.cloudRecyclerView, binding.recyclerView)
 
-                val authority = mode.authority
-                viewModel.setCloudAuthority(authority)
-                val pathData = CloudPathData("0", authority.username)
-                navigateCloudTo(pathData)
+                navigateCloudTo(authority.getRootPath(context))
             }
 
             is FileModeState.GoogleDrive -> {
-                requireActivity().title = getString(R.string.google_drive)
+                val authority = cloudMode.authority
+
+                requireActivity().title = authority.getTitle(context)
                 switchViewWithFade(binding.cloudRecyclerView, binding.recyclerView)
 
-                val accessToken = mode.accessToken
-                viewModel.setAccessToken(accessToken)
-                val pathData = CloudPathData("root", "my-drive")
-                navigateCloudTo(pathData)
+                navigateCloudTo(authority.getRootPath(context))
             }
 
             is FileModeState.OneDrive -> {
-                requireActivity().title = getString(R.string.one_drive)
+                val authority = cloudMode.authority
+
+                requireActivity().title = authority.getTitle(context)
                 switchViewWithFade(binding.cloudRecyclerView, binding.recyclerView)
 
-                val accessToken = mode.accessToken
-                viewModel.setAccessToken(accessToken)
-                val pathData = CloudPathData("root", "My files")
-                navigateCloudTo(pathData)
+                navigateCloudTo(authority.getRootPath(context))
             }
 
             FileModeState.Local, is FileModeState.QuickAccess -> {
@@ -960,20 +960,21 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             throwable.printStackTrace()
             val message = when (throwable) {
                 is LoginExpiredException -> {
-                    Settings.STORAGES.valueCompat.find { it is GDriveServer }?.let {
+                    Settings.STORAGES.valueCompat.find { it is GoogleDriveServer }?.let {
                         Storages.remove(it)
                     }
                     navigateToDefaultRoot()
                     getString(R.string.login_expired)
                 }
 
-                is SDriveException -> throwable.message ?: getString(R.string.server_error_occurred)
+                is StarBoardDriveException -> throwable.message
+                    ?: getString(R.string.server_error_occurred)
 
                 is HttpStatusException -> {
                     when (throwable.code) {
                         401 -> {
                             Settings.STORAGES.valueCompat.find {
-                                it is GDriveServer || it is OneDriveServer
+                                it is GoogleDriveServer || it is OneDriveServer
                             }?.let {
                                 Storages.remove(it)
                             }
@@ -1234,7 +1235,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun updateOverlayToolbar() {
-        val isInCloudStorage = viewModel.isCloudFileMode
+        val isInCloudStorage = viewModel.isStarBoardDriveFileMode
         val files = viewModel.selectedFiles
         val cloudFiles = viewModel.selectedCloudFiles
         if (files.isEmpty() && cloudFiles.isEmpty()) {
@@ -1395,7 +1396,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun confirmDeleteFiles() {
-        if (viewModel.isCloudFileMode) {
+        if (viewModel.isStarBoardDriveFileMode) {
             val files = viewModel.selectedCloudFiles
             ConfirmDeleteCloudFilesDialogFragment.show(files, this)
         } else {
@@ -1438,7 +1439,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun selectAllFiles() {
-        if (viewModel.isCloudFileMode) {
+        if (viewModel.isStarBoardDriveFileMode) {
             cloudFileListAdapter.selectAllFiles()
         } else {
             adapter.selectAllFiles()
@@ -1626,13 +1627,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
-        viewModel.setCloudAuthority(authority)
         viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
-    override fun logout(authority: Authority) {
-        viewModel.logout(authority)
+    override fun logout() {
+        viewModel.logout()
     }
 
     override fun getDragShadow(file: FileItem): View {
@@ -1662,7 +1662,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 load(AppIconPackageName(appDirectoryPackageName))
             }
         }
-        val fileCount = if (viewModel.isCloudFileMode) {
+        val fileCount = if (viewModel.isStarBoardDriveFileMode) {
             viewModel.cloudPasteState.files.size
         } else {
             viewModel.pasteState.files.size
@@ -1927,7 +1927,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun createFile(name: String) {
-        if (viewModel.isCloudFileMode) {
+        if (viewModel.isStarBoardDriveFileMode) {
             viewModel.createCloudFile(name, requireContext())
         } else {
             val path = currentPath.resolve(name)
@@ -1940,7 +1940,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun createDirectory(name: String) {
-        if (viewModel.isCloudFileMode) {
+        if (viewModel.isStarBoardDriveFileMode) {
             viewModel.createCloudDirectory(name)
         } else {
             val path = currentPath.resolve(name)

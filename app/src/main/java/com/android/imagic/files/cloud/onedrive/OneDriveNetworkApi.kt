@@ -15,7 +15,7 @@ import retrofit2.http.Query
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-interface OneDriveApi {
+interface OneDriveNetworkApi {
 
     @GET("me/drive/root/children")
     suspend fun listRootFiles(): OneDriveListResponse

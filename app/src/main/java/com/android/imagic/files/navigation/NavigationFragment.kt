@@ -2,7 +2,6 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
 import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.filelist.CloudPathData
@@ -21,7 +21,7 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.storage.CloudLogoutFragment
 import com.android.imagic.files.storage.EditSDriveServerActivity
-import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
@@ -79,7 +79,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         binding.settingsRecyclerView.setMaxHeight(500)
 
         binding.loginLayout.setOnClickListener {
-            val sDriveServer = viewModel.sDriveServer.valueCompat
+            val sDriveServer = viewModel.starBoardDriveServer.valueCompat
             if (sDriveServer == null) {
                 launchIntent(EditSDriveServerActivity::class.createIntent())
             } else {
@@ -91,7 +91,11 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         StorageItemListLiveData.observe(viewLifecycleOwner) { onStorageItemsChanged(it) }
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
-        viewModel.sDriveServer.observe(viewLifecycleOwner) { onSDriveServerChanged(it) }
+        viewModel.starBoardDriveServer.observe(viewLifecycleOwner) {
+            onStarBoardDriveServerChanged(
+                it
+            )
+        }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
         listener.observeCurrentQuickAccessCategory(viewLifecycleOwner) {
             onQuickAccessCategoryChanged(it)
@@ -113,7 +117,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         quickAccessListAdapter.notifyCheckedChanged()
 
         navigationItems.forEach { item ->
-            if (item is CloudStorageItem) {
+            if (item is StarBoardDriveItem) {
                 viewModel.updateServer(item.storage)
                 return
             }
@@ -141,8 +145,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         quickAccessListAdapter.notifyCheckedChanged()
     }
 
-    private fun onSDriveServerChanged(server: SDriveServer?) {
-        Log.d("chengluo", "onSDriveServerChanged server: $server")
+    private fun onStarBoardDriveServerChanged(server: StarBoardDriveServer?) {
         if (server == null) {
             binding.userHeaderImage.setImageResource(R.drawable.nav_user_header_img)
             binding.username.text = getString(R.string.navigation_login_account_tip)
@@ -166,15 +169,15 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         get() = listener.currentFileMode
 
     override fun navigateToCloud(authority: Authority) {
-        listener.setFileModeState(FileModeState.Cloud(authority))
+        listener.setFileModeState(FileModeState.StarBoardDrive(authority))
     }
 
-    override fun navigateToGoogleDrive(accessToken: String) {
-        listener.setFileModeState(FileModeState.GoogleDrive(accessToken))
+    override fun navigateToGoogleDrive(authority: ServerAuthority) {
+        listener.setFileModeState(FileModeState.GoogleDrive(authority))
     }
 
-    override fun navigateToOneDrive(accessToken: String) {
-        listener.setFileModeState(FileModeState.OneDrive(accessToken))
+    override fun navigateToOneDrive(authority: ServerAuthority) {
+        listener.setFileModeState(FileModeState.OneDrive(authority))
     }
 
     override fun navigateTo(path: Path) {
@@ -221,12 +224,12 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         listener.dropToCloud(cloudDirectoryPath, authority)
     }
 
-    override fun logout(server: SDriveServer) {
+    override fun logout(server: StarBoardDriveServer) {
         CloudLogoutFragment.show(server, this)
     }
 
-    fun logout(authority: Authority) {
-        listener.logout(authority)
+    fun logout() {
+        listener.logout()
     }
 
     interface Listener {
@@ -246,6 +249,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         fun cancelDragDrop()
         fun dropToLocal(directoryPath: Path)
         fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
-        fun logout(authority: Authority)
+        fun logout()
     }
 }

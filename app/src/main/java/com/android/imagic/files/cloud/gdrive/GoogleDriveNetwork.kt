@@ -33,7 +33,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
-class GoogleDriveServiceClient(val client: OkHttpClient) {
+class GoogleDriveNetwork(val client: OkHttpClient) {
 
     private val json: Json = networkJson
 
@@ -44,7 +44,7 @@ class GoogleDriveServiceClient(val client: OkHttpClient) {
             json.asConverterFactory("application/json".toMediaType())
         )
         .build()
-        .create(GoogleDriveService::class.java)
+        .create(GoogleDriveNetworkApi::class.java)
 
     suspend fun getFileList(
         directoryId: String,

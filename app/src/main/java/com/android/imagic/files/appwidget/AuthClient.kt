@@ -3,6 +3,7 @@ package com.android.imagic.files.appwidget
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCall
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -39,6 +40,17 @@ data class AccessTokenData(
     val ext_expires_in: Long,
     val type: Int
 )
+
+fun AccessTokenData.toServerAuthority(): ServerAuthority {
+    val now = System.currentTimeMillis()
+    val expiresAt = now + (expires_in * 1000)
+    return ServerAuthority(
+        accessToken = access_token,
+        refreshToken = refresh_token ?: "",
+        expireAt = expiresAt,
+        type = type
+    )
+}
 
 fun AccessTokenData.toAuthority(): Authority = Authority(
     openId = unionid ?: sub,

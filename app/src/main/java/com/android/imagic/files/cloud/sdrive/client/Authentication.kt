@@ -1,8 +1,8 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import android.os.Parcelable
+import com.android.imagic.files.cloud.util.AuthenticatorInterceptor
 import kotlinx.parcelize.Parcelize
-import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -11,8 +11,6 @@ import okhttp3.Route
 sealed class Authentication : Parcelable {
     abstract fun createAuthenticatorInterceptor(authority: Authority): AuthenticatorInterceptor
 }
-
-interface AuthenticatorInterceptor : Authenticator, Interceptor
 
 @Parcelize
 data object SDriveAuthentication : Authentication() {

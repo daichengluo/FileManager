@@ -33,7 +33,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
-class OneDriveNetworkClient(val client: OkHttpClient) {
+class OneDriveNetwork(val client: OkHttpClient) {
 
     private val json: Json = networkJson
 
@@ -44,7 +44,7 @@ class OneDriveNetworkClient(val client: OkHttpClient) {
             json.asConverterFactory("application/json".toMediaType())
         )
         .build()
-        .create(OneDriveApi::class.java)
+        .create(OneDriveNetworkApi::class.java)
 
     suspend fun getRootFileList(): ApiOperation<List<CloudFileItem>> = safeApiCall {
         network.listRootFiles().value.map { it.toCloudFileItem() }

@@ -1,6 +1,9 @@
 package com.android.imagic.files.cloud.sdrive.client
 
+import android.content.Context
 import android.os.Parcelable
+import com.android.imagic.files.R
+import com.android.imagic.files.filelist.CloudPathData
 import kotlinx.parcelize.Parcelize
 import java.security.MessageDigest
 import java.time.Clock
@@ -28,6 +31,11 @@ data class Authority(
         val timestamp = Clock.systemUTC().instant().epochSecond.toString()
         return sha256(openId + timestamp + accessToken + salt) to timestamp
     }
+
+    fun getRootPath(context: Context): CloudPathData =
+        CloudPathData("0", context.getString(R.string.my_files))
+
+    fun getTitle(context: Context): String = context.getString(R.string.starboard_drive)
 
     companion object {
         fun sha256(input: String): String = MessageDigest

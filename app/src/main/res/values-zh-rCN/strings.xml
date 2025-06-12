@@ -696,4 +696,6 @@
     <string name="starting_transfer">准备开始...</string>
     <string name="failed_transfer">传输失败</string>
     <string name="completed_transfer">传输完成</string>
+    <string name="my_files">我的文件</string>
+    <string name="my_drive">我的云端硬盘</string>
 </resources>

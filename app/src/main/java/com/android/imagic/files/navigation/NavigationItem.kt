@@ -5,9 +5,10 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.compat.getDrawableCompat
 import com.android.imagic.files.filelist.FileModeState
-import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import java8.nio.file.Path
 
 abstract class NavigationItem {
@@ -32,14 +33,14 @@ abstract class NavigationItem {
         val currentPath: Path
         val currentFileMode: FileModeState
         fun navigateToCloud(authority: Authority)
-        fun navigateToGoogleDrive(accessToken: String)
-        fun navigateToOneDrive(accessToken: String)
+        fun navigateToGoogleDrive(authority: ServerAuthority)
+        fun navigateToOneDrive(authority: ServerAuthority)
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun quickAccessTo(quickAccess: QuickAccess)
         fun launchIntent(intent: Intent)
         fun closeNavigationDrawer()
         fun addBookmark()
-        fun logout(server: SDriveServer)
+        fun logout(server: StarBoardDriveServer)
     }
 }

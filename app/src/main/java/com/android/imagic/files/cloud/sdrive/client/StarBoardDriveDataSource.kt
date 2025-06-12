@@ -7,7 +7,7 @@ import java8.nio.file.Path
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface SDriveDataSource {
+interface StarBoardDriveDataSource {
     suspend fun getContentLength(url: String): ApiOperation<Long>
     suspend fun downloadFile(url: String, path: Path): Flow<TransferStatus>
     suspend fun getFileList(directoryId: String): ApiOperation<List<CloudFileItem>>

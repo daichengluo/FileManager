@@ -16,8 +16,9 @@ import com.android.imagic.files.appwidget.CloudClient
 import com.android.imagic.files.appwidget.QrcodeLoginStatus
 import com.android.imagic.files.appwidget.toAuthInfoBody
 import com.android.imagic.files.appwidget.toAuthority
+import com.android.imagic.files.appwidget.toServerAuthority
 import com.android.imagic.files.cloud.sdrive.client.Authority
-import com.android.imagic.files.cloud.sdrive.client.SDriveClient.OkHttpAuthenticatorInterceptor
+import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.NetworkUtil
@@ -145,14 +146,22 @@ class CloudQRCodeLoginViewModel : ViewModel() {
         client.getUserInfo(data.toAuthInfoBody(headerImagerUrl)).onSuccess {
             Log.d("chengluo", "updateUserInfo Success: $it")
             val newAuthority = getSpaceUsageInfo(it.toAuthority())
-            Storages.addOrReplace(SDriveServer(null, null, newAuthority))
+            Storages.addOrReplace(StarBoardDriveServer(null, null, newAuthority))
 
             if (it.isGoogle) {
-                val gDriveServer = GDriveServer(null, null, it.access_token)
-                Storages.addOrReplace(gDriveServer)
+                val googleDriveServer = GoogleDriveServer(
+                    null,
+                    null,
+                    data.toServerAuthority()
+                )
+                Storages.addOrReplace(googleDriveServer)
             }
             if (it.isMicrosoft) {
-                val oneDriveServer = OneDriveServer(null, null, it.access_token)
+                val oneDriveServer = OneDriveServer(
+                    null,
+                    null,
+                    data.toServerAuthority()
+                )
                 Storages.addOrReplace(oneDriveServer)
             }
 

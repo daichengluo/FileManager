@@ -18,7 +18,7 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.CloudLogoutDialogActivity
 import com.android.imagic.files.storage.CloudLogoutFragment
-import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.valueCompat
@@ -43,8 +43,8 @@ object LoginWidgetUpdater {
         appWidgetIds: IntArray
     ) {
         val storages = Settings.STORAGES.valueCompat.toList()
-        val sDriveServers = storages.filter { it is SDriveServer }
-        val isLogin = sDriveServers.isNotEmpty()
+        val starBoardDriveServers = storages.filter { it is StarBoardDriveServer }
+        val isLogin = starBoardDriveServers.isNotEmpty()
         Log.d("chengluo", "onUpdate isLogin: $isLogin")
 
         val loginIntent = WidgetLoginLaunchActivity::class.createIntent()
@@ -68,9 +68,9 @@ object LoginWidgetUpdater {
 
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
 
-        sDriveServers.firstOrNull()?.let { server ->
-            val sDriveServer = server as SDriveServer
-            val authority = sDriveServer.authority
+        starBoardDriveServers.firstOrNull()?.let { server ->
+            val starBoardDriveServer = server as StarBoardDriveServer
+            val authority = starBoardDriveServer.authority
             remoteViews.setTextViewText(R.id.usernameText, authority.username)
 
             val goToCloudListIntent = Intent(context, FileListActivity::class.java).apply {
@@ -82,7 +82,7 @@ object LoginWidgetUpdater {
             )
             val logoutIntent = CloudLogoutDialogActivity::class.createIntent()
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .putArgs(CloudLogoutFragment.Args(sDriveServer))
+                .putArgs(CloudLogoutFragment.Args(starBoardDriveServer))
             val logoutPendingIntent = PendingIntent.getActivity(
                 context, 0, logoutIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

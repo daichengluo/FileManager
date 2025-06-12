@@ -76,7 +76,7 @@ class BreadcrumbLiveData(
                 }
             }
 
-            is FileModeState.Cloud,
+            is FileModeState.StarBoardDrive,
             is FileModeState.GoogleDrive,
             is FileModeState.OneDrive -> {
                 if (cloudPathList != null) {

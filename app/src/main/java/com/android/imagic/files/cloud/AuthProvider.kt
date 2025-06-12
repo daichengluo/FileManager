@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.settings.Settings
-import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.valueCompat
 
 class AuthProvider : ContentProvider() {
@@ -34,10 +34,10 @@ class AuthProvider : ContentProvider() {
                 arrayOf("openId", "accessToken", "userId", "username", "headerImageUrl")
             )
             val storages = Settings.STORAGES.valueCompat.toList()
-            val sDriveServers = storages.filter { it is SDriveServer }
-            sDriveServers.firstOrNull()?.let { server ->
-                val sDriveServer = server as SDriveServer
-                val authority = sDriveServer.authority
+            val starBoardDriveServers = storages.filter { it is StarBoardDriveServer }
+            starBoardDriveServers.firstOrNull()?.let { server ->
+                val starBoardDriveServer = server as StarBoardDriveServer
+                val authority = starBoardDriveServer.authority
                 Log.d("chengluo", "query authority: $authority")
                 matrixCursor.addRow(
                     arrayOf(

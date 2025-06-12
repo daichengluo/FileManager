@@ -51,17 +51,17 @@ class CloudLogoutFragment : AppCompatDialogFragment() {
     }
 
     private fun tryLogoutIfNeeded() {
-        (parentFragment as? NavigationFragment)?.logout(args.server.authority)
+        (parentFragment as? NavigationFragment)?.logout()
     }
 
     companion object {
         const val TAG = "logout"
 
-        fun show(server: SDriveServer, fragment: Fragment) {
+        fun show(server: StarBoardDriveServer, fragment: Fragment) {
             CloudLogoutFragment().putArgs(Args(server)).show(fragment)
         }
     }
 
     @Parcelize
-    class Args(val server: SDriveServer) : ParcelableArgs
+    class Args(val server: StarBoardDriveServer) : ParcelableArgs
 }

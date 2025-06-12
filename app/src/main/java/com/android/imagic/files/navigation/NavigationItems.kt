@@ -22,9 +22,9 @@ import com.android.imagic.files.settings.SettingsActivity
 import com.android.imagic.files.settings.StandardDirectoryListActivity
 import com.android.imagic.files.storage.AddStorageDialogActivity
 import com.android.imagic.files.storage.FileSystemRoot
-import com.android.imagic.files.storage.GDriveServer
+import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
-import com.android.imagic.files.storage.SDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.util.createIntent
@@ -91,8 +91,8 @@ private val storageItems: List<NavigationItem>
     get() = Settings.STORAGES.valueCompat.filter { it.isVisible }.map {
         if (it.path != null) PathStorageItem(it) else {
             when (it) {
-                is SDriveServer -> CloudStorageItem(it)
-                is GDriveServer -> GoogleDriveItem(it)
+                is StarBoardDriveServer -> StarBoardDriveItem(it)
+                is GoogleDriveServer -> GoogleDriveItem(it)
                 is OneDriveServer -> OneDriveItem(it)
                 else -> IntentStorageItem(it)
             }
@@ -169,8 +169,8 @@ private class IntentStorageItem(
     }
 }
 
-internal class CloudStorageItem(
-    val storage: SDriveServer
+internal class StarBoardDriveItem(
+    val storage: StarBoardDriveServer
 ) : NavigationItem() {
     init {
         require(storage.isVisible)
@@ -197,7 +197,7 @@ internal class CloudStorageItem(
 
     override fun isChecked(listener: Listener): Boolean {
         val mode = listener.currentFileMode
-        return if (mode is FileModeState.Cloud) {
+        return if (mode is FileModeState.StarBoardDrive) {
             mode.authority == storage.authority
         } else false
     }
@@ -213,7 +213,7 @@ internal class CloudStorageItem(
 }
 
 internal class GoogleDriveItem(
-    val storage: GDriveServer
+    val storage: GoogleDriveServer
 ) : NavigationItem() {
     init {
         require(storage.isVisible)
@@ -232,7 +232,7 @@ internal class GoogleDriveItem(
 
 
     override fun onClick(listener: Listener) {
-        listener.navigateToGoogleDrive(storage.accessToken)
+        listener.navigateToGoogleDrive(storage.authority)
     }
 
     override fun onLongClick(listener: Listener): Boolean {
@@ -259,7 +259,7 @@ internal class OneDriveItem(
     override fun getSubtitle(context: Context): String? = null
 
     override fun onClick(listener: Listener) {
-        listener.navigateToOneDrive(storage.accessToken)
+        listener.navigateToOneDrive(storage.authority)
     }
 
     override fun onLongClick(listener: Listener): Boolean {

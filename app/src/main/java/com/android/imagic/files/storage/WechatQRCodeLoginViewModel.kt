@@ -35,7 +35,7 @@ class WechatQRCodeLoginViewModel : ViewModel() {
                         it.nickname,
                         it.headimgurl
                     )
-                    val server = SDriveServer(null, null, authority)
+                    val server = StarBoardDriveServer(null, null, authority)
                     Storages.addOrReplace(server)
                     _loginSuccess.value = true
                 }

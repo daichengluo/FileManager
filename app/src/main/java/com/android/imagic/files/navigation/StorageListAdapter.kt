@@ -119,7 +119,7 @@ class StorageListAdapter(
             return
         }
         if (item !is AddStorageItem) {
-            binding.itemLayout.setOnDragListener { _, event ->
+            binding.itemLayout.setOnDragListener { view, event ->
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> {
                         true
@@ -150,11 +150,13 @@ class StorageListAdapter(
                         if (storageItem is PathItem) {
                             dragDropListener.dropToLocal(item.path)
                         }
-                        if (storageItem is CloudStorageItem) {
+                        if (storageItem is StarBoardDriveItem) {
                             val storage = storageItem.storage
                             val authority = storage.authority
-                            val pathData = CloudPathData("0", authority.username)
-                            dragDropListener.dropToCloud(pathData, authority)
+                            dragDropListener.dropToCloud(
+                                authority.getRootPath(view.context),
+                                authority
+                            )
                         }
                         true
                     }

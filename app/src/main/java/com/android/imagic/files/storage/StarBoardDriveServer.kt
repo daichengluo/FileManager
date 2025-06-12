@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 import kotlin.random.Random
 
 @Parcelize
-class SDriveServer(
+class StarBoardDriveServer(
     override val id: Long,
     override val customName: String?,
     val authority: Authority

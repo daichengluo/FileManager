@@ -17,7 +17,7 @@ import retrofit2.http.Query
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-interface SDriveNetworkApi {
+interface StarBoardDriveNetworkApi {
 
     @HEAD
     suspend fun getContentLength(@Url url: String): Response<Void>
@@ -27,7 +27,7 @@ interface SDriveNetworkApi {
     suspend fun downloadFile(@Url url: String, @Header("Range") range: String): ResponseBody
 
     @GET("api/NetDisk/GetUserFileList")
-    suspend fun getFileList(@Query("TargetID") directoryId: String): ApiResponse<List<FileInfo>>
+    suspend fun getFileList(@Query("TargetID") directoryId: String): ApiResponse<List<StarBoardDriveFileMetadata>>
 
     @Multipart
     @POST("api/OSSService/UploadFileAndGetUrl")
@@ -47,16 +47,16 @@ interface SDriveNetworkApi {
     ): ApiResponse<UploadFileInfo>
 
     @POST("api/NetDisk/AddNewUserFolder")
-    suspend fun createDirectory(@Body body: NewFolderBody): ApiResponse<FileInfo>
+    suspend fun createDirectory(@Body body: NewFolderBody): ApiResponse<StarBoardDriveFileMetadata>
 
     @POST("api/NetDisk/UploadUserFile")
-    suspend fun uploadFileInfo(@Body body: FileInfoBody): ApiResponse<FileInfo>
+    suspend fun uploadFileInfo(@Body body: FileInfoBody): ApiResponse<StarBoardDriveFileMetadata>
 
     @PUT("api/NetDisk/ReNameUserFolderOrFile")
     suspend fun renameFile(@Body body: RenameBody): ApiResponse<Boolean>
 
     @POST("api/NetDisk/GetUserDirTree")
-    suspend fun getDirTree(@Body body: DirTreeBody): ApiResponse<List<FileInfo>>
+    suspend fun getDirTree(@Body body: DirTreeBody): ApiResponse<List<StarBoardDriveFileMetadata>>
 
     @PUT("api/NetDisk/DeleteInformation")
     suspend fun deleteFiles(@Body body: DeleteFilesBody): ApiResponse<Int>

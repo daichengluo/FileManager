@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 import java.text.Collator
 
 @Serializable
-data class FileInfo(
+data class StarBoardDriveFileMetadata(
     val id: Int,
     val fName: String? = null,
     val fType: Int,
@@ -31,7 +31,7 @@ data class FileInfo(
     val fileHash: String? = null
 )
 
-fun FileInfo.toCloudFileItem(): CloudFileItem {
+fun StarBoardDriveFileMetadata.toCloudFileItem(): CloudFileItem {
     val name = fName ?: ""
     val nameCollationKey = Collator.getInstance().getCollationKeyForFileName(name)
     val type = if (fType == 1) CloudFileType.FILE else CloudFileType.DIRECTORY

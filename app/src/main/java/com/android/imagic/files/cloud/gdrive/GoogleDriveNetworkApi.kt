@@ -18,7 +18,7 @@ import retrofit2.http.Query
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-interface GoogleDriveService {
+interface GoogleDriveNetworkApi {
 
     // 获取文件列表（比如列出某个文件夹下的内容）
     @GET("drive/v3/files")

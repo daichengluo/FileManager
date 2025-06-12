@@ -3,6 +3,8 @@ package com.android.imagic.files.cloud.gdrive
 import android.util.Log
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.AuthenticatorInterceptor
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
@@ -22,13 +24,13 @@ import java.util.concurrent.TimeUnit
 
 object GoogleDriveClient {
 
-    private val clients = mutableMapOf<String, GoogleDriveServiceClient>()
+    private val clients = mutableMapOf<ServerAuthority, GoogleDriveNetwork>()
 
-    private fun getClient(accessToken: String): GoogleDriveServiceClient {
+    private fun getClient(authority: ServerAuthority): GoogleDriveNetwork {
         synchronized(clients) {
-            var client = clients[accessToken]
+            var client = clients[authority]
             if (client == null) {
-                val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(accessToken)
+                val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(authority)
                 val okHttpClient = okHttpClient.newBuilder()
                     .connectTimeout(15, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
@@ -42,8 +44,8 @@ object GoogleDriveClient {
                     .addNetworkInterceptor(authenticatorInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()
-                client = GoogleDriveServiceClient(okHttpClient)
-                clients[accessToken] = client
+                client = GoogleDriveNetwork(okHttpClient)
+                clients[authority] = client
             }
             return client
         }
@@ -51,27 +53,27 @@ object GoogleDriveClient {
 
     suspend fun getFileList(
         directoryId: String,
-        accessToken: String
-    ): ApiOperation<List<CloudFileItem>> = getClient(accessToken).getFileList(directoryId)
+        authority: ServerAuthority
+    ): ApiOperation<List<CloudFileItem>> = getClient(authority).getFileList(directoryId)
 
     suspend fun createDirectory(
         directoryName: String,
         parentId: String,
-        accessToken: String
-    ): ApiOperation<String> = getClient(accessToken).createDirectory(directoryName, parentId)
+        authority: ServerAuthority
+    ): ApiOperation<String> = getClient(authority).createDirectory(directoryName, parentId)
 
     suspend fun uploadFile(
         file: File,
         parentId: String,
-        accessToken: String
-    ): ApiOperation<String> = getClient(accessToken).uploadFile(file, parentId)
+        authority: ServerAuthority
+    ): ApiOperation<String> = getClient(authority).uploadFile(file, parentId)
 
     fun uploadFile(
         path: Path,
         parentId: String,
-        accessToken: String
+        authority: ServerAuthority
     ): Flow<TransferStatus> = flow {
-        val client = getClient(accessToken)
+        val client = getClient(authority)
         val fileSize = path.size()
         if (fileSize > 1024 * 1024 * 5) {
             val response = client.getResumableUploadUrl(path, parentId)
@@ -98,37 +100,37 @@ object GoogleDriveClient {
         fileId: String,
         fileSize: Long,
         path: Path,
-        accessToken: String
-    ): Flow<TransferStatus> = getClient(accessToken).downloadFile(fileId, fileSize, path)
+        authority: ServerAuthority
+    ): Flow<TransferStatus> = getClient(authority).downloadFile(fileId, fileSize, path)
 
     suspend fun renameFile(
         fileId: String,
         newName: String,
-        accessToken: String
-    ): ApiOperation<String> = getClient(accessToken).renameFile(fileId, newName)
+        authority: ServerAuthority
+    ): ApiOperation<String> = getClient(authority).renameFile(fileId, newName)
 
-    suspend fun deleteFileById(fileId: String, accessToken: String): ApiOperation<Unit> =
-        getClient(accessToken).deleteFileById(fileId)
+    suspend fun deleteFileById(fileId: String, authority: ServerAuthority): ApiOperation<Unit> =
+        getClient(authority).deleteFileById(fileId)
 
     suspend fun copyFile(
         fileId: String,
         targetFileId: String,
-        accessToken: String
-    ): ApiOperation<String> = getClient(accessToken).copyFile(fileId, targetFileId)
+        authority: ServerAuthority
+    ): ApiOperation<String> = getClient(authority).copyFile(fileId, targetFileId)
 
     suspend fun moveFile(
         fileId: String,
         targetFileId: String,
         sourceFileId: String,
-        accessToken: String
-    ): ApiOperation<String> = getClient(accessToken).moveFile(fileId, targetFileId, sourceFileId)
+        authority: ServerAuthority
+    ): ApiOperation<String> = getClient(authority).moveFile(fileId, targetFileId, sourceFileId)
 
     internal class OkHttpAuthenticatorInterceptor(
-        private val accessToken: String
+        private val authority: ServerAuthority
     ) : AuthenticatorInterceptor {
 
         private fun getAuthenticatorInterceptor(): AuthenticatorInterceptor =
-            GoogleDriveAuthentication.createAuthenticatorInterceptor(accessToken)
+            GoogleDriveAuthentication.createAuthenticatorInterceptor(authority)
 
         override fun authenticate(route: Route?, response: Response): Request? =
             getAuthenticatorInterceptor().authenticate(route, response)

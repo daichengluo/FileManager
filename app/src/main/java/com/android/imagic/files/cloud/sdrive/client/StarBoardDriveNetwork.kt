@@ -36,7 +36,7 @@ import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 import kotlin.math.pow
 
-class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
+class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource {
 
     private val baseUrl: String = BuildConfig.STB_API_URL
     private val json: Json = networkJson
@@ -48,7 +48,7 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
             json.asConverterFactory("application/json".toMediaType())
         )
         .build()
-        .create(SDriveNetworkApi::class.java)
+        .create(StarBoardDriveNetworkApi::class.java)
 
     override suspend fun getContentLength(url: String): ApiOperation<Long> {
         return safeApiCall {
