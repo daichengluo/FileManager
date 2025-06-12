@@ -103,6 +103,7 @@ import com.android.imagic.files.navigation.BookmarkDirectory
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.navigation.NavigationRootMapLiveData
 import com.android.imagic.files.navigation.QuickAccessCategory
+import com.android.imagic.files.navigation.getExternalStorageDirectory
 import com.android.imagic.files.provider.archive.createArchiveRootPath
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.provider.common.isDirectory
@@ -283,6 +284,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                             )
                         }
                     }
+
                     FileJobService.Actions.CANCELLING.toString() -> {
                         handler.post {
                             updateTransferProgress(
@@ -320,6 +322,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         fileTransferAdapter.removeItem(id)
         if (fileTransferAdapter.list.isEmpty()) {
             fileTransferActionMode.hide()
+            showToast(R.string.completed_transfer)
         } else {
             val size = fileTransferAdapter.list.size
             binding.transferTitle.text = getQuantityString(
@@ -342,7 +345,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
                     FileTransfer.Status.FAILED -> removeTransferItem(transfer.id)
                     FileTransfer.Status.FINISHED -> {
-                        showToast(R.string.completed_transfer)
                         removeTransferItem(transfer.id)
                     }
                 }
@@ -593,7 +595,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         .let { Paths.get(it.pathCompat) }
                     navigateToRoot(internalStoragePath)
                 } else if (!activity.title.equals(storageTitle)) {
-                    activity.setTitle(storageTitle)
+                    activity.title = storageTitle
                 }
             }
         }
@@ -2284,7 +2286,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun downloadToLocal(file: CloudFileItem) {
-        viewModel.downloadToLocal(file, requireContext())
+        val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
+        viewModel.downloadToLocal(
+            file, downloadPath, false, viewModel.currentFileMode, requireContext()
+        )
     }
 
     companion object {
