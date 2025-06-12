@@ -137,6 +137,11 @@ class FileTransferAdapter(
                         context.sendBroadcast(it)
                     }
                     TransferJobManager.cancel(id)
+                    Intent(Actions.CANCELLED.toString()).apply {
+                        putExtra(FILE_TRANSFER_ID, id)
+                    }.also {
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(it)
+                    }
                 }
             }
         }

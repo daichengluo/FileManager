@@ -46,7 +46,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.Closeable
 import java.io.File
-import java.io.IOException
 
 // TODO: Use SavedStateHandle to save state.
 class FileListViewModel : ViewModel() {
@@ -434,7 +433,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -454,7 +453,7 @@ class FileListViewModel : ViewModel() {
                             is TransferStatus.Failed -> FileTransfer(
                                 id = id,
                                 title = name,
-                                text = "Failed: ${status.exception.message}",
+                                text = context.getString(R.string.failed_transfer),
                                 max = 100,
                                 progress = 0,
                                 indeterminate = false,
@@ -480,7 +479,7 @@ class FileListViewModel : ViewModel() {
                                 FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = "Completed",
+                                    text = context.getString(R.string.completed_transfer),
                                     max = 100,
                                     progress = 100,
                                     indeterminate = false,
@@ -553,7 +552,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -569,7 +568,7 @@ class FileListViewModel : ViewModel() {
                             is TransferStatus.Failed -> FileTransfer(
                                 id = id,
                                 title = name,
-                                text = "Failed: ${status.exception.message}",
+                                text = context.getString(R.string.failed_transfer),
                                 max = 100,
                                 progress = 0,
                                 indeterminate = false,
@@ -583,7 +582,7 @@ class FileListViewModel : ViewModel() {
                                 FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = "Completed",
+                                    text = context.getString(R.string.completed_transfer),
                                     max = 100,
                                     progress = 100,
                                     indeterminate = false,
@@ -637,7 +636,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -651,7 +650,7 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = name,
-                            text = "Failed: ${status.exception.message}",
+                            text = context.getString(R.string.failed_transfer),
                             max = 100,
                             progress = 0,
                             indeterminate = false,
@@ -665,7 +664,7 @@ class FileListViewModel : ViewModel() {
                             FileTransfer(
                                 id = id,
                                 title = name,
-                                text = "Completed",
+                                text = context.getString(R.string.completed_transfer),
                                 max = 100,
                                 progress = 100,
                                 indeterminate = false,
@@ -785,7 +784,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -794,7 +793,23 @@ class FileListViewModel : ViewModel() {
             )
             val localFile = directoryPath.resolve(cloudFile.name)
             if (!localFile.exists()) localFile.createFile()
+
+            if (localFile.size() >= cloudFile.size) {
+                _fileTransferState.emit(
+                    FileTransfer(
+                        id = id,
+                        title = cloudFile.name,
+                        text = context.getString(R.string.completed_transfer),
+                        max = 100,
+                        progress = 100,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FINISHED
+                    )
+                )
+                return@launch
+            }
             if (authority == null || cloudFile.url == null) return@launch
+
             SDriveClient.downloadFile(cloudFile.url, localFile, authority!!).collect { status ->
                 Log.d("chengluo", "downloadFile: $status")
                 val transfer = when (status) {
@@ -825,7 +840,7 @@ class FileListViewModel : ViewModel() {
                         FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = "Completed",
+                            text = context.getString(R.string.completed_transfer),
                             max = 100,
                             progress = 100,
                             indeterminate = false,
@@ -836,7 +851,7 @@ class FileListViewModel : ViewModel() {
                     is TransferStatus.Failed -> FileTransfer(
                         id = id,
                         title = cloudFile.name,
-                        text = "Failed: ${status.exception.message}",
+                        text = context.getString(R.string.failed_transfer),
                         max = 100,
                         progress = 0,
                         indeterminate = false,
@@ -845,13 +860,13 @@ class FileListViewModel : ViewModel() {
                 }
                 _fileTransferState.emit(transfer)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             _fileTransferState.emit(
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = "Failed: ${e.message}",
+                    text = context.getString(R.string.failed_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -873,7 +888,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -882,7 +897,23 @@ class FileListViewModel : ViewModel() {
             )
             val localFile = directoryPath.resolve(cloudFile.name)
             if (!localFile.exists()) localFile.createFile()
+
+            if (localFile.size() >= cloudFile.size) {
+                _fileTransferState.emit(
+                    FileTransfer(
+                        id = id,
+                        title = cloudFile.name,
+                        text = context.getString(R.string.completed_transfer),
+                        max = 100,
+                        progress = 100,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FINISHED
+                    )
+                )
+                return@launch
+            }
             if (accessToken == null) return@launch
+
             GoogleDriveClient.downloadFile(cloudFile.id, cloudFile.size, localFile, accessToken!!)
                 .collect { status ->
                     Log.d("chengluo", "downloadGoogleDriveFile: $status")
@@ -914,7 +945,7 @@ class FileListViewModel : ViewModel() {
                             FileTransfer(
                                 id = id,
                                 title = cloudFile.name,
-                                text = "Completed",
+                                text = context.getString(R.string.completed_transfer),
                                 max = 100,
                                 progress = 100,
                                 indeterminate = false,
@@ -925,7 +956,7 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = "Failed: ${status.exception.message}",
+                            text = context.getString(R.string.failed_transfer),
                             max = 100,
                             progress = 0,
                             indeterminate = false,
@@ -934,13 +965,13 @@ class FileListViewModel : ViewModel() {
                     }
                     _fileTransferState.emit(transfer)
                 }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             _fileTransferState.emit(
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = "Failed: ${e.message}",
+                    text = context.getString(R.string.failed_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -963,7 +994,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = "Starting",
+                    text = context.getString(R.string.starting_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -972,7 +1003,23 @@ class FileListViewModel : ViewModel() {
             )
             val localFile = directoryPath.resolve(cloudFile.name)
             if (!localFile.exists()) localFile.createFile()
+
+            if (localFile.size() >= cloudFile.size) {
+                _fileTransferState.emit(
+                    FileTransfer(
+                        id = id,
+                        title = cloudFile.name,
+                        text = context.getString(R.string.completed_transfer),
+                        max = 100,
+                        progress = 100,
+                        indeterminate = false,
+                        status = FileTransfer.Status.FINISHED
+                    )
+                )
+                return@launch
+            }
             if (accessToken == null) return@launch
+
             val response = OneDriveClient.getDownloadUrl(cloudFile.id, accessToken!!)
             if (response is ApiOperation.Failure) return@launch
 
@@ -1008,7 +1055,7 @@ class FileListViewModel : ViewModel() {
                             FileTransfer(
                                 id = id,
                                 title = cloudFile.name,
-                                text = "Completed",
+                                text = context.getString(R.string.completed_transfer),
                                 max = 100,
                                 progress = 100,
                                 indeterminate = false,
@@ -1019,7 +1066,7 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = "Failed: ${status.exception.message}",
+                            text = context.getString(R.string.failed_transfer),
                             max = 100,
                             progress = 0,
                             indeterminate = false,
@@ -1028,13 +1075,13 @@ class FileListViewModel : ViewModel() {
                     }
                     _fileTransferState.emit(transfer)
                 }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             _fileTransferState.emit(
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = "Failed: ${e.message}",
+                    text = context.getString(R.string.failed_transfer),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -1056,7 +1103,7 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    fun logoutGoogleDrive(accessToken: String?) {
+    fun logoutCloud(accessToken: String?) {
         if (_accessTokenLiveData.valueCompat == accessToken) {
             setFileModeState(FileModeState.Local)
             setAccessToken(null)
@@ -1109,7 +1156,8 @@ class FileListViewModel : ViewModel() {
         clearCloudPasteState()
 
         val files = pasteState.files
-        val directoryId = currentCloudPath?.directoryId ?: "0"
+        val directoryId = currentCloudPath?.directoryId
+            ?: if (currentFileMode is FileModeState.Cloud) "0" else "root"
         if (pasteState.copy) {
             files.forEach {
                 viewModelScope.launch {

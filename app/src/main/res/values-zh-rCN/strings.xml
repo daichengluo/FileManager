@@ -692,4 +692,8 @@
     <string name="qrcode_login_user_agreement_text">使用扫码登录，表示你同意%1$s和%2$s。</string>
     <string name="google_drive">谷歌云端硬盘</string>
     <string name="one_drive">微软 OneDrive</string>
+    <string name="canceling_transfer">取消中...</string>
+    <string name="starting_transfer">准备开始...</string>
+    <string name="failed_transfer">传输失败</string>
+    <string name="completed_transfer">传输完成</string>
 </resources>

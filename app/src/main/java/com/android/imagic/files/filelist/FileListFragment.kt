@@ -276,9 +276,22 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 )
 
                 when (acton) {
-                    FileJobService.Actions.STARTED.toString(),
-                    FileJobService.Actions.PROGRESS.toString(),
+                    FileJobService.Actions.STARTED.toString() -> {
+                        handler.post {
+                            updateTransferProgress(
+                                fileTransfer.copy(text = getString(R.string.starting_transfer))
+                            )
+                        }
+                    }
                     FileJobService.Actions.CANCELLING.toString() -> {
+                        handler.post {
+                            updateTransferProgress(
+                                fileTransfer.copy(text = getString(R.string.canceling_transfer))
+                            )
+                        }
+                    }
+
+                    FileJobService.Actions.PROGRESS.toString() -> {
                         handler.post { updateTransferProgress(fileTransfer) }
                     }
 
@@ -327,8 +340,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     FileTransfer.Status.TRANSFERRING,
                     FileTransfer.Status.CANCELLING -> updateTransferProgress(transfer)
 
-                    FileTransfer.Status.FINISHED,
                     FileTransfer.Status.FAILED -> removeTransferItem(transfer.id)
+                    FileTransfer.Status.FINISHED -> {
+                        showToast(R.string.completed_transfer)
+                        removeTransferItem(transfer.id)
+                    }
                 }
             }
         }
@@ -622,7 +638,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
             fileTransferReceiver, IntentFilter().apply {
+                addAction(FileJobService.Actions.STARTED.toString())
                 addAction(FileJobService.Actions.PROGRESS.toString())
+                addAction(FileJobService.Actions.CANCELLING.toString())
                 addAction(FileJobService.Actions.CANCELLED.toString())
                 addAction(FileJobService.Actions.FAILED.toString())
                 addAction(FileJobService.Actions.FINISHED.toString())
