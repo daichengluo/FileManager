@@ -173,6 +173,10 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         listener.setFileModeState(FileModeState.GoogleDrive(accessToken))
     }
 
+    override fun navigateToOneDrive(accessToken: String) {
+        listener.setFileModeState(FileModeState.OneDrive(accessToken))
+    }
+
     override fun navigateTo(path: Path) {
         listener.navigateTo(path)
     }

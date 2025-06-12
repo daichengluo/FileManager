@@ -147,8 +147,15 @@ class CloudQRCodeLoginViewModel : ViewModel() {
             val newAuthority = getSpaceUsageInfo(it.toAuthority())
             Storages.addOrReplace(SDriveServer(null, null, newAuthority))
 
-            val gDriveServer = GDriveServer(null, null, it.access_token)
-            Storages.addOrReplace(gDriveServer)
+            if (it.isGoogle) {
+                val gDriveServer = GDriveServer(null, null, it.access_token)
+                Storages.addOrReplace(gDriveServer)
+            }
+            if (it.isMicrosoft) {
+                val oneDriveServer = OneDriveServer(null, null, it.access_token)
+                Storages.addOrReplace(oneDriveServer)
+            }
+
             _authority.value = newAuthority
         }
     }

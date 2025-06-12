@@ -2,8 +2,8 @@ package com.android.imagic.files.cloud.gdrive
 
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
-import com.android.imagic.files.cloud.sdrive.client.TransferStatus
-import com.android.imagic.files.cloud.sdrive.client.saveFile
+import com.android.imagic.files.cloud.util.TransferStatus
+import com.android.imagic.files.cloud.util.saveFile
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.filelist.name
@@ -15,6 +15,7 @@ import com.android.imagic.files.util.safeApiCall
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java8.nio.file.Files
 import java8.nio.file.Path
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
@@ -28,6 +29,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import java.io.File
 import java.nio.ByteBuffer
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
 class GoogleDriveServiceClient(val client: OkHttpClient) {
@@ -115,6 +118,8 @@ class GoogleDriveServiceClient(val client: OkHttpClient) {
         val fileSize = path.size()
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
         Files.newByteChannel(path).use { channel ->
+            coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
+
             repeat(totalChunks) { chunkIndex ->
                 try {
                     val offset = chunkIndex * chunkSize
@@ -125,6 +130,7 @@ class GoogleDriveServiceClient(val client: OkHttpClient) {
                     // 确保完整读取
                     var totalRead = 0
                     while (buffer.hasRemaining()) {
+                        coroutineContext.ensureActive() // ✅ 读数据过程中检查
                         val read = channel.read(buffer)
                         if (read < 0) break
                         totalRead += read
@@ -163,6 +169,9 @@ class GoogleDriveServiceClient(val client: OkHttpClient) {
                         }
                     }
 
+                } catch (e: CancellationException) {
+                    // ✅ 明确处理协程取消
+                    throw e
                 } catch (e: Exception) {
                     emit(TransferStatus.Failed(e))
                     return@flow

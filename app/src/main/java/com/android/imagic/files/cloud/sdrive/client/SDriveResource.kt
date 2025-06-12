@@ -1,6 +1,7 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.TransferStatus
 import java.io.File
 
 interface SDriveResource {

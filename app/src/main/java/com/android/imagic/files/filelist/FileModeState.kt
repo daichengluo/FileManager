@@ -8,4 +8,5 @@ sealed interface FileModeState {
     data class QuickAccess(val quickAccessWrap: QuickAccessWrap) : FileModeState
     data class Cloud(val authority: Authority) : FileModeState
     data class GoogleDrive(val accessToken: String) : FileModeState
+    data class OneDrive(val accessToken: String) : FileModeState
 }

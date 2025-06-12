@@ -853,4 +853,5 @@
     <string name="check_agreement_first">Please check the User Agreement</string>
     <string name="qrcode_login_user_agreement_text">By Signing in with QR code, you agree to the %1$s and %2$s.</string>
     <string name="google_drive">Google Drive</string>
+    <string name="one_drive">One Drive</string>
 </resources>

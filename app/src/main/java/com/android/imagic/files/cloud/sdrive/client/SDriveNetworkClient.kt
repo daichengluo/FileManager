@@ -3,6 +3,8 @@ package com.android.imagic.files.cloud.sdrive.client
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.TransferStatus
+import com.android.imagic.files.cloud.util.saveFile
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.provider.common.createFile
@@ -15,6 +17,7 @@ import java8.nio.file.Files
 import java8.nio.file.Path
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -28,6 +31,8 @@ import retrofit2.Retrofit
 import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -111,6 +116,8 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
 
         Files.newByteChannel(path).use { channel ->
             repeat(totalChunks) { chunkIndex ->
+                coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
+
                 try {
                     val offset = chunkIndex * chunkSize
                     val bufferSize = min(chunkSize, fileSize - offset).toInt()
@@ -119,6 +126,7 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
                     val buffer = ByteBuffer.wrap(byteArray)
                     var totalRead = 0
                     while (buffer.hasRemaining()) {
+                        coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
                         val read = channel.read(buffer)
                         if (read < 0) break
                         totalRead += read
@@ -153,8 +161,12 @@ class SDriveNetworkClient(val client: OkHttpClient) : SDriveDataSource {
                             }
                         }
                     }
-                } catch (e: IOException) {
+                } catch (e: CancellationException) {
+                    // ✅ 明确处理协程取消
+                    throw e
+                } catch (e: Exception) {
                     emit(TransferStatus.Failed(e))
+                    return@flow
                 }
             }
         }

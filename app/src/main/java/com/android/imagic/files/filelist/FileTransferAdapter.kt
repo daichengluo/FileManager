@@ -11,6 +11,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.util.TransferJobManager
 import com.android.imagic.files.databinding.FileTransferItemBinding
 import com.android.imagic.files.filejob.FileJobReceiver
 import com.android.imagic.files.filejob.FileJobService.Actions
@@ -135,6 +136,7 @@ class FileTransferAdapter(
                     FileJobReceiver.createIntent(id).also {
                         context.sendBroadcast(it)
                     }
+                    TransferJobManager.cancel(id)
                 }
             }
         }

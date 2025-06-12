@@ -109,6 +109,7 @@ import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.GDriveServer
+import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
@@ -880,6 +881,16 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 navigateCloudTo(pathData)
             }
 
+            is FileModeState.OneDrive -> {
+                requireActivity().title = getString(R.string.one_drive)
+                switchViewWithFade(binding.cloudRecyclerView, binding.recyclerView)
+
+                val accessToken = mode.accessToken
+                viewModel.setAccessToken(accessToken)
+                val pathData = CloudPathData("root", "My files")
+                navigateCloudTo(pathData)
+            }
+
             FileModeState.Local, is FileModeState.QuickAccess -> {
                 switchViewWithFade(binding.recyclerView, binding.cloudRecyclerView)
             }
@@ -941,7 +952,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 is HttpStatusException -> {
                     when (throwable.code) {
                         401 -> {
-                            Settings.STORAGES.valueCompat.find { it is GDriveServer }?.let {
+                            Settings.STORAGES.valueCompat.find {
+                                it is GDriveServer || it is OneDriveServer
+                            }?.let {
                                 Storages.remove(it)
                             }
                             navigateToDefaultRoot()

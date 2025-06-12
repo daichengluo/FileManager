@@ -33,6 +33,7 @@ abstract class NavigationItem {
         val currentFileMode: FileModeState
         fun navigateToCloud(authority: Authority)
         fun navigateToGoogleDrive(accessToken: String)
+        fun navigateToOneDrive(accessToken: String)
         fun navigateTo(path: Path)
         fun navigateToRoot(path: Path)
         fun quickAccessTo(quickAccess: QuickAccess)

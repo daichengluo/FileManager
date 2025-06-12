@@ -14,10 +14,10 @@ import java.text.Collator
 
 @Serializable
 data class FileInfo(
-    val id: String,
+    val id: Int,
     val fName: String? = null,
     val fType: Int,
-    val parentID: String,
+    val parentID: Int,
     val thumbURL: String? = null,
     val groupID: String? = null,
     val createUser: String? = null,
@@ -45,8 +45,8 @@ fun FileInfo.toCloudFileItem(): CloudFileItem {
     val createTime = createTime?.toInstant()
     val modifyTime = modifyTime?.toInstant() ?: createTime
     return CloudFileItem(
-        id = id,
-        parentId = parentID,
+        id = id.toString(),
+        parentId = parentID.toString(),
         name = name,
         nameCollationKey = nameCollationKey,
         type = type,

@@ -23,6 +23,7 @@ import com.android.imagic.files.settings.StandardDirectoryListActivity
 import com.android.imagic.files.storage.AddStorageDialogActivity
 import com.android.imagic.files.storage.FileSystemRoot
 import com.android.imagic.files.storage.GDriveServer
+import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.SDriveServer
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.storage.StorageVolumeListLiveData
@@ -92,6 +93,7 @@ private val storageItems: List<NavigationItem>
             when (it) {
                 is SDriveServer -> CloudStorageItem(it)
                 is GDriveServer -> GoogleDriveItem(it)
+                is OneDriveServer -> OneDriveItem(it)
                 else -> IntentStorageItem(it)
             }
         }
@@ -231,6 +233,33 @@ internal class GoogleDriveItem(
 
     override fun onClick(listener: Listener) {
         listener.navigateToGoogleDrive(storage.accessToken)
+    }
+
+    override fun onLongClick(listener: Listener): Boolean {
+        return true
+    }
+}
+
+internal class OneDriveItem(
+    val storage: OneDriveServer
+) : NavigationItem() {
+    init {
+        require(storage.isVisible)
+    }
+
+    override val id: Long
+        get() = storage.id
+
+    override val iconRes: Int
+        @DrawableRes
+        get() = storage.iconRes
+
+    override fun getTitle(context: Context): String = storage.getName(context)
+
+    override fun getSubtitle(context: Context): String? = null
+
+    override fun onClick(listener: Listener) {
+        listener.navigateToOneDrive(storage.accessToken)
     }
 
     override fun onLongClick(listener: Listener): Boolean {

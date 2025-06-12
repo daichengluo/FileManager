@@ -75,7 +75,10 @@ class BreadcrumbLiveData(
                     value = BreadcrumbData(paths, null, nameProducers, selectedIndex)
                 }
             }
-            is FileModeState.Cloud, is FileModeState.GoogleDrive -> {
+
+            is FileModeState.Cloud,
+            is FileModeState.GoogleDrive,
+            is FileModeState.OneDrive -> {
                 if (cloudPathList != null) {
                     selectedIndex = cloudPathList.size - 1
                     value = BreadcrumbData(paths, cloudPathList, nameProducers, selectedIndex)

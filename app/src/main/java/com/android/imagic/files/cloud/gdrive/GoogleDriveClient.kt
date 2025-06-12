@@ -3,7 +3,7 @@ package com.android.imagic.files.cloud.gdrive
 import android.util.Log
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.cloud.CloudFileItem
-import com.android.imagic.files.cloud.sdrive.client.TransferStatus
+import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
 import java8.nio.file.Path
