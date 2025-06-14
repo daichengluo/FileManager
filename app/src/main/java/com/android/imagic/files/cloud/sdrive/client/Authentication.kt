@@ -13,7 +13,7 @@ sealed class Authentication : Parcelable {
 }
 
 @Parcelize
-data object SDriveAuthentication : Authentication() {
+data object StarBoardDriveAuthentication : Authentication() {
 
     override fun createAuthenticatorInterceptor(authority: Authority): AuthenticatorInterceptor =
         object : AuthenticatorInterceptor {

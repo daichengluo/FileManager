@@ -95,7 +95,7 @@ object StarBoardDriveClient {
     ) : AuthenticatorInterceptor {
 
         private fun getAuthenticatorInterceptor(): AuthenticatorInterceptor =
-            SDriveAuthentication.createAuthenticatorInterceptor(authority)
+            StarBoardDriveAuthentication.createAuthenticatorInterceptor(authority)
 
         override fun authenticate(route: Route?, response: Response): Request? =
             getAuthenticatorInterceptor().authenticate(route, response)
