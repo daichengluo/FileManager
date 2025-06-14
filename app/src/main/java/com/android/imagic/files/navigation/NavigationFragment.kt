@@ -21,7 +21,10 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.storage.CloudLogoutFragment
 import com.android.imagic.files.storage.EditSDriveServerActivity
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.launchSafe
@@ -92,14 +95,17 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         QuickAccessItemListLiveData.observe(viewLifecycleOwner) { onQuickAccessItemsChanged(it) }
         SettingsItemListLiveData.observe(viewLifecycleOwner) { onSettingsItemsChanged(it) }
         viewModel.starBoardDriveServer.observe(viewLifecycleOwner) {
-            onStarBoardDriveServerChanged(
-                it
-            )
+            onStarBoardDriveServerChanged(it)
+        }
+        viewModel.serverAuthority.observe(viewLifecycleOwner) {
+            onServerAuthorityChanged(it)
         }
         listener.observeCurrentPath(viewLifecycleOwner) { onCurrentPathChanged(it) }
         listener.observeCurrentQuickAccessCategory(viewLifecycleOwner) {
             onQuickAccessCategoryChanged(it)
         }
+
+        viewModel.queryAuthority(requireContext())
     }
 
     private fun onOpenPathResult(result: Path?) {
@@ -159,6 +165,16 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
                 }
             }
             binding.username.text = authority.username
+        }
+    }
+
+    private fun onServerAuthorityChanged(serverAuthority: ServerAuthority?) {
+        if (serverAuthority == null) return
+        if (serverAuthority.isGoogle) {
+            Storages.addOrReplace(GoogleDriveServer(null, null, serverAuthority))
+        }
+        if (serverAuthority.isMicrosoft) {
+            Storages.addOrReplace(OneDriveServer(null, null, serverAuthority))
         }
     }
 

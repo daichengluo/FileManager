@@ -15,6 +15,7 @@ import com.android.imagic.files.util.startActivitySafe
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AddStorageDialogFragment : AppCompatDialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         MaterialAlertDialogBuilder(requireContext(), theme)
             .setTitle(R.string.storage_add_storage_title)

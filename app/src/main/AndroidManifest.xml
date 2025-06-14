@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <permission
-        android:name="com.android.imagic.files.READ_AUTHORITY"
+        android:name="com.android.imagic.permission.READ_AUTHORITY"
         android:protectionLevel="signature" />
 
     <uses-feature
@@ -41,6 +41,8 @@
     <uses-permission
         android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
         tools:ignore="ProtectedPermissions" />
+
+    <uses-permission android:name="com.android.imagic.permission.READ_AUTHORITY" />
 
     <application
         android:allowBackup="true"
@@ -449,7 +451,7 @@
             android:name="com.android.imagic.files.cloud.AuthProvider"
             android:authorities="@string/auth_provider_authority"
             android:exported="true"
-            android:permission="com.android.imagic.files.READ_AUTHORITY" />
+            android:permission="com.android.imagic.permission.READ_AUTHORITY" />
 
         <receiver android:name="com.android.imagic.files.filejob.FileJobReceiver" />
 

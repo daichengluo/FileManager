@@ -20,20 +20,20 @@ data class ServerAuthority(
         }
 
     val isGoogle: Boolean
-        get() = type == 0
-
-    val isMicrosoft: Boolean
         get() = type == 1
 
+    val isMicrosoft: Boolean
+        get() = type == 2
+
     fun getRootPath(context: Context): CloudPathData = when (type) {
-        0 -> CloudPathData("root", context.getString(R.string.my_drive))
-        1 -> CloudPathData("root", context.getString(R.string.my_files))
+        1 -> CloudPathData("root", context.getString(R.string.my_drive))
+        2 -> CloudPathData("root", context.getString(R.string.my_files))
         else -> CloudPathData("0", context.getString(R.string.my_files))
     }
 
     fun getTitle(context: Context): String = when (type) {
-        0 -> context.getString(R.string.google_drive)
-        1 -> context.getString(R.string.one_drive)
+        1 -> context.getString(R.string.google_drive)
+        2 -> context.getString(R.string.one_drive)
         else -> context.getString(R.string.starboard_drive)
     }
 }
