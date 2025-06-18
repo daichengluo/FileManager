@@ -15,8 +15,8 @@ data class Authority(
     val userId: Int,
     val username: String,
     val headerImageUrl: String? = null,
-    val freeSpace: Long = 5242880,
-    val totalSpace: Long = 5242880
+    val totalSpace: Long = 5242880,
+    val freeSpace: Long = 5242880
 ) : Parcelable {
 
     val usedSpace: Long

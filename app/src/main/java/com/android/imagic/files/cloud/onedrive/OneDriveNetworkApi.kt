@@ -89,6 +89,9 @@ interface OneDriveNetworkApi {
         @Query("\$select") select: String = "@microsoft.graph.downloadUrl"
     ): OneDriveDownloadResponse
 
+    @GET("me/drive")
+    suspend fun getStorageQuota(): StorageQuotaResponse
+
     @Streaming
     @GET
     suspend fun downloadFile(@Url url: String, @Header("Range") range: String): ResponseBody

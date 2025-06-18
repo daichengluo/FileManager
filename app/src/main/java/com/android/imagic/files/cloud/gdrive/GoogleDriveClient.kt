@@ -5,6 +5,7 @@ import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.util.AuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.ServerAuthority
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.util.ApiOperation
@@ -124,6 +125,9 @@ object GoogleDriveClient {
         sourceFileId: String,
         authority: ServerAuthority
     ): ApiOperation<String> = getClient(authority).moveFile(fileId, targetFileId, sourceFileId)
+
+    suspend fun getSpaceData(authority: ServerAuthority): ApiOperation<SpaceData> =
+        getClient(authority).getSpaceData()
 
     internal class OkHttpAuthenticatorInterceptor(
         private val authority: ServerAuthority

@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.onedrive
 
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.file.asMimeType
 import com.android.imagic.files.filelist.getCollationKeyForFileName
 import kotlinx.serialization.SerialName
@@ -77,4 +78,24 @@ data class OneDriveDownloadResponse(
 data class UploadSessionResponse(
     val uploadUrl: String,
     val expirationDateTime: String
+)
+
+@Serializable
+data class StorageQuotaResponse(
+    val id: String,
+    val driveType: String,
+    val quota: Quota
+)
+
+@Serializable
+data class Quota(
+    val remaining: Long,
+    val state: String,
+    val total: Long,
+    val used: Long
+)
+
+fun Quota.toSpaceData(): SpaceData = SpaceData(
+    total = total,
+    used = used
 )

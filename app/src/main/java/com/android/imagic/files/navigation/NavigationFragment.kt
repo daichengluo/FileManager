@@ -1,10 +1,15 @@
 package com.android.imagic.files.navigation
 
 import android.content.Intent
+import android.database.ContentObserver
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -12,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.android.imagic.files.R
+import com.android.imagic.files.app.contentResolver
+import com.android.imagic.files.app.packageManager
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
@@ -48,6 +55,15 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     private lateinit var storageListAdapter: StorageListAdapter
     private lateinit var quickAccessListAdapter: QuickAccessListAdapter
     private lateinit var settingsListAdapter: SettingsListAdapter
+
+    private val uri = "content://com.android.imagic.authentication.auth_provider/authority".toUri()
+    private val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+            Log.d("chengluo", "Content changed!")
+            viewModel.queryAuthority(requireContext())
+        }
+    }
 
     lateinit var listener: Listener
 
@@ -106,6 +122,17 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         }
 
         viewModel.queryAuthority(requireContext())
+
+        val providerInfo = packageManager.resolveContentProvider(
+            "com.android.imagic.authentication.auth_provider",
+            0
+        )
+        providerInfo?.let { contentResolver.registerContentObserver(uri, true, observer) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        contentResolver.unregisterContentObserver(observer)
     }
 
     private fun onOpenPathResult(result: Path?) {
@@ -169,6 +196,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     }
 
     private fun onServerAuthorityChanged(serverAuthority: ServerAuthority?) {
+        Log.d("chengluo", "onServerAuthorityChanged: $serverAuthority")
         if (serverAuthority == null) return
         if (serverAuthority.isGoogle) {
             Storages.addOrReplace(GoogleDriveServer(null, null, serverAuthority))

@@ -4,6 +4,7 @@ import android.util.Log
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.onedrive.UploadFileRequestItem.UploadFileRequest
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile
 import com.android.imagic.files.file.MimeType
@@ -190,4 +191,8 @@ class OneDriveNetwork(val client: OkHttpClient) {
             val body = OperationFileRequest(ParentReference(targetFileId))
             network.moveItem(fileId, body).toCloudFileItem()
         }
+
+    suspend fun getSpaceData(): ApiOperation<SpaceData> = safeApiCall {
+        network.getStorageQuota().quota.toSpaceData()
+    }
 }

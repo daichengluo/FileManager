@@ -103,4 +103,9 @@ interface GoogleDriveNetworkApi {
         @Path("fileId") fileId: String,
         @Query("fields") fields: String = "id,parents"
     ): FileParentsResponse
+
+    @GET("drive/v3/about")
+    suspend fun getStorageQuota(
+        @Query("fields") fields: String = "storageQuota"
+    ): StorageQuotaResponse
 }

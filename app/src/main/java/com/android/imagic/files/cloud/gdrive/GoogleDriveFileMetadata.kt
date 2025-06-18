@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.gdrive
 
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.file.asMimeType
 import com.android.imagic.files.filelist.getCollationKeyForFileName
 import kotlinx.serialization.Serializable
@@ -67,4 +68,25 @@ data class RenameFileResponse(
 @Serializable
 data class GoogleDriveFileListResponse(
     val files: List<GoogleDriveFileMetadata>
+)
+
+@Serializable
+data class StorageQuotaResponse(
+    val storageQuota: StorageQuota
+)
+
+@Serializable
+data class StorageQuota(
+    val limit: Long,
+    val usage: Long,
+    val usageInDrive: Long,
+    val usageInDriveTrash: Long
+) {
+    val remaining: Long
+        get() = limit - usage
+}
+
+fun StorageQuota.toSpaceData(): SpaceData = SpaceData(
+    total = limit,
+    used = usage
 )

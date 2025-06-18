@@ -228,8 +228,16 @@ internal class GoogleDriveItem(
 
     override fun getTitle(context: Context): String = storage.getName(context)
 
-    override fun getSubtitle(context: Context): String? = null
-
+    override fun getSubtitle(context: Context): String? {
+        val totalSpace = storage.authority.totalSpace
+        val remainingSpace = storage.authority.remaining
+        if (totalSpace == 0L || remainingSpace == 0L) return null
+        val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+        val remainingSpaceString = remainingSpace.asFileSize().formatHumanReadable(context)
+        return context.getString(
+            R.string.navigation_storage_subtitle_format, remainingSpaceString, totalSpaceString
+        )
+    }
 
     override fun onClick(listener: Listener) {
         listener.navigateToGoogleDrive(storage.authority)
@@ -256,7 +264,16 @@ internal class OneDriveItem(
 
     override fun getTitle(context: Context): String = storage.getName(context)
 
-    override fun getSubtitle(context: Context): String? = null
+    override fun getSubtitle(context: Context): String? {
+        val totalSpace = storage.authority.totalSpace
+        val remainingSpace = storage.authority.remaining
+        if (totalSpace == 0L || remainingSpace == 0L) return null
+        val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+        val remainingSpaceString = remainingSpace.asFileSize().formatHumanReadable(context)
+        return context.getString(
+            R.string.navigation_storage_subtitle_format, remainingSpaceString, totalSpaceString
+        )
+    }
 
     override fun onClick(listener: Listener) {
         listener.navigateToOneDrive(storage.authority)

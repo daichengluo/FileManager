@@ -8,16 +8,26 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ServerAuthority(
+    val openId: String,
+    val userId: Int,
+    val username: String,
+    val email: String,
+    val avatarUrl: String?,
     val accessToken: String,
     val refreshToken: String,
     val expireAt: Long,
-    val type: Int
+    val type: Int,
+    val totalSpace: Long,
+    val usedSpace: Long
 ) : Parcelable {
 
     val isTokenExpired: Boolean
         get() {
             return System.currentTimeMillis() >= expireAt - 5 * 60 * 1000 // 提前 5 分钟刷新
         }
+
+    val remaining: Long
+        get() = totalSpace - usedSpace
 
     val isGoogle: Boolean
         get() = type == 1

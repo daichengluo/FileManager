@@ -44,11 +44,22 @@ data class AccessTokenData(
 fun AccessTokenData.toServerAuthority(): ServerAuthority {
     val now = System.currentTimeMillis()
     val expiresAt = now + (expires_in * 1000)
+
+    val username = if (givenname == null) {
+        familyname
+    } else "$givenname $familyname"
     return ServerAuthority(
+        openId = unionid ?: sub,
+        userId = id,
+        username = username,
+        email = email,
+        avatarUrl = picture,
         accessToken = access_token,
         refreshToken = refresh_token ?: "",
         expireAt = expiresAt,
-        type = type
+        type = type,
+        totalSpace = 0L,
+        usedSpace = 0L
     )
 }
 

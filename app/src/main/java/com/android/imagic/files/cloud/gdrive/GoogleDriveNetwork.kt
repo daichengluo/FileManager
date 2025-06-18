@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.gdrive
 
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile
 import com.android.imagic.files.file.MimeType
@@ -208,5 +209,9 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
         sourceFileId: String
     ): ApiOperation<String> = safeApiCall {
         network.moveFile(fileId, targetFileId, sourceFileId).id
+    }
+
+    suspend fun getSpaceData(): ApiOperation<SpaceData> = safeApiCall {
+        network.getStorageQuota().storageQuota.toSpaceData()
     }
 }
