@@ -9,9 +9,9 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import java.text.CollationKey
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Parcelize
 data class CloudFileItem(
@@ -45,6 +45,7 @@ val CloudFileItem.extension: String
 val CloudFileItem.toCloudPathData: CloudPathData?
     get() = if (isDirectory) CloudPathData(id, name) else null
 
-fun String.toInstant(): Instant = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-    .atZone(ZoneId.systemDefault())
-    .toInstant()
+fun String.toInstant(): Instant {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'GMT'XXX", Locale.ENGLISH)
+    return OffsetDateTime.parse(this, formatter).toInstant()
+}
