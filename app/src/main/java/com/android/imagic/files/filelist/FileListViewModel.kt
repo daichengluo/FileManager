@@ -76,8 +76,9 @@ class FileListViewModel : ViewModel() {
 
     fun setFileModeState(mode: FileModeState) {
         if (_currentFileModeStateLiveData.valueCompat != mode) {
-            _currentFileModeStateLiveData.value = mode
+            _cloudPathListLiveData.value = emptyList()
         }
+        _currentFileModeStateLiveData.value = mode
     }
 
     val currentPathLiveData = trailLiveData.map {
