@@ -16,8 +16,8 @@ android {
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
         targetSdk 34
-        versionCode 10007
-        versionName '1.0.0-beta07'
+        versionCode 10008
+        versionName '1.0.0-beta08'
         resValue 'string', 'app_version', versionName + ' (' + versionCode + ')'
         buildConfigField 'String', 'FILE_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".file_provider"'
         buildConfigField 'String', 'AUTH_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".auth_provider"'
@@ -29,6 +29,7 @@ android {
                 arguments '-DANDROID_STL=none'
             }
         }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
         aidl true
@@ -210,4 +211,14 @@ dependencies {
 
     // Generate QR Code
     implementation 'com.google.zxing:core:3.5.3'
+
+    // Android Test
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit:1.2.1"
+    androidTestImplementation "androidx.test:runner:1.6.2"
+
+    // Microsoft Identity
+    implementation("com.microsoft.identity.client:msal:6.0.1") {
+        exclude group: "com.microsoft.device.display"
+    }
 }

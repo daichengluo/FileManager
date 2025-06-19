@@ -44,6 +44,10 @@
 
     <uses-permission android:name="com.android.imagic.permission.READ_AUTHORITY" />
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
     <application
         android:allowBackup="true"
         android:banner="@null"
@@ -404,6 +408,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.microsoft.identity.client.BrowserTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="com.android.imagic.files"
+                    android:path="/ywYdOi1G7E%2BDKV3cs9O2ugs%2Bdbk%3D"
+                    android:scheme="msauth" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name="com.android.imagic.files.filejob.FileJobService"
             android:foregroundServiceType="dataSync" />
@@ -434,6 +454,19 @@
             <meta-data
                 android:name="autoStoreLocales"
                 android:value="true" />
+        </service>
+
+        <service
+            android:name=".cloud.sdrive.AuthenticatorService"
+            android:exported="true"
+            android:permission="com.android.imagic.permission.READ_AUTHORITY">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
         </service>
 
         <provider

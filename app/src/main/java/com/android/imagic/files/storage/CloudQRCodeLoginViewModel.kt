@@ -164,7 +164,6 @@ class CloudQRCodeLoginViewModel : ViewModel() {
                 )
                 Storages.addOrReplace(oneDriveServer)
             }
-
             _authority.value = newAuthority
         }
     }

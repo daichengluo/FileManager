@@ -1,5 +1,7 @@
 package com.android.imagic.files.storage
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +58,19 @@ class CloudQRCodeLoginFragment : Fragment() {
         viewModel.authority.observe(viewLifecycleOwner) { authority ->
             if (authority != null) {
                 LoginWidgetUpdater.updateWidgets(requireContext())
+
+                val account = Account(authority.username, "com.android.imagic.account")
+                val accountManager = AccountManager.get(context)
+
+                val success = accountManager.addAccountExplicitly(
+                    account,
+                    authority.signTimestamp.first,
+                    null
+                )
+                if (success) {
+                    // 可以设置 authToken
+                    accountManager.setAuthToken(account, "full_access", authority.accessToken)
+                }
                 finish()
             }
         }

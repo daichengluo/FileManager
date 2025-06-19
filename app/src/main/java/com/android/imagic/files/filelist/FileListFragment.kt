@@ -322,7 +322,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         fileTransferAdapter.removeItem(id)
         if (fileTransferAdapter.list.isEmpty()) {
             fileTransferActionMode.hide()
-            showToast(R.string.completed_transfer)
         } else {
             val size = fileTransferAdapter.list.size
             binding.transferTitle.text = getQuantityString(

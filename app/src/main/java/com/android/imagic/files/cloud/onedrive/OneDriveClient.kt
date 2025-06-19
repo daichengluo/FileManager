@@ -107,7 +107,14 @@ object OneDriveClient {
         fileSize: Long,
         path: Path,
         authority: ServerAuthority
-    ): Flow<TransferStatus> = getClient(authority).downloadFile(url, fileSize, path)
+    ): Flow<TransferStatus> {
+        val okHttpClient = okHttpClient.newBuilder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .build()
+        return OneDriveNetwork(okHttpClient).downloadFile(url, fileSize, path)
+    }
 
     suspend fun renameFile(
         fileId: String,

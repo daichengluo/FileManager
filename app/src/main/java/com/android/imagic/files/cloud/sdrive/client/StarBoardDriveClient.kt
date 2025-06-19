@@ -11,7 +11,6 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -29,11 +28,6 @@ object StarBoardDriveClient {
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .followRedirects(false)
-                    .addInterceptor(
-                        HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.HEADERS
-                        }
-                    )
                     .addNetworkInterceptor(authenticatorInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()

@@ -1,0 +1,15 @@
+{
+  "client_id": "ad750c21-0a0b-4195-a8b8-044af6cfec09",
+  "authorization_user_agent": "DEFAULT",
+  "redirect_uri": "msauth://com.android.imagic.files/ywYdOi1G7E%2BDKV3cs9O2ugs%2Bdbk%3D",
+  "account_mode": "SINGLE",
+  "authorities": [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "AzureADandPersonalMicrosoftAccount",
+        "tenant_id": "common"
+      }
+    }
+  ]
+}
