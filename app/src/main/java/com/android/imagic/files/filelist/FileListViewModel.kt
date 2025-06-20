@@ -64,6 +64,9 @@ class FileListViewModel : ViewModel() {
         }
     } else false
 
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> = _errorMessage
+
     private val _currentFileModeStateLiveData = MutableLiveData<FileModeState>(FileModeState.Local)
     val currentFileModeStateLiveData: LiveData<FileModeState> = _currentFileModeStateLiveData
     val currentFileMode: FileModeState
@@ -331,6 +334,10 @@ class FileListViewModel : ViewModel() {
         isMove: Boolean,
         context: Context
     ) {
+        if (path.isArchivePath) {
+            _errorMessage.value = context.getString(R.string.cannot_extract_to_cloud_drive)
+            return
+        }
         if (path.isDirectory()) {
             val folderName = path.fileName.toString()
 

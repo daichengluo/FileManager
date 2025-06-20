@@ -629,6 +629,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
             binding.toolbar.setNavButtonEnable(viewModel.canNavigateUpBreadcrumb)
         }
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let { showToast(it) }
+        }
         Settings.FILE_LIST_SHOW_HIDDEN_FILES.observe(viewLifecycleOwner) {
             onShowHiddenFilesChanged(it)
         }
