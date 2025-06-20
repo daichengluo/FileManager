@@ -461,68 +461,68 @@ class FileListViewModel : ViewModel() {
                 try {
                     StarBoardDriveClient.uploadChunks(localFile, starBoardDriveMode.authority)
                         .collect { status ->
-                        Log.d("chengluo", "uploadFile status: $status")
-                        val transfer = when (status) {
-                            is TransferStatus.Failed -> FileTransfer(
-                                id = id,
-                                title = name,
-                                text = context.getString(R.string.failed_transfer),
-                                max = 100,
-                                progress = 0,
-                                indeterminate = false,
-                                status = FileTransfer.Status.FAILED
-                            )
-
-                            is TransferStatus.Finished -> {
-                                val url = status.data ?: return@collect
-                                StarBoardDriveClient.uploadFileInfo(
-                                    name,
-                                    sizeInKB,
-                                    url,
-                                    directoryId,
-                                    starBoardDriveMode.authority
-                                )
-                                    .onSuccess {
-                                        refreshCloud()
-                                        if (isMove) {
-                                            FileJobService.delete(listOf(localFile), context)
-                                        }
-                                    }
-                                    .onFailure { it.printStackTrace() }
-                                FileTransfer(
+                            Log.d("chengluo", "uploadFile status: $status")
+                            val transfer = when (status) {
+                                is TransferStatus.Failed -> FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = context.getString(R.string.completed_transfer),
+                                    text = context.getString(R.string.failed_transfer),
                                     max = 100,
-                                    progress = 100,
+                                    progress = 0,
                                     indeterminate = false,
-                                    status = FileTransfer.Status.FINISHED
+                                    status = FileTransfer.Status.FAILED
                                 )
-                            }
 
-                            is TransferStatus.Transferring -> {
-                                val sizeString =
-                                    status.total.asFileSize().formatHumanReadable(context)
-                                val transferredSizeString =
-                                    status.transferred.asFileSize().formatHumanReadable(context)
-                                val text = context.getString(
-                                    R.string.file_job_transfer_size_notification_text_one_format,
-                                    transferredSizeString,
-                                    sizeString
-                                )
-                                FileTransfer(
-                                    id = id,
-                                    title = name,
-                                    text = text,
-                                    max = status.total.toInt(),
-                                    progress = status.transferred.toInt(),
-                                    indeterminate = false,
-                                    status = FileTransfer.Status.TRANSFERRING
-                                )
+                                is TransferStatus.Finished -> {
+                                    val url = status.data ?: return@collect
+                                    StarBoardDriveClient.uploadFileInfo(
+                                        name,
+                                        sizeInKB,
+                                        url,
+                                        directoryId,
+                                        starBoardDriveMode.authority
+                                    )
+                                        .onSuccess {
+                                            refreshCloud()
+                                            if (isMove) {
+                                                FileJobService.delete(listOf(localFile), context)
+                                            }
+                                        }
+                                        .onFailure { it.printStackTrace() }
+                                    FileTransfer(
+                                        id = id,
+                                        title = name,
+                                        text = context.getString(R.string.completed_transfer),
+                                        max = 100,
+                                        progress = 100,
+                                        indeterminate = false,
+                                        status = FileTransfer.Status.FINISHED
+                                    )
+                                }
+
+                                is TransferStatus.Transferring -> {
+                                    val sizeString =
+                                        status.total.asFileSize().formatHumanReadable(context)
+                                    val transferredSizeString =
+                                        status.transferred.asFileSize().formatHumanReadable(context)
+                                    val text = context.getString(
+                                        R.string.file_job_transfer_size_notification_text_one_format,
+                                        transferredSizeString,
+                                        sizeString
+                                    )
+                                    FileTransfer(
+                                        id = id,
+                                        title = name,
+                                        text = text,
+                                        max = status.total.toInt(),
+                                        progress = status.transferred.toInt(),
+                                        indeterminate = false,
+                                        status = FileTransfer.Status.TRANSFERRING
+                                    )
+                                }
                             }
+                            _fileTransferState.emit(transfer)
                         }
-                        _fileTransferState.emit(transfer)
-                    }
                 } finally {
                     TransferJobManager.cancel(id)
                 }
@@ -896,55 +896,55 @@ class FileListViewModel : ViewModel() {
 
             StarBoardDriveClient.downloadFile(cloudFile.url, localFile, authority)
                 .collect { status ->
-                Log.d("chengluo", "downloadFile: $status")
-                val transfer = when (status) {
-                    is TransferStatus.Transferring -> {
-                        val sizeString = status.total.asFileSize().formatHumanReadable(context)
-                        val transferredSizeString =
-                            status.transferred.asFileSize().formatHumanReadable(context)
-                        val text = context.getString(
-                            R.string.file_job_transfer_size_notification_text_one_format,
-                            transferredSizeString,
-                            sizeString
-                        )
-                        FileTransfer(
-                            id = id,
-                            title = cloudFile.name,
-                            text = text,
-                            max = status.total.toInt(),
-                            progress = status.transferred.toInt(),
-                            indeterminate = false,
-                            status = FileTransfer.Status.TRANSFERRING
-                        )
-                    }
-
-                    is TransferStatus.Finished -> {
-                        if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                    Log.d("chengluo", "downloadFile: $status")
+                    val transfer = when (status) {
+                        is TransferStatus.Transferring -> {
+                            val sizeString = status.total.asFileSize().formatHumanReadable(context)
+                            val transferredSizeString =
+                                status.transferred.asFileSize().formatHumanReadable(context)
+                            val text = context.getString(
+                                R.string.file_job_transfer_size_notification_text_one_format,
+                                transferredSizeString,
+                                sizeString
+                            )
+                            FileTransfer(
+                                id = id,
+                                title = cloudFile.name,
+                                text = text,
+                                max = status.total.toInt(),
+                                progress = status.transferred.toInt(),
+                                indeterminate = false,
+                                status = FileTransfer.Status.TRANSFERRING
+                            )
                         }
-                        FileTransfer(
+
+                        is TransferStatus.Finished -> {
+                            if (isMove) {
+                                deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                            }
+                            FileTransfer(
+                                id = id,
+                                title = cloudFile.name,
+                                text = context.getString(R.string.completed_transfer),
+                                max = 100,
+                                progress = 100,
+                                indeterminate = false,
+                                status = FileTransfer.Status.FINISHED
+                            )
+                        }
+
+                        is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = context.getString(R.string.completed_transfer),
+                            text = context.getString(R.string.failed_transfer),
                             max = 100,
-                            progress = 100,
+                            progress = 0,
                             indeterminate = false,
-                            status = FileTransfer.Status.FINISHED
+                            status = FileTransfer.Status.FAILED
                         )
                     }
-
-                    is TransferStatus.Failed -> FileTransfer(
-                        id = id,
-                        title = cloudFile.name,
-                        text = context.getString(R.string.failed_transfer),
-                        max = 100,
-                        progress = 0,
-                        indeterminate = false,
-                        status = FileTransfer.Status.FAILED
-                    )
+                    _fileTransferState.emit(transfer)
                 }
-                _fileTransferState.emit(transfer)
-            }
         } catch (e: Exception) {
             e.printStackTrace()
             _fileTransferState.emit(
@@ -1201,19 +1201,33 @@ class FileListViewModel : ViewModel() {
         val cloudFiles = cloudPasteState.files
         val cloudMode = cloudPasteState.cloudMode
         Log.d("chengluo", "pasteToLocal cloudMode: $cloudMode")
-        if (cloudMode == null || cloudMode == FileModeState.Local || cloudMode is FileModeState.QuickAccess) {
-            return
-        }
-        if (cloudPasteState.copy) {
-            cloudFiles.forEach { cloudFile ->
-                viewModelScope.launch {
-                    downloadCloudRecursively(cloudFile, targetLocalDir, false, cloudMode, context)
+        if (cloudMode is FileModeState.StarBoardDrive ||
+            cloudMode is FileModeState.OneDrive ||
+            cloudMode is FileModeState.GoogleDrive
+        ) {
+            if (cloudPasteState.copy) {
+                cloudFiles.forEach { cloudFile ->
+                    viewModelScope.launch {
+                        downloadCloudRecursively(
+                            cloudFile,
+                            targetLocalDir,
+                            false,
+                            cloudMode,
+                            context
+                        )
+                    }
                 }
-            }
-        } else {
-            cloudFiles.forEach { cloudFile ->
-                viewModelScope.launch {
-                    downloadCloudRecursively(cloudFile, targetLocalDir, true, cloudMode, context)
+            } else {
+                cloudFiles.forEach { cloudFile ->
+                    viewModelScope.launch {
+                        downloadCloudRecursively(
+                            cloudFile,
+                            targetLocalDir,
+                            true,
+                            cloudMode,
+                            context
+                        )
+                    }
                 }
             }
         }
