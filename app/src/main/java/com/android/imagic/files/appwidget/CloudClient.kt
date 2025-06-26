@@ -3,7 +3,6 @@ package com.android.imagic.files.appwidget
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.sdrive.client.Authority
-import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCallHandled
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -21,7 +20,6 @@ internal interface CloudAuth {
     suspend fun getUserInfo(body: AuthInfoBody): ApiOperation<LoginInfo>
     suspend fun uploadFileService(file: File): ApiOperation<String?>
     suspend fun getSpaceUsageInfo(): ApiOperation<SpaceInfo>
-    suspend fun refreshAccessToken(type: Int, refreshToken: String): ApiOperation<ServerAuthority>
 }
 
 @Serializable
@@ -116,13 +114,4 @@ class CloudClient(client: OkHttpClient) : CloudAuth {
 
     override suspend fun getSpaceUsageInfo(): ApiOperation<SpaceInfo> =
         safeApiCallHandled { network.getSpaceUsageInfo() }
-
-    override suspend fun refreshAccessToken(
-        type: Int,
-        refreshToken: String
-    ): ApiOperation<ServerAuthority> {
-        return safeApiCallHandled {
-            network.refreshAccessToken(type, refreshToken)
-        }.mapSuccess { it.toServerAuthority() }
-    }
 }

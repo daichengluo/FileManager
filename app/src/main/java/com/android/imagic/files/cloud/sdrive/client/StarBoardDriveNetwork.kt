@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
+import com.android.imagic.files.appwidget.AccessTokenData
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile
@@ -257,5 +258,12 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
         return safeApiCallHandled {
             network.moveOrCopyFiles(fileIds, 1, targetId)
         }
+    }
+
+    override suspend fun refreshAccessToken(
+        type: Int,
+        refreshToken: String
+    ): ApiOperation<AccessTokenData> = safeApiCallHandled {
+        network.refreshAccessToken(type, refreshToken)
     }
 }

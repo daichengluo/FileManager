@@ -78,7 +78,6 @@ class CloudQRCodeLoginViewModel : ViewModel() {
             while (isActive && _qrcodeBitmap.valueCompat != null) {
                 AuthClientImpl.getState(state!!)
                     .onSuccess {
-                        Log.d("chengluo", "getState Success: $it")
                         _qrcodeLoginStatus.value = it
                         if (QrcodeLoginStatus.LOGGING == it) {
                             getStateJob?.cancel()
@@ -101,7 +100,6 @@ class CloudQRCodeLoginViewModel : ViewModel() {
             while (isActive && _qrcodeLoginStatus.valueCompat == QrcodeLoginStatus.LOGGING) {
                 AuthClientImpl.getAccessToken(state!!)
                     .onSuccess {
-                        Log.d("chengluo", "getAccessToken Success: $it")
                         _accessTokenData.value = it
                         if (it != null) {
                             getAccessTokenJob?.cancel()

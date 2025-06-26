@@ -860,4 +860,7 @@
     <string name="completed_transfer">Transfer completed</string>
     <string name="my_files">My files</string>
     <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Cannot extract the archive to the cloud drive.</string>
+
+    <string name="web_client_id" translatable="false">35820500923-upus4qgu0hkva1er9ubdhmj7idae68cf.apps.googleusercontent.com</string>
 </resources>

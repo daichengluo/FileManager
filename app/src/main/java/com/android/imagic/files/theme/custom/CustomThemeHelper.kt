@@ -21,9 +21,9 @@ object CustomThemeHelper {
     fun initialize(application: Application) {
         application.registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                check(activityBaseThemes.containsKey(activity)) {
-                    "Activity must extend AppActivity: $activity"
-                }
+                /*                check(activityBaseThemes.containsKey(activity)) {
+                                    "Activity must extend AppActivity: $activity"
+                                }*/
             }
 
             override fun onActivityDestroyed(activity: Activity) {

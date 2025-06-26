@@ -1,5 +1,6 @@
 package com.android.imagic.files.cloud.sdrive.client
 
+import com.android.imagic.files.appwidget.AccessTokenData
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.util.ApiOperation
@@ -27,4 +28,5 @@ interface StarBoardDriveDataSource {
     suspend fun deleteFiles(fileIds: String): ApiOperation<Boolean>
     suspend fun moveFiles(fileIds: String, targetId: String): ApiOperation<Boolean>
     suspend fun copyFiles(fileIds: String, targetId: String): ApiOperation<Boolean>
+    suspend fun refreshAccessToken(type: Int, refreshToken: String): ApiOperation<AccessTokenData>
 }

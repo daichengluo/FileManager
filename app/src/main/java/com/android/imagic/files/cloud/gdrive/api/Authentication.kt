@@ -1,4 +1,4 @@
-package com.android.imagic.files.cloud.gdrive
+package com.android.imagic.files.cloud.gdrive.api
 
 import android.os.Parcelable
 import com.android.imagic.files.cloud.util.AuthenticatorInterceptor

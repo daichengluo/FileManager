@@ -29,10 +29,4 @@ internal interface CloudApi {
 
     @GET("api/NetDisk/Getstoragespace")
     suspend fun getSpaceUsageInfo(): ApiResponse<SpaceInfo>
-
-    @GET("Google/RefreshAccessTokenAsync")
-    suspend fun refreshAccessToken(
-        @Query("Type") type: Int,
-        @Query("refreshToken") refreshToken: String
-    ): ApiResponse<AccessTokenData>
 }

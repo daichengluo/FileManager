@@ -7,12 +7,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.imagic.files.cloud.gdrive.GoogleDriveClient
+import com.android.imagic.files.cloud.gdrive.api.GoogleDriveClient
+import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.util.ServerAuthority
+import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.valueCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import kotlinx.coroutines.launch
 
 class NavigationViewModel : ViewModel() {
@@ -23,10 +27,16 @@ class NavigationViewModel : ViewModel() {
     private val _serverAuthority = MutableLiveData<ServerAuthority?>(null)
     val serverAuthority: LiveData<ServerAuthority?> = _serverAuthority
 
-    fun updateServer(server: StarBoardDriveServer?) {
+    fun updateStarBoardDriveServer(server: StarBoardDriveServer?) {
         if (_starBoardDriveServer.valueCompat != server) {
             _starBoardDriveServer.value = server
         }
+    }
+
+    fun updateGoogleDriveServer(server: GoogleDriveServer, context: Context) {
+        GoogleSignIn.getLastSignedInAccount(context)?.let { account ->
+            GoogleDriveServiceClient.getService(server.authority, account, context)
+        } ?: Storages.remove(server)
     }
 
     fun queryAuthority(context: Context) {

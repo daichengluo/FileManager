@@ -1,7 +1,9 @@
-package com.android.imagic.files.cloud.gdrive
+package com.android.imagic.files.cloud.gdrive.api
 
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.gdrive.toCloudFileItem
+import com.android.imagic.files.cloud.gdrive.toSpaceData
 import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile

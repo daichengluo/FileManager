@@ -151,12 +151,15 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
 
         navigationItems.forEach { item ->
             if (item is StarBoardDriveItem) {
-                viewModel.updateServer(item.storage)
+                viewModel.updateStarBoardDriveServer(item.storage)
+                return
+            } else if (item is GoogleDriveItem) {
+                viewModel.updateGoogleDriveServer(item.storage, requireContext())
                 return
             }
         }
 
-        viewModel.updateServer(null)
+        viewModel.updateStarBoardDriveServer(null)
     }
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {

@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.gdrive
 
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.DriveType
 import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.file.asMimeType
 import com.android.imagic.files.filelist.getCollationKeyForFileName
@@ -41,7 +42,8 @@ fun GoogleDriveFileMetadata.toCloudFileItem(): CloudFileItem {
         createTime = Instant.parse(createdTime),
         modifyTime = Instant.parse(modifiedTime),
         fileHash = id,
-        childrenCount = null
+        childrenCount = null,
+        driveType = DriveType.GOOGLE_DRIVE
     )
 }
 

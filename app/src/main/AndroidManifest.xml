@@ -419,7 +419,7 @@
 
                 <data
                     android:host="com.android.imagic.files"
-                    android:path="/ywYdOi1G7E%2BDKV3cs9O2ugs%2Bdbk%3D"
+                    android:path="/87zUdqCfHCM9OCZiyIGk6Sfj2io="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

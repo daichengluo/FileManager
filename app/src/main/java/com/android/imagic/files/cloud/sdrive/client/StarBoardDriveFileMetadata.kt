@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.DriveType
 import com.android.imagic.files.cloud.toInstant
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeType
@@ -58,6 +59,7 @@ fun StarBoardDriveFileMetadata.toCloudFileItem(): CloudFileItem {
         createTime = createTime,
         modifyTime = modifyTime,
         fileHash = fileHash,
-        childrenCount = childrenCount?.toInt()
+        childrenCount = childrenCount?.toInt(),
+        driveType = DriveType.STAR_BOARD
     )
 }

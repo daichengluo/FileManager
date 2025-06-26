@@ -1,5 +1,10 @@
-package com.android.imagic.files.cloud.gdrive
+package com.android.imagic.files.cloud.gdrive.api
 
+import com.android.imagic.files.cloud.gdrive.FileOperationResponse
+import com.android.imagic.files.cloud.gdrive.FileParentsResponse
+import com.android.imagic.files.cloud.gdrive.GoogleDriveFileListResponse
+import com.android.imagic.files.cloud.gdrive.RenameFileResponse
+import com.android.imagic.files.cloud.gdrive.StorageQuotaResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

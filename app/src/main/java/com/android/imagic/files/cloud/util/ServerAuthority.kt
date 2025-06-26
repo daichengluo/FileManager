@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ServerAuthority(
     val openId: String,
-    val userId: Int,
+    val userId: Int? = null,
     val username: String,
     val email: String,
     val avatarUrl: String?,

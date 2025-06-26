@@ -1,6 +1,7 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.app.okHttpClient
+import com.android.imagic.files.appwidget.AccessTokenData
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.util.AuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.TransferStatus
@@ -11,6 +12,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -28,6 +30,11 @@ object StarBoardDriveClient {
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .followRedirects(false)
+                    .addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.HEADERS
+                        }
+                    )
                     .addNetworkInterceptor(authenticatorInterceptor)
                     .authenticator(authenticatorInterceptor)
                     .build()
@@ -83,6 +90,12 @@ object StarBoardDriveClient {
         parentId: String,
         authority: Authority
     ): ApiOperation<List<CloudFileItem>> = getClient(authority).getFileList(parentId)
+
+    suspend fun refreshAccessToken(
+        type: Int,
+        refreshToken: String,
+        authority: Authority
+    ): ApiOperation<AccessTokenData> = getClient(authority).refreshAccessToken(type, refreshToken)
 
     internal class OkHttpAuthenticatorInterceptor(
         private val authority: Authority

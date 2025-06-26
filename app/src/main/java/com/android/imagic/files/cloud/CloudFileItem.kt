@@ -28,15 +28,29 @@ data class CloudFileItem(
     val createTime: Instant? = null,
     val modifyTime: Instant? = null,
     var childrenCount: Int? = null,
-    val fileHash: String? = null
+    val fileHash: String? = null,
+    val driveType: DriveType
 ) : Parcelable {
 
     val isDirectory: Boolean
         get() = type == CloudFileType.DIRECTORY
+
+    val isStarBoardDrive: Boolean
+        get() = driveType == DriveType.STAR_BOARD
+
+    val isGoogleDrive: Boolean
+        get() = driveType == DriveType.GOOGLE_DRIVE
+
+    val isOneDrive: Boolean
+        get() = driveType == DriveType.ONEDRIVE
 }
 
 enum class CloudFileType {
     DIRECTORY, FILE
+}
+
+enum class DriveType {
+    STAR_BOARD, ONEDRIVE, GOOGLE_DRIVE
 }
 
 val CloudFileItem.extension: String

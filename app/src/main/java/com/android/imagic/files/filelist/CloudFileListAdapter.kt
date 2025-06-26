@@ -324,14 +324,25 @@ class CloudFileListAdapter(
             val descriptionSeparator = context.getString(R.string.file_item_description_separator)
             val lastModificationTime = file.modifyTime?.formatShort(context) ?: ""
 
-            it.text = if (isDirectory) {
-                val childrenCountText = context.getQuantityString(
-                    R.plurals.file_item_file_count_format, childrenCount, childrenCount
-                )
-                listOf(lastModificationTime, childrenCountText).joinToString(descriptionSeparator)
+            it.text = if (file.isGoogleDrive) {
+                if (isDirectory) {
+                    lastModificationTime
+                } else {
+                    val size = file.size.asFileSize().formatHumanReadable(context)
+                    listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+                }
             } else {
-                val size = file.size.asFileSize().formatHumanReadable(context)
-                listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+                if (isDirectory) {
+                    val childrenCountText = context.getQuantityString(
+                        R.plurals.file_item_file_count_format, childrenCount, childrenCount
+                    )
+                    listOf(lastModificationTime, childrenCountText).joinToString(
+                        descriptionSeparator
+                    )
+                } else {
+                    val size = file.size.asFileSize().formatHumanReadable(context)
+                    listOf(lastModificationTime, size).joinToString(descriptionSeparator)
+                }
             }
         }
         holder.popupMenu?.setOnMenuItemClickListener {

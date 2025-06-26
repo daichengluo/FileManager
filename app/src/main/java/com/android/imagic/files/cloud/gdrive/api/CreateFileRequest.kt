@@ -1,4 +1,4 @@
-package com.android.imagic.files.cloud.gdrive
+package com.android.imagic.files.cloud.gdrive.api
 
 import kotlinx.serialization.Serializable
 

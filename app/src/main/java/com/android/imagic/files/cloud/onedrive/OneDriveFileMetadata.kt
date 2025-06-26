@@ -2,6 +2,7 @@ package com.android.imagic.files.cloud.onedrive
 
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.CloudFileType
+import com.android.imagic.files.cloud.DriveType
 import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.file.asMimeType
 import com.android.imagic.files.filelist.getCollationKeyForFileName
@@ -59,7 +60,8 @@ fun OneDriveFileMetadata.toCloudFileItem(): CloudFileItem {
         createTime = createdDateTime?.let { Instant.parse(it) },
         modifyTime = lastModifiedDateTime?.let { Instant.parse(it) },
         childrenCount = folder?.childCount,
-        fileHash = id // 可替换为 ETag 或自定义 hash
+        fileHash = id, // 可替换为 ETag 或自定义 hash
+        driveType = DriveType.ONEDRIVE
     )
 }
 

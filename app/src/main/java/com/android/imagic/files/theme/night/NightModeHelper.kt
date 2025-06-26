@@ -22,11 +22,13 @@ object NightModeHelper {
     fun initialize(application: Application) {
         application.registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                check(activity in activities) { "Activity must extend AppActivity: $activity" }
+//                check(activity in activities) { "Activity must extend AppActivity: $activity" }
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                activities -= activity as AppCompatActivity
+                if (activity is AppCompatActivity) {
+                    activities -= activity
+                }
             }
         })
     }
