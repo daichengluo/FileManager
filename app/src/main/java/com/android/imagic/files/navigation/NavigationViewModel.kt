@@ -11,7 +11,6 @@ import com.android.imagic.files.cloud.gdrive.api.GoogleDriveClient
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.util.ServerAuthority
-import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ApiOperation
@@ -27,16 +26,22 @@ class NavigationViewModel : ViewModel() {
     private val _serverAuthority = MutableLiveData<ServerAuthority?>(null)
     val serverAuthority: LiveData<ServerAuthority?> = _serverAuthority
 
-    fun updateStarBoardDriveServer(server: StarBoardDriveServer?) {
-        if (_starBoardDriveServer.valueCompat != server) {
-            _starBoardDriveServer.value = server
+    fun onStorageItemsChanged(navigationItems: List<NavigationItem?>, context: Context) {
+        navigationItems.firstOrNull { it is StarBoardDriveItem }?.let { item ->
+            val server = (item as StarBoardDriveItem).storage
+            if (_starBoardDriveServer.valueCompat != server) {
+                _starBoardDriveServer.value = server
+            }
+        } ?: run { _starBoardDriveServer.value = null }
+        navigationItems.firstOrNull { it is GoogleDriveItem }?.let { item ->
+            val server = (item as GoogleDriveItem).storage
+            val authority = server.authority
+            if (authority.accessToken.isEmpty()) {
+                GoogleSignIn.getLastSignedInAccount(context)?.let { account ->
+                    GoogleDriveServiceClient.getService(server.authority, account, context)
+                } ?: Storages.remove(server)
+            }
         }
-    }
-
-    fun updateGoogleDriveServer(server: GoogleDriveServer, context: Context) {
-        GoogleSignIn.getLastSignedInAccount(context)?.let { account ->
-            GoogleDriveServiceClient.getService(server.authority, account, context)
-        } ?: Storages.remove(server)
     }
 
     fun queryAuthority(context: Context) {
@@ -80,13 +85,22 @@ class NavigationViewModel : ViewModel() {
         Log.d("chengluo", "getDriveSpaceData: $serverAuthority")
         if (serverAuthority.totalSpace == 0L) {
             if (serverAuthority.isGoogle) {
-                val response = GoogleDriveClient.getSpaceData(serverAuthority)
-                if (response is ApiOperation.Success) {
-                    val data = response.data
-                    _serverAuthority.value = serverAuthority.copy(
-                        totalSpace = data.total,
-                        usedSpace = data.used
-                    )
+                if (serverAuthority.accessToken.isEmpty()) {
+                    GoogleDriveServiceClient.getSpaceData(serverAuthority)?.let { spaceData ->
+                        _serverAuthority.value = serverAuthority.copy(
+                            totalSpace = spaceData.total,
+                            usedSpace = spaceData.used
+                        )
+                    }
+                } else {
+                    val response = GoogleDriveClient.getSpaceData(serverAuthority)
+                    if (response is ApiOperation.Success) {
+                        val data = response.data
+                        _serverAuthority.value = serverAuthority.copy(
+                            totalSpace = data.total,
+                            usedSpace = data.used
+                        )
+                    }
                 }
             }
             if (serverAuthority.isMicrosoft) {

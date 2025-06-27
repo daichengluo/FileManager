@@ -22,10 +22,10 @@ import com.android.imagic.files.util.args
 import com.android.imagic.files.util.viewModels
 import kotlinx.parcelize.Parcelize
 
-class EditSDriveServerFragment : Fragment() {
+class EditStarBoardDriveServerFragment : Fragment() {
     private val args by args<Args>()
 
-    private val viewModel by viewModels { { EditSDriveServerViewModel() } }
+    private val viewModel by viewModels { { EditStarBoardDriveServerViewModel() } }
 
     private lateinit var binding: EditSdriveServerFragmentBinding
 

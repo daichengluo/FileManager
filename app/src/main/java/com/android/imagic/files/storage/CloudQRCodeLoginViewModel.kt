@@ -17,6 +17,8 @@ import com.android.imagic.files.appwidget.QrcodeLoginStatus
 import com.android.imagic.files.appwidget.toAuthInfoBody
 import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.appwidget.toServerAuthority
+import com.android.imagic.files.cloud.gdrive.api.GoogleDriveClient
+import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.util.ApiOperation
@@ -125,7 +127,7 @@ class CloudQRCodeLoginViewModel : ViewModel() {
         val okHttpClient = okHttpClient.newBuilder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.HEADERS
+                    level = HttpLoggingInterceptor.Level.BODY
                 }
             )
             .addNetworkInterceptor(authenticatorInterceptor)
@@ -146,19 +148,34 @@ class CloudQRCodeLoginViewModel : ViewModel() {
             val newAuthority = getSpaceUsageInfo(it.toAuthority())
             Storages.addOrReplace(StarBoardDriveServer(null, null, newAuthority))
 
+            val authority = data.toServerAuthority()
             if (it.isGoogle) {
+                val response = GoogleDriveClient.getSpaceData(authority)
+                val updateAuthority = if (response is ApiOperation.Success) {
+                    authority.copy(
+                        totalSpace = response.data.total,
+                        usedSpace = response.data.used
+                    )
+                } else authority
                 val googleDriveServer = GoogleDriveServer(
                     null,
                     null,
-                    data.toServerAuthority()
+                    updateAuthority
                 )
                 Storages.addOrReplace(googleDriveServer)
             }
             if (it.isMicrosoft) {
+                val response = OneDriveClient.getSpaceData(authority)
+                val updateAuthority = if (response is ApiOperation.Success) {
+                    authority.copy(
+                        totalSpace = response.data.total,
+                        usedSpace = response.data.used
+                    )
+                } else authority
                 val oneDriveServer = OneDriveServer(
                     null,
                     null,
-                    data.toServerAuthority()
+                    updateAuthority
                 )
                 Storages.addOrReplace(oneDriveServer)
             }
@@ -172,6 +189,11 @@ class CloudQRCodeLoginViewModel : ViewModel() {
         val okHttpClient = okHttpClient.newBuilder()
             .addNetworkInterceptor(authenticatorInterceptor)
             .authenticator(authenticatorInterceptor)
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
         val client = CloudClient(okHttpClient)
         return when (val response = client.getSpaceUsageInfo()) {

@@ -27,7 +27,7 @@ import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.storage.CloudLogoutFragment
-import com.android.imagic.files.storage.EditSDriveServerActivity
+import com.android.imagic.files.storage.EditStarBoardDriveServerActivity
 import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
@@ -100,7 +100,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         binding.loginLayout.setOnClickListener {
             val sDriveServer = viewModel.starBoardDriveServer.valueCompat
             if (sDriveServer == null) {
-                launchIntent(EditSDriveServerActivity::class.createIntent())
+                launchIntent(EditStarBoardDriveServerActivity::class.createIntent())
             } else {
                 logout(sDriveServer)
             }
@@ -148,18 +148,7 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         storageListAdapter.replace(navigationItems)
         storageListAdapter.notifyCheckedChanged()
         quickAccessListAdapter.notifyCheckedChanged()
-
-        navigationItems.forEach { item ->
-            if (item is StarBoardDriveItem) {
-                viewModel.updateStarBoardDriveServer(item.storage)
-                return
-            } else if (item is GoogleDriveItem) {
-                viewModel.updateGoogleDriveServer(item.storage, requireContext())
-                return
-            }
-        }
-
-        viewModel.updateStarBoardDriveServer(null)
+        viewModel.onStorageItemsChanged(navigationItems, requireContext())
     }
 
     private fun onQuickAccessItemsChanged(navigationItems: List<NavigationItem?>) {

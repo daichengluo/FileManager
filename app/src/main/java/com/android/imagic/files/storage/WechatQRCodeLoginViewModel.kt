@@ -15,7 +15,7 @@ class WechatQRCodeLoginViewModel : ViewModel() {
     val loginSuccess: LiveData<Boolean> = _loginSuccess
 
     fun getLoginUrl() = viewModelScope.launch {
-        SDriveAuthClient.getLoginUrlInfo(3)
+        StarBoardDriveAuthClient.getLoginUrlInfo(3)
             .onSuccess { response ->
                 _wxQrcodeUrl.value = response.data?.loginURL
             }
@@ -25,7 +25,7 @@ class WechatQRCodeLoginViewModel : ViewModel() {
     }
 
     fun doLogin(code: String, state: String) = viewModelScope.launch {
-        SDriveAuthClient.doLogin(code, state)
+        StarBoardDriveAuthClient.doLogin(code, state)
             .onSuccess { response ->
                 response.data?.let {
                     val authority = Authority(

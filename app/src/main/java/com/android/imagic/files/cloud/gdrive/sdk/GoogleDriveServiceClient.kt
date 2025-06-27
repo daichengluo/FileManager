@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.imagic.files.R
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.util.ServerAuthority
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.util.ApiOperation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -138,4 +139,7 @@ object GoogleDriveServiceClient {
         targetDirectoryId: String,
         authority: ServerAuthority
     ): Boolean = getService(authority)?.moveFile(fileId, targetDirectoryId) ?: false
+
+    suspend fun getSpaceData(authority: ServerAuthority): SpaceData? =
+        getService(authority)?.getSpaceData()
 }

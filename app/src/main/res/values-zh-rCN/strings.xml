@@ -699,4 +699,5 @@
     <string name="my_files">我的文件</string>
     <string name="my_drive">我的云端硬盘</string>
     <string name="cannot_extract_to_cloud_drive">无法解压文件到网盘中</string>
+    <string name="login_failed_message">登录失败：%1$s</string>
 </resources>

@@ -8,7 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.android.imagic.files.R
+import com.android.imagic.files.app.okHttpClient
+import com.android.imagic.files.appwidget.CloudClient
+import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.databinding.CloudPasswordLoginFragmentBinding
@@ -35,11 +39,13 @@ import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.SilentAuthenticationCallback
 import com.microsoft.identity.client.exception.MsalException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.logging.HttpLoggingInterceptor
 
 class CloudPasswordLoginFragment : Fragment() {
 
-    private val sharedViewModel: EditSDriveServerViewModel by viewModels({ requireParentFragment() })
+    private val sharedViewModel: EditStarBoardDriveServerViewModel by viewModels({ requireParentFragment() })
 
     private lateinit var binding: CloudPasswordLoginFragmentBinding
 
@@ -179,6 +185,7 @@ class CloudPasswordLoginFragment : Fragment() {
             .requestEmail()
             .requestScopes(Scope(DriveScopes.DRIVE_FILE))
             .requestIdToken(serverClientId)
+            .requestServerAuthCode(serverClientId)
             .requestProfile()
             .requestId()
             .build()
@@ -207,14 +214,48 @@ class CloudPasswordLoginFragment : Fragment() {
                         totalSpace = 0L,
                         usedSpace = 0L
                     )
-                    val storage =
-                        GoogleDriveServer(id = null, customName = null, authority = authority)
-                    Storages.addOrReplace(storage)
-                    GoogleDriveServiceClient.getService(authority, account, requireContext())
-                    finish()
+                    lifecycleScope.launch {
+                        GoogleDriveServiceClient.getService(authority, account, requireContext())
+                        val updatedAuthority =
+                            GoogleDriveServiceClient.getSpaceData(authority)?.let {
+                                authority.copy(totalSpace = it.total, usedSpace = it.used)
+                            } ?: authority
+                        val storage = GoogleDriveServer(
+                            id = null,
+                            customName = null,
+                            authority = updatedAuthority
+                        )
+                        Storages.addOrReplace(storage)
+                    }
+
+
+                    account.serverAuthCode?.let {
+                        Log.d("chengluo", "serverAuthCode: $it")
+
+                        val okHttpClient = okHttpClient.newBuilder()
+                            .addInterceptor(
+                                HttpLoggingInterceptor().apply {
+                                    level = HttpLoggingInterceptor.Level.BODY
+                                }
+                            )
+                            .build()
+                        val state = "GG@" + generateNonceStr(8)
+                        lifecycleScope.launch {
+                            CloudClient(okHttpClient).doLogin(it, state)
+                                .onSuccess { loginInfo ->
+                                    val starBoardServer =
+                                        StarBoardDriveServer(null, null, loginInfo.toAuthority())
+                                    Storages.addOrReplace(starBoardServer)
+                                }
+                                .onFailure { e ->
+                                    e.printStackTrace()
+                                }
+                            finish()
+                        }
+                    }
                 }
             } else {
-                Log.e("chengluo", "登录失败：${task.exception}")
+                showToast(getString(R.string.login_failed_message, task.exception?.message ?: ""))
             }
         }
     }
@@ -257,5 +298,12 @@ class CloudPasswordLoginFragment : Fragment() {
         const val RC_SIGN_IN = 6007
 
         val microsoftScopes = listOf("User.Read", "openid", "profile", "email", "Files.ReadWrite")
+
+        fun generateNonceStr(length: Int): String {
+            val allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            return (1..length)
+                .map { allowedChars.random() }
+                .joinToString("")
+        }
     }
 }

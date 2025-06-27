@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.navigation.NavigationFragment
+import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.show
+import com.android.imagic.files.util.valueCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
 
@@ -35,6 +37,10 @@ class CloudLogoutFragment : AppCompatDialogFragment() {
     private fun remove() {
         tryLogoutIfNeeded()
         Storages.remove(args.server)
+        val storages = Settings.STORAGES.valueCompat.toList()
+        storages.filter { it is GoogleDriveServer || it is OneDriveServer }.forEach {
+            Storages.remove(it)
+        }
         LoginWidgetUpdater.updateWidgets(requireContext())
     }
 

@@ -12,7 +12,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
-internal interface SDriveAuth {
+internal interface StarBoardDriveAuth {
     suspend fun getLoginUrlInfo(loginType: Int): ApiOperation<LoginUrlResponse>
     suspend fun doLogin(code: String, state: String): ApiOperation<LoginInfoResponse>
 }
@@ -52,7 +52,7 @@ data class LoginInfoResponse(
     )
 }
 
-object SDriveAuthClient : SDriveAuth {
+object StarBoardDriveAuthClient : StarBoardDriveAuth {
 
     private val baseUrl: String = BuildConfig.STB_API_URL
     private val json: Json = networkJson
@@ -71,7 +71,7 @@ object SDriveAuthClient : SDriveAuth {
             json.asConverterFactory("application/json".toMediaType())
         )
         .build()
-        .create(SDriveAuthApi::class.java)
+        .create(StarBoardDriveAuthApi::class.java)
 
     override suspend fun getLoginUrlInfo(loginType: Int): ApiOperation<LoginUrlResponse> =
         safeApiCall { network.getLoginUrlInfo(loginType) }

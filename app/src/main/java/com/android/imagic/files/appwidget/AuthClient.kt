@@ -10,6 +10,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 enum class QrcodeLoginStatus {
@@ -83,7 +84,13 @@ object AuthClientImpl : AuthClient {
 
     private const val BASE_URL = "https://wboard.starboard-online.com/api/ApiIgc/"
     private val json: Json = networkJson
-    private val client = okHttpClient.newBuilder().build()
+    private val client = okHttpClient.newBuilder()
+        .addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+        )
+        .build()
 
     private val network = Retrofit.Builder()
         .baseUrl(BASE_URL)

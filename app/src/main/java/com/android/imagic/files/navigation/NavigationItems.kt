@@ -27,6 +27,7 @@ import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.storage.Storage
 import com.android.imagic.files.storage.StorageVolumeListLiveData
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.isMounted
 import com.android.imagic.files.util.putArgs
@@ -244,6 +245,7 @@ internal class GoogleDriveItem(
     }
 
     override fun onLongClick(listener: Listener): Boolean {
+        Storages.remove(storage)
         return true
     }
 }

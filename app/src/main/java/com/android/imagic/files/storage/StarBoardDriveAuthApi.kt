@@ -3,7 +3,7 @@ package com.android.imagic.files.storage
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-internal interface SDriveAuthApi {
+internal interface StarBoardDriveAuthApi {
     @GET("Google/GetWhiteboardWeChatLoginUri")
     suspend fun getLoginUrlInfo(@Query("type") loginType: Int): LoginUrlResponse
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.imagic.files.util.valueCompat
 
-class EditSDriveServerViewModel : ViewModel() {
+class EditStarBoardDriveServerViewModel : ViewModel() {
 
     private val _userAgreementCheckedLiveData = MutableLiveData<Boolean>(false)
     val userAgreementCheckedLiveData: LiveData<Boolean> = _userAgreementCheckedLiveData

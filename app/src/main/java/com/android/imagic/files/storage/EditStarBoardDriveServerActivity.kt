@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.util.putArgs
 
-class EditSDriveServerActivity : AppActivity() {
+class EditStarBoardDriveServerActivity : AppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +22,9 @@ class EditSDriveServerActivity : AppActivity() {
         // Calls ensureSubDecor().
         findViewById<View>(android.R.id.content)
         if (savedInstanceState == null) {
-            val fragment = EditSDriveServerFragment().putArgs(EditSDriveServerFragment.Args(false))
+            val fragment = EditStarBoardDriveServerFragment().putArgs(
+                EditStarBoardDriveServerFragment.Args(false)
+            )
             supportFragmentManager.commit { add(android.R.id.content, fragment) }
         }
     }
