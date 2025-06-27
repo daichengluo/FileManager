@@ -361,13 +361,11 @@ class FileListViewModel : ViewModel() {
             val cloudMode = currentFileMode
 
             if (cloudMode is FileModeState.StarBoardDrive) {
-
-                val response =
-                    StarBoardDriveClient.createDirectory(
-                        folderName,
-                        parentDirectoryId,
-                        cloudMode.authority
-                    )
+                val response = StarBoardDriveClient.createDirectory(
+                    folderName,
+                    parentDirectoryId,
+                    cloudMode.authority
+                )
                 val newDirectoryId = if (response is ApiOperation.Success) {
                     refreshCloud()
                     response.data.id
@@ -386,16 +384,26 @@ class FileListViewModel : ViewModel() {
                 }
             }
             if (cloudMode is FileModeState.GoogleDrive) {
-                val response =
-                    GoogleDriveClient.createDirectory(
+                val newDirectoryId = if (cloudMode.authority.accessToken.isEmpty()) {
+                    val result = GoogleDriveServiceClient.createDirectory(
                         folderName,
                         parentDirectoryId,
                         cloudMode.authority
                     )
-                val newDirectoryId = if (response is ApiOperation.Success) {
                     refreshCloud()
-                    response.data
-                } else null
+                    result
+                } else {
+                    val response = GoogleDriveClient.createDirectory(
+                        folderName,
+                        parentDirectoryId,
+                        cloudMode.authority
+                    )
+                    if (response is ApiOperation.Success) {
+                        refreshCloud()
+                        response.data
+                    } else null
+                }
+
                 if (newDirectoryId == null) {
                     Log.e("chengluo", "Failed to create remote folder: $folderName")
                     return
@@ -410,12 +418,11 @@ class FileListViewModel : ViewModel() {
                 }
             }
             if (cloudMode is FileModeState.OneDrive) {
-                val response =
-                    OneDriveClient.createDirectory(
-                        folderName,
-                        parentDirectoryId,
-                        cloudMode.authority
-                    )
+                val response = OneDriveClient.createDirectory(
+                    folderName,
+                    parentDirectoryId,
+                    cloudMode.authority
+                )
                 val newDirectoryId = if (response is ApiOperation.Success) {
                     refreshCloud()
                     response.data.id

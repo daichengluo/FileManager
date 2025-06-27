@@ -101,7 +101,7 @@ class GoogleDriveService(val drive: Drive) {
         totalCount
     }
 
-    suspend fun createDirectory(directoryName: String, parentId: String): Boolean =
+    suspend fun createDirectory(directoryName: String, parentId: String): String? =
         withContext(Dispatchers.IO) {
             val metadata = File().apply {
                 name = directoryName
@@ -110,14 +110,14 @@ class GoogleDriveService(val drive: Drive) {
             }
 
             try {
-                drive.files()
+                val result = drive.files()
                     .create(metadata)
                     .setFields("id, name")
                     .execute()
-                true
+                result.id
             } catch (e: Exception) {
                 Log.e("chengluo", "createDirectory: ${e.message}", e)
-                false
+                null
             }
         }
 

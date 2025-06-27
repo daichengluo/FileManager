@@ -79,7 +79,7 @@ object GoogleDriveServiceClient {
         name: String,
         directoryId: String,
         authority: ServerAuthority
-    ): Boolean = getService(authority)?.createDirectory(name, directoryId) ?: false
+    ): String? = getService(authority)?.createDirectory(name, directoryId)
 
     suspend fun createFile(
         name: String,
