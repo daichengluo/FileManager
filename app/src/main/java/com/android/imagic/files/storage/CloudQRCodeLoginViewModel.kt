@@ -43,7 +43,7 @@ class CloudQRCodeLoginViewModel : ViewModel() {
     private val _qrcodeBitmap = MutableLiveData<Bitmap?>(null)
     val qrcodeBitmap: LiveData<Bitmap?> = _qrcodeBitmap
 
-    private val _qrcodeLoginStatus = MutableLiveData<QrcodeLoginStatus>(QrcodeLoginStatus.UNSTARTED)
+    private val _qrcodeLoginStatus = MutableLiveData(QrcodeLoginStatus.UNSTARTED)
     val qrcodeLoginStatus: LiveData<QrcodeLoginStatus> = _qrcodeLoginStatus
 
     private val _accessTokenData = MutableLiveData<AccessTokenData?>(null)
@@ -51,6 +51,9 @@ class CloudQRCodeLoginViewModel : ViewModel() {
 
     private val _authority = MutableLiveData<Authority?>(null)
     val authority: LiveData<Authority?> = _authority
+
+    private val _isLoadingUserInfoLiveData = MutableLiveData(false)
+    val isLoadingUserInfoLiveData: LiveData<Boolean> = _isLoadingUserInfoLiveData
 
     private var state: String? = null
     private var getStateJob: Job? = null
@@ -104,6 +107,7 @@ class CloudQRCodeLoginViewModel : ViewModel() {
                     .onSuccess {
                         _accessTokenData.value = it
                         if (it != null) {
+                            _isLoadingUserInfoLiveData.value = true
                             getAccessTokenJob?.cancel()
                             getAccessTokenJob = null
                         }

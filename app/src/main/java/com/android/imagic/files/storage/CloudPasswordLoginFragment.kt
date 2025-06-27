@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.android.imagic.files.R
@@ -191,7 +192,11 @@ class CloudPasswordLoginFragment : Fragment() {
             .build()
 
         val googleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions)
-        signInLauncher.launch(googleSignInClient.signInIntent)
+        try {
+            signInLauncher.launch(googleSignInClient.signInIntent)
+        } catch (_: Exception) {
+            showToast(R.string.login_failed_retry)
+        }
     }
 
     private val signInLauncher = registerForActivityResult(
@@ -216,6 +221,7 @@ class CloudPasswordLoginFragment : Fragment() {
                     )
                     lifecycleScope.launch {
                         GoogleDriveServiceClient.getService(authority, account, requireContext())
+                        binding.progressBarLayout.isVisible = true
                         val updatedAuthority =
                             GoogleDriveServiceClient.getSpaceData(authority)?.let {
                                 authority.copy(totalSpace = it.total, usedSpace = it.used)

@@ -17,6 +17,7 @@ import com.android.imagic.files.util.viewModels
 class CloudQRCodeLoginFragment : Fragment() {
 
     private val viewModel by viewModels { { CloudQRCodeLoginViewModel() } }
+    private val sharedViewModel: EditStarBoardDriveServerViewModel by viewModels({ requireParentFragment() })
 
     private lateinit var binding: CloudQrcodeLoginFragmentBinding
 
@@ -73,6 +74,10 @@ class CloudQRCodeLoginFragment : Fragment() {
                 }
                 finish()
             }
+        }
+
+        viewModel.isLoadingUserInfoLiveData.observe(viewLifecycleOwner) { loading ->
+            binding.progressBarLayout.isVisible = loading
         }
 
         viewModel.generateQrcode(requireContext())

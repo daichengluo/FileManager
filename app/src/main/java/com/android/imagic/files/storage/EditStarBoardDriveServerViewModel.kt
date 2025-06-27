@@ -7,7 +7,7 @@ import com.android.imagic.files.util.valueCompat
 
 class EditStarBoardDriveServerViewModel : ViewModel() {
 
-    private val _userAgreementCheckedLiveData = MutableLiveData<Boolean>(false)
+    private val _userAgreementCheckedLiveData = MutableLiveData(false)
     val userAgreementCheckedLiveData: LiveData<Boolean> = _userAgreementCheckedLiveData
     val userAgreementChecked: Boolean
         get() = userAgreementCheckedLiveData.valueCompat

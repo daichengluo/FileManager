@@ -700,4 +700,6 @@
     <string name="my_drive">我的云端硬盘</string>
     <string name="cannot_extract_to_cloud_drive">无法解压文件到网盘中</string>
     <string name="login_failed_message">登录失败：%1$s</string>
+    <string name="login_failed_retry">登录失败，请重试</string>
+    <string name="loading_user_data">正在加载用户数据</string>
 </resources>
