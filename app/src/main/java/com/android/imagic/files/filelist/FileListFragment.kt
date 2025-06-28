@@ -15,7 +15,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.DragEvent
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
@@ -111,6 +110,7 @@ import com.android.imagic.files.provider.linux.isLinuxPath
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.storage.StorageVolumeListLiveData
 import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.ui.AppBarLayoutExpandHackListener
@@ -882,9 +882,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun onCurrentFileModeStateChanged(cloudMode: FileModeState) {
-
         val context = requireContext()
-
         when (cloudMode) {
             is FileModeState.StarBoardDrive -> {
                 val authority = cloudMode.authority
@@ -917,6 +915,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 switchViewWithFade(binding.recyclerView, binding.cloudRecyclerView)
             }
         }
+        updateBottomToolbar()
     }
 
     private fun onCloudPathListChanged(pathData: CloudPathData?) {
@@ -962,9 +961,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             throwable.printStackTrace()
             val message = when (throwable) {
                 is LoginExpiredException -> {
-                    Settings.STORAGES.valueCompat.find { it is GoogleDriveServer }?.let {
-                        Storages.remove(it)
-                    }
+                    Settings.STORAGES.valueCompat.find {
+                        it is GoogleDriveServer || it is OneDriveServer || it is StarBoardDriveServer
+                    }?.let { Storages.remove(it) }
                     navigateToDefaultRoot()
                     getString(R.string.login_expired)
                 }
@@ -1237,7 +1236,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun updateOverlayToolbar() {
-        val isInCloudStorage = viewModel.isStarBoardDriveFileMode
+        val isInCloudStorage = viewModel.isCloudFileMode
         val files = viewModel.selectedFiles
         val cloudFiles = viewModel.selectedCloudFiles
         if (files.isEmpty() && cloudFiles.isEmpty()) {
@@ -1398,7 +1397,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun confirmDeleteFiles() {
-        if (viewModel.isStarBoardDriveFileMode) {
+        if (viewModel.isCloudFileMode) {
             val files = viewModel.selectedCloudFiles
             ConfirmDeleteCloudFilesDialogFragment.show(files, this)
         } else {
@@ -1441,7 +1440,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun selectAllFiles() {
-        if (viewModel.isStarBoardDriveFileMode) {
+        if (viewModel.isCloudFileMode) {
             cloudFileListAdapter.selectAllFiles()
         } else {
             adapter.selectAllFiles()
@@ -1511,8 +1510,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
                 return
             }
-            val areAllFilesArchivePaths =
-                cloudFiles.isEmpty() && files.all { it.path.isArchivePath }
+            val areAllFilesArchivePaths = files.all { it.path.isArchivePath }
             val fileSize = cloudFiles.size + files.size
             bottomActionMode.title = getQuantityString(
                 if (pasteState.copy || cloudPasteState.copy) {
@@ -1528,12 +1526,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             binding.bottomCreateFileNameEdit.isVisible = false
             bottomActionMode.setMenuResource(R.menu.file_list_paste)
             val isCurrentPathReadOnly =
-                viewModel.currentPath.fileSystem.isReadOnly && cloudFiles.isEmpty()
+                viewModel.currentPath.fileSystem.isReadOnly && viewModel.isLocalFileMode
             bottomActionMode.menu.findItem(R.id.action_paste)
                 .setTitle(
                     if (areAllFilesArchivePaths) R.string.file_list_paste_action_extract_here else R.string.paste
                 )
-                .isEnabled = !isCurrentPathReadOnly || cloudFiles.isNotEmpty()
+                .isEnabled = !isCurrentPathReadOnly
         }
         if (!bottomActionMode.isActive) {
             bottomActionMode.start(object : ToolbarActionMode.Callback {
@@ -1664,7 +1662,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 load(AppIconPackageName(appDirectoryPackageName))
             }
         }
-        val fileCount = if (viewModel.isStarBoardDriveFileMode) {
+        val fileCount = if (viewModel.isCloudFileMode) {
             viewModel.cloudPasteState.files.size
         } else {
             viewModel.pasteState.files.size
@@ -1929,7 +1927,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun createFile(name: String) {
-        if (viewModel.isStarBoardDriveFileMode) {
+        if (viewModel.isCloudFileMode) {
             viewModel.createCloudFile(name, requireContext())
         } else {
             val path = currentPath.resolve(name)
@@ -1942,7 +1940,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun createDirectory(name: String) {
-        if (viewModel.isStarBoardDriveFileMode) {
+        if (viewModel.isCloudFileMode) {
             viewModel.createCloudDirectory(name)
         } else {
             val path = currentPath.resolve(name)
@@ -2217,7 +2215,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun openCloudFile(file: CloudFileItem) {
-        Log.d("chengluo", "openCloudFile: $file")
         val mimeType = file.mimeType
         if (file.isDirectory) {
             val cloudPath = CloudPathData(file.id, file.name)

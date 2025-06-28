@@ -58,7 +58,7 @@ class FileListViewModel : ViewModel() {
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
 
     fun navigateUp(): Boolean = if (canNavigateUpBreadcrumb) {
-        if (isStarBoardDriveFileMode) {
+        if (isCloudFileMode) {
             navigateCloudUp()
             true
         } else {
@@ -74,10 +74,13 @@ class FileListViewModel : ViewModel() {
     val currentFileMode: FileModeState
         get() = currentFileModeStateLiveData.valueCompat
 
-    val isStarBoardDriveFileMode: Boolean
+    val isCloudFileMode: Boolean
         get() = currentFileMode is FileModeState.StarBoardDrive ||
                 currentFileMode is FileModeState.GoogleDrive ||
                 currentFileMode is FileModeState.OneDrive
+
+    val isLocalFileMode: Boolean
+        get() = currentFileMode is FileModeState.Local
 
     fun setFileModeState(mode: FileModeState) {
         if (_currentFileModeStateLiveData.valueCompat != mode) {
@@ -1267,7 +1270,7 @@ class FileListViewModel : ViewModel() {
 
     fun pasteFiles(context: Context) {
         Log.d("chengluo", "pasteFiles: ")
-        if (isStarBoardDriveFileMode) {
+        if (isCloudFileMode) {
             val targetCloudPath = currentCloudPath ?: return
             pasteToCloud(targetCloudPath, context)
         } else {
@@ -1443,7 +1446,7 @@ class FileListViewModel : ViewModel() {
         }
 
     fun reload() {
-        if (isStarBoardDriveFileMode) {
+        if (isCloudFileMode) {
             refreshCloud()
         } else {
             val path = currentPath
@@ -1626,7 +1629,7 @@ class FileListViewModel : ViewModel() {
 
     val isAllSelectedLiveData = MediatorLiveData<Boolean>().apply {
         val compute = {
-            if (isStarBoardDriveFileMode) {
+            if (isCloudFileMode) {
                 val stateful = cloudFileListLiveData.value
                 if (stateful !is Success) {
                     value = false
