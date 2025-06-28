@@ -34,7 +34,7 @@ private val extensionToMimeTypeOverrideMap = mapOf(
     "lzma" to "application/x-lzma",
     "p7b" to "application/x-pkcs7-certificates",
     "spc" to "application/x-pkcs7-certificates", // Clashes with "chemical/x-galactic-spc"
-    "ts" to "application/typescript", // Clashes with "video/mp2ts"
+    "ts" to "video/mp2t", // Clashes with "application/typescript"
     "py3" to "text/x-python",
     "py3x" to "text/x-python",
     "pyx" to "text/x-python",
