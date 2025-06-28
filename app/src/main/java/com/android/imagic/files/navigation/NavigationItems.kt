@@ -282,6 +282,8 @@ internal class OneDriveItem(
     }
 
     override fun onLongClick(listener: Listener): Boolean {
+        Settings.STORAGES.valueCompat.find { it is OneDriveServer }
+            ?.let { Storages.remove(it) }
         return true
     }
 }

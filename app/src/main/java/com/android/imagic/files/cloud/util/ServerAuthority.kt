@@ -3,7 +3,10 @@ package com.android.imagic.files.cloud.util
 import android.content.Context
 import android.os.Parcelable
 import com.android.imagic.files.R
+import com.android.imagic.files.appwidget.AuthInfoBody
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.filelist.CloudPathData
+import com.android.imagic.files.storage.CloudPasswordLoginFragment
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -47,3 +50,20 @@ data class ServerAuthority(
         else -> context.getString(R.string.starboard_drive)
     }
 }
+
+fun ServerAuthority.toStarBoardAuthority(): Authority = Authority(
+    openId = openId,
+    accessToken = accessToken,
+    userId = 0,
+    username = username,
+    headerImageUrl = avatarUrl
+)
+
+fun ServerAuthority.toAuthInfoBody(): AuthInfoBody = AuthInfoBody(
+    login_type = type.toString(),
+    email = email,
+    unionid = openId,
+    refresh_token = CloudPasswordLoginFragment.generateNonceStr(32),
+    nickname = username,
+    headimgurl = avatarUrl ?: ""
+)

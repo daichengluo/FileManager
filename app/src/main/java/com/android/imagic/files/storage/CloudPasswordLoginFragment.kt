@@ -15,17 +15,21 @@ import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.appwidget.CloudClient
 import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
+import com.android.imagic.files.cloud.onedrive.OneDriveClient
+import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.ServerAuthority
+import com.android.imagic.files.cloud.util.toAuthInfoBody
+import com.android.imagic.files.cloud.util.toStarBoardAuthority
 import com.android.imagic.files.databinding.CloudPasswordLoginFragmentBinding
+import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.util.ApiOperation
+import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.showToast
+import com.android.imagic.files.util.valueCompat
 import com.android.imagic.files.util.viewModels
-import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
 import com.microsoft.identity.client.AcquireTokenSilentParameters
@@ -42,7 +46,10 @@ import com.microsoft.identity.client.exception.MsalException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.File
+import java.io.FileOutputStream
 
 class CloudPasswordLoginFragment : Fragment() {
 
@@ -129,12 +136,76 @@ class CloudPasswordLoginFragment : Fragment() {
     private fun microsoftLogin() {
         val authInteractiveCallback = object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                Log.d("chengluo", "Successfully authenticated")
-                val accessToken = authenticationResult.accessToken
                 val claims = authenticationResult.account.claims
-                val email = claims?.get("preferred_username") as String?
-                val locale = claims?.get("locale") as String?
-                Log.d("chengluo", "accessToken $accessToken email: $email locale: $locale")
+                val accessToken = authenticationResult.accessToken
+                val expireAt = authenticationResult.expiresOn.time
+
+                val authority = ServerAuthority(
+                    openId = claims?.get("oid") as? String ?: "",
+                    username = claims?.get("name") as? String ?: "",
+                    email = claims?.get("preferred_username") as? String ?: "",
+                    avatarUrl = null,
+                    accessToken = accessToken,
+                    refreshToken = "",
+                    expireAt = expireAt,
+                    type = 2,
+                    totalSpace = 0L,
+                    usedSpace = 0L
+                )
+                lifecycleScope.launch {
+                    binding.progressBarLayout.isVisible = true
+                    val response = OneDriveClient.getSpaceData(authority)
+                    var updatedAuthority = if (response is ApiOperation.Success) {
+                        val data = response.data
+                        authority.copy(
+                            totalSpace = data.total,
+                            usedSpace = data.used
+                        )
+                    } else authority
+
+                    val starBoardAuthority = updatedAuthority.toStarBoardAuthority()
+                    val authenticatorInterceptor =
+                        OkHttpAuthenticatorInterceptor(starBoardAuthority)
+                    val okHttpClient = okHttpClient.newBuilder()
+                        .addInterceptor(
+                            HttpLoggingInterceptor().apply {
+                                level = HttpLoggingInterceptor.Level.BODY
+                            }
+                        )
+                        .addNetworkInterceptor(authenticatorInterceptor)
+                        .authenticator(authenticatorInterceptor)
+                        .build()
+                    val starBoardClient = CloudClient(okHttpClient)
+                    CloudClient(okHttpClient).getUserInfo(updatedAuthority.toAuthInfoBody())
+                        .onSuccess { loginInfo ->
+                            val starBoardServer =
+                                StarBoardDriveServer(null, null, loginInfo.toAuthority())
+                            Settings.STORAGES.valueCompat.find { it is StarBoardDriveServer }
+                                ?.let { Storages.remove(it) }
+                            Storages.addOrReplace(starBoardServer)
+                        }
+                        .onFailure { e ->
+                            e.printStackTrace()
+                        }
+                    val headImageUrl = getUserHeaderImage(updatedAuthority.accessToken)?.let {
+                        val response = starBoardClient.uploadFileService(it)
+                        if (response is ApiOperation.Success) {
+                            response.data
+                        } else null
+                    }
+                    updatedAuthority = updatedAuthority.copy(
+                        avatarUrl = headImageUrl
+                    )
+                    val storage = OneDriveServer(
+                        id = null,
+                        customName = null,
+                        authority = updatedAuthority
+                    )
+                    Settings.STORAGES.valueCompat.find { it is OneDriveServer }
+                        ?.let { Storages.remove(it) }
+                    Storages.addOrReplace(storage)
+                    finish()
+                }
             }
 
             override fun onError(exception: MsalException) {
@@ -155,14 +226,98 @@ class CloudPasswordLoginFragment : Fragment() {
         msalApp?.signIn(signInParameters)
     }
 
+    private suspend fun getUserHeaderImage(accessToken: String): File? =
+        withContext(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(Constants.MS_GRAPH_PHOTO)
+                    .addHeader("Authorization", "Bearer $accessToken")
+                    .get()
+                    .build()
+
+                val response = okHttpClient.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    response.close()
+                    return@withContext null
+                }
+
+                val bytes = response.body?.bytes()
+                response.close()
+
+                if (bytes != null) {
+                    val file = File.createTempFile("userHeaderImage", ".jpg")
+                    FileOutputStream(file).use { it.write(bytes) }
+                    return@withContext file
+                }
+            } catch (e: Exception) {
+                Log.e("chengluo", "getUserHeaderImage: ", e)
+            }
+            return@withContext null
+        }
+
     private fun acquireMicrosoftTokenSilentAsync(account: IAccount) {
         val silentAuthenticationCallback = object : SilentAuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                Log.d("chengluo", "Successfully authenticated")
                 val claims = authenticationResult.account.claims
-                val email = claims?.get("preferred_username") as String?
                 val accessToken = authenticationResult.accessToken
-                Log.d("chengluo", "accessToken $accessToken email: $email")
+                val expireAt = authenticationResult.expiresOn.time
+
+                val authority = ServerAuthority(
+                    openId = claims?.get("oid") as? String ?: "",
+                    username = claims?.get("name") as? String ?: "",
+                    email = claims?.get("preferred_username") as? String ?: "",
+                    avatarUrl = null,
+                    accessToken = accessToken,
+                    refreshToken = "",
+                    expireAt = expireAt,
+                    type = 2,
+                    totalSpace = 0L,
+                    usedSpace = 0L
+                )
+                lifecycleScope.launch {
+                    binding.progressBarLayout.isVisible = true
+                    val response = OneDriveClient.getSpaceData(authority)
+                    val updatedAuthority = if (response is ApiOperation.Success) {
+                        val data = response.data
+                        authority.copy(
+                            totalSpace = data.total,
+                            usedSpace = data.used
+                        )
+                    } else authority
+                    val storage = OneDriveServer(
+                        id = null,
+                        customName = null,
+                        authority = updatedAuthority
+                    )
+                    Settings.STORAGES.valueCompat.find { it is OneDriveServer }
+                        ?.let { Storages.remove(it) }
+                    Storages.addOrReplace(storage)
+
+                    val starBoardAuthority = updatedAuthority.toStarBoardAuthority()
+                    val authenticatorInterceptor =
+                        OkHttpAuthenticatorInterceptor(starBoardAuthority)
+                    val okHttpClient = okHttpClient.newBuilder()
+                        .addInterceptor(
+                            HttpLoggingInterceptor().apply {
+                                level = HttpLoggingInterceptor.Level.BODY
+                            }
+                        )
+                        .addNetworkInterceptor(authenticatorInterceptor)
+                        .authenticator(authenticatorInterceptor)
+                        .build()
+                    CloudClient(okHttpClient).getUserInfo(updatedAuthority.toAuthInfoBody())
+                        .onSuccess { loginInfo ->
+                            val starBoardServer =
+                                StarBoardDriveServer(null, null, loginInfo.toAuthority())
+                            Settings.STORAGES.valueCompat.find { it is StarBoardDriveServer }
+                                ?.let { Storages.remove(it) }
+                            Storages.addOrReplace(starBoardServer)
+                        }
+                        .onFailure { e ->
+                            e.printStackTrace()
+                        }
+                    finish()
+                }
             }
 
             override fun onError(exception: MsalException) {
@@ -231,6 +386,8 @@ class CloudPasswordLoginFragment : Fragment() {
                             customName = null,
                             authority = updatedAuthority
                         )
+                        Settings.STORAGES.valueCompat.find { it is GoogleDriveServer }
+                            ?.let { Storages.remove(it) }
                         Storages.addOrReplace(storage)
                     }
 
@@ -266,42 +423,8 @@ class CloudPasswordLoginFragment : Fragment() {
         }
     }
 
-    private suspend fun getGoogleAccessToken(account: GoogleSignInAccount): String =
-        withContext(Dispatchers.IO) {
-            val scope = "oauth2:${DriveScopes.DRIVE_FILE}"
-            try {
-                GoogleAuthUtil.getToken(requireContext(), account.account!!, scope)
-            } catch (e: Exception) {
-                throw RuntimeException("获取 token 失败: ${e.message}", e)
-            }
-        }
-
-    private fun ensureGooglePlayServices(): Boolean {
-        val activity = requireActivity()
-        val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val status = googleApiAvailability.isGooglePlayServicesAvailable(activity)
-
-        return if (status != ConnectionResult.SUCCESS) {
-            if (googleApiAvailability.isUserResolvableError(status)) {
-                googleApiAvailability.showErrorDialogFragment(activity, status, REQUEST_CODE)
-            } else {
-                Log.e(
-                    "chengluo",
-                    "GooglePlayService: Google Play Services not resolvable: status = $status"
-                )
-            }
-            false
-        } else {
-            Log.d("chengluo", "GooglePlayService: Google Play Services is available")
-            true
-        }
-    }
-
     companion object {
         const val TAG = "password"
-
-        const val REQUEST_CODE = 7007
-        const val RC_SIGN_IN = 6007
 
         val microsoftScopes = listOf("User.Read", "openid", "profile", "email", "Files.ReadWrite")
 
