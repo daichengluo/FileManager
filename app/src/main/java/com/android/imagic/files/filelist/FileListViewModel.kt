@@ -449,9 +449,7 @@ class FileListViewModel : ViewModel() {
     }
 
     fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) {
-
         val cloudMode = currentFileMode
-
         if (cloudMode is FileModeState.StarBoardDrive) {
             uploadCloudFile(localFile, directoryId, isMove, cloudMode, context)
         }
@@ -471,7 +469,6 @@ class FileListViewModel : ViewModel() {
         context: Context
     ) {
         val id = localFile.toString().hashCode()
-
         val job = viewModelScope.launch {
             val name = localFile.fileName.toString()
 
@@ -487,107 +484,74 @@ class FileListViewModel : ViewModel() {
                 )
             )
 
-            val sizeInBytes = localFile.size()
-            val sizeInKB = sizeInBytes / 1024
-            val isBigFile = sizeInKB > 1024 * 5
+            val sizeInKB = localFile.size() / 1024
+            try {
+                StarBoardDriveClient.uploadChunks(localFile, starBoardDriveMode.authority)
+                    .collect { status ->
+                        Log.d("chengluo", "uploadFile status: $status")
+                        val transfer = when (status) {
+                            is TransferStatus.Failed -> FileTransfer(
+                                id = id,
+                                title = name,
+                                text = context.getString(R.string.failed_transfer),
+                                max = 100,
+                                progress = 0,
+                                indeterminate = false,
+                                status = FileTransfer.Status.FAILED
+                            )
 
-            if (isBigFile) {
-                try {
-                    StarBoardDriveClient.uploadChunks(localFile, starBoardDriveMode.authority)
-                        .collect { status ->
-                            Log.d("chengluo", "uploadFile status: $status")
-                            val transfer = when (status) {
-                                is TransferStatus.Failed -> FileTransfer(
+                            is TransferStatus.Finished -> {
+                                val url = status.data ?: return@collect
+                                StarBoardDriveClient.uploadFileInfo(
+                                    name,
+                                    sizeInKB,
+                                    url,
+                                    directoryId,
+                                    starBoardDriveMode.authority
+                                )
+                                    .onSuccess {
+                                        refreshCloud()
+                                        if (isMove) {
+                                            FileJobService.delete(listOf(localFile), context)
+                                        }
+                                    }
+                                    .onFailure { it.printStackTrace() }
+                                FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = context.getString(R.string.failed_transfer),
+                                    text = context.getString(R.string.completed_transfer),
                                     max = 100,
-                                    progress = 0,
+                                    progress = 100,
                                     indeterminate = false,
-                                    status = FileTransfer.Status.FAILED
+                                    status = FileTransfer.Status.FINISHED
                                 )
-
-                                is TransferStatus.Finished -> {
-                                    val url = status.data ?: return@collect
-                                    StarBoardDriveClient.uploadFileInfo(
-                                        name,
-                                        sizeInKB,
-                                        url,
-                                        directoryId,
-                                        starBoardDriveMode.authority
-                                    )
-                                        .onSuccess {
-                                            refreshCloud()
-                                            if (isMove) {
-                                                FileJobService.delete(listOf(localFile), context)
-                                            }
-                                        }
-                                        .onFailure { it.printStackTrace() }
-                                    FileTransfer(
-                                        id = id,
-                                        title = name,
-                                        text = context.getString(R.string.completed_transfer),
-                                        max = 100,
-                                        progress = 100,
-                                        indeterminate = false,
-                                        status = FileTransfer.Status.FINISHED
-                                    )
-                                }
-
-                                is TransferStatus.Transferring -> {
-                                    val sizeString =
-                                        status.total.asFileSize().formatHumanReadable(context)
-                                    val transferredSizeString =
-                                        status.transferred.asFileSize().formatHumanReadable(context)
-                                    val text = context.getString(
-                                        R.string.file_job_transfer_size_notification_text_one_format,
-                                        transferredSizeString,
-                                        sizeString
-                                    )
-                                    FileTransfer(
-                                        id = id,
-                                        title = name,
-                                        text = text,
-                                        max = status.total.toInt(),
-                                        progress = status.transferred.toInt(),
-                                        indeterminate = false,
-                                        status = FileTransfer.Status.TRANSFERRING
-                                    )
-                                }
                             }
-                            _fileTransferState.emit(transfer)
-                        }
-                } finally {
-                    TransferJobManager.cancel(id)
-                }
-            } else {
-                val response =
-                    StarBoardDriveClient.uploadFile(localFile, starBoardDriveMode.authority)
 
-                if (response is ApiOperation.Success) {
-
-                    val url = response.data.url ?: ""
-                    Log.d("chengluo", "uploadFile file size: $sizeInKB")
-
-                    StarBoardDriveClient.uploadFileInfo(
-                        name,
-                        sizeInKB,
-                        url,
-                        directoryId,
-                        starBoardDriveMode.authority
-                    )
-                        .onSuccess {
-                            refreshCloud()
-                            if (isMove) {
-                                FileJobService.delete(listOf(localFile), context)
+                            is TransferStatus.Transferring -> {
+                                val sizeString =
+                                    status.total.asFileSize().formatHumanReadable(context)
+                                val transferredSizeString =
+                                    status.transferred.asFileSize().formatHumanReadable(context)
+                                val text = context.getString(
+                                    R.string.file_job_transfer_size_notification_text_one_format,
+                                    transferredSizeString,
+                                    sizeString
+                                )
+                                FileTransfer(
+                                    id = id,
+                                    title = name,
+                                    text = text,
+                                    max = status.total.toInt(),
+                                    progress = status.transferred.toInt(),
+                                    indeterminate = false,
+                                    status = FileTransfer.Status.TRANSFERRING
+                                )
                             }
-                            TransferJobManager.cancel(id)
                         }
-                        .onFailure {
-                            it.printStackTrace()
-                            TransferJobManager.cancel(id)
-                        }
-                }
+                        _fileTransferState.emit(transfer)
+                    }
+            } finally {
+                TransferJobManager.cancel(id)
             }
         }
         TransferJobManager.register(id, job)
