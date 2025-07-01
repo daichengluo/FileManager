@@ -1294,6 +1294,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             val isCurrentPathReadOnly = if (isInCloudStorage) false
             else viewModel.currentPath.fileSystem.isReadOnly
             menu.findItem(R.id.action_archive).isVisible = !isCurrentPathReadOnly
+            menu.findItem(R.id.action_share).isVisible = !isInCloudStorage
         }
         if (!overlayActionMode.isActive) {
             binding.appBarLayout.setExpanded(true)
