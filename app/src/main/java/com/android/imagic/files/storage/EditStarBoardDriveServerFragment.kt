@@ -29,10 +29,6 @@ class EditStarBoardDriveServerFragment : Fragment() {
 
     private lateinit var binding: EditSdriveServerFragmentBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,12 +65,21 @@ class EditStarBoardDriveServerFragment : Fragment() {
             fm.commit {
                 add(R.id.fragmentContainer, password, CloudPasswordLoginFragment.TAG)
                 add(R.id.fragmentContainer, qrcode, CloudQRCodeLoginFragment.TAG)
-                hide(password)
+                if (args.qrcodeLogin) {
+                    hide(password)
+                } else {
+                    hide(qrcode)
+                }
             }
-            binding.loginSwitchButton.setImageResource(R.drawable.password_login_method)
+            binding.loginSwitchButton.setImageResource(
+                if (args.qrcodeLogin)
+                    R.drawable.password_login_method
+                else
+                    R.drawable.qrcode_login_method
+            )
             binding.loginSwitchButton.contentDescription = getString(R.string.use_password_login)
-            binding.userAgreementLayout.isVisible = false
-            binding.qrcodeUserAgreementText.isVisible = true
+            binding.userAgreementLayout.isVisible = !args.qrcodeLogin
+            binding.qrcodeUserAgreementText.isVisible = args.qrcodeLogin
         }
 
         binding.loginSwitchButton.setOnClickListener {
@@ -219,5 +224,8 @@ class EditStarBoardDriveServerFragment : Fragment() {
     }
 
     @Parcelize
-    class Args(val fromWidget: Boolean = false) : ParcelableArgs
+    class Args(
+        val fromWidget: Boolean = false,
+        val qrcodeLogin: Boolean = true
+    ) : ParcelableArgs
 }

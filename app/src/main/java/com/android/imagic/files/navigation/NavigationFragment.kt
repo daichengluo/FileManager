@@ -28,6 +28,7 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
 import com.android.imagic.files.storage.CloudLogoutFragment
 import com.android.imagic.files.storage.EditStarBoardDriveServerActivity
+import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
 import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
@@ -100,7 +101,14 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         binding.loginLayout.setOnClickListener {
             val sDriveServer = viewModel.starBoardDriveServer.valueCompat
             if (sDriveServer == null) {
-                launchIntent(EditStarBoardDriveServerActivity::class.createIntent())
+                launchIntent(
+                    EditStarBoardDriveServerActivity::class.createIntent().putArgs(
+                        EditStarBoardDriveServerFragment.Args(
+                            fromWidget = false,
+                            qrcodeLogin = true
+                        )
+                    )
+                )
             } else {
                 logout(sDriveServer)
             }

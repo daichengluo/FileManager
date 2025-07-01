@@ -18,6 +18,7 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.CloudLogoutDialogActivity
 import com.android.imagic.files.storage.CloudLogoutFragment
+import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
@@ -47,14 +48,9 @@ object LoginWidgetUpdater {
         val isLogin = starBoardDriveServers.isNotEmpty()
         Log.d("chengluo", "onUpdate isLogin: $isLogin")
 
-        val loginIntent = WidgetLoginLaunchActivity::class.createIntent()
-        val loginPendingIntent = PendingIntent.getActivity(
-            context, 0, loginIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login).apply {
-            setOnClickPendingIntent(R.id.widgetLoginButton, loginPendingIntent)
+            setOnClickPendingIntent(R.id.widgetLoginButton, getActivityPendingIntent(context, true))
+            setOnClickPendingIntent(R.id.loginActonButton, getActivityPendingIntent(context, false))
         }
 
         remoteViews.setViewVisibility(
@@ -109,6 +105,19 @@ object LoginWidgetUpdater {
             }
         }
     }
+
+    private fun getActivityPendingIntent(context: Context, qrcodeLogin: Boolean): PendingIntent =
+        PendingIntent.getActivity(
+            context,
+            0,
+            WidgetLoginLaunchActivity::class.createIntent().putArgs(
+                EditStarBoardDriveServerFragment.Args(
+                    fromWidget = true,
+                    qrcodeLogin = qrcodeLogin
+                )
+            ),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
     private fun loadUserHeaderImage(
         remoteViews: RemoteViews,

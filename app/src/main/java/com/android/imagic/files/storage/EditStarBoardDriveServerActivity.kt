@@ -5,9 +5,11 @@ import android.view.Gravity
 import android.view.View
 import androidx.fragment.app.commit
 import com.android.imagic.files.app.AppActivity
+import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
 
 class EditStarBoardDriveServerActivity : AppActivity() {
+    private val args by args<EditStarBoardDriveServerFragment.Args>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +24,7 @@ class EditStarBoardDriveServerActivity : AppActivity() {
         // Calls ensureSubDecor().
         findViewById<View>(android.R.id.content)
         if (savedInstanceState == null) {
-            val fragment = EditStarBoardDriveServerFragment().putArgs(
-                EditStarBoardDriveServerFragment.Args(false)
-            )
+            val fragment = EditStarBoardDriveServerFragment().putArgs(args)
             supportFragmentManager.commit { add(android.R.id.content, fragment) }
         }
     }
