@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.imagic.files.R
 import com.android.imagic.files.app.okHttpClient
 import com.android.imagic.files.appwidget.CloudClient
+import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
@@ -204,6 +205,7 @@ class CloudPasswordLoginFragment : Fragment() {
                     Settings.STORAGES.valueCompat.find { it is OneDriveServer }
                         ?.let { Storages.remove(it) }
                     Storages.addOrReplace(storage)
+                    LoginWidgetUpdater.updateWidgets(requireContext())
                     finish()
                 }
             }
@@ -312,6 +314,7 @@ class CloudPasswordLoginFragment : Fragment() {
                             Settings.STORAGES.valueCompat.find { it is StarBoardDriveServer }
                                 ?.let { Storages.remove(it) }
                             Storages.addOrReplace(starBoardServer)
+                            LoginWidgetUpdater.updateWidgets(requireContext())
                         }
                         .onFailure { e ->
                             e.printStackTrace()
@@ -409,6 +412,7 @@ class CloudPasswordLoginFragment : Fragment() {
                                     val starBoardServer =
                                         StarBoardDriveServer(null, null, loginInfo.toAuthority())
                                     Storages.addOrReplace(starBoardServer)
+                                    LoginWidgetUpdater.updateWidgets(requireContext())
                                 }
                                 .onFailure { e ->
                                     e.printStackTrace()
