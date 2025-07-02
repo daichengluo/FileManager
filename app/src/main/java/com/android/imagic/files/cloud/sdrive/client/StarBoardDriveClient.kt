@@ -91,6 +91,8 @@ object StarBoardDriveClient {
         authority: Authority
     ): ApiOperation<List<CloudFileItem>> = getClient(authority).getFileList(parentId)
 
+    suspend fun getSpaceData(authority: Authority) = getClient(authority).getSpaceData()
+
     suspend fun refreshAccessToken(
         type: Int,
         refreshToken: String,

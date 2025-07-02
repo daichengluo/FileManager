@@ -20,6 +20,7 @@ import com.android.imagic.files.storage.CloudLogoutDialogActivity
 import com.android.imagic.files.storage.CloudLogoutFragment
 import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
 import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.valueCompat
@@ -100,8 +101,14 @@ object LoginWidgetUpdater {
 
             appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
 
-            authority.headerImageUrl?.let { url ->
-                loadUserHeaderImage(remoteViews, url, context, appWidgetManager, appWidgetIds)
+            if (authority.headerImageUrl != null && authority.headerImageUrl != Constants.MS_GRAPH_PHOTO) {
+                loadUserHeaderImage(
+                    remoteViews,
+                    authority.headerImageUrl,
+                    context,
+                    appWidgetManager,
+                    appWidgetIds
+                )
             }
         }
     }

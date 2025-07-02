@@ -3,7 +3,9 @@ package com.android.imagic.files.cloud.sdrive.client
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.appwidget.AccessTokenData
+import com.android.imagic.files.appwidget.toSpaceData
 import com.android.imagic.files.cloud.CloudFileItem
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile
 import com.android.imagic.files.file.MimeType
@@ -219,9 +221,9 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
         name: String,
         size: Long,
         url: String,
-        directoryId: String
+        targetId: String
     ): ApiOperation<Boolean> = safeApiCallHandled {
-        val body = FileInfoBody(name, size, url, "", directoryId)
+        val body = FileInfoBody(name, size, url, "", targetId)
         network.uploadFileInfo(body)
     }.mapSuccess { true }
 
@@ -259,6 +261,10 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
             network.moveOrCopyFiles(fileIds, 1, targetId)
         }
     }
+
+    suspend fun getSpaceData(): ApiOperation<SpaceData> = safeApiCallHandled {
+        network.getSpaceUsageInfo()
+    }.mapSuccess { it.toSpaceData() }
 
     override suspend fun refreshAccessToken(
         type: Int,

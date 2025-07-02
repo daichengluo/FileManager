@@ -1,6 +1,7 @@
 package com.android.imagic.files.cloud.sdrive.client
 
 import com.android.imagic.files.appwidget.AccessTokenData
+import com.android.imagic.files.appwidget.SpaceInfo
 import com.android.imagic.files.util.ApiResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -68,6 +69,9 @@ interface StarBoardDriveNetworkApi {
         @Query("Type") type: Int,
         @Query("TargetID") directoryId: String
     ): ApiResponse<Boolean>
+
+    @GET("api/NetDisk/Getstoragespace")
+    suspend fun getSpaceUsageInfo(): ApiResponse<SpaceInfo>
 
     @GET("Google/RefreshAccessTokenAsync")
     suspend fun refreshAccessToken(

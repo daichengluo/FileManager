@@ -15,6 +15,7 @@ import com.android.imagic.files.cloud.gdrive.api.GoogleDriveClient
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferJobManager
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.file.FileItem
@@ -30,6 +31,10 @@ import com.android.imagic.files.provider.common.isDirectory
 import com.android.imagic.files.provider.common.newDirectoryStream
 import com.android.imagic.files.provider.common.size
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.CloseableLiveData
 import com.android.imagic.files.util.Failure
@@ -295,12 +300,13 @@ class FileListViewModel : ViewModel() {
 
     fun deleteCloudFiles(files: CloudFileItemSet) = viewModelScope.launch {
         if (files.isEmpty()) return@launch
-
         val cloudMode = currentFileMode
-
         if (cloudMode is FileModeState.StarBoardDrive) {
             StarBoardDriveClient.delete(files.map { it.id }, cloudMode.authority)
-                .onSuccess { refreshCloud() }
+                .onSuccess {
+                    refreshCloud()
+                    getDriveSpace(cloudMode)
+                }
                 .onFailure { it.printStackTrace() }
         }
         if (cloudMode is FileModeState.GoogleDrive) {
@@ -316,15 +322,71 @@ class FileListViewModel : ViewModel() {
                     }
                 }
             }
+            getDriveSpace(cloudMode)
         }
         if (cloudMode is FileModeState.OneDrive) {
             files.forEach { file ->
                 viewModelScope.launch {
-
                     OneDriveClient.deleteFileById(file.id, cloudMode.authority)
                         .onSuccess { refreshCloud() }
                         .onFailure { it.printStackTrace() }
                 }
+            }
+            getDriveSpace(cloudMode)
+        }
+    }
+
+    private fun getDriveSpace(cloudMode: FileModeState) = viewModelScope.launch {
+        if (cloudMode is FileModeState.StarBoardDrive) {
+            val authority = cloudMode.authority
+            StarBoardDriveClient.getSpaceData(authority)
+                .onSuccess { updateStorage(it, cloudMode) }
+                .onFailure { it.printStackTrace() }
+        }
+    }
+
+    private fun updateStorage(spaceData: SpaceData, cloudMode: FileModeState) {
+        val storages = Settings.STORAGES.valueCompat.toList()
+        if (cloudMode is FileModeState.StarBoardDrive) {
+            storages.firstOrNull { it is StarBoardDriveServer }?.let {
+                val currentStorage = it as StarBoardDriveServer
+                val storage = StarBoardDriveServer(
+                    currentStorage.id,
+                    currentStorage.customName,
+                    currentStorage.authority.copy(
+                        totalSpace = spaceData.total,
+                        freeSpace = spaceData.remaining
+                    )
+                )
+                Storages.replace(storage)
+            }
+        }
+        if (cloudMode is FileModeState.GoogleDrive) {
+            storages.firstOrNull { it is GoogleDriveServer }?.let {
+                val currentStorage = it as GoogleDriveServer
+                val storage = GoogleDriveServer(
+                    currentStorage.id,
+                    currentStorage.customName,
+                    currentStorage.authority.copy(
+                        totalSpace = spaceData.total,
+                        usedSpace = spaceData.used
+                    )
+                )
+                Storages.replace(storage)
+            }
+        }
+        if (cloudMode is FileModeState.OneDrive) {
+            storages.firstOrNull { it is OneDriveServer }?.let {
+                val currentStorage = it as OneDriveServer
+                val storage = OneDriveServer(
+                    currentStorage.id,
+                    currentStorage.customName,
+                    currentStorage.authority.copy(
+                        totalSpace = spaceData.total,
+                        usedSpace = spaceData.used
+                    )
+                )
+                Storages.replace(storage)
             }
         }
     }
@@ -358,11 +420,9 @@ class FileListViewModel : ViewModel() {
             _errorMessage.value = context.getString(R.string.cannot_extract_to_cloud_drive)
             return
         }
+        val cloudMode = currentFileMode
         if (path.isDirectory()) {
             val folderName = path.fileName.toString()
-
-            val cloudMode = currentFileMode
-
             if (cloudMode is FileModeState.StarBoardDrive) {
                 val response = StarBoardDriveClient.createDirectory(
                     folderName,
@@ -446,6 +506,7 @@ class FileListViewModel : ViewModel() {
         } else {
             uploadFile(path, parentDirectoryId, isMove, context)
         }
+        getDriveSpace(cloudMode)
     }
 
     fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) {

@@ -3,6 +3,7 @@ package com.android.imagic.files.appwidget
 import com.android.imagic.files.BuildConfig
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.safeApiCallHandled
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -65,6 +66,11 @@ data class SpaceInfo(
     val remainingSpace: Long,
     val usedSpace: Long,
     val totalSpace: Long
+)
+
+fun SpaceInfo.toSpaceData(): SpaceData = SpaceData(
+    total = totalSpace,
+    used = usedSpace
 )
 
 fun LoginInfo.toAuthority(): Authority = Authority(

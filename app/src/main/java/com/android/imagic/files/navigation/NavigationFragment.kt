@@ -15,10 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.dispose
 import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.app.contentResolver
 import com.android.imagic.files.app.packageManager
+import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
@@ -187,9 +189,11 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
             authority.headerImageUrl?.let { url ->
                 if (url != Constants.MS_GRAPH_PHOTO) {
                     binding.userHeaderImage.apply {
+                        dispose()
                         load(url)
                     }
                 }
+                LoginWidgetUpdater.updateWidgets(requireContext())
             }
             binding.username.text = authority.username
         }

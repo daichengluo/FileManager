@@ -59,6 +59,7 @@ import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
+import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_CLOUD_AUTHORITY
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.sdrive.client.Authority
@@ -322,6 +323,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         fileTransferAdapter.removeItem(id)
         if (fileTransferAdapter.list.isEmpty()) {
             fileTransferActionMode.hide()
+            LoginWidgetUpdater.updateWidgets(requireContext())
         } else {
             val size = fileTransferAdapter.list.size
             binding.transferTitle.text = getQuantityString(
@@ -963,7 +965,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 is LoginExpiredException -> {
                     Settings.STORAGES.valueCompat.find {
                         it is GoogleDriveServer || it is OneDriveServer || it is StarBoardDriveServer
-                    }?.let { Storages.remove(it) }
+                    }?.let {
+                        Storages.remove(it)
+                        LoginWidgetUpdater.updateWidgets(requireContext())
+                    }
                     navigateToDefaultRoot()
                     getString(R.string.login_expired)
                 }
