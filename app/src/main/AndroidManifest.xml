@@ -53,12 +53,12 @@
         android:banner="@null"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/netework_security_config"
         android:requestLegacyExternalStorage="true"
         android:requestRawExternalStorageAccess="true"
-        android:roundIcon="@mipmap/launcher_icon"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Files"
         android:usesCleartextTraffic="true"
@@ -420,7 +420,7 @@
 
                 <data
                     android:host="com.android.imagic.files"
-                    android:path="/87zUdqCfHCM9OCZiyIGk6Sfj2io="
+                    android:path="/ywYdOi1G7E+DKV3cs9O2ugs+dbk="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>
