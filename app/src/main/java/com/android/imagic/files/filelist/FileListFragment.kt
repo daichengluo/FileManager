@@ -1298,7 +1298,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             menu.findItem(R.id.action_extract).isVisible = areAllFilesArchiveFiles
             val isCurrentPathReadOnly = if (isInCloudStorage) false
             else viewModel.currentPath.fileSystem.isReadOnly
-            menu.findItem(R.id.action_archive).isVisible = !isCurrentPathReadOnly
+            menu.findItem(R.id.action_archive).isVisible =
+                !isCurrentPathReadOnly && !isInCloudStorage
             menu.findItem(R.id.action_share).isVisible = !isInCloudStorage
         }
         if (!overlayActionMode.isActive) {
