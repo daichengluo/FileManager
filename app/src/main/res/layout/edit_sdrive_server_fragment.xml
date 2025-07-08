@@ -16,7 +16,8 @@
         android:layout_marginEnd="3dp"
         android:background="@null"
         android:contentDescription="@string/use_password_login"
-        android:src="@drawable/password_login_method" />
+        android:src="@drawable/password_login_method"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/userAgreementLayout"
@@ -26,8 +27,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="15dp"
-        android:paddingVertical="8dp"
-        android:visibility="gone">
+        android:paddingVertical="8dp">
 
         <ImageButton
             android:id="@+id/userAgreementButton"
@@ -60,8 +60,8 @@
         android:orientation="horizontal"
         android:paddingHorizontal="15dp"
         android:paddingVertical="8dp"
-        android:text="@string/qrcode_login_user_agreement_text"
         android:textColor="#B3272628"
         android:textSize="8sp"
+        android:visibility="gone"
         tools:ignore="SmallSp,UnusedAttribute" />
 </FrameLayout>
