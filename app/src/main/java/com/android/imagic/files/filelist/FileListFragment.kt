@@ -1655,11 +1655,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             cloudFiles.firstOrNull()?.let {
                 if (it.id == cloudDirectoryPath.directoryId) {
                     CopyOrMoveItselfDialogFragment.show(isCopy, this)
+                    binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+                    return
                 }
             }
-        } else {
-            viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
         }
+        viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
@@ -2212,6 +2213,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun dropToCloud(cloudDirectoryPath: CloudPathData) {
+        val cloudFiles = viewModel.cloudPasteState.files
+        val isCopy = viewModel.cloudPasteState.copy
+        if (cloudFiles.size == 1) {
+            cloudFiles.firstOrNull()?.let {
+                if (it.id == cloudDirectoryPath.directoryId) {
+                    CopyOrMoveItselfDialogFragment.show(isCopy, this)
+                    binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+                    return
+                }
+            }
+        }
         viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
