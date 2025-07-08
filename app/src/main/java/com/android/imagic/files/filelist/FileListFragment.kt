@@ -65,6 +65,7 @@ import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.exception.LoginExpiredException
 import com.android.imagic.files.cloud.sdrive.client.exception.StarBoardDriveException
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.coil.AppIconPackageName
 import com.android.imagic.files.compat.checkSelfPermissionCompat
 import com.android.imagic.files.compat.isPrimaryCompat
@@ -1645,10 +1646,49 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
-    override fun dropToCloud(
+    override fun dropToStarBoardDrive(
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
+        if (showConflictDialog(cloudDirectoryPath)) return
+        val storages = Settings.STORAGES.valueCompat.toList()
+        storages.firstOrNull { it is StarBoardDriveServer }?.let {
+            val authority = (it as StarBoardDriveServer).authority
+            val cloudMode = FileModeState.StarBoardDrive(authority)
+            viewModel.pasteToCloud(cloudDirectoryPath, cloudMode, requireContext())
+        }
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+    }
+
+    override fun dropToOneDrive(
+        cloudDirectoryPath: CloudPathData,
+        authority: ServerAuthority
+    ) {
+        if (showConflictDialog(cloudDirectoryPath)) return
+        val storages = Settings.STORAGES.valueCompat.toList()
+        storages.firstOrNull { it is OneDriveServer }?.let {
+            val authority = (it as OneDriveServer).authority
+            val cloudMode = FileModeState.OneDrive(authority)
+            viewModel.pasteToCloud(cloudDirectoryPath, cloudMode, requireContext())
+        }
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+    }
+
+    override fun dropToGoogleDrive(
+        cloudDirectoryPath: CloudPathData,
+        authority: ServerAuthority
+    ) {
+        if (showConflictDialog(cloudDirectoryPath)) return
+        val storages = Settings.STORAGES.valueCompat.toList()
+        storages.firstOrNull { it is GoogleDriveServer }?.let {
+            val authority = (it as GoogleDriveServer).authority
+            val cloudMode = FileModeState.GoogleDrive(authority)
+            viewModel.pasteToCloud(cloudDirectoryPath, cloudMode, requireContext())
+        }
+        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+    }
+
+    private fun showConflictDialog(cloudDirectoryPath: CloudPathData): Boolean {
         val cloudFiles = viewModel.cloudPasteState.files
         val isCopy = viewModel.cloudPasteState.copy
         if (cloudFiles.size == 1) {
@@ -1656,12 +1696,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 if (it.id == cloudDirectoryPath.directoryId) {
                     CopyOrMoveItselfDialogFragment.show(isCopy, this)
                     binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
-                    return
+                    return true
                 }
             }
         }
-        viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
-        binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
+        return false
     }
 
     override fun logout() {
@@ -2224,7 +2263,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
             }
         }
-        viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
+        val cloudMode = viewModel.currentFileMode
+        viewModel.pasteToCloud(cloudDirectoryPath, cloudMode, requireContext())
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 

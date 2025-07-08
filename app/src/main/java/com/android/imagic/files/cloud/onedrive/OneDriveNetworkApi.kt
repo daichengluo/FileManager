@@ -51,7 +51,7 @@ interface OneDriveNetworkApi {
     suspend fun createUploadSessionInRoot(
         @Path("filename") filename: String,
         @Body uploadFileRequestItem: UploadFileRequestItem
-    ): String
+    ): UploadSessionResponse
 
     @POST("me/drive/items/{parentId}:/{filename}:/createUploadSession")
     suspend fun createUploadSession(

@@ -414,13 +414,14 @@ class FileListViewModel : ViewModel() {
         path: Path,
         parentDirectoryId: String,
         isMove: Boolean,
+        cloudMode: FileModeState,
         context: Context
     ) {
+        Log.d("chengluo", "uploadFolderRecursively parentDirectoryId: $parentDirectoryId")
         if (path.isArchivePath) {
             _errorMessage.value = context.getString(R.string.cannot_extract_to_cloud_drive)
             return
         }
-        val cloudMode = currentFileMode
         if (path.isDirectory()) {
             val folderName = path.fileName.toString()
             if (cloudMode is FileModeState.StarBoardDrive) {
@@ -439,7 +440,7 @@ class FileListViewModel : ViewModel() {
                 }
                 path.newDirectoryStream().use { directoryStream ->
                     for (child in directoryStream) {
-                        uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                        uploadFolderRecursively(child, newDirectoryId, isMove, cloudMode, context)
                     }
                 }
                 if (isMove) {
@@ -473,7 +474,7 @@ class FileListViewModel : ViewModel() {
                 }
                 path.newDirectoryStream().use { directoryStream ->
                     for (child in directoryStream) {
-                        uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                        uploadFolderRecursively(child, newDirectoryId, isMove, cloudMode, context)
                     }
                 }
                 if (isMove) {
@@ -496,7 +497,7 @@ class FileListViewModel : ViewModel() {
                 }
                 path.newDirectoryStream().use { directoryStream ->
                     for (child in directoryStream) {
-                        uploadFolderRecursively(child, newDirectoryId, isMove, context)
+                        uploadFolderRecursively(child, newDirectoryId, isMove, cloudMode, context)
                     }
                 }
                 if (isMove) {
@@ -504,13 +505,18 @@ class FileListViewModel : ViewModel() {
                 }
             }
         } else {
-            uploadFile(path, parentDirectoryId, isMove, context)
+            uploadFile(path, parentDirectoryId, isMove, cloudMode, context)
         }
         getDriveSpace(cloudMode)
     }
 
-    fun uploadFile(localFile: Path, directoryId: String, isMove: Boolean, context: Context) {
-        val cloudMode = currentFileMode
+    fun uploadFile(
+        localFile: Path,
+        directoryId: String,
+        isMove: Boolean,
+        cloudMode: FileModeState,
+        context: Context
+    ) {
         if (cloudMode is FileModeState.StarBoardDrive) {
             uploadCloudFile(localFile, directoryId, isMove, cloudMode, context)
         }
@@ -1297,7 +1303,8 @@ class FileListViewModel : ViewModel() {
         Log.d("chengluo", "pasteFiles: ")
         if (isCloudFileMode) {
             val targetCloudPath = currentCloudPath ?: return
-            pasteToCloud(targetCloudPath, context)
+            val cloudMode = currentFileMode
+            pasteToCloud(targetCloudPath, cloudMode, context)
         } else {
             val targetLocalDir = currentPath
             pasteToLocal(targetLocalDir, context)
@@ -1350,13 +1357,13 @@ class FileListViewModel : ViewModel() {
         clearPasteState()
     }
 
-    fun pasteToCloud(targetCloudPath: CloudPathData, context: Context) {
+    fun pasteToCloud(targetCloudPath: CloudPathData, cloudMode: FileModeState, context: Context) {
         Log.d("chengluo", "pasteToCloud: $targetCloudPath")
         val cloudFiles = cloudPasteState.files
         if (cloudPasteState.copy) {
-            copyCloudFiles(cloudFiles, targetCloudPath)
+            copyCloudFiles(cloudFiles, targetCloudPath, cloudMode)
         } else {
-            moveCloudFiles(cloudFiles, targetCloudPath)
+            moveCloudFiles(cloudFiles, targetCloudPath, cloudMode)
         }
         clearCloudPasteState()
 
@@ -1366,109 +1373,111 @@ class FileListViewModel : ViewModel() {
         if (pasteState.copy) {
             files.forEach {
                 viewModelScope.launch {
-                    uploadFolderRecursively(it.path, directoryId, false, context)
+                    uploadFolderRecursively(it.path, directoryId, false, cloudMode, context)
                 }
             }
         } else {
             files.forEach {
                 viewModelScope.launch {
-                    uploadFolderRecursively(it.path, directoryId, true, context)
+                    uploadFolderRecursively(it.path, directoryId, true, cloudMode, context)
                 }
             }
         }
         clearPasteState()
     }
 
-    private fun moveCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) {
-        viewModelScope.launch {
-            if (files.isEmpty()) return@launch
-
-            val cloudMode = currentFileMode
-
-            if (cloudMode is FileModeState.StarBoardDrive) {
-                StarBoardDriveClient.moveFile(
-                    files.map { it.id },
-                    cloudPath.directoryId,
-                    cloudMode.authority
-                )
-                    .onSuccess { refreshCloud() }
-                    .onFailure { it.printStackTrace() }
-            }
-            if (cloudMode is FileModeState.GoogleDrive) {
-                files.forEach { file ->
-                    viewModelScope.launch {
-                        if (cloudMode.authority.accessToken.isEmpty()) {
-                            GoogleDriveServiceClient.moveFile(
-                                file.id,
-                                cloudPath.directoryId,
-                                cloudMode.authority
-                            )
-                            refreshCloud()
-                        } else {
-                            GoogleDriveClient.moveFile(
-                                file.id,
-                                cloudPath.directoryId,
-                                file.parentId,
-                                cloudMode.authority
-                            ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
-                        }
+    private fun moveCloudFiles(
+        files: CloudFileItemSet,
+        cloudPath: CloudPathData,
+        cloudMode: FileModeState
+    ) = viewModelScope.launch {
+        if (files.isEmpty()) return@launch
+        if (cloudMode is FileModeState.StarBoardDrive) {
+            StarBoardDriveClient.moveFile(
+                files.map { it.id },
+                cloudPath.directoryId,
+                cloudMode.authority
+            )
+                .onSuccess { refreshCloud() }
+                .onFailure { it.printStackTrace() }
+        }
+        if (cloudMode is FileModeState.GoogleDrive) {
+            files.forEach { file ->
+                viewModelScope.launch {
+                    if (cloudMode.authority.accessToken.isEmpty()) {
+                        GoogleDriveServiceClient.moveFile(
+                            file.id,
+                            cloudPath.directoryId,
+                            cloudMode.authority
+                        )
+                        refreshCloud()
+                    } else {
+                        GoogleDriveClient.moveFile(
+                            file.id,
+                            cloudPath.directoryId,
+                            file.parentId,
+                            cloudMode.authority
+                        ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
                     }
                 }
             }
-            if (cloudMode is FileModeState.OneDrive) {
-                files.forEach { file ->
-                    viewModelScope.launch {
-                        OneDriveClient.moveFile(file.id, cloudPath.directoryId, cloudMode.authority)
-                            .onSuccess { refreshCloud() }
-                            .onFailure { it.printStackTrace() }
-                    }
+        }
+        if (cloudMode is FileModeState.OneDrive) {
+            files.forEach { file ->
+                viewModelScope.launch {
+                    OneDriveClient.moveFile(file.id, cloudPath.directoryId, cloudMode.authority)
+                        .onSuccess { refreshCloud() }
+                        .onFailure { it.printStackTrace() }
                 }
             }
         }
     }
 
-    private fun copyCloudFiles(files: CloudFileItemSet, cloudPath: CloudPathData) =
-        viewModelScope.launch {
-            if (files.isEmpty()) return@launch
-            val cloudMode = currentFileMode
-            if (cloudMode is FileModeState.StarBoardDrive) {
-                StarBoardDriveClient.copyFile(
-                    files.map { it.id },
-                    cloudPath.directoryId,
-                    cloudMode.authority
-                ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
-            }
-            if (cloudMode is FileModeState.GoogleDrive) {
-                files.forEach { file ->
-                    viewModelScope.launch {
-                        if (cloudMode.authority.accessToken.isEmpty()) {
-                            GoogleDriveServiceClient.copyFile(
-                                file.id,
-                                cloudPath.directoryId,
-                                file.isDirectory,
-                                cloudMode.authority
-                            )
-                            refreshCloud()
-                        } else {
-                            GoogleDriveClient.copyFile(
-                                file.id,
-                                cloudPath.directoryId,
-                                cloudMode.authority
-                            ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
-                        }
-                    }
-                }
-            }
-            if (cloudMode is FileModeState.OneDrive) {
-                files.forEach { file ->
-                    viewModelScope.launch {
-                        OneDriveClient.copyFile(file.id, cloudPath.directoryId, cloudMode.authority)
-                            .onSuccess { refreshCloud() }
-                            .onFailure { it.printStackTrace() }
+    private fun copyCloudFiles(
+        files: CloudFileItemSet,
+        cloudPath: CloudPathData,
+        cloudMode: FileModeState
+    ) = viewModelScope.launch {
+        Log.d("chengluo", "copyCloudFiles files size: ${files.size}")
+        if (files.isEmpty()) return@launch
+        if (cloudMode is FileModeState.StarBoardDrive) {
+            StarBoardDriveClient.copyFile(
+                files.map { it.id },
+                cloudPath.directoryId,
+                cloudMode.authority
+            ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
+        }
+        if (cloudMode is FileModeState.GoogleDrive) {
+            files.forEach { file ->
+                viewModelScope.launch {
+                    if (cloudMode.authority.accessToken.isEmpty()) {
+                        GoogleDriveServiceClient.copyFile(
+                            file.id,
+                            cloudPath.directoryId,
+                            file.isDirectory,
+                            cloudMode.authority
+                        )
+                        refreshCloud()
+                    } else {
+                        GoogleDriveClient.copyFile(
+                            file.id,
+                            cloudPath.directoryId,
+                            cloudMode.authority
+                        ).onSuccess { refreshCloud() }.onFailure { it.printStackTrace() }
                     }
                 }
             }
         }
+        if (cloudMode is FileModeState.OneDrive) {
+            files.forEach { file ->
+                viewModelScope.launch {
+                    OneDriveClient.copyFile(file.id, cloudPath.directoryId, cloudMode.authority)
+                        .onSuccess { refreshCloud() }
+                        .onFailure { it.printStackTrace() }
+                }
+            }
+        }
+    }
 
     fun reload() {
         if (isCloudFileMode) {

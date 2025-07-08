@@ -7,11 +7,13 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.RippleDrawable
+import android.util.Log
 import android.view.DragEvent
 import android.view.ViewGroup
 import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.RecyclerView
 import com.android.imagic.files.cloud.sdrive.client.Authority
+import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.compat.foregroundCompat
 import com.android.imagic.files.compat.obtainStyledAttributesCompat
 import com.android.imagic.files.compat.use
@@ -149,14 +151,37 @@ class StorageListAdapter(
                         val storageItem = item
                         if (storageItem is PathItem) {
                             dragDropListener.dropToLocal(item.path)
+                            return@setOnDragListener true
                         }
                         if (storageItem is StarBoardDriveItem) {
+                            Log.d("chengluo", "ACTION_DROP: StarBoardDriveItem")
                             val storage = storageItem.storage
                             val authority = storage.authority
-                            dragDropListener.dropToCloud(
+                            dragDropListener.dropToStarBoardDrive(
                                 authority.getRootPath(view.context),
                                 authority
                             )
+                            return@setOnDragListener true
+                        }
+                        if (storageItem is GoogleDriveItem) {
+                            Log.d("chengluo", "ACTION_DROP: GoogleDriveItem")
+                            val storage = storageItem.storage
+                            val authority = storage.authority
+                            dragDropListener.dropToGoogleDrive(
+                                authority.getRootPath(view.context),
+                                authority
+                            )
+                            return@setOnDragListener true
+                        }
+                        if (storageItem is OneDriveItem) {
+                            Log.d("chengluo", "ACTION_DROP: OneDriveItem")
+                            val storage = storageItem.storage
+                            val authority = storage.authority
+                            dragDropListener.dropToOneDrive(
+                                authority.getRootPath(view.context),
+                                authority
+                            )
+                            return@setOnDragListener true
                         }
                         true
                     }
@@ -188,6 +213,8 @@ class StorageListAdapter(
     interface Listener {
         fun cancelDragDrop()
         fun dropToLocal(directoryPath: Path)
-        fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
+        fun dropToStarBoardDrive(cloudDirectoryPath: CloudPathData, authority: Authority)
+        fun dropToOneDrive(cloudDirectoryPath: CloudPathData, authority: ServerAuthority)
+        fun dropToGoogleDrive(cloudDirectoryPath: CloudPathData, authority: ServerAuthority)
     }
 }

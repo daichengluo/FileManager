@@ -265,11 +265,25 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         listener.dropToLocal(directoryPath)
     }
 
-    override fun dropToCloud(
+    override fun dropToStarBoardDrive(
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
-        listener.dropToCloud(cloudDirectoryPath, authority)
+        listener.dropToStarBoardDrive(cloudDirectoryPath, authority)
+    }
+
+    override fun dropToOneDrive(
+        cloudDirectoryPath: CloudPathData,
+        authority: ServerAuthority
+    ) {
+        listener.dropToOneDrive(cloudDirectoryPath, authority)
+    }
+
+    override fun dropToGoogleDrive(
+        cloudDirectoryPath: CloudPathData,
+        authority: ServerAuthority
+    ) {
+        listener.dropToGoogleDrive(cloudDirectoryPath, authority)
     }
 
     override fun logout(server: StarBoardDriveServer) {
@@ -296,7 +310,9 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
         fun closeNavigationDrawer()
         fun cancelDragDrop()
         fun dropToLocal(directoryPath: Path)
-        fun dropToCloud(cloudDirectoryPath: CloudPathData, authority: Authority)
+        fun dropToStarBoardDrive(cloudDirectoryPath: CloudPathData, authority: Authority)
+        fun dropToOneDrive(cloudDirectoryPath: CloudPathData, authority: ServerAuthority)
+        fun dropToGoogleDrive(cloudDirectoryPath: CloudPathData, authority: ServerAuthority)
         fun logout()
     }
 }
