@@ -2247,6 +2247,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             dispose()
             setImageDrawable(null)
         }
+        val fileCount = if (viewModel.isCloudFileMode) {
+            viewModel.cloudPasteState.files.size
+        } else {
+            viewModel.pasteState.files.size
+        }
+        binding.fileCountTextView.apply {
+            text = fileCount.toString()
+        }
+        binding.fileCountLayout.apply {
+            isVisible = fileCount > 1
+        }
         return binding.dragPlaceholder.apply { isVisible = true }
     }
 
