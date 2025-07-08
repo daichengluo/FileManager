@@ -1509,6 +1509,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         } else {
             val pasteState = viewModel.pasteState
             val cloudPasteState = viewModel.cloudPasteState
+            val isLocalFileMode = viewModel.isLocalFileMode
             val files = pasteState.files
             val cloudFiles = cloudPasteState.files
             if (files.isEmpty() && cloudFiles.isEmpty()) {
@@ -1517,7 +1518,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
                 return
             }
-            val areAllFilesArchivePaths = files.all { it.path.isArchivePath }
+            val areAllFilesArchivePaths = files.all { it.path.isArchivePath } && isLocalFileMode
             val fileSize = cloudFiles.size + files.size
             bottomActionMode.title = getQuantityString(
                 if (pasteState.copy || cloudPasteState.copy) {
@@ -1533,10 +1534,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             binding.bottomCreateFileNameEdit.isVisible = false
             bottomActionMode.setMenuResource(R.menu.file_list_paste)
             val isCurrentPathReadOnly =
-                viewModel.currentPath.fileSystem.isReadOnly && viewModel.isLocalFileMode
+                viewModel.currentPath.fileSystem.isReadOnly && isLocalFileMode
             bottomActionMode.menu.findItem(R.id.action_paste)
                 .setTitle(
-                    if (areAllFilesArchivePaths) R.string.file_list_paste_action_extract_here else R.string.paste
+                    if (areAllFilesArchivePaths) R.string.file_list_paste_action_extract_here
+                    else R.string.paste
                 )
                 .isEnabled = !isCurrentPathReadOnly
         }
@@ -1609,6 +1611,19 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     private fun pasteFiles() {
+        if (viewModel.isCloudFileMode) {
+            val cloudFiles = viewModel.cloudPasteState.files
+            val isCopy = viewModel.cloudPasteState.copy
+            val targetCloudPath = viewModel.currentCloudPath
+            if (cloudFiles.size == 1) {
+                cloudFiles.firstOrNull()?.let {
+                    if (it.id == targetCloudPath?.directoryId) {
+                        CopyOrMoveItselfDialogFragment.show(isCopy, this)
+                        return
+                    }
+                }
+            }
+        }
         viewModel.pasteFiles(requireContext())
     }
 
@@ -1634,7 +1649,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
-        viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
+        val cloudFiles = viewModel.cloudPasteState.files
+        val isCopy = viewModel.cloudPasteState.copy
+        if (cloudFiles.size == 1) {
+            cloudFiles.firstOrNull()?.let {
+                if (it.id == cloudDirectoryPath.directoryId) {
+                    CopyOrMoveItselfDialogFragment.show(isCopy, this)
+                }
+            }
+        } else {
+            viewModel.pasteToCloud(cloudDirectoryPath, requireContext())
+        }
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
@@ -1833,10 +1858,22 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         RenameFileDialogFragment.show(file, this)
     }
 
-    override fun hasFileWithName(name: String): Boolean = getFileWithName(name) != null
+    override fun hasFileWithName(name: String): Boolean {
+        val file = if (viewModel.isLocalFileMode) getFileWithName(name)
+        else getCloudFileWithName(name)
+        return file != null
+    }
 
     private fun getFileWithName(name: String): FileItem? {
         val fileListData = viewModel.fileListStateful
+        if (fileListData !is Success) {
+            return null
+        }
+        return fileListData.value.find { it.name == name }
+    }
+
+    private fun getCloudFileWithName(name: String): CloudFileItem? {
+        val fileListData = viewModel.cloudFileListStateful
         if (fileListData !is Success) {
             return null
         }
