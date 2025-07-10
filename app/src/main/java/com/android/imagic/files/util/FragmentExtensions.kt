@@ -192,3 +192,5 @@ fun Fragment.startActivityForResultSafe(intent: Intent, requestCode: Int, option
         showToast(R.string.activity_not_found)
     }
 }
+
+fun Fragment.isInSplitScreen(): Boolean = requireActivity().isInMultiWindowMode

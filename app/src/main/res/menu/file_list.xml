@@ -58,6 +58,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_split_screen"
+        android:icon="@drawable/icon_split_screen"
+        android:orderInCategory="100"
+        android:title="@string/file_list_action_split_screen"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_new_task"
         android:orderInCategory="100"
         android:title="@string/file_list_action_new_task"

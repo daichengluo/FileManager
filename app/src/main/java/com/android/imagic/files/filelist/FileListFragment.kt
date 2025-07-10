@@ -137,6 +137,7 @@ import com.android.imagic.files.util.Failure
 import com.android.imagic.files.util.HttpStatusException
 import com.android.imagic.files.util.Loading
 import com.android.imagic.files.util.ParcelableArgs
+import com.android.imagic.files.util.ScreenMode
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.addOnBackPressedCallback
@@ -159,6 +160,7 @@ import com.android.imagic.files.util.getDimensionDp
 import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
+import com.android.imagic.files.util.isInSplitScreen
 import com.android.imagic.files.util.isMediaPlayerAvailable
 import com.android.imagic.files.util.isOrientationLandscape
 import com.android.imagic.files.util.parcelable
@@ -788,6 +790,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 true
             }
 
+            R.id.action_split_screen -> {
+                splitScreenOrExit()
+                true
+            }
+
             R.id.action_new_task -> {
                 newTask()
                 true
@@ -834,6 +841,20 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode)
+        val screenMode = if (isInMultiWindowMode) ScreenMode.SPLIT else ScreenMode.STANDARD
+        viewModel.screenMode = screenMode
+    }
+
+    private fun splitScreenOrExit() {
+        if (isInSplitScreen()) {
+            finish()
+        } else {
+            splitScreen(currentPath)
         }
     }
 
@@ -1164,6 +1185,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun openInNewTask(path: Path) {
+        val intent = FileListActivity.createViewIntent(path)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        startActivitySafe(intent)
+    }
+
+    private fun splitScreen(path: Path) {
         val intent = FileListActivity.createViewIntent(path)
             .addFlags(
                 Intent.FLAG_ACTIVITY_NEW_DOCUMENT

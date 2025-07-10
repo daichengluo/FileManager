@@ -39,6 +39,7 @@ import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.CloseableLiveData
 import com.android.imagic.files.util.Failure
 import com.android.imagic.files.util.Loading
+import com.android.imagic.files.util.ScreenMode
 import com.android.imagic.files.util.Stateful
 import com.android.imagic.files.util.Success
 import com.android.imagic.files.util.valueCompat
@@ -120,6 +121,14 @@ class FileListViewModel : ViewModel() {
         }
         _searchStateLiveData.value = SearchState(false, "")
     }
+
+    private val _screenModeLiveData = MutableLiveData(ScreenMode.STANDARD)
+    val screenModeLiveData: LiveData<ScreenMode> = _screenModeLiveData
+    var screenMode: ScreenMode
+        get() = _screenModeLiveData.valueCompat
+        set(value) {
+            _screenModeLiveData.value = value
+        }
 
     val currentQuickAccessCategory: QuickAccessCategory?
         get() {

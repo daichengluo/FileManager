@@ -865,4 +865,5 @@
     <string name="login_failed_message">Login failed: %1$s</string>
     <string name="login_failed_retry">Login failed, please try again</string>
     <string name="loading_user_data">Loading user data...</string>
+    <string name="file_list_action_split_screen">Split screen</string>
 </resources>
