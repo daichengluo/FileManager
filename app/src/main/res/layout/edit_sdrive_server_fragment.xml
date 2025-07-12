@@ -31,8 +31,8 @@
 
         <ImageButton
             android:id="@+id/userAgreementButton"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:background="@null"
             android:contentDescription="@string/user_agreement"
             android:src="@drawable/useragreement_unchecked_grey" />
