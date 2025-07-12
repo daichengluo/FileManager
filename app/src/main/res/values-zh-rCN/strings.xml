@@ -702,4 +702,6 @@
     <string name="login_failed_retry">登录失败，请重试</string>
     <string name="loading_user_data">正在加载用户数据</string>
     <string name="file_list_action_split_screen">分屏模式</string>
+    <string name="load_user_image_failed">加载用户头像失败</string>
+    <string name="login_user_cancelled">登录已取消，请重试</string>
 </resources>

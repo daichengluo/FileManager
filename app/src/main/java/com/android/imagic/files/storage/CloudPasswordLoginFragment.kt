@@ -93,7 +93,11 @@ class CloudPasswordLoginFragment : Fragment() {
                     }
 
                     override fun onError(exception: MsalException) {
-                        Log.e("chengluo", "初始化失败: ${exception.message}")
+                        Log.e(
+                            "chengluo",
+                            "microsoft login create client error: ${exception.message}"
+                        )
+                        showToast(R.string.login_failed_retry)
                     }
                 }
             )
@@ -129,6 +133,7 @@ class CloudPasswordLoginFragment : Fragment() {
 
             override fun onError(exception: MsalException) {
                 Log.e("chengluo", "createSingleAccountPublicClientApplication error: $exception")
+                showToast(R.string.login_failed_retry)
             }
         }
         msalApp?.getCurrentAccountAsync(currentAccountCallback)
@@ -212,10 +217,12 @@ class CloudPasswordLoginFragment : Fragment() {
 
             override fun onError(exception: MsalException) {
                 Log.d("chengluo", "Authentication failed: $exception")
+                showToast(R.string.login_failed_retry)
             }
 
             override fun onCancel() {
                 Log.d("chengluo", "User cancelled login.")
+                showToast(R.string.login_user_cancelled)
             }
         }
 
@@ -253,6 +260,7 @@ class CloudPasswordLoginFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 Log.e("chengluo", "getUserHeaderImage: ", e)
+                showToast(R.string.load_user_image_failed)
             }
             return@withContext null
         }
@@ -424,6 +432,8 @@ class CloudPasswordLoginFragment : Fragment() {
             } else {
                 showToast(getString(R.string.login_failed_message, task.exception?.message ?: ""))
             }
+        } else {
+            showToast(R.string.login_failed_retry)
         }
     }
 

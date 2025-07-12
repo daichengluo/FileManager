@@ -866,4 +866,6 @@
     <string name="login_failed_retry">Login failed, please try again</string>
     <string name="loading_user_data">Loading user data...</string>
     <string name="file_list_action_split_screen">Split screen</string>
+    <string name="load_user_image_failed">Failed to load user avatar</string>
+    <string name="login_user_cancelled">Login was cancelled, please try again</string>
 </resources>
