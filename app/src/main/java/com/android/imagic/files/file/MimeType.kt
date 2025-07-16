@@ -51,7 +51,12 @@ value class MimeType(val value: String) : Parcelable {
             "video" -> FileTypeCategory.VIDEO
             "audio" -> FileTypeCategory.AUDIO
             "application" -> when (subtype) {
-                "pdf", "msword", "vnd.ms-excel", "vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "pdf",
+                "msword",
+                "vnd.ms-excel",
+                "vnd.ms-powerpoint",
+                "vnd.openxmlformats-officedocument.presentationml.presentation",
+                "vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> FileTypeCategory.DOCUMENT
 
                 "vnd.android.package-archive" -> FileTypeCategory.APK

@@ -42,12 +42,16 @@ fun FileTypeCategory.getQueryInfo(): Quadruple<Uri, Array<String>, String, Array
         FileTypeCategory.DOCUMENT -> Quadruple(
             MediaStore.Files.getContentUri("external"),
             projection,
-            "${MediaStore.Files.FileColumns.MIME_TYPE} IN (?, ?, ?, ?)",
+            "${MediaStore.Files.FileColumns.MIME_TYPE} IN (?, ?, ?, ?, ?, ?, ?, ?)",
             arrayOf(
+                "text/plain",
                 "application/pdf",
                 "application/msword",
+                "application/vnd.ms-excel",
+                "application/vnd.ms-powerpoint",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "text/plain"
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation"
             )
         )
 
