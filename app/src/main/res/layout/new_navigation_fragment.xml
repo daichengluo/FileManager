@@ -89,7 +89,8 @@
                 android:layout_marginBottom="11dp"
                 android:background="@drawable/surface_background"
                 android:paddingHorizontal="12dp"
-                android:paddingVertical="11dp" />
+                android:paddingVertical="11dp"
+                tools:listitem="@layout/navigation_quick_access_item" />
 
             <LinearLayout
                 android:id="@+id/storageLayout"

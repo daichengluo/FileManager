@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:lineHeight="13dp"
+        android:maxWidth="52dp"
         android:singleLine="true"
         android:textColor="#FF262626"
         android:textFontWeight="500"

@@ -113,6 +113,7 @@ class QuickAccessListAdapter(
         val item = getItem(position)!!
         val binding = (holder as ItemHolder).binding
         binding.itemLayout.isChecked = item.isChecked(listener)
+        binding.titleText.isSelected = item.isChecked(listener)
         if (payloads.isNotEmpty()) {
             return
         }
@@ -133,6 +134,6 @@ class QuickAccessListAdapter(
 
     private class ItemHolder(val binding: NavigationQuickAccessItemBinding) :
         RecyclerView.ViewHolder(
-        binding.root
-    )
+            binding.root
+        )
 }
