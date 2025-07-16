@@ -62,7 +62,7 @@ android {
 //            minifyEnabled true
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'STB_API_URL', '"https://dev.starboard-online.com/stbapi/"'
+            buildConfigField 'String', 'STB_API_URL', '"https://www.starboard-online.com/stbapi/"'
         }
         debug {
             buildConfigField 'String', 'STB_API_URL', '"https://dev.starboard-online.com/stbapi/"'
