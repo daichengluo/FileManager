@@ -66,6 +66,7 @@
                     android:layout_weight="1"
                     android:ellipsize="marquee"
                     android:lineHeight="22dp"
+                    android:maxWidth="120dp"
                     android:singleLine="true"
                     android:text="@string/navigation_login_account_tip"
                     android:textAlignment="textStart"

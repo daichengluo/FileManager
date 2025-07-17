@@ -632,7 +632,7 @@
     <plurals name="file_item_file_count_format">
         <item quantity="other">%1$,d 件</item>
     </plurals>
-    <string name="navigation_login_account_tip">アカウントにログインしてください</string>
+    <string name="navigation_login_account_tip">ログイン</string>
     <string name="navigation_internal_storage_name">内部ストレージ</string>
     <string name="navigation_quick_access_images">画像</string>
     <string name="navigation_quick_access_videos">動画</string>
