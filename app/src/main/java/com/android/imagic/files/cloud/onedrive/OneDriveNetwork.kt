@@ -72,7 +72,7 @@ class OneDriveNetwork(val client: OkHttpClient) {
     fun uploadFileInChunks(
         uploadUrl: String,
         path: Path,
-        chunkSize: Long = 256 * 1024L
+        chunkSize: Long = 1024 * 1024L
     ): Flow<TransferStatus> = flow {
         val fileSize = path.size()
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()

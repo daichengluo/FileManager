@@ -1377,8 +1377,7 @@ class FileListViewModel : ViewModel() {
         clearCloudPasteState()
 
         val files = pasteState.files
-        val directoryId = currentCloudPath?.directoryId
-            ?: if (currentFileMode is FileModeState.StarBoardDrive) "0" else "root"
+        val directoryId = targetCloudPath.directoryId
         if (pasteState.copy) {
             files.forEach {
                 viewModelScope.launch {

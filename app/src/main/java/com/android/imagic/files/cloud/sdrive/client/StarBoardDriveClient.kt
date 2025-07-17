@@ -72,7 +72,7 @@ object StarBoardDriveClient {
         getClient(authority).uploadFile(authority.userId, path)
 
     suspend fun uploadChunks(path: Path, authority: Authority): Flow<TransferStatus> =
-        getClient(authority).uploadChunks(authority.userId, path, 256 * 1024L)
+        getClient(authority).uploadChunks(authority.userId, path, 1024 * 1024L)
 
     suspend fun downloadFile(url: String, path: Path, authority: Authority): Flow<TransferStatus> =
         getClient(authority).downloadFile(url, path)
