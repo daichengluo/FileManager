@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.dispose
 import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.app.contentResolver
@@ -188,10 +187,13 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
             val authority = server.authority
             authority.headerImageUrl?.let { url ->
                 if (url != Constants.MS_GRAPH_PHOTO) {
-                    binding.userHeaderImage.apply {
-                        dispose()
-                        load(url)
+                    binding.userHeaderImage.load(url) {
+                        error(R.drawable.nav_user_header_img)
+                        placeholder(R.drawable.nav_user_header_img)
+                        crossfade(true)
                     }
+                } else {
+                    binding.userHeaderImage.setImageResource(R.drawable.nav_user_header_img)
                 }
                 LoginWidgetUpdater.updateWidgets(requireContext())
             }
