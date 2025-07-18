@@ -387,10 +387,11 @@
 
         <activity
             android:name="com.android.imagic.files.viewer.video.VideoPlayerActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/video_player_title"
-            android:theme="@style/Theme.Files.Immersive">
-            <intent-filter tools:ignore="AppLinkUrlError">
+            android:theme="@style/Theme.Files.Immersive"
+            tools:ignore="AppLinkUrlError">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="video/*" />

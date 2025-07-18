@@ -28,8 +28,11 @@ import me.zhanghai.android.systemuihelper.SystemUiHelper
 class VideoPlayerFragment : Fragment() {
     private val args by args<Args>()
     private val videoUrl by lazy { args.intent.data }
+    private val videoName by lazy { args.name }
 
     private lateinit var uri: Uri
+
+    private lateinit var name: String
 
     private lateinit var player: ExoPlayer
 
@@ -41,6 +44,7 @@ class VideoPlayerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         player = ExoPlayer.Builder(requireContext()).build()
         uri = savedInstanceState?.getState<State>()?.uri ?: videoUrl!!
+        name = savedInstanceState?.getState<State>()?.name ?: videoName
 
         setHasOptionsMenu(true)
     }
@@ -62,7 +66,7 @@ class VideoPlayerFragment : Fragment() {
         // Our app bar will draw the status bar background.
         activity.window.statusBarColor = Color.TRANSPARENT
         binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
-        activity.title = args.name
+        activity.title = name
         binding.toolbar.subtitle = null
         systemUiHelper = SystemUiHelper(
             activity, SystemUiHelper.LEVEL_IMMERSIVE, SystemUiHelper.FLAG_IMMERSIVE_STICKY
