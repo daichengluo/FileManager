@@ -859,7 +859,8 @@
     <string name="my_drive">my-drive</string>
     <string name="cannot_extract_to_cloud_drive">Cannot extract the archive to the cloud drive.</string>
 
-    <string name="web_client_id" translatable="false">35820500923-upus4qgu0hkva1er9ubdhmj7idae68cf.apps.googleusercontent.com</string>
+    <!--    <string name="web_client_id" translatable="false">35820500923-upus4qgu0hkva1er9ubdhmj7idae68cf.apps.googleusercontent.com</string>-->
+    <string name="web_client_id" translatable="false">1041137692769-0es9vhfms0kcdl9h137lpcg95rehnlls.apps.googleusercontent.com</string>
     <string name="login_failed_message">Login failed: %1$s</string>
     <string name="login_failed_retry">Login failed, please try again</string>
     <string name="loading_user_data">Loading user data...</string>
