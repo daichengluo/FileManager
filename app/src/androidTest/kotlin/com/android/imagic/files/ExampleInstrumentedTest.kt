@@ -17,7 +17,8 @@ class ExampleInstrumentedTest {
         val debugSha1 = "F3:BC:D4:76:A0:9F:1C:23:3D:38:26:62:C8:81:A4:E9:27:E3:DA:2A"
         val proSha1 = "27:19:6E:38:6B:87:5E:76:AD:F7:00:E7:EA:84:E4:C6:EE:E3:3D:FA"
         val edlaSha1 = "CB:06:1D:3A:2D:46:EC:4F:83:29:5D:DC:B3:D3:B6:BA:0B:3E:75:B9"
-        sha1ToBase64("debugSha1", debugSha1)
+        val universalSha1 = "3C:6C:6D:9A:9C:2B:00:98:B3:7A:44:76:07:10:1C:74:06:94:73:5F"
+        sha1ToBase64("universalSha1", universalSha1)
     }
 
     fun sha1ToBase64(flavorName: String, sha1: String) {
