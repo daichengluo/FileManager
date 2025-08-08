@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import com.android.imagic.files.databinding.VideoPlayerFragmentBinding
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.ParcelableParceler
@@ -79,7 +80,16 @@ class VideoPlayerFragment : Fragment() {
                 .start()
         }
         // This will set up window flags.
-        systemUiHelper.show()
+        //systemUiHelper.show()
+        binding.playerView.setControllerVisibilityListener(
+            PlayerView.ControllerVisibilityListener { visibility ->
+                if (visibility == View.VISIBLE) {
+                    systemUiHelper.show()
+                } else {
+                    systemUiHelper.hide()
+                }
+            }
+        )
 
         binding.playerView.setOnClickListener { systemUiHelper.toggle() }
         binding.playerView.player = player
