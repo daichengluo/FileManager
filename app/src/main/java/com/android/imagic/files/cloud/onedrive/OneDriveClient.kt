@@ -65,39 +65,41 @@ object OneDriveClient {
         authority: ServerAuthority
     ): ApiOperation<CloudFileItem> = getClient(authority).createDirectory(name, parentId)
 
-    suspend fun uploadFile(
+    fun uploadFile(
         file: File,
         parentId: String,
         authority: ServerAuthority
-    ): ApiOperation<CloudFileItem> = getClient(authority).uploadFile(file, parentId)
+    ): Flow<TransferStatus> = getClient(authority).uploadFileWithProgress(file, parentId)
 
     fun uploadFile(
         path: Path,
         parentId: String,
         authority: ServerAuthority
-    ): Flow<TransferStatus> = flow {
+    ): Flow<TransferStatus> {
         val client = getClient(authority)
         val fileSize = path.size()
-        if (fileSize > 1024 * 1024 * 5) {
-            val response = client.getUploadUrl(parentId, path.fileName.toString())
-            when (response) {
-                is ApiOperation.Success -> {
-                    response.data?.let {
-                        Log.d("chengluo", "uploadFile getUploadUrl: $it")
-                        client.uploadFileInChunks(it, path).collect { emit(it) }
+        return if (fileSize < 1024 * 1024 * 4) {
+            val file = path.toFile()
+            uploadFile(file, parentId, authority)
+        } else {
+            flow {
+                val response = client.getUploadUrl(parentId, path.fileName.toString())
+                when (response) {
+                    is ApiOperation.Success -> {
+                        response.data?.let {
+                            Log.d("chengluo", "uploadFile getUploadUrl: $it")
+                            client.uploadFileInChunks(it, path).collect { emit(it) }
+                        }
+                    }
+
+                    is ApiOperation.Failure -> {
+                        Log.e("chengluo", "uploadFile: ", response.exception)
+                        emit(TransferStatus.Failed(response.exception))
                     }
                 }
-
-                is ApiOperation.Failure -> {
-                    Log.e("chengluo", "uploadFile: ", response.exception)
-                    emit(TransferStatus.Failed(response.exception))
-                }
-            }
-        } else {
-            client.uploadFile(path, parentId)
-            emit(TransferStatus.Finished())
+            }.flowOn(Dispatchers.IO).distinctUntilChanged()
         }
-    }.flowOn(Dispatchers.IO).distinctUntilChanged()
+    }
 
     suspend fun getDownloadUrl(fileId: String, authority: ServerAuthority): ApiOperation<String> =
         getClient(authority).getDownloadUrl(fileId)

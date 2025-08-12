@@ -3,7 +3,7 @@ package com.android.imagic.files.cloud.onedrive
 import android.util.Log
 import com.android.imagic.files.app.networkJson
 import com.android.imagic.files.cloud.CloudFileItem
-import com.android.imagic.files.cloud.onedrive.UploadFileRequestItem.UploadFileRequest
+import com.android.imagic.files.cloud.util.ProgressRequestBody
 import com.android.imagic.files.cloud.util.SpaceData
 import com.android.imagic.files.cloud.util.TransferStatus
 import com.android.imagic.files.cloud.util.saveFile
@@ -17,9 +17,12 @@ import com.android.imagic.files.util.safeApiCall
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java8.nio.file.Files
 import java8.nio.file.Path
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -29,6 +32,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
 import java.io.File
+import java.net.URLEncoder
 import java.nio.ByteBuffer
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
@@ -64,7 +68,7 @@ class OneDriveNetwork(val client: OkHttpClient) {
     suspend fun getUploadUrl(parentId: String, filename: String): ApiOperation<String?> =
         safeApiCall {
             val body = UploadFileRequestItem(
-                UploadFileRequest(filename, "rename")
+                UploadFileRequestItem.UploadFileRequest(filename, "rename")
             )
             network.createUploadSession(parentId, filename, body).uploadUrl
         }
@@ -143,6 +147,30 @@ class OneDriveNetwork(val client: OkHttpClient) {
             }
         }
     }
+
+    fun uploadFileWithProgress(
+        file: File,
+        parentId: String
+    ): Flow<TransferStatus> = callbackFlow {
+        if (!file.exists()) file.createNewFile()
+
+        val mimeType = MimeType.guessFromPath(file.path).value
+        val mediaType = mimeType.toMediaType()
+
+        val requestBody = ProgressRequestBody(file, mediaType) { transferred, total ->
+            trySend(TransferStatus.Transferring(transferred, total))
+        }
+
+        try {
+            val encodedName = URLEncoder.encode(file.name, "UTF-8")
+            val metadata = network.uploadFile(parentId, encodedName, requestBody)
+            trySend(TransferStatus.Finished(data = metadata.id))
+        } catch (e: Exception) {
+            trySend(TransferStatus.Failed(e))
+        }
+
+        close() // 结束 flow
+    }.flowOn(Dispatchers.IO)
 
     suspend fun uploadFile(file: File, parentId: String): ApiOperation<CloudFileItem> =
         safeApiCall {
