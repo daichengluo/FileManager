@@ -280,7 +280,7 @@ class FileListViewModel : ViewModel() {
     fun createCloudFile(name: String, context: Context) {
         val file = File(context.cacheDir, name)
         file.deleteOnExit()
-        uploadFile(file)
+        uploadFile(file, context)
     }
 
     fun renameCloudFile(file: CloudFileItem, newName: String) = viewModelScope.launch {
@@ -552,7 +552,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.uploading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -569,7 +569,7 @@ class FileListViewModel : ViewModel() {
                             is TransferStatus.Failed -> FileTransfer(
                                 id = id,
                                 title = name,
-                                text = context.getString(R.string.failed_transfer),
+                                text = context.getString(R.string.upload_failed),
                                 max = 100,
                                 progress = 0,
                                 indeterminate = false,
@@ -595,7 +595,7 @@ class FileListViewModel : ViewModel() {
                                 FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = context.getString(R.string.completed_transfer),
+                                    text = context.getString(R.string.upload_completed),
                                     max = 100,
                                     progress = 100,
                                     indeterminate = false,
@@ -648,7 +648,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.uploading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -670,7 +670,7 @@ class FileListViewModel : ViewModel() {
                     FileTransfer(
                         id = id,
                         title = name,
-                        text = context.getString(R.string.failed_transfer),
+                        text = context.getString(R.string.upload_failed),
                         max = 100,
                         progress = 0,
                         indeterminate = false,
@@ -695,7 +695,7 @@ class FileListViewModel : ViewModel() {
             is TransferStatus.Failed -> FileTransfer(
                 id = id,
                 title = name,
-                text = context.getString(R.string.failed_transfer),
+                text = context.getString(R.string.upload_failed),
                 max = 100,
                 progress = 0,
                 indeterminate = false,
@@ -709,7 +709,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = context.getString(R.string.completed_transfer),
+                    text = context.getString(R.string.upload_completed),
                     max = 100,
                     progress = 100,
                     indeterminate = false,
@@ -756,7 +756,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.uploading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -771,7 +771,7 @@ class FileListViewModel : ViewModel() {
                             is TransferStatus.Failed -> FileTransfer(
                                 id = id,
                                 title = name,
-                                text = context.getString(R.string.failed_transfer),
+                                text = context.getString(R.string.upload_failed),
                                 max = 100,
                                 progress = 0,
                                 indeterminate = false,
@@ -785,7 +785,7 @@ class FileListViewModel : ViewModel() {
                                 FileTransfer(
                                     id = id,
                                     title = name,
-                                    text = context.getString(R.string.completed_transfer),
+                                    text = context.getString(R.string.upload_completed),
                                     max = 100,
                                     progress = 100,
                                     indeterminate = false,
@@ -823,7 +823,7 @@ class FileListViewModel : ViewModel() {
         TransferJobManager.register(id, job)
     }
 
-    fun uploadFile(file: File) = viewModelScope.launch {
+    fun uploadFile(file: File, context: Context) = viewModelScope.launch {
         val directoryId = currentCloudPath?.directoryId ?: return@launch
 
         val cloudMode = currentFileMode
@@ -859,9 +859,57 @@ class FileListViewModel : ViewModel() {
             }
         }
         if (cloudMode is FileModeState.OneDrive) {
+            val id = file.toString().hashCode()
+            val name = file.name
             OneDriveClient.uploadFile(file, directoryId, cloudMode.authority)
-                .onSuccess { refreshCloud() }
-                .onFailure { it.printStackTrace() }
+                .collect { status ->
+                    Log.d("chengluo", "uploadFile status: $status")
+                    val transfer = when (status) {
+                        is TransferStatus.Failed -> FileTransfer(
+                            id = id,
+                            title = name,
+                            text = context.getString(R.string.upload_failed),
+                            max = 100,
+                            progress = 0,
+                            indeterminate = false,
+                            status = FileTransfer.Status.FAILED
+                        )
+
+                        is TransferStatus.Finished -> {
+                            FileTransfer(
+                                id = id,
+                                title = name,
+                                text = context.getString(R.string.download_completed),
+                                max = 100,
+                                progress = 100,
+                                indeterminate = false,
+                                status = FileTransfer.Status.FINISHED
+                            )
+                        }
+
+                        is TransferStatus.Transferring -> {
+                            val sizeString =
+                                status.total.asFileSize().formatHumanReadable(context)
+                            val transferredSizeString =
+                                status.transferred.asFileSize().formatHumanReadable(context)
+                            val text = context.getString(
+                                R.string.file_job_transfer_size_notification_text_one_format,
+                                transferredSizeString,
+                                sizeString
+                            )
+                            FileTransfer(
+                                id = id,
+                                title = name,
+                                text = text,
+                                max = status.total.toInt(),
+                                progress = status.transferred.toInt(),
+                                indeterminate = false,
+                                status = FileTransfer.Status.TRANSFERRING
+                            )
+                        }
+                    }
+                    _fileTransferState.emit(transfer)
+                }
         }
     }
 
@@ -971,7 +1019,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.downloading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -986,7 +1034,7 @@ class FileListViewModel : ViewModel() {
                     FileTransfer(
                         id = id,
                         title = cloudFile.name,
-                        text = context.getString(R.string.completed_transfer),
+                        text = context.getString(R.string.download_completed),
                         max = 100,
                         progress = 100,
                         indeterminate = false,
@@ -1031,7 +1079,7 @@ class FileListViewModel : ViewModel() {
                             FileTransfer(
                                 id = id,
                                 title = cloudFile.name,
-                                text = context.getString(R.string.completed_transfer),
+                                text = context.getString(R.string.download_completed),
                                 max = 100,
                                 progress = 100,
                                 indeterminate = false,
@@ -1042,7 +1090,7 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = context.getString(R.string.failed_transfer),
+                            text = context.getString(R.string.download_failed),
                             max = 100,
                             progress = 0,
                             indeterminate = false,
@@ -1057,7 +1105,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = context.getString(R.string.failed_transfer),
+                    text = context.getString(R.string.download_failed),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -1081,7 +1129,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.downloading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -1096,7 +1144,7 @@ class FileListViewModel : ViewModel() {
                     FileTransfer(
                         id = id,
                         title = cloudFile.name,
-                        text = context.getString(R.string.completed_transfer),
+                        text = context.getString(R.string.download_completed),
                         max = 100,
                         progress = 100,
                         indeterminate = false,
@@ -1128,7 +1176,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = context.getString(R.string.failed_transfer),
+                    text = context.getString(R.string.download_failed),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -1174,7 +1222,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = context.getString(R.string.completed_transfer),
+                    text = context.getString(R.string.download_completed),
                     max = 100,
                     progress = 100,
                     indeterminate = false,
@@ -1185,7 +1233,7 @@ class FileListViewModel : ViewModel() {
             is TransferStatus.Failed -> FileTransfer(
                 id = id,
                 title = cloudFile.name,
-                text = context.getString(R.string.failed_transfer),
+                text = context.getString(R.string.download_failed),
                 max = 100,
                 progress = 0,
                 indeterminate = false,
@@ -1208,7 +1256,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
-                    text = context.getString(R.string.starting_transfer),
+                    text = context.getString(R.string.downloading),
                     max = 100,
                     progress = 0,
                     indeterminate = false,
@@ -1223,7 +1271,7 @@ class FileListViewModel : ViewModel() {
                     FileTransfer(
                         id = id,
                         title = cloudFile.name,
-                        text = context.getString(R.string.completed_transfer),
+                        text = context.getString(R.string.download_completed),
                         max = 100,
                         progress = 100,
                         indeterminate = false,
@@ -1272,7 +1320,7 @@ class FileListViewModel : ViewModel() {
                             FileTransfer(
                                 id = id,
                                 title = cloudFile.name,
-                                text = context.getString(R.string.completed_transfer),
+                                text = context.getString(R.string.download_completed),
                                 max = 100,
                                 progress = 100,
                                 indeterminate = false,
@@ -1283,7 +1331,7 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Failed -> FileTransfer(
                             id = id,
                             title = cloudFile.name,
-                            text = context.getString(R.string.failed_transfer),
+                            text = context.getString(R.string.download_failed),
                             max = 100,
                             progress = 0,
                             indeterminate = false,
@@ -1298,7 +1346,7 @@ class FileListViewModel : ViewModel() {
                 FileTransfer(
                     id = cloudFile.hashCode(),
                     title = cloudFile.name,
-                    text = context.getString(R.string.failed_transfer),
+                    text = context.getString(R.string.download_failed),
                     max = 100,
                     progress = 0,
                     indeterminate = false,

@@ -688,9 +688,12 @@
     <string name="google_drive">Google Drive</string>
     <string name="one_drive">Microsoft OneDrive</string>
     <string name="canceling_transfer">キャンセル中...</string>
-    <string name="starting_transfer">転送の準備中...</string>
-    <string name="failed_transfer">転送に失敗しました</string>
-    <string name="completed_transfer">転送が完了しました</string>
+    <string name="downloading">転送の準備中...</string>
+    <string name="uploading">アップロード中...</string>
+    <string name="upload_failed">アップロード失敗</string>
+    <string name="download_failed">ダウンロード失敗</string>
+    <string name="upload_completed">アップロード完了</string>
+    <string name="download_completed">ダウンロード完了</string>
     <string name="my_files">マイファイル</string>
     <string name="my_drive">マイドライブ</string>
     <string name="cannot_extract_to_cloud_drive">クラウドドライブに解凍できません</string>

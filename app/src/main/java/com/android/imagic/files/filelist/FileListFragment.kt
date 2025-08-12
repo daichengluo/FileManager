@@ -284,7 +284,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     FileJobService.Actions.STARTED.toString() -> {
                         handler.post {
                             updateTransferProgress(
-                                fileTransfer.copy(text = getString(R.string.starting_transfer))
+                                fileTransfer.copy(text = getString(R.string.downloading))
                             )
                         }
                     }

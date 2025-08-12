@@ -852,9 +852,12 @@
     <string name="google_drive">Google Drive</string>
     <string name="one_drive">OneDrive</string>
     <string name="canceling_transfer">Canceling...</string>
-    <string name="starting_transfer">Starting...</string>
-    <string name="failed_transfer">Transfer failed</string>
-    <string name="completed_transfer">Transfer completed</string>
+    <string name="downloading">Starting...</string>
+    <string name="uploading">Uploading...</string>
+    <string name="upload_failed">Upload failed</string>
+    <string name="download_failed">Download failed</string>
+    <string name="upload_completed">Upload completed</string>
+    <string name="download_completed">Download completed</string>
     <string name="my_files">My files</string>
     <string name="my_drive">my-drive</string>
     <string name="cannot_extract_to_cloud_drive">Cannot extract the archive to the cloud drive.</string>
