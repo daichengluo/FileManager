@@ -18,6 +18,7 @@ import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
 import com.android.imagic.files.cloud.onedrive.MsalApp
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
+import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.cloud.util.toAuthInfoBody
@@ -46,10 +47,12 @@ import com.microsoft.identity.client.exception.MsalException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.TimeUnit
 
 class CloudPasswordLoginFragment : Fragment() {
 
@@ -343,7 +346,8 @@ class CloudPasswordLoginFragment : Fragment() {
         val googleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions)
         try {
             signInLauncher.launch(googleSignInClient.signInIntent)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e("chengluo", "loginWithGoogle error: ", e)
             showToast(R.string.login_failed_retry)
         }
     }
@@ -351,11 +355,12 @@ class CloudPasswordLoginFragment : Fragment() {
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        Log.d("chengluo", "StartActivityForResult: ${result.data}")
         if (result.resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             if (task.isSuccessful) {
                 task.result?.let { account ->
-                    val authority = ServerAuthority(
+                    val serverAuthority = ServerAuthority(
                         openId = account.id ?: "",
                         userId = 0,
                         username = account.displayName ?: "",
@@ -369,12 +374,16 @@ class CloudPasswordLoginFragment : Fragment() {
                         usedSpace = 0L
                     )
                     lifecycleScope.launch {
-                        GoogleDriveServiceClient.getService(authority, account, requireContext())
+                        GoogleDriveServiceClient.getService(
+                            serverAuthority,
+                            account,
+                            requireContext()
+                        )
                         binding.progressBarLayout.isVisible = true
                         val updatedAuthority =
-                            GoogleDriveServiceClient.getSpaceData(authority)?.let {
-                                authority.copy(totalSpace = it.total, usedSpace = it.used)
-                            } ?: authority
+                            GoogleDriveServiceClient.getSpaceData(serverAuthority)?.let {
+                                serverAuthority.copy(totalSpace = it.total, usedSpace = it.used)
+                            } ?: serverAuthority
                         val storage = GoogleDriveServer(
                             id = null,
                             customName = null,
@@ -385,31 +394,38 @@ class CloudPasswordLoginFragment : Fragment() {
                         Storages.addOrReplace(storage)
                     }
 
-
-                    account.serverAuthCode?.let {
-                        Log.d("chengluo", "serverAuthCode: $it")
-
-                        val okHttpClient = okHttpClient.newBuilder()
+                    lifecycleScope.launch {
+                        val authority = Authority(
+                            openId = account.id ?: "",
+                            userId = 0,
+                            username = account.displayName ?: "",
+                            headerImageUrl = account.photoUrl?.toString(),
+                            accessToken = "",
+                        )
+                        val authenticatorInterceptor = OkHttpAuthenticatorInterceptor(authority)
+                        val okHttpClient = OkHttpClient().newBuilder()
+                            .connectTimeout(15, TimeUnit.SECONDS)
+                            .writeTimeout(60, TimeUnit.SECONDS)
+                            .readTimeout(60, TimeUnit.SECONDS)
                             .addInterceptor(
                                 HttpLoggingInterceptor().apply {
                                     level = HttpLoggingInterceptor.Level.BODY
                                 }
                             )
+                            .addNetworkInterceptor(authenticatorInterceptor)
+                            .authenticator(authenticatorInterceptor)
                             .build()
-                        val state = "GG@" + generateNonceStr(8)
-                        lifecycleScope.launch {
-                            CloudClient(okHttpClient).doLogin(it, state)
-                                .onSuccess { loginInfo ->
-                                    val starBoardServer =
-                                        StarBoardDriveServer(null, null, loginInfo.toAuthority())
-                                    Storages.addOrReplace(starBoardServer)
-                                    LoginWidgetUpdater.updateWidgets(requireContext())
-                                }
-                                .onFailure { e ->
-                                    e.printStackTrace()
-                                }
-                            finish()
-                        }
+                        CloudClient(okHttpClient).getUserInfo(serverAuthority.toAuthInfoBody())
+                            .onSuccess { loginInfo ->
+                                val starBoardServer =
+                                    StarBoardDriveServer(null, null, loginInfo.toAuthority())
+                                Storages.addOrReplace(starBoardServer)
+                                LoginWidgetUpdater.updateWidgets(requireContext())
+                            }
+                            .onFailure { e ->
+                                Log.e("chengluo", "google starboard doLogin error: ", e)
+                            }
+                        finish()
                     }
                 }
             } else {
