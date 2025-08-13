@@ -43,7 +43,7 @@ interface OneDriveNetworkApi {
     @PUT("me/drive/items/{parentId}:/{filename}:/content")
     suspend fun uploadFile(
         @Path("parentId") parentId: String,
-        @Path("filename") filename: String,
+        @Path("filename", encoded = true) filename: String,
         @Body fileBody: RequestBody
     ): OneDriveFileMetadata
 
@@ -56,7 +56,7 @@ interface OneDriveNetworkApi {
     @POST("me/drive/items/{parentId}:/{filename}:/createUploadSession")
     suspend fun createUploadSession(
         @Path("parentId") parentId: String,
-        @Path("filename") filename: String,
+        @Path("filename") filename: String,      // 仅文件名，不含斜杠
         @Body uploadFileRequestItem: UploadFileRequestItem
     ): UploadSessionResponse
 

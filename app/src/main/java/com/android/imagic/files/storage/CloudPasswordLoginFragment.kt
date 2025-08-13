@@ -16,6 +16,7 @@ import com.android.imagic.files.appwidget.CloudClient
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.appwidget.toAuthority
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
+import com.android.imagic.files.cloud.onedrive.MsalApp
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
 import com.android.imagic.files.cloud.util.ServerAuthority
@@ -37,10 +38,8 @@ import com.microsoft.identity.client.AcquireTokenSilentParameters
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAccount
 import com.microsoft.identity.client.IAuthenticationResult
-import com.microsoft.identity.client.IPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication.CurrentAccountCallback
-import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.SilentAuthenticationCallback
 import com.microsoft.identity.client.exception.MsalException
@@ -57,8 +56,6 @@ class CloudPasswordLoginFragment : Fragment() {
     private val sharedViewModel: EditStarBoardDriveServerViewModel by viewModels({ requireParentFragment() })
 
     private lateinit var binding: CloudPasswordLoginFragmentBinding
-
-    private var msalApp: ISingleAccountPublicClientApplication? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,24 +80,7 @@ class CloudPasswordLoginFragment : Fragment() {
                 showToast(R.string.check_agreement_first)
                 return@setOnClickListener
             }
-            PublicClientApplication.createSingleAccountPublicClientApplication(
-                requireContext(),
-                R.raw.msal_config,
-                object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
-                    override fun onCreated(application: ISingleAccountPublicClientApplication) {
-                        msalApp = application
-                        loadMicrosoftAccountOrLogin()
-                    }
-
-                    override fun onError(exception: MsalException) {
-                        Log.e(
-                            "chengluo",
-                            "microsoft login create client error: ${exception.message}"
-                        )
-                        showToast(R.string.login_failed_retry)
-                    }
-                }
-            )
+            MsalApp.initMsalApp(requireContext(), ::loadMicrosoftAccountOrLogin)
         }
         binding.loginWithWechat.setOnClickListener {
             if (!sharedViewModel.userAgreementChecked) {
@@ -110,14 +90,14 @@ class CloudPasswordLoginFragment : Fragment() {
         }
     }
 
-    private fun loadMicrosoftAccountOrLogin() {
+    private fun loadMicrosoftAccountOrLogin(msalApp: ISingleAccountPublicClientApplication) {
         val currentAccountCallback = object : CurrentAccountCallback {
             override fun onAccountLoaded(activeAccount: IAccount?) {
                 Log.d("chengluo", "onAccountLoaded $activeAccount")
                 if (activeAccount == null) {
-                    microsoftLogin()
+                    microsoftLogin(msalApp)
                 } else {
-                    acquireMicrosoftTokenSilentAsync(activeAccount)
+                    acquireMicrosoftTokenSilentAsync(msalApp, activeAccount)
                 }
             }
 
@@ -127,7 +107,7 @@ class CloudPasswordLoginFragment : Fragment() {
             ) {
                 if (currentAccount == null) {
                     Log.d("chengluo", "onAccountChanged OnSignOut")
-                    microsoftLogin()
+                    microsoftLogin(msalApp)
                 }
             }
 
@@ -136,10 +116,10 @@ class CloudPasswordLoginFragment : Fragment() {
                 showToast(R.string.login_failed_retry)
             }
         }
-        msalApp?.getCurrentAccountAsync(currentAccountCallback)
+        msalApp.getCurrentAccountAsync(currentAccountCallback)
     }
 
-    private fun microsoftLogin() {
+    private fun microsoftLogin(msalApp: ISingleAccountPublicClientApplication) {
         val authInteractiveCallback = object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val claims = authenticationResult.account.claims
@@ -232,7 +212,7 @@ class CloudPasswordLoginFragment : Fragment() {
             .withScopes(microsoftScopes)
             .withCallback(authInteractiveCallback)
             .build()
-        msalApp?.signIn(signInParameters)
+        msalApp.signIn(signInParameters)
     }
 
     private suspend fun getUserHeaderImage(accessToken: String): File? =
@@ -265,7 +245,10 @@ class CloudPasswordLoginFragment : Fragment() {
             return@withContext null
         }
 
-    private fun acquireMicrosoftTokenSilentAsync(account: IAccount) {
+    private fun acquireMicrosoftTokenSilentAsync(
+        msalApp: ISingleAccountPublicClientApplication,
+        account: IAccount
+    ) {
         val silentAuthenticationCallback = object : SilentAuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val claims = authenticationResult.account.claims
@@ -342,7 +325,7 @@ class CloudPasswordLoginFragment : Fragment() {
             .withScopes(microsoftScopes)
             .withCallback(silentAuthenticationCallback)
             .build()
-        msalApp?.acquireTokenSilentAsync(silentParameters)
+        msalApp.acquireTokenSilentAsync(silentParameters)
     }
 
     private fun loginWithGoogle() {

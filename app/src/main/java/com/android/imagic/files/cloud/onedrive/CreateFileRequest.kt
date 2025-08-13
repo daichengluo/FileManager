@@ -17,7 +17,6 @@ data class UploadFileRequestItem(
 ) {
     @Serializable
     data class UploadFileRequest(
-        val name: String,
         @SerialName("@microsoft.graph.conflictBehavior")
         val conflictBehavior: String
     )

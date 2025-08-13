@@ -25,16 +25,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.io.File
 import java.net.URLEncoder
 import java.nio.ByteBuffer
-import kotlin.coroutines.cancellation.CancellationException
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
@@ -50,6 +49,27 @@ class OneDriveNetwork(val client: OkHttpClient) {
         )
         .build()
         .create(OneDriveNetworkApi::class.java)
+
+    fun getNewUploadApi(): OneDriveUploadChunkApi {
+        val client = OkHttpClient().newBuilder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.HEADERS
+                }
+            )
+            .build()
+        return Retrofit.Builder()
+            .baseUrl("https://graph.microsoft.com/v1.0/")
+            .client(client)
+            .addConverterFactory(
+                json.asConverterFactory("application/json".toMediaType())
+            )
+            .build()
+            .create(OneDriveUploadChunkApi::class.java)
+    }
 
     suspend fun getRootFileList(): ApiOperation<List<CloudFileItem>> = safeApiCall {
         network.listRootFiles().value.map { it.toCloudFileItem() }
@@ -68,81 +88,65 @@ class OneDriveNetwork(val client: OkHttpClient) {
     suspend fun getUploadUrl(parentId: String, filename: String): ApiOperation<String?> =
         safeApiCall {
             val body = UploadFileRequestItem(
-                UploadFileRequestItem.UploadFileRequest(filename, "rename")
+                UploadFileRequestItem.UploadFileRequest("rename")
             )
             network.createUploadSession(parentId, filename, body).uploadUrl
         }
 
     fun uploadFileInChunks(
+        api: OneDriveUploadChunkApi,
         uploadUrl: String,
-        path: Path,
-        chunkSize: Long = 1024 * 1024L
+        file: Path,
+        chunkSize: Long = 1024 * 1024L // 1MB
     ): Flow<TransferStatus> = flow {
-        val fileSize = path.size()
+        val fileSize = file.size()
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
-        Files.newByteChannel(path).use { channel ->
+
+        Files.newByteChannel(file).use { channel ->
             repeat(totalChunks) { chunkIndex ->
-                coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
+                coroutineContext.ensureActive()
 
-                try {
-                    val offset = chunkIndex * chunkSize
-                    val bufferSize = min(chunkSize, fileSize - offset).toInt()
-                    val byteArray = ByteArray(bufferSize)
-                    val buffer = ByteBuffer.wrap(byteArray)
+                val offset = chunkIndex * chunkSize
+                val bufferSize = min(chunkSize, fileSize - offset).toInt()
+                val byteArray = ByteArray(bufferSize)
+                val buffer = ByteBuffer.wrap(byteArray)
+                var totalRead = 0
+                while (buffer.hasRemaining()) {
+                    val read = channel.read(buffer)
+                    if (read < 0) break
+                    totalRead += read
+                }
+                if (totalRead <= 0) return@repeat
 
-                    // 确保完整读取
-                    var totalRead = 0
-                    while (buffer.hasRemaining()) {
-                        coroutineContext.ensureActive() // ✅ 读数据过程中检查
-                        val read = channel.read(buffer)
-                        if (read < 0) break
-                        totalRead += read
+                val start = offset
+                val end = offset + totalRead - 1
+                val requestBody = byteArray.toRequestBody(
+                    MimeType.guessFromPath(file.toString()).value.toMediaType(),
+                    0,
+                    totalRead
+                )
+
+                val response = api.uploadChunk(
+                    uploadUrl = uploadUrl,
+                    contentLength = totalRead.toLong(),
+                    contentRange = "bytes $start-$end/$fileSize",
+                    body = requestBody
+                )
+
+                when (response.code()) {
+                    200, 201 -> {
+                        emit(TransferStatus.Finished())
+                        return@flow
                     }
 
-                    if (totalRead <= 0) return@repeat
-
-                    val start = offset
-                    val end = offset + totalRead - 1
-
-                    val request = Request.Builder()
-                        .url(uploadUrl)
-                        .addHeader("Content-Length", totalRead.toString())
-                        .addHeader("Content-Range", "bytes $start-$end/$fileSize")
-                        .put(
-                            RequestBody.create(
-                                "application/octet-stream".toMediaTypeOrNull(),
-                                byteArray,
-                                0,
-                                totalRead
-                            )
-                        )
-                        .build()
-
-                    val response = client.newCall(request).execute()
-                    response.use {
-                        when (it.code) {
-                            200, 201 -> {
-                                emit(TransferStatus.Finished())
-                                return@flow
-                            }
-
-                            202, 308 -> {
-                                emit(TransferStatus.Transferring(end + 1, fileSize))
-                                // 继续下一个 chunk
-                            }
-
-                            else -> {
-                                emit(TransferStatus.Failed(Exception("Upload failed: ${it.code}")))
-                                return@flow
-                            }
-                        }
+                    202, 308 -> {
+                        emit(TransferStatus.Transferring(end + 1, fileSize))
                     }
-                } catch (e: CancellationException) {
-                    // ✅ 明确处理协程取消
-                    throw e
-                } catch (e: Exception) {
-                    emit(TransferStatus.Failed(e))
-                    return@flow
+
+                    else -> {
+                        emit(TransferStatus.Failed(Exception("Upload failed: ${response.code()}")))
+                        return@flow
+                    }
                 }
             }
         }

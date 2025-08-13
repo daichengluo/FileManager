@@ -86,9 +86,9 @@ object OneDriveClient {
                 val response = client.getUploadUrl(parentId, path.fileName.toString())
                 when (response) {
                     is ApiOperation.Success -> {
-                        response.data?.let {
-                            Log.d("chengluo", "uploadFile getUploadUrl: $it")
-                            client.uploadFileInChunks(it, path).collect { emit(it) }
+                        response.data?.let { uploadUrl ->
+                            val api = client.getNewUploadApi()
+                            client.uploadFileInChunks(api, uploadUrl, path).collect { emit(it) }
                         }
                     }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.imagic.files.cloud.gdrive.sdk.GoogleDriveServiceClient
+import com.android.imagic.files.cloud.onedrive.MsalApp
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.storage.Storages
@@ -34,6 +35,9 @@ class NavigationViewModel : ViewModel() {
                     GoogleDriveServiceClient.getService(server.authority, account, context)
                 } ?: Storages.remove(server)
             }
+        }
+        navigationItems.firstOrNull { it is OneDriveItem }?.let { item ->
+            MsalApp.initMsalApp(context)
         }
     }
 }
