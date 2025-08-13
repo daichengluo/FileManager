@@ -16,8 +16,8 @@ android {
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
         targetSdk 34
-        versionCode 10202
-        versionName '1.0.202'
+        versionCode 10203
+        versionName 'V1.0.203-20250813'
         resValue 'string', 'app_version', versionName + ' (' + versionCode + ')'
         buildConfigField 'String', 'FILE_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".file_provider"'
         buildConfigField 'String', 'AUTH_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".auth_provider"'
@@ -68,7 +68,7 @@ android {
             buildConfigField 'String', 'STB_API_URL', '"https://dev.starboard-online.com/stbapi/"'
         }
     }
-    setProperty("archivesBaseName", "NewFileManager-V${defaultConfig.versionName}")
+    setProperty("archivesBaseName", "NewFileManager-${defaultConfig.versionName}")
     packagingOptions {
         jniLibs {
             useLegacyPackaging true
