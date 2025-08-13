@@ -27,7 +27,7 @@ data object StarBoardDriveAuthentication : Authentication() {
                     .header("openid", authority.openId)
                     .header("sign", sign)
                     .header("timestamp", timestamp)
-                    .header("device", "2")
+                    .header("device", "9")
                     .build()
 
                 return chain.proceed(newRequest)
