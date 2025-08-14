@@ -146,14 +146,12 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
                     when (response) {
                         is ApiOperation.Failure -> {
                             emit(TransferStatus.Failed(response.exception))
-                            return@flow
                         }
 
                         is ApiOperation.Success -> {
                             val url = response.data.url
                             if (url != null) {
                                 emit(TransferStatus.Finished(url))
-                                return@flow
                             } else {
                                 emit(
                                     TransferStatus.Transferring(
@@ -165,11 +163,9 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
                         }
                     }
                 } catch (e: CancellationException) {
-                    // ✅ 明确处理协程取消
                     throw e
                 } catch (e: Exception) {
                     emit(TransferStatus.Failed(e))
-                    return@flow
                 }
             }
         }
