@@ -34,7 +34,6 @@ import retrofit2.Retrofit
 import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 import kotlin.math.pow
@@ -117,11 +116,10 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
         val fileName = path.fileName.toString()
 
-        Files.newByteChannel(path).use { channel ->
-            repeat(totalChunks) { chunkIndex ->
-                coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
-
-                try {
+        try {
+            Files.newByteChannel(path).use { channel ->
+                repeat(totalChunks) { chunkIndex ->
+                    coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
                     val offset = chunkIndex * chunkSize
                     val bufferSize = min(chunkSize, fileSize - offset).toInt()
 
@@ -162,12 +160,10 @@ class StarBoardDriveNetwork(val client: OkHttpClient) : StarBoardDriveDataSource
                             }
                         }
                     }
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    emit(TransferStatus.Failed(e))
                 }
             }
+        } catch (e: Exception) {
+            emit(TransferStatus.Failed(e))
         }
     }
 

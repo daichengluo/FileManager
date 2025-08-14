@@ -307,43 +307,36 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    fun deleteCloudFiles(files: CloudFileItemSet) = viewModelScope.launch {
-        if (files.isEmpty()) return@launch
-        val cloudMode = currentFileMode
-        if (cloudMode is FileModeState.StarBoardDrive) {
-            StarBoardDriveClient.delete(files.map { it.id }, cloudMode.authority)
-                .onSuccess {
-                    refreshCloud()
-                    getDriveSpace(cloudMode)
-                }
-                .onFailure { it.printStackTrace() }
-        }
-        if (cloudMode is FileModeState.GoogleDrive) {
-            files.forEach { file ->
-                viewModelScope.launch {
+    fun deleteCloudFiles(files: CloudFileItemSet, cloudMode: FileModeState) =
+        viewModelScope.launch {
+            Log.d("chengluo", "deleteCloudFiles: $files cloudMode: $currentFileMode")
+            if (files.isEmpty()) return@launch
+            if (cloudMode is FileModeState.StarBoardDrive) {
+                Log.d("chengluo", "deleteCloudFiles: StarBoardDrive")
+                StarBoardDriveClient.delete(files.map { it.id }, cloudMode.authority)
+                    .onFailure { Log.e("chengluo", "StarBoardDrive deleteCloudFiles: ", it) }
+                getDriveSpace(cloudMode)
+            }
+            if (cloudMode is FileModeState.GoogleDrive) {
+                Log.d("chengluo", "deleteCloudFiles: GoogleDrive")
+                for (file in files) {
                     if (cloudMode.authority.accessToken.isEmpty()) {
                         GoogleDriveServiceClient.deleteFile(file.id, cloudMode.authority)
-                        refreshCloud()
                     } else {
                         GoogleDriveClient.deleteFileById(file.id, cloudMode.authority)
-                            .onSuccess { refreshCloud() }
-                            .onFailure { it.printStackTrace() }
+                            .onFailure { Log.e("chengluo", "GoogleDrive deleteCloudFiles: ", it) }
                     }
                 }
             }
-            getDriveSpace(cloudMode)
-        }
-        if (cloudMode is FileModeState.OneDrive) {
-            files.forEach { file ->
-                viewModelScope.launch {
+            if (cloudMode is FileModeState.OneDrive) {
+                Log.d("chengluo", "deleteCloudFiles: OneDrive")
+                for (file in files) {
                     OneDriveClient.deleteFileById(file.id, cloudMode.authority)
-                        .onSuccess { refreshCloud() }
-                        .onFailure { it.printStackTrace() }
+                        .onFailure { Log.e("chengluo", "OneDrive deleteCloudFiles: ", it) }
                 }
             }
-            getDriveSpace(cloudMode)
+            refreshCloud()
         }
-    }
 
     private fun getDriveSpace(cloudMode: FileModeState) = viewModelScope.launch {
         if (cloudMode is FileModeState.StarBoardDrive) {
@@ -587,6 +580,7 @@ class FileListViewModel : ViewModel() {
                                 )
                                     .onSuccess {
                                         refreshCloud()
+                                        getDriveSpace(starBoardDriveMode)
                                         if (isMove) {
                                             FileJobService.delete(listOf(localFile), context)
                                         }
@@ -938,7 +932,7 @@ class FileListViewModel : ViewModel() {
                             downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
                         }
                     }
 
@@ -964,7 +958,7 @@ class FileListViewModel : ViewModel() {
                             downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
                         }
                     }
 
@@ -986,7 +980,7 @@ class FileListViewModel : ViewModel() {
                             downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
                         }
                     }
 
@@ -1074,7 +1068,7 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             if (isMove) {
-                                deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                                deleteCloudFiles(cloudFileItemSetOf(cloudFile), starBoardDriveMode)
                             }
                             FileTransfer(
                                 id = id,
@@ -1160,14 +1154,14 @@ class FileListViewModel : ViewModel() {
                     localFile,
                     cloudFile.size,
                     cloudMode.authority
-                )?.collect { googleDownloadTransfer(id, it, cloudFile, isMove, context) }
+                )?.collect { googleDownloadTransfer(id, it, cloudFile, isMove, cloudMode, context) }
             } else {
                 GoogleDriveClient.downloadFile(
                     cloudFile.id,
                     cloudFile.size,
                     localFile,
                     cloudMode.authority
-                ).collect { googleDownloadTransfer(id, it, cloudFile, isMove, context) }
+                ).collect { googleDownloadTransfer(id, it, cloudFile, isMove, cloudMode, context) }
             }
 
         } catch (e: Exception) {
@@ -1191,6 +1185,7 @@ class FileListViewModel : ViewModel() {
         status: TransferStatus,
         cloudFile: CloudFileItem,
         isMove: Boolean,
+        googleDriveMode: FileModeState.GoogleDrive,
         context: Context
     ) {
         Log.d("chengluo", "googleDownloadTransfer: $status")
@@ -1217,7 +1212,7 @@ class FileListViewModel : ViewModel() {
 
             is TransferStatus.Finished -> {
                 if (isMove) {
-                    deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                    deleteCloudFiles(cloudFileItemSetOf(cloudFile), googleDriveMode)
                 }
                 FileTransfer(
                     id = id,
@@ -1315,7 +1310,7 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             if (isMove) {
-                                deleteCloudFiles(cloudFileItemSetOf(cloudFile))
+                                deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
                             }
                             FileTransfer(
                                 id = id,
@@ -1372,34 +1367,22 @@ class FileListViewModel : ViewModel() {
         Log.d("chengluo", "pasteToLocal: $targetLocalDir")
         val cloudFiles = cloudPasteState.files
         val cloudMode = cloudPasteState.cloudMode
+        val isMove = !cloudPasteState.copy
         Log.d("chengluo", "pasteToLocal cloudMode: $cloudMode")
         if (cloudMode is FileModeState.StarBoardDrive ||
             cloudMode is FileModeState.OneDrive ||
             cloudMode is FileModeState.GoogleDrive
         ) {
-            if (cloudPasteState.copy) {
-                cloudFiles.forEach { cloudFile ->
-                    viewModelScope.launch {
-                        downloadCloudRecursively(
-                            cloudFile,
-                            targetLocalDir,
-                            false,
-                            cloudMode,
-                            context
-                        )
-                    }
-                }
-            } else {
-                cloudFiles.forEach { cloudFile ->
-                    viewModelScope.launch {
-                        downloadCloudRecursively(
-                            cloudFile,
-                            targetLocalDir,
-                            true,
-                            cloudMode,
-                            context
-                        )
-                    }
+            Log.d("chengluo", "pasteToLocal isMove: $isMove")
+            cloudFiles.forEach { cloudFile ->
+                viewModelScope.launch {
+                    downloadCloudRecursively(
+                        cloudFile,
+                        targetLocalDir,
+                        isMove,
+                        cloudMode,
+                        context
+                    )
                 }
             }
         }

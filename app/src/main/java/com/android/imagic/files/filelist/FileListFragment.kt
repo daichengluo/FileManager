@@ -2404,7 +2404,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun deleteCloudFiles(files: CloudFileItemSet) {
-        viewModel.deleteCloudFiles(files)
+        viewModel.deleteCloudFiles(files, viewModel.currentFileMode)
         viewModel.selectCloudFiles(files, false)
     }
 
