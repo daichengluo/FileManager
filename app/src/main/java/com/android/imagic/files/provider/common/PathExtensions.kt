@@ -290,6 +290,9 @@ fun <A : BasicFileAttributes> Path.readAttributes(type: Class<A>, vararg options
 
 fun Path.isDirectory(vararg options: LinkOption): Boolean = Files.isDirectory(this, *options)
 
+fun Path.isEmptyDirectory(): Boolean =
+    isDirectory() && Files.list(this).use { stream -> !stream.findAny().isPresent }
+
 val Path.isHidden: Boolean
     @Throws(IOException::class)
     get() = Files.isHidden(this)
