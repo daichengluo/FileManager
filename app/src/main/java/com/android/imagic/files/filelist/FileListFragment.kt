@@ -1643,7 +1643,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             val pasteMode = cloudPasteState.cloudMode
             val currentMode = viewModel.currentFileMode
             Log.d("chengluo", "pasteFiles pasteMode: $pasteMode currentMode: $currentMode")
-            if (cloudPasteState.cloudMode != null && currentMode != pasteMode) {
+            if (isCloudDriveMode(pasteMode) && isCloudDriveMode(currentMode) && currentMode != pasteMode) {
                 CopyOrMoveBetweenCloudDialogFragment.show(this)
                 return
             }
@@ -1686,7 +1686,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         authority: Authority
     ) {
         val currentMode = viewModel.currentFileMode
-        if (currentMode !is FileModeState.StarBoardDrive) {
+        if (isCloudDriveMode(currentMode) && currentMode !is FileModeState.StarBoardDrive) {
             CopyOrMoveBetweenCloudDialogFragment.show(this)
             return
         }
@@ -1705,7 +1705,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         authority: ServerAuthority
     ) {
         val currentMode = viewModel.currentFileMode
-        if (currentMode !is FileModeState.OneDrive) {
+        if (isCloudDriveMode(currentMode) && currentMode !is FileModeState.OneDrive) {
             CopyOrMoveBetweenCloudDialogFragment.show(this)
             return
         }
@@ -1724,7 +1724,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         authority: ServerAuthority
     ) {
         val currentMode = viewModel.currentFileMode
-        if (currentMode !is FileModeState.GoogleDrive) {
+        if (isCloudDriveMode(currentMode) && currentMode !is FileModeState.GoogleDrive) {
             CopyOrMoveBetweenCloudDialogFragment.show(this)
             return
         }
@@ -2306,7 +2306,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         val pasteMode = cloudPasteState.cloudMode
         val currentMode = viewModel.currentFileMode
         Log.d("chengluo", "pasteFiles pasteMode: $pasteMode currentMode: $currentMode")
-        if (cloudPasteState.cloudMode != null && currentMode != pasteMode) {
+        if (isCloudDriveMode(pasteMode) && isCloudDriveMode(currentMode) && currentMode != pasteMode) {
             CopyOrMoveBetweenCloudDialogFragment.show(this)
             return
         }
@@ -2454,6 +2454,12 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.downloadToLocal(
             file, downloadPath, false, viewModel.currentFileMode, requireContext()
         )
+    }
+
+    private fun isCloudDriveMode(mode: FileModeState?): Boolean {
+        return mode is FileModeState.StarBoardDrive ||
+                mode is FileModeState.GoogleDrive ||
+                mode is FileModeState.OneDrive
     }
 
     companion object {
