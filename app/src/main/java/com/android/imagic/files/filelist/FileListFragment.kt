@@ -2302,8 +2302,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun dropToCloud(cloudDirectoryPath: CloudPathData) {
-        val cloudFiles = viewModel.cloudPasteState.files
-        val isCopy = viewModel.cloudPasteState.copy
+        val cloudPasteState = viewModel.cloudPasteState
+        val pasteMode = cloudPasteState.cloudMode
+        val currentMode = viewModel.currentFileMode
+        Log.d("chengluo", "pasteFiles pasteMode: $pasteMode currentMode: $currentMode")
+        if (cloudPasteState.cloudMode != null && currentMode != pasteMode) {
+            CopyOrMoveBetweenCloudDialogFragment.show(this)
+            return
+        }
+
+        val cloudFiles = cloudPasteState.files
+        val isCopy = cloudPasteState.copy
         if (cloudFiles.size == 1) {
             cloudFiles.firstOrNull()?.let {
                 if (it.id == cloudDirectoryPath.directoryId) {
@@ -2313,8 +2322,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
             }
         }
-        val cloudMode = viewModel.currentFileMode
-        viewModel.pasteToCloud(cloudDirectoryPath, cloudMode, requireContext())
+        viewModel.pasteToCloud(cloudDirectoryPath, currentMode, requireContext())
         binding.dragPlaceholder.fadeToVisibilityUnsafe(false)
     }
 
