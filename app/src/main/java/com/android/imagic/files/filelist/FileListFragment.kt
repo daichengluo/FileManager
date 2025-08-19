@@ -448,9 +448,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED, DragEvent.ACTION_DRAG_ENTERED,
                 DragEvent.ACTION_DRAG_EXITED, DragEvent.ACTION_DRAG_ENDED,
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    true
-                }
+                DragEvent.ACTION_DRAG_LOCATION -> true
 
                 DragEvent.ACTION_DROP -> {
                     val cloudDirectoryPath = viewModel.currentCloudPath
@@ -1687,6 +1685,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: Authority
     ) {
+        val currentMode = viewModel.currentFileMode
+        if (currentMode !is FileModeState.StarBoardDrive) {
+            CopyOrMoveBetweenCloudDialogFragment.show(this)
+            return
+        }
         if (showConflictDialog(cloudDirectoryPath)) return
         val storages = Settings.STORAGES.valueCompat.toList()
         storages.firstOrNull { it is StarBoardDriveServer }?.let {
@@ -1701,6 +1704,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: ServerAuthority
     ) {
+        val currentMode = viewModel.currentFileMode
+        if (currentMode !is FileModeState.OneDrive) {
+            CopyOrMoveBetweenCloudDialogFragment.show(this)
+            return
+        }
         if (showConflictDialog(cloudDirectoryPath)) return
         val storages = Settings.STORAGES.valueCompat.toList()
         storages.firstOrNull { it is OneDriveServer }?.let {
@@ -1715,6 +1723,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         cloudDirectoryPath: CloudPathData,
         authority: ServerAuthority
     ) {
+        val currentMode = viewModel.currentFileMode
+        if (currentMode !is FileModeState.GoogleDrive) {
+            CopyOrMoveBetweenCloudDialogFragment.show(this)
+            return
+        }
         if (showConflictDialog(cloudDirectoryPath)) return
         val storages = Settings.STORAGES.valueCompat.toList()
         storages.firstOrNull { it is GoogleDriveServer }?.let {
