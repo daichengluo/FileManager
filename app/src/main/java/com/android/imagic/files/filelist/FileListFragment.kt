@@ -15,6 +15,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import android.view.DragEvent
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
@@ -1640,8 +1641,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     private fun pasteFiles() {
         if (viewModel.isCloudFileMode) {
-            val cloudFiles = viewModel.cloudPasteState.files
-            val isCopy = viewModel.cloudPasteState.copy
+            val cloudPasteState = viewModel.cloudPasteState
+            val pasteMode = cloudPasteState.cloudMode
+            val currentMode = viewModel.currentFileMode
+            Log.d("chengluo", "pasteFiles pasteMode: $pasteMode currentMode: $currentMode")
+            if (cloudPasteState.cloudMode != null && currentMode != pasteMode) {
+                CopyOrMoveBetweenCloudDialogFragment.show(this)
+                return
+            }
+
+            val cloudFiles = cloudPasteState.files
+            val isCopy = cloudPasteState.copy
             val targetCloudPath = viewModel.currentCloudPath
             if (cloudFiles.size == 1) {
                 cloudFiles.firstOrNull()?.let {
@@ -2387,7 +2397,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         copyCloudFiles(cloudFileItemSetOf(file))
     }
 
-    override fun confirmDeleteCloudFile(file: CloudFileItem) {
+    override fun showConfirmDeleteCloudFileDialog(file: CloudFileItem) {
         ConfirmDeleteCloudFilesDialogFragment.show(cloudFileItemSetOf(file), this)
     }
 

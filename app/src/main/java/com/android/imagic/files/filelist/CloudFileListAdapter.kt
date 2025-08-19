@@ -358,7 +358,7 @@ class CloudFileListAdapter(
                 }
 
                 R.id.action_delete -> {
-                    listener.confirmDeleteCloudFile(file)
+                    listener.showConfirmDeleteCloudFileDialog(file)
                     true
                 }
 
@@ -520,7 +520,7 @@ class CloudFileListAdapter(
         fun openCloudFile(file: CloudFileItem)
         fun cutCloudFile(file: CloudFileItem)
         fun copyCloudFile(file: CloudFileItem)
-        fun confirmDeleteCloudFile(file: CloudFileItem)
+        fun showConfirmDeleteCloudFileDialog(file: CloudFileItem)
         fun showRenameCloudFileDialog(file: CloudFileItem)
         fun showCloudFilePropertiesDialog(file: CloudFileItem)
     }

@@ -1,0 +1,25 @@
+package com.android.imagic.files.filelist
+
+import android.app.Dialog
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
+import com.android.imagic.files.R
+import com.android.imagic.files.util.show
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
+class CopyOrMoveBetweenCloudDialogFragment : AppCompatDialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return MaterialAlertDialogBuilder(requireContext(), theme)
+            .setMessage(R.string.cannot_copy_move_between_cloud_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .create()
+    }
+
+    companion object {
+        fun show(fragment: Fragment) {
+            CopyOrMoveBetweenCloudDialogFragment().show(fragment)
+        }
+    }
+}

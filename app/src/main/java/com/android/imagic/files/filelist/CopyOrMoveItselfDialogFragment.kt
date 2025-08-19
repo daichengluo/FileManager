@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import com.android.imagic.files.R
-import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
@@ -15,9 +14,6 @@ import kotlinx.parcelize.Parcelize
 
 class CopyOrMoveItselfDialogFragment : AppCompatDialogFragment() {
     private val args by args<Args>()
-
-    private val listener: Listener
-        get() = requireParentFragment() as Listener
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val isCopy = args.isCopy
@@ -39,8 +35,4 @@ class CopyOrMoveItselfDialogFragment : AppCompatDialogFragment() {
 
     @Parcelize
     class Args(val isCopy: Boolean) : ParcelableArgs
-
-    interface Listener {
-        fun downloadToLocal(file: CloudFileItem)
-    }
 }

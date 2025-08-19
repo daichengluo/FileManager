@@ -357,12 +357,12 @@ class GoogleDriveService(val drive: Drive) {
         fileId: String,
         newParentId: String
     ): Boolean = withContext(Dispatchers.IO) {
-        val file = drive.files().get(fileId)
-            .setFields("parents")
-            .execute()
-        val oldParents = file.parents?.joinToString(separator = ",")
-
         try {
+            val file = drive.files().get(fileId)
+                .setFields("parents")
+                .execute()
+            val oldParents = file.parents?.joinToString(separator = ",")
+
             drive.files().update(fileId, null)
                 .setAddParents(newParentId)
                 .setRemoveParents(oldParents)

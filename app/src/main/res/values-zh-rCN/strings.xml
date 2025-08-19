@@ -707,4 +707,5 @@
     <string name="file_list_action_split_screen">分屏模式</string>
     <string name="load_user_image_failed">加载用户头像失败</string>
     <string name="login_user_cancelled">登录已取消，请重试</string>
+    <string name="cannot_copy_move_between_cloud_message">暂不支持复制或移动文件到另一网盘</string>
 </resources>

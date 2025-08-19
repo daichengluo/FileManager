@@ -703,4 +703,5 @@
     <string name="file_list_action_split_screen">分割画面モード</string>
     <string name="load_user_image_failed">ユーザーのアイコンの読み込みに失敗しました</string>
     <string name="login_user_cancelled">ログインがキャンセルされました。再試行してください</string>
+    <string name="cannot_copy_move_between_cloud_message">異なるクラウドドライブへのファイルのコピーや移動はまだサポートされていません</string>
 </resources>

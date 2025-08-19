@@ -870,4 +870,5 @@
     <string name="file_list_action_split_screen">Split screen</string>
     <string name="load_user_image_failed">Failed to load user avatar</string>
     <string name="login_user_cancelled">Login was cancelled, please try again</string>
+    <string name="cannot_copy_move_between_cloud_message">Copying or moving files between different cloud drives is not supported yet</string>
 </resources>

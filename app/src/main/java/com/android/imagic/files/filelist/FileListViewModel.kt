@@ -1842,7 +1842,6 @@ class FileListViewModel : ViewModel() {
         get() = _cloudPasteStateLiveData.valueCompat
 
     fun addToCloudPasteState(copy: Boolean, files: CloudFileItemSet) {
-        val cloudPasteState = _cloudPasteStateLiveData.valueCompat
         var changed = false
         if (cloudPasteState.copy != copy) {
             changed = cloudPasteState.files.isNotEmpty()
