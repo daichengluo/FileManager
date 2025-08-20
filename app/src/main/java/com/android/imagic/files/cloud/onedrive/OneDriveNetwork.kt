@@ -136,7 +136,6 @@ class OneDriveNetwork(val client: OkHttpClient) {
                 when (response.code()) {
                     200, 201 -> {
                         emit(TransferStatus.Finished())
-                        return@flow
                     }
 
                     202, 308 -> {
@@ -145,7 +144,6 @@ class OneDriveNetwork(val client: OkHttpClient) {
 
                     else -> {
                         emit(TransferStatus.Failed(Exception("Upload failed: ${response.code()}")))
-                        return@flow
                     }
                 }
             }
