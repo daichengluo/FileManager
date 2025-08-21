@@ -107,6 +107,15 @@ object GoogleDriveClient {
     suspend fun deleteFileById(fileId: String, authority: ServerAuthority): ApiOperation<Unit> =
         getClient(authority).deleteFileById(fileId)
 
+    suspend fun deleteEmptyFolder(fileId: String, authority: ServerAuthority): ApiOperation<Unit> =
+        getClient(authority).deleteEmptyFolder(fileId)
+
+    suspend fun deleteEmptyFoldersRecursive(
+        fileId: String,
+        authority: ServerAuthority
+    ): ApiOperation<Unit> =
+        getClient(authority).deleteEmptyFoldersRecursive(fileId)
+
     suspend fun copyFile(
         fileId: String,
         targetFileId: String,

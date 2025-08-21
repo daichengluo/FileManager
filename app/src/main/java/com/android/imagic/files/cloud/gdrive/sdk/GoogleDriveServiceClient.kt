@@ -117,6 +117,12 @@ object GoogleDriveServiceClient {
     suspend fun deleteFile(fileId: String, authority: ServerAuthority): Boolean =
         getService(authority)?.deleteFile(fileId) ?: false
 
+    suspend fun deleteEmptyFolder(fileId: String, authority: ServerAuthority): Boolean =
+        getService(authority)?.deleteEmptyFolder(fileId) ?: false
+
+    suspend fun deleteEmptyFoldersRecursive(fileId: String, authority: ServerAuthority): Boolean =
+        getService(authority)?.deleteEmptyFoldersRecursive(fileId) ?: false
+
     suspend fun renameFile(fileId: String, newName: String, authority: ServerAuthority): Boolean =
         getService(authority)?.renameFile(fileId, newName) ?: false
 

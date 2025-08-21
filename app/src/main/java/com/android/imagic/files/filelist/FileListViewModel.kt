@@ -327,7 +327,6 @@ class FileListViewModel : ViewModel() {
                         GoogleDriveServiceClient.deleteFile(file.id, cloudMode.authority)
                     } else {
                         GoogleDriveClient.deleteFileById(file.id, cloudMode.authority)
-                            .onFailure { Log.e("chengluo", "GoogleDrive deleteCloudFiles: ", it) }
                     }
                 }
             }
@@ -335,7 +334,6 @@ class FileListViewModel : ViewModel() {
                 Log.d("chengluo", "deleteCloudFiles: OneDrive")
                 for (file in fileList) {
                     OneDriveClient.deleteFileById(file.id, cloudMode.authority)
-                        .onFailure { Log.e("chengluo", "OneDrive deleteCloudFiles: ", it) }
                 }
             }
             refreshCloud()
@@ -993,6 +991,7 @@ class FileListViewModel : ViewModel() {
         path: Path,
         isMove: Boolean,
         cloudMode: FileModeState,
+        topCloudFile: CloudFileItem,
         context: Context
     ) {
         if (cloudFile.isDirectory) {
@@ -1007,10 +1006,19 @@ class FileListViewModel : ViewModel() {
                     is ApiOperation.Success -> {
                         val children = response.data
                         for (child in children) {
-                            downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
+                            downloadCloudRecursively(
+                                cloudFile = child,
+                                path = localDir,
+                                isMove = isMove,
+                                cloudMode = cloudMode,
+                                topCloudFile = topCloudFile,
+                                context = context
+                            )
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
+                            StarBoardDriveClient.delete(listOf(cloudFile.id), cloudMode.authority)
+                                .onSuccess { refreshCloud() }
+                            getDriveSpace(cloudMode)
                         }
                     }
 
@@ -1033,10 +1041,28 @@ class FileListViewModel : ViewModel() {
                     is ApiOperation.Success -> {
                         val children = response.data
                         for (child in children) {
-                            downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
+                            downloadCloudRecursively(
+                                cloudFile = child,
+                                path = localDir,
+                                isMove = isMove,
+                                cloudMode = cloudMode,
+                                topCloudFile = topCloudFile,
+                                context = context
+                            )
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
+                            if (cloudMode.authority.accessToken.isEmpty()) {
+                                GoogleDriveServiceClient.deleteEmptyFoldersRecursive(
+                                    topCloudFile.id,
+                                    cloudMode.authority
+                                )
+                                refreshCloud()
+                            } else {
+                                GoogleDriveClient.deleteEmptyFoldersRecursive(
+                                    topCloudFile.id,
+                                    cloudMode.authority
+                                ).onSuccess { refreshCloud() }
+                            }
                         }
                     }
 
@@ -1055,10 +1081,20 @@ class FileListViewModel : ViewModel() {
                     is ApiOperation.Success -> {
                         val children = response.data
                         for (child in children) {
-                            downloadCloudRecursively(child, localDir, isMove, cloudMode, context)
+                            downloadCloudRecursively(
+                                cloudFile = child,
+                                path = localDir,
+                                isMove = isMove,
+                                cloudMode = cloudMode,
+                                topCloudFile = topCloudFile,
+                                context = context
+                            )
                         }
                         if (isMove) {
-                            deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
+                            OneDriveClient.deleteEmptyFolderRecursive(
+                                topCloudFile.id,
+                                cloudMode.authority
+                            ).onSuccess { refreshCloud() }
                         }
                     }
 
@@ -1232,14 +1268,32 @@ class FileListViewModel : ViewModel() {
                     localFile,
                     cloudFile.size,
                     cloudMode.authority
-                )?.collect { googleDownloadTransfer(id, it, cloudFile, isMove, cloudMode, context) }
+                )?.collect {
+                    googleDownloadTransfer(
+                        id,
+                        it,
+                        cloudFile,
+                        isMove,
+                        cloudMode,
+                        context
+                    )
+                }
             } else {
                 GoogleDriveClient.downloadFile(
                     cloudFile.id,
                     cloudFile.size,
                     localFile,
                     cloudMode.authority
-                ).collect { googleDownloadTransfer(id, it, cloudFile, isMove, cloudMode, context) }
+                ).collect {
+                    googleDownloadTransfer(
+                        id,
+                        it,
+                        cloudFile,
+                        isMove,
+                        cloudMode,
+                        context
+                    )
+                }
             }
 
         } catch (e: Exception) {
@@ -1290,7 +1344,11 @@ class FileListViewModel : ViewModel() {
 
             is TransferStatus.Finished -> {
                 if (isMove) {
-                    deleteCloudFiles(cloudFileItemSetOf(cloudFile), googleDriveMode)
+                    if (googleDriveMode.authority.accessToken.isEmpty()) {
+                        GoogleDriveServiceClient.deleteFile(cloudFile.id, googleDriveMode.authority)
+                    } else {
+                        GoogleDriveClient.deleteFileById(cloudFile.id, googleDriveMode.authority)
+                    }
                 }
                 FileTransfer(
                     id = id,
@@ -1388,7 +1446,7 @@ class FileListViewModel : ViewModel() {
 
                         is TransferStatus.Finished -> {
                             if (isMove) {
-                                deleteCloudFiles(cloudFileItemSetOf(cloudFile), cloudMode)
+                                OneDriveClient.deleteFileById(cloudFile.id, cloudMode.authority)
                             }
                             FileTransfer(
                                 id = id,
@@ -1455,11 +1513,12 @@ class FileListViewModel : ViewModel() {
             cloudFiles.forEach { cloudFile ->
                 viewModelScope.launch {
                     downloadCloudRecursively(
-                        cloudFile,
-                        targetLocalDir,
-                        isMove,
-                        cloudMode,
-                        context
+                        cloudFile = cloudFile,
+                        path = targetLocalDir,
+                        isMove = isMove,
+                        cloudMode = cloudMode,
+                        topCloudFile = cloudFile,
+                        context = context
                     )
                 }
             }

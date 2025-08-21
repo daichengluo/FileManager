@@ -23,6 +23,12 @@ interface OneDriveNetworkApi {
     @GET("me/drive/items/{itemId}/children")
     suspend fun listDirectoryFiles(@Path("itemId") itemId: String): OneDriveListResponse
 
+    @GET("me/drive/items/{itemId}/children")
+    suspend fun listChildren(
+        @Path("itemId") itemId: String,
+        @Query("\$select") select: String = "id,folder"
+    ): OneDriveChildrenResponse
+
     @POST("me/drive/root/children")
     suspend fun createFolderInRoot(
         @Body folderRequest: CreateFileRequest
@@ -59,6 +65,12 @@ interface OneDriveNetworkApi {
         @Path("filename") filename: String,      // 仅文件名，不含斜杠
         @Body uploadFileRequestItem: UploadFileRequestItem
     ): UploadSessionResponse
+
+    @GET("me/drive/items/{itemId}")
+    suspend fun getItemInfo(
+        @Path("itemId") itemId: String,
+        @Query("\$select") select: String = "id,folder"
+    ): OneDriveItem
 
     @DELETE("me/drive/items/{itemId}")
     suspend fun deleteItemById(

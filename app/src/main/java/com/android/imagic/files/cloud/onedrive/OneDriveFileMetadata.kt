@@ -25,6 +25,17 @@ data class OneDriveFileMetadata(
 )
 
 @Serializable
+data class OneDriveItem(
+    val id: String,
+    val folder: FolderInfo? = null
+)
+
+@Serializable
+data class OneDriveChildrenResponse(
+    val value: List<OneDriveItem>
+)
+
+@Serializable
 data class FileInfo(val mimeType: String?)
 
 @Serializable

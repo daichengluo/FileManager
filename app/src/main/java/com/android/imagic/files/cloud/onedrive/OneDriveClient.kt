@@ -127,6 +127,15 @@ object OneDriveClient {
     suspend fun deleteFileById(fileId: String, authority: ServerAuthority): ApiOperation<Unit> =
         getClient(authority).deleteFileById(fileId)
 
+    suspend fun deleteEmptyFolder(fileId: String, authority: ServerAuthority): ApiOperation<Unit> =
+        getClient(authority).deleteEmptyFolder(fileId)
+
+    suspend fun deleteEmptyFolderRecursive(
+        fileId: String,
+        authority: ServerAuthority
+    ): ApiOperation<Unit> =
+        getClient(authority).deleteEmptyFolderRecursive(fileId)
+
     suspend fun copyFile(
         fileId: String,
         targetFileId: String,

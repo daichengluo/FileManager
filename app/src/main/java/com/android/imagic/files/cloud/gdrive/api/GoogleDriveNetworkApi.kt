@@ -4,6 +4,8 @@ import com.android.imagic.files.cloud.gdrive.FileOperationResponse
 import com.android.imagic.files.cloud.gdrive.FileParentsResponse
 import com.android.imagic.files.cloud.gdrive.GoogleDriveFileListResponse
 import com.android.imagic.files.cloud.gdrive.RenameFileResponse
+import com.android.imagic.files.cloud.gdrive.SimpleDriveFile
+import com.android.imagic.files.cloud.gdrive.SimpleFileListResponse
 import com.android.imagic.files.cloud.gdrive.StorageQuotaResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -84,6 +86,19 @@ interface GoogleDriveNetworkApi {
         @Body body: Map<String, String>,
         @Query("fields") fields: String = "id, name"
     ): RenameFileResponse
+
+    @GET("drive/v3/files/{fileId}")
+    suspend fun getFileInfo(
+        @Path("fileId") fileId: String,
+        @Query("fields") fields: String = "id,mimeType"
+    ): SimpleDriveFile
+
+    @GET("drive/v3/files")
+    suspend fun listChildren(
+        @Query("q") query: String,
+        @Query("fields") fields: String = "files(id)",
+        @Query("pageSize") pageSize: Int = 1
+    ): SimpleFileListResponse
 
     @DELETE("drive/v3/files/{fileId}")
     suspend fun deleteFile(

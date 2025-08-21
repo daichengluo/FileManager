@@ -211,6 +211,34 @@ class OneDriveNetwork(val client: OkHttpClient) {
         network.deleteItemById(fileId)
     }
 
+    suspend fun deleteEmptyFolder(fileId: String): ApiOperation<Unit> = safeApiCall {
+        val item = network.getItemInfo(fileId)
+        if (item.folder != null) {
+            if (item.folder.childCount == 0) {
+                network.deleteItemById(fileId)
+            }
+        }
+    }
+
+    suspend fun deleteEmptyFolderRecursive(fileId: String): ApiOperation<Unit> = safeApiCall {
+        val item = network.getItemInfo(fileId)
+        item.folder ?: return@safeApiCall
+
+        // 获取子项并递归
+        val children = network.listChildren(fileId).value
+        for (child in children) {
+            if (child.folder != null) {
+                deleteEmptyFolderRecursive(child.id)
+            }
+        }
+
+        // 再次检查是否为空
+        val remaining = network.listChildren(fileId).value
+        if (remaining.isEmpty()) {
+            network.deleteItemById(fileId)
+        }
+    }
+
     suspend fun copyFile(fileId: String, targetFileId: String): ApiOperation<Unit> = safeApiCall {
         val body = OperationFileRequest(ParentReference(targetFileId))
         network.copyItem(fileId, body)

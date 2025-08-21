@@ -22,6 +22,17 @@ data class GoogleDriveFileMetadata(
     val thumbnailLink: String? = null
 )
 
+@Serializable
+data class SimpleDriveFile(
+    val id: String,
+    val mimeType: String
+)
+
+@Serializable
+data class SimpleFileListResponse(
+    val files: List<SimpleDriveFile>
+)
+
 fun GoogleDriveFileMetadata.toCloudFileItem(): CloudFileItem {
     val nameCollationKey = Collator.getInstance().getCollationKeyForFileName(name)
     val type = if (mimeType == "application/vnd.google-apps.folder") {

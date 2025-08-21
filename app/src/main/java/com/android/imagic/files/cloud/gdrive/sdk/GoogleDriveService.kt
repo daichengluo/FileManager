@@ -289,6 +289,96 @@ class GoogleDriveService(val drive: Drive) {
         }
     }
 
+    suspend fun deleteEmptyFolder(fileId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            // 先获取 file 元数据
+            val file = drive.files().get(fileId)
+                .setFields("id, mimeType")
+                .execute()
+
+            // 判断是不是文件夹
+            if (file.mimeType == "application/vnd.google-apps.folder") {
+                // 查询文件夹内是否有内容
+                val children = drive.files().list()
+                    .setQ("'$fileId' in parents and trashed=false")
+                    .setFields("files(id)")
+                    .setPageSize(1) // 只查 1 个就够了，提高效率
+                    .execute()
+
+                val isEmpty = children.files.isNullOrEmpty()
+                if (isEmpty) {
+                    drive.files().delete(fileId).execute()
+                    true
+                } else {
+                    Log.d("chengluo", "deleteFileIfEmptyFolder: 文件夹不为空，跳过删除")
+                    false
+                }
+            } else {
+                Log.d("chengluo", "deleteFileIfEmptyFolder: 不是文件夹，跳过删除")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("chengluo", "deleteFileIfEmptyFolder error: ${e.message}", e)
+            false
+        }
+    }
+
+    suspend fun deleteEmptyFoldersRecursive(fileId: String): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                // 1. 确认是文件夹
+                val folder = drive.files().get(fileId)
+                    .setFields("id, mimeType")
+                    .execute()
+
+                if (folder.mimeType != "application/vnd.google-apps.folder") {
+                    return@withContext false // 不是文件夹
+                }
+
+                // 2. 查找子文件
+                val children = drive.files().list()
+                    .setQ("'$fileId' in parents and trashed=false")
+                    .setFields("files(id, mimeType)")
+                    .execute()
+                    .files
+
+                if (children.isNullOrEmpty()) {
+                    // 文件夹本身就是空的，直接删除
+                    drive.files().delete(fileId).execute()
+                    return@withContext true
+                }
+
+                // 3. 遍历子文件夹，递归清理
+                var deletedSomething = false
+                for (child in children) {
+                    if (child.mimeType == "application/vnd.google-apps.folder") {
+                        val deleted = deleteEmptyFoldersRecursive(child.id)
+                        if (deleted) {
+                            deletedSomething = true
+                        }
+                    }
+                }
+
+                // 4. 删除当前文件夹（若因子文件夹删除后变空）
+                val recheck = drive.files().list()
+                    .setQ("'$fileId' in parents and trashed=false")
+                    .setFields("files(id)")
+                    .setPageSize(1) // 只查一个就够了，提高效率
+                    .execute()
+                    .files
+
+                if (recheck.isNullOrEmpty()) {
+                    drive.files().delete(fileId).execute()
+                    return@withContext true
+                }
+
+                deletedSomething
+            } catch (e: Exception) {
+                Log.e("chengluo", "deleteEmptyFoldersRecursive error: ${e.message}", e)
+                false
+            }
+        }
+
     suspend fun copyFile(
         fileId: String,
         targetFolderId: String

@@ -193,6 +193,43 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
         network.deleteFile(fileId)
     }
 
+    suspend fun deleteEmptyFolder(fileId: String): ApiOperation<Unit> = safeApiCall {
+        val file = network.getFileInfo(fileId)
+        if (file.mimeType == "application/vnd.google-apps.folder") {
+            val children = network.listChildren("'$fileId' in parents and trashed=false")
+            if (children.files.isEmpty()) {
+                network.deleteFile(fileId)
+            }
+        }
+    }
+
+    suspend fun deleteEmptyFoldersRecursive(folderId: String): ApiOperation<Unit> = safeApiCall {
+        val file = network.getFileInfo(folderId)
+        if (file.mimeType != "application/vnd.google-apps.folder") {
+            return@safeApiCall
+        }
+
+        // 获取子文件
+        val children = network.listChildren("'$folderId' in parents and trashed=false").files
+
+        if (children.isEmpty()) {
+            // 当前就是空文件夹 → 删除
+            network.deleteFile(folderId)
+        }
+
+        for (child in children) {
+            if (child.mimeType == "application/vnd.google-apps.folder") {
+                deleteEmptyFoldersRecursive(child.id)
+            }
+        }
+
+        // 再次检查是否变空
+        val recheck = network.listChildren("'$folderId' in parents and trashed=false").files
+        if (recheck.isEmpty()) {
+            network.deleteFile(folderId)
+        }
+    }
+
     suspend fun downloadFile(fileId: String, fileSize: Long, path: Path): Flow<TransferStatus> {
         val downloadedBytes = path.size()
         return network.downloadFile(fileId).saveFile(path, downloadedBytes, fileSize)
