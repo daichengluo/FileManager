@@ -17,6 +17,7 @@ object MsalApp {
         onSuccess: ((msalApp: ISingleAccountPublicClientApplication) -> Unit)? = null,
         onError: ((e: MsalException) -> Unit)? = null
     ) {
+        Log.d("chengluo", "initMsalApp: ")
         if (msalApp == null) {
             PublicClientApplication.createSingleAccountPublicClientApplication(
                 context,
@@ -25,17 +26,20 @@ object MsalApp {
                     override fun onCreated(application: ISingleAccountPublicClientApplication) {
                         msalApp = application
                         onSuccess?.invoke(msalApp!!)
+                        Log.d("chengluo", "initMsalApp onCreated: ")
                     }
 
                     override fun onError(exception: MsalException) {
                         Log.e(
                             "chengluo",
-                            "microsoft login create client error: ${exception.message}"
+                            "initMsalApp error: ${exception.message}"
                         )
                         onError?.invoke(exception)
                     }
                 }
             )
+        } else {
+            onSuccess?.invoke(msalApp!!)
         }
     }
 }
