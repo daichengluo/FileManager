@@ -2452,7 +2452,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun downloadToLocal(file: CloudFileItem) {
         val downloadPath = Paths.get(getExternalStorageDirectory(Environment.DIRECTORY_DOWNLOADS))
         viewModel.downloadToLocal(
-            file, downloadPath, false, viewModel.currentFileMode, requireContext()
+            file, downloadPath, false, viewModel.currentFileMode, file, requireContext()
         )
     }
 

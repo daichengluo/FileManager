@@ -399,6 +399,7 @@ class FileListViewModel : ViewModel() {
         path: Path,
         isMove: Boolean,
         cloudMode: FileModeState,
+        topCloudFile: CloudFileItem,
         context: Context
     ) {
         Log.d("chengluo", "downloadToLocal file: $file path: $path isMove: $isMove")
@@ -406,10 +407,10 @@ class FileListViewModel : ViewModel() {
             downloadFile(file, path, isMove, cloudMode, context)
         }
         if (cloudMode is FileModeState.GoogleDrive) {
-            downloadGoogleDriveFile(file, path, isMove, cloudMode, context)
+            downloadGoogleDriveFile(file, path, isMove, cloudMode, topCloudFile, context)
         }
         if (cloudMode is FileModeState.OneDrive) {
-            downloadOneDriveFile(file, path, isMove, cloudMode, context)
+            downloadOneDriveFile(file, path, isMove, cloudMode, topCloudFile, context)
         }
     }
 
@@ -1108,7 +1109,7 @@ class FileListViewModel : ViewModel() {
                 }
             }
         } else {
-            downloadToLocal(cloudFile, path, isMove, cloudMode, context)
+            downloadToLocal(cloudFile, path, isMove, cloudMode, topCloudFile, context)
         }
     }
 
@@ -1228,6 +1229,7 @@ class FileListViewModel : ViewModel() {
         directoryPath: Path,
         isMove: Boolean,
         cloudMode: FileModeState.GoogleDrive,
+        topCloudFile: CloudFileItem,
         context: Context
     ) = viewModelScope.launch {
         try {
@@ -1275,6 +1277,7 @@ class FileListViewModel : ViewModel() {
                         cloudFile,
                         isMove,
                         cloudMode,
+                        topCloudFile,
                         context
                     )
                 }
@@ -1291,6 +1294,7 @@ class FileListViewModel : ViewModel() {
                         cloudFile,
                         isMove,
                         cloudMode,
+                        topCloudFile,
                         context
                     )
                 }
@@ -1318,6 +1322,7 @@ class FileListViewModel : ViewModel() {
         cloudFile: CloudFileItem,
         isMove: Boolean,
         googleDriveMode: FileModeState.GoogleDrive,
+        topCloudFile: CloudFileItem,
         context: Context
     ) {
         Log.d("chengluo", "googleDownloadTransfer: $status")
@@ -1350,6 +1355,16 @@ class FileListViewModel : ViewModel() {
                         GoogleDriveClient.deleteFileById(cloudFile.id, googleDriveMode.authority)
                     }
                 }
+                if (isMove) {
+                    if (googleDriveMode.authority.accessToken.isEmpty()) {
+                        GoogleDriveServiceClient.deleteEmptyFolder(
+                            topCloudFile.id,
+                            googleDriveMode.authority
+                        )
+                    } else {
+                        GoogleDriveClient.deleteFileById(topCloudFile.id, googleDriveMode.authority)
+                    }
+                }
                 FileTransfer(
                     id = id,
                     title = cloudFile.name,
@@ -1379,6 +1394,7 @@ class FileListViewModel : ViewModel() {
         directoryPath: Path,
         isMove: Boolean,
         cloudMode: FileModeState.OneDrive,
+        topCloudFile: CloudFileItem,
         context: Context
     ) = viewModelScope.launch {
         try {
@@ -1447,6 +1463,12 @@ class FileListViewModel : ViewModel() {
                         is TransferStatus.Finished -> {
                             if (isMove) {
                                 OneDriveClient.deleteFileById(cloudFile.id, cloudMode.authority)
+                            }
+                            if (isMove) {
+                                OneDriveClient.deleteEmptyFolder(
+                                    topCloudFile.id,
+                                    cloudMode.authority
+                                )
                             }
                             FileTransfer(
                                 id = id,
