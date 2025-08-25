@@ -581,14 +581,16 @@ class GoogleDriveService(val drive: Drive) {
     }
 
     suspend fun getSpaceData(): SpaceData = withContext(Dispatchers.IO) {
-        val about = drive.about().get()
-            .setFields("storageQuota")
-            .execute()
+        try {
+            val about = drive.about().get()
+                .setFields("storageQuota")
+                .execute()
 
-        val storage = about.storageQuota
-        SpaceData(
-            total = storage.limit ?: 0L,
-            used = storage.usage ?: 0L
-        )
+            val storage = about.storageQuota
+            SpaceData(total = storage.limit ?: 0L, used = storage.usage ?: 0L)
+        } catch (e: Exception) {
+            Log.e("chengluo", "getSpaceData: ", e)
+            SpaceData(total = 0L, used = 0L)
+        }
     }
 }
