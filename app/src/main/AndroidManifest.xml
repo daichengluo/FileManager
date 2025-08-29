@@ -59,6 +59,7 @@
         android:requestLegacyExternalStorage="true"
         android:requestRawExternalStorageAccess="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:singleUser="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Files"
         android:usesCleartextTraffic="true"
@@ -394,6 +395,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="video/*" />
                 <data android:mimeType="audio/*" />
             </intent-filter>
