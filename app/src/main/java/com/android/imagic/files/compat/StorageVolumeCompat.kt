@@ -21,6 +21,11 @@ val StorageVolume.pathCompat: String
 
 private val getPathFileMethod by lazyReflectedMethod(storageVolumeClass, "getPathFile")
 
+private val getUserLabelMethod by lazyReflectedMethod(storageVolumeClass, "getUserLabel")
+
+val StorageVolume.userLabel: String
+    get() = getUserLabelMethod.invoke(this) as String
+
 val StorageVolume.pathFileCompat: File
     get() = File(pathCompat)
 
