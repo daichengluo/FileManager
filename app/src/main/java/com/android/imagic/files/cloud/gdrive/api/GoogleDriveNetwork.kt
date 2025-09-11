@@ -121,7 +121,7 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
         val fileSize = path.size()
         val totalChunks = ((fileSize + chunkSize - 1) / chunkSize).toInt()
         Files.newByteChannel(path).use { channel ->
-            coroutineContext.ensureActive() // ✅ 每次循环检查是否被取消
+            coroutineContext.ensureActive()
 
             repeat(totalChunks) { chunkIndex ->
                 try {
@@ -130,10 +130,9 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
                     val byteArray = ByteArray(bufferSize)
                     val buffer = ByteBuffer.wrap(byteArray)
 
-                    // 确保完整读取
                     var totalRead = 0
                     while (buffer.hasRemaining()) {
-                        coroutineContext.ensureActive() // ✅ 读数据过程中检查
+                        coroutineContext.ensureActive()
                         val read = channel.read(buffer)
                         if (read < 0) break
                         totalRead += read
@@ -156,7 +155,6 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
                         when {
                             it.isSuccessful -> {
                                 emit(TransferStatus.Finished())
-                                return@flow // 上传完成，提前结束 flow
                             }
 
                             it.code == 308 -> { // Resume Incomplete
@@ -167,17 +165,14 @@ class GoogleDriveNetwork(val client: OkHttpClient) {
 
                             else -> {
                                 emit(TransferStatus.Failed(Exception("Upload failed: ${it.code}")))
-                                return@flow
                             }
                         }
                     }
 
                 } catch (e: CancellationException) {
-                    // ✅ 明确处理协程取消
-                    throw e
+                    emit(TransferStatus.Failed(e))
                 } catch (e: Exception) {
                     emit(TransferStatus.Failed(e))
-                    return@flow
                 }
             }
         }
