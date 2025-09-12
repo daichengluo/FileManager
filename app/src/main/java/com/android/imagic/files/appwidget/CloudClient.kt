@@ -51,14 +51,20 @@ data class LoginInfo(
     val nickname: String,
     val headimgurl: String
 ) {
-    val isGoogle: Boolean
+    val isMicrosoft: Boolean
         get() = login_type == "1"
 
-    val isMicrosoft: Boolean
+    val isGoogle: Boolean
         get() = login_type == "2"
 
     val isWeChat: Boolean
         get() = login_type == "3"
+
+    val isHuawei: Boolean
+        get() = login_type == "4"
+
+    val isPassword: Boolean
+        get() = login_type == "5"
 }
 
 @Serializable
