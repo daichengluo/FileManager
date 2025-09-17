@@ -576,13 +576,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         }
                     }
             }
-            path?.let {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    openFile(it.loadFileItem())
-                }
-            }
             if (path == null) {
                 path = Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat
+            } else {
+                if (!path.isDirectory()) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        openFile(path.loadFileItem())
+                    }
+                }
             }
             if (path.isDirectory()) {
                 viewModel.resetTo(path)
