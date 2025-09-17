@@ -47,7 +47,6 @@ object LoginWidgetUpdater {
         val storages = Settings.STORAGES.valueCompat.toList()
         val starBoardDriveServers = storages.filter { it is StarBoardDriveServer }
         val isLogin = starBoardDriveServers.isNotEmpty()
-        Log.d("chengluo", "onUpdate isLogin: $isLogin")
 
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login).apply {
             setOnClickPendingIntent(R.id.widgetLoginButton, getActivityPendingIntent(context, true))

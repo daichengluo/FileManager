@@ -90,6 +90,7 @@ import com.android.imagic.files.file.intentType
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
+import com.android.imagic.files.file.isVideo
 import com.android.imagic.files.file.loadFileItem
 import com.android.imagic.files.file.mediaStoreUri
 import com.android.imagic.files.filejob.FileJobService
@@ -162,9 +163,10 @@ import com.android.imagic.files.util.getDimensionDp
 import com.android.imagic.files.util.getDrawable
 import com.android.imagic.files.util.getQuantityString
 import com.android.imagic.files.util.hasSw600Dp
+import com.android.imagic.files.util.isImagicViewerAvailable
 import com.android.imagic.files.util.isInSplitScreen
-import com.android.imagic.files.util.isMediaPlayerAvailable
 import com.android.imagic.files.util.isOrientationLandscape
+import com.android.imagic.files.util.isPackageAvailable
 import com.android.imagic.files.util.parcelable
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
 import com.android.imagic.files.util.showToast
@@ -181,6 +183,7 @@ import java8.nio.file.Path
 import java8.nio.file.Paths
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import me.zhanghai.android.foregroundcompat.ForegroundImageButton
 import kotlin.math.roundToInt
@@ -576,18 +579,22 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         }
                     }
             }
-            if (path == null) {
-                path = Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat
-            } else {
-                if (!path.isDirectory()) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        openFile(path.loadFileItem())
+            path?.let {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        path!!.loadFileItem()
+                    }.let { file ->
+                        withContext(Dispatchers.Main) {
+                            openFile(file)
+                            finish()
+                        }
                     }
                 }
             }
-            if (path.isDirectory()) {
-                viewModel.resetTo(path)
+            if (path == null) {
+                path = Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat
             }
+            viewModel.resetTo(if (path.isDirectory()) path else path.parent)
             if (pickOptions != null) {
                 viewModel.pickOptions = pickOptions
             }
@@ -1831,6 +1838,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     }
 
     override fun openFile(file: FileItem) {
+        Log.d("chengluo", "openFile: $file")
         val pickOptions = viewModel.pickOptions
         if (pickOptions != null) {
             if (file.attributes.isDirectory) {
@@ -1900,7 +1908,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (path.isArchivePath) {
             FileJobService.open(path, mimeType, withChooser, requireContext())
         } else {
-            val uri = if (isMediaPlayerAvailable() && mimeType.isMedia) {
+            val uri = if (mimeType.isMedia) {
                 path.mediaStoreUri(requireContext()) ?: path.fileProviderUri
             } else {
                 path.fileProviderUri
@@ -1908,6 +1916,18 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             val intent = uri.createViewIntent(mimeType)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 .apply {
+                    if (mimeType.isVideo && isPackageAvailable("android.rk.RockVideoPlayer")) {
+                        setClassName(
+                            "android.rk.RockVideoPlayer",
+                            "android.rk.RockVideoPlayer.VideoPlayActivity"
+                        )
+                    }
+                    if (mimeType.isImage && isImagicViewerAvailable()) {
+                        setClassName(
+                            "com.android.imagic.imageviewer",
+                            "com.android.imagic.imageviewer.PhotoActivity"
+                        )
+                    }
                     extraPath = path
                     maybeAddImageViewerActivityExtras(this, path, mimeType)
                 }

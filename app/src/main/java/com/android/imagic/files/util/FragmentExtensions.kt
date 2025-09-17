@@ -174,9 +174,6 @@ fun Fragment.isPackageAvailable(packageName: String): Boolean =
 fun Fragment.isImagicViewerAvailable(): Boolean =
     isPackageAvailable("com.android.imagic.imageviewer")
 
-fun Fragment.isMediaPlayerAvailable(): Boolean =
-    isPackageAvailable("com.droidlogic.videoplayer")
-
 fun Fragment.startActivitySafe(intent: Intent, options: Bundle? = null) {
     try {
         startActivity(intent, options)

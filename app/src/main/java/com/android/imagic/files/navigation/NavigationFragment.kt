@@ -2,7 +2,6 @@ package com.android.imagic.files.navigation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -174,7 +173,6 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
     }
 
     private fun onServerAuthorityChanged(serverAuthority: ServerAuthority?) {
-        Log.d("chengluo", "onServerAuthorityChanged: $serverAuthority")
         if (serverAuthority == null) return
         if (serverAuthority.isGoogle) {
             Storages.addOrReplace(GoogleDriveServer(null, null, serverAuthority))
