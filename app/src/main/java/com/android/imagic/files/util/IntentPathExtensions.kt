@@ -13,8 +13,12 @@ import java.net.URI
 
 private const val EXTRA_PATH_URI = "${BuildConfig.APPLICATION_ID}.extra.PATH_URI"
 
+private const val EXTRA_PATH = "path"
+
 var Intent.extraPath: Path?
     get() {
+        val extraPath = getStringExtra(EXTRA_PATH)
+        extraPath?.let { return Paths.get(it) }
         val extraPathUri = getStringExtra(EXTRA_PATH_URI)
         extraPathUri?.let { URI::class.createOrLog(it) }?.let { return Paths.get(it) }
         data?.toPathOrNull()?.let { return it }

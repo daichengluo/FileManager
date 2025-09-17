@@ -90,6 +90,7 @@ import com.android.imagic.files.file.intentType
 import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
+import com.android.imagic.files.file.loadFileItem
 import com.android.imagic.files.file.mediaStoreUri
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
@@ -178,6 +179,7 @@ import com.android.imagic.files.viewer.video.VideoPlayerActivity
 import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
 import java8.nio.file.Paths
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import me.zhanghai.android.foregroundcompat.ForegroundImageButton
@@ -522,7 +524,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             val intent = args.intent
             var pickOptions: PickOptions? = null
             when (val action = intent.action) {
-                Intent.ACTION_GET_CONTENT, Intent.ACTION_OPEN_DOCUMENT,
+                Intent.ACTION_GET_CONTENT,
+                Intent.ACTION_OPEN_DOCUMENT,
                 Intent.ACTION_CREATE_DOCUMENT -> {
                     val mode = if (action == Intent.ACTION_CREATE_DOCUMENT) {
                         PickOptions.Mode.CREATE_FILE
@@ -573,10 +576,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         }
                     }
             }
+            path?.let {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    openFile(it.loadFileItem())
+                }
+            }
             if (path == null) {
                 path = Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat
             }
-            viewModel.resetTo(path)
+            if (path.isDirectory()) {
+                viewModel.resetTo(path)
+            }
             if (pickOptions != null) {
                 viewModel.pickOptions = pickOptions
             }
