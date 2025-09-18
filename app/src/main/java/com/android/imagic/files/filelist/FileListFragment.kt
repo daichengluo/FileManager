@@ -579,14 +579,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         }
                     }
             }
-            path?.let {
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        path!!.loadFileItem()
-                    }.let { file ->
-                        withContext(Dispatchers.Main) {
-                            openFile(file)
-                            finish()
+            // open other app file and finish self
+            intent.getStringExtra("path")?.let {
+                Paths.get(it)?.let { path ->
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            path.loadFileItem()
+                        }.let { file ->
+                            withContext(Dispatchers.Main) {
+                                openFile(file)
+                                finish()
+                            }
                         }
                     }
                 }
