@@ -1,6 +1,5 @@
 package com.android.imagic.files.filelist
 
-import android.app.ComponentCaller
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,18 +7,12 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.file.MimeType
-import com.android.imagic.files.file.loadFileItem
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.putArgs
 import java8.nio.file.Path
-import java8.nio.file.Paths
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FileListActivity : AppActivity() {
     private lateinit var fragment: FileListFragment
@@ -35,29 +28,6 @@ class FileListActivity : AppActivity() {
         } else {
             fragment = supportFragmentManager.findFragmentById(android.R.id.content)
                     as FileListFragment
-        }
-    }
-
-    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
-        super.onNewIntent(intent, caller)
-        setIntent(intent)
-        fragment = supportFragmentManager.findFragmentById(android.R.id.content)
-                as FileListFragment
-
-        // open other app file and finish self
-        intent.getStringExtra("path")?.let {
-            Paths.get(it)?.let { path ->
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        path.loadFileItem()
-                    }.let { file ->
-                        withContext(Dispatchers.Main) {
-                            fragment.openFile(file)
-                            finish()
-                        }
-                    }
-                }
-            }
         }
     }
 

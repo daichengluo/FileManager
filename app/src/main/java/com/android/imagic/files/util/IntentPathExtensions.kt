@@ -71,12 +71,3 @@ var Intent.extraPathList: List<Path>
         val pathUris = value.map { it.toUri() }
         putExtra(EXTRA_PATH_URI_LIST, pathUris as Serializable)
     }
-
-private const val EXTRA_URI_STRING_LIST = "${BuildConfig.APPLICATION_ID}.extra.URI_STRING_LIST"
-
-var Intent.extraUrlStringList: List<String>
-    @Suppress("UNCHECKED_CAST")
-    get() = (getSerializableExtra(EXTRA_URI_STRING_LIST) as List<String>?) ?: emptyList()
-    set(value) {
-        putExtra(EXTRA_URI_STRING_LIST, value as Serializable)
-    }

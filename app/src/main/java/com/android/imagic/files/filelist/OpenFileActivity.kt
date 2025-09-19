@@ -2,25 +2,35 @@ package com.android.imagic.files.filelist
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.app.application
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeTypeOrNull
 import com.android.imagic.files.file.fileProviderUri
+import com.android.imagic.files.file.guessFromPath
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.createViewIntent
 import com.android.imagic.files.util.extraPath
 import com.android.imagic.files.util.startActivitySafe
 import java8.nio.file.Path
+import java8.nio.file.Paths
+
+private const val EXTRA_PATH = "path"
 
 class OpenFileActivity : AppActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val intent = intent
-        val path = intent.extraPath
-        val mimeType = intent.type?.asMimeTypeOrNull()
+        val path = intent.getStringExtra(EXTRA_PATH)?.let {
+            Paths.get(it)
+        } ?: intent.extraPath
+        val mimeType = intent.type?.asMimeTypeOrNull() ?: path?.let {
+            MimeType.guessFromPath(it.toString())
+        }
         if (path != null && mimeType != null) {
             openFile(path, mimeType)
         }
@@ -28,6 +38,7 @@ class OpenFileActivity : AppActivity() {
     }
 
     private fun openFile(path: Path, mimeType: MimeType) {
+        Log.d("chengluo", "OpenFileActivity openFile path: $path mimeType: $mimeType")
         if (path.isArchivePath) {
             FileJobService.open(path, mimeType, false, this)
         } else {

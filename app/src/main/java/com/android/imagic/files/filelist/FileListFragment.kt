@@ -91,7 +91,6 @@ import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
 import com.android.imagic.files.file.isVideo
-import com.android.imagic.files.file.loadFileItem
 import com.android.imagic.files.file.mediaStoreUri
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
@@ -181,9 +180,7 @@ import com.android.imagic.files.viewer.video.VideoPlayerActivity
 import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
 import java8.nio.file.Paths
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import me.zhanghai.android.foregroundcompat.ForegroundImageButton
 import kotlin.math.roundToInt
@@ -579,25 +576,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                         }
                     }
             }
-            // open other app file and finish self
-            intent.getStringExtra("path")?.let {
-                Paths.get(it)?.let { path ->
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            path.loadFileItem()
-                        }.let { file ->
-                            withContext(Dispatchers.Main) {
-                                openFile(file)
-                                finish()
-                            }
-                        }
-                    }
-                }
-            }
             if (path == null) {
                 path = Settings.FILE_LIST_DEFAULT_DIRECTORY.valueCompat
             }
-            viewModel.resetTo(if (path.isDirectory()) path else path.parent)
+            viewModel.resetTo(path)
             if (pickOptions != null) {
                 viewModel.pickOptions = pickOptions
             }
