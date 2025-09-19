@@ -450,7 +450,16 @@ class PersistentDrawerLayout @JvmOverloads constructor(
     }
 
     private inner class ViewDragCallback(private val gravity: Int) : ViewDragHelper.Callback() {
-        override fun tryCaptureView(child: View, pointerId: Int): Boolean = false
+
+        override fun tryCaptureView(child: View, pointerId: Int): Boolean {
+            if (!isDrawerView(child)) return false
+            val childHorizontal = getChildAbsoluteHorizontalGravity(child)
+            val callbackHorizontal = Gravity.getAbsoluteGravity(
+                gravity,
+                layoutDirection
+            ) and Gravity.HORIZONTAL_GRAVITY_MASK
+            return childHorizontal == callbackHorizontal
+        }
 
         override fun onViewPositionChanged(
             changedView: View, left: Int, top: Int, dx: Int, dy: Int

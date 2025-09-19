@@ -652,7 +652,13 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
         viewModel.cloudFileListLiveData.observe(viewLifecycleOwner) { onCloudFileListChanged(it) }
         viewModel.breadcrumbLiveData.observe(viewLifecycleOwner) {
-            binding.toolbar.setNavButtonEnable(viewModel.canNavigateUpBreadcrumb)
+            if (isInSplitScreen() && !viewModel.canNavigateUpBreadcrumb) {
+                binding.toolbar.setNavigationIcon(R.drawable.icon_open_drawer)
+                binding.toolbar.setNavButtonEnable(true)
+            } else {
+                binding.toolbar.setNavigationIcon(R.drawable.action_bar_back_icon)
+                binding.toolbar.setNavButtonEnable(viewModel.canNavigateUpBreadcrumb)
+            }
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             it?.let { showToast(it) }
@@ -765,7 +771,11 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                navigateUp()
+                if (isInSplitScreen() && !viewModel.canNavigateUpBreadcrumb) {
+                    toggleNavigationDrawer()
+                } else {
+                    navigateUp()
+                }
                 true
             }
 
@@ -2155,6 +2165,21 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun closeNavigationDrawer() {
         binding.drawerLayout?.closeDrawer(GravityCompat.START)
+    }
+
+    private fun openNavigationDrawer() {
+        binding.drawerLayout?.openDrawer(GravityCompat.START)
+    }
+
+    private fun toggleNavigationDrawer() {
+        binding.drawerLayout?.let {
+            val isOpen = it.isDrawerOpen(GravityCompat.START)
+            if (isOpen) {
+                it.closeDrawer(GravityCompat.START)
+            } else {
+                it.openDrawer(GravityCompat.START)
+            }
+        }
     }
 
     private fun ensureStorageAccess() {
