@@ -14,8 +14,6 @@ import com.android.imagic.files.compat.DocumentsContractCompat
 import com.android.imagic.files.compat.removeFlagsCompat
 import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.intentType
-import com.android.imagic.files.file.isImage
-import com.android.imagic.files.file.isVideo
 import kotlin.reflect.KClass
 
 fun <T : Context> KClass<T>.createIntent(): Intent = Intent(application, java)
@@ -156,20 +154,6 @@ fun Uri.createViewIntent(): Intent = Intent(Intent.ACTION_VIEW, this)
 
 fun Uri.createViewIntent(mimeType: MimeType): Intent = Intent(Intent.ACTION_VIEW)
     // Calling setType() will clear data.
-    .apply {
-        if (mimeType.isVideo) {
-            setClassName(
-                "android.rk.RockVideoPlayer",
-                "android.rk.RockVideoPlayer.VideoPlayActivity"
-            )
-        }
-        if (mimeType.isImage) {
-            setClassName(
-                "com.android.imagic.imageviewer",
-                "com.android.imagic.imageviewer.PhotoActivity"
-            )
-        }
-    }
     .setDataAndType(this, mimeType.intentType)
     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

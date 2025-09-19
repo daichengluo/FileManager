@@ -1900,6 +1900,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
     private fun openFileWithIntent(file: FileItem, withChooser: Boolean) {
         val path = file.path
         val mimeType = file.mimeType
+
         if (path.isArchivePath) {
             FileJobService.open(path, mimeType, withChooser, requireContext())
         } else {
@@ -1908,9 +1909,18 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             } else {
                 path.fileProviderUri
             }
+
             val intent = uri.createViewIntent(mimeType)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 .apply {
+                    extraPath = path
+                    maybeAddImageViewerActivityExtras(this, path, mimeType)
+                }
+
+            val finalIntent = if (withChooser) {
+                intent.withChooser()
+            } else {
+                intent.apply {
                     if (mimeType.isVideo && isPackageAvailable("android.rk.RockVideoPlayer")) {
                         setClassName(
                             "android.rk.RockVideoPlayer",
@@ -1923,11 +1933,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                             "com.android.imagic.imageviewer.PhotoActivity"
                         )
                     }
-                    extraPath = path
-                    maybeAddImageViewerActivityExtras(this, path, mimeType)
                 }
-                .let { if (withChooser) it.withChooser() else it }
-            startActivitySafe(intent)
+            }
+
+            startActivitySafe(finalIntent)
         }
     }
 

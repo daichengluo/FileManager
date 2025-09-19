@@ -9,6 +9,8 @@ import com.android.imagic.files.file.MimeType
 import com.android.imagic.files.file.asMimeTypeOrNull
 import com.android.imagic.files.file.fileProviderUri
 import com.android.imagic.files.file.guessFromPath
+import com.android.imagic.files.file.isImage
+import com.android.imagic.files.file.isVideo
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.provider.archive.isArchivePath
 import com.android.imagic.files.util.createViewIntent
@@ -44,7 +46,21 @@ class OpenFileActivity : AppActivity() {
         } else {
             val intent = path.fileProviderUri.createViewIntent(mimeType)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                .apply { extraPath = path }
+                .apply {
+                    extraPath = path
+                    if (mimeType.isVideo) {
+                        setClassName(
+                            "android.rk.RockVideoPlayer",
+                            "android.rk.RockVideoPlayer.VideoPlayActivity"
+                        )
+                    }
+                    if (mimeType.isImage) {
+                        setClassName(
+                            "com.android.imagic.imageviewer",
+                            "com.android.imagic.imageviewer.PhotoActivity"
+                        )
+                    }
+                }
             startActivitySafe(intent)
         }
     }
