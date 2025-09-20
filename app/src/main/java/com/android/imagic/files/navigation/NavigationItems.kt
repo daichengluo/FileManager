@@ -205,6 +205,7 @@ internal class StarBoardDriveItem(
 
     override fun onClick(listener: Listener) {
         listener.navigateToCloud(storage.authority)
+        listener.closeNavigationDrawer()
     }
 
     override fun onLongClick(listener: Listener): Boolean {
@@ -242,6 +243,7 @@ internal class GoogleDriveItem(
 
     override fun onClick(listener: Listener) {
         listener.navigateToGoogleDrive(storage.authority)
+        listener.closeNavigationDrawer()
     }
 
     override fun onLongClick(listener: Listener): Boolean {
@@ -279,6 +281,7 @@ internal class OneDriveItem(
 
     override fun onClick(listener: Listener) {
         listener.navigateToOneDrive(storage.authority)
+        listener.closeNavigationDrawer()
     }
 
     override fun onLongClick(listener: Listener): Boolean {
@@ -386,7 +389,10 @@ private class QuickAccessItem(
 
     override fun getTitle(context: Context): String = quickAccess.getTitle(context)
 
-    override fun onClick(listener: Listener) = listener.quickAccessTo(quickAccess)
+    override fun onClick(listener: Listener) {
+        listener.quickAccessTo(quickAccess)
+        listener.closeNavigationDrawer()
+    }
 
     override fun onLongClick(listener: Listener): Boolean {
         listener.launchIntent(QuickAccessListActivity::class.createIntent())
