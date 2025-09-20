@@ -1,5 +1,6 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
+import android.R
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -8,8 +9,8 @@ import com.android.imagic.files.app.AppActivity
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
 
-class EditStarBoardDriveServerActivity : AppActivity() {
-    private val args by args<EditStarBoardDriveServerFragment.Args>()
+class CloudLoginActivity : AppActivity() {
+    private val args by args<CloudLoginFragment.Args>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +23,10 @@ class EditStarBoardDriveServerActivity : AppActivity() {
         title = null
 
         // Calls ensureSubDecor().
-        findViewById<View>(android.R.id.content)
+        findViewById<View>(R.id.content)
         if (savedInstanceState == null) {
-            val fragment = EditStarBoardDriveServerFragment().putArgs(args)
-            supportFragmentManager.commit { add(android.R.id.content, fragment) }
+            val fragment = CloudLoginFragment().putArgs(args)
+            supportFragmentManager.commit { add(R.id.content, fragment) }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import com.android.imagic.files.R
+import com.android.imagic.files.cloud.CloudLogoutDialogActivity
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.util.createIntent
 import java8.nio.file.Path

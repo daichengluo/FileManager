@@ -1,4 +1,4 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
 import android.app.Activity
 import android.os.Bundle
@@ -23,8 +23,12 @@ import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpA
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.cloud.util.toAuthInfoBody
 import com.android.imagic.files.cloud.util.toStarBoardAuthority
-import com.android.imagic.files.databinding.CloudPasswordLoginFragmentBinding
+import com.android.imagic.files.databinding.PasswordLoginFragmentBinding
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.finish
@@ -54,17 +58,17 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
 
-class CloudPasswordLoginFragment : Fragment() {
+class PasswordLoginFragment : Fragment() {
 
-    private val sharedViewModel: EditStarBoardDriveServerViewModel by viewModels({ requireParentFragment() })
+    private val sharedViewModel: CloudLoginViewModel by viewModels({ requireParentFragment() })
 
-    private lateinit var binding: CloudPasswordLoginFragmentBinding
+    private lateinit var binding: PasswordLoginFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = CloudPasswordLoginFragmentBinding.inflate(inflater, container, false)
+    ): View = PasswordLoginFragmentBinding.inflate(inflater, container, false)
         .also { binding = it }
         .root
 
@@ -437,8 +441,6 @@ class CloudPasswordLoginFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "password"
-
         val microsoftScopes = listOf("User.Read", "openid", "profile", "email", "Files.ReadWrite")
 
         fun generateNonceStr(length: Int): String {

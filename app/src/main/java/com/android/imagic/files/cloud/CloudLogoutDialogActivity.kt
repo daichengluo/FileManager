@@ -1,5 +1,6 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
+import android.R
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.commit
@@ -14,7 +15,7 @@ class CloudLogoutDialogActivity : AppActivity() {
         super.onCreate(savedInstanceState)
 
         // Calls ensureSubDecor().
-        findViewById<View>(android.R.id.content)
+        findViewById<View>(R.id.content)
         if (savedInstanceState == null) {
             val fragment = CloudLogoutFragment().putArgs(args)
             supportFragmentManager.commit {

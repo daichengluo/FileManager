@@ -7,7 +7,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.os.Binder
 import android.os.Bundle
-import com.android.imagic.files.storage.EditStarBoardDriveServerActivity
+import com.android.imagic.files.cloud.CloudLoginActivity
 import com.android.imagic.files.util.createIntent
 
 class StarBoardAccountAuthenticator(private val context: Context) :
@@ -20,7 +20,7 @@ class StarBoardAccountAuthenticator(private val context: Context) :
         requiredFeatures: Array<String>?,
         options: Bundle?
     ): Bundle {
-        val intent = EditStarBoardDriveServerActivity::class.createIntent().apply {
+        val intent = CloudLoginActivity::class.createIntent().apply {
             putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
         }
         return Bundle().apply {

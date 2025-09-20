@@ -864,12 +864,11 @@
     <string name="login_microsoft_account">تسجيل الدخول باستخدام Microsoft</string>
     <string name="login_wechat_account">تسجيل الدخول باستخدام WeChat</string>
     <string name="message_logout">هل أنت متأكد أنك تريد تسجيل الخروج؟ بعد تسجيل الخروج لن تتمكن من الوصول إلى ملفات السحابة حتى تقوم بتسجيل الدخول مجددًا.</string>
-    <string name="qrcode_login_scan_tip">استخدم هاتفك لمسح رمز الاستجابة السريعة لتسجيل الدخول إلى Google Drive أو Microsoft OneDrive</string>
+    <string name="qrcode_login_scan_tip">يرجى استخدام الكاميرا أو تطبيق المتصفح لمسح رمز الاستجابة السريعة لتسجيل الدخول</string>
     <string name="user_agreement_text">لقد قرأت ووافقت على %1$s و %2$s.</string>
     <string name="user_agreement">اتفاقية المستخدم</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="check_agreement_first">يرجى الموافقة على اتفاقية المستخدم</string>
-    <string name="qrcode_login_user_agreement_text">باستخدام تسجيل الدخول عبر رمز الاستجابة السريعة، فإنك توافق على %1$s و %2$s.</string>
     <string name="google_drive">Google Drive</string>
     <string name="one_drive">Microsoft OneDrive</string>
     <string name="canceling_transfer">جارٍ الإلغاء...</string>

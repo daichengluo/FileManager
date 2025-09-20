@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
+import com.android.imagic.files.cloud.CloudLoginActivity
+import com.android.imagic.files.cloud.CloudLoginFragment
+import com.android.imagic.files.cloud.CloudLogoutFragment
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.util.ServerAuthority
 import com.android.imagic.files.databinding.NewNavigationFragmentBinding
@@ -20,9 +23,6 @@ import com.android.imagic.files.file.QuickAccessWrap
 import com.android.imagic.files.filelist.CloudPathData
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.filelist.FileModeState
-import com.android.imagic.files.storage.CloudLogoutFragment
-import com.android.imagic.files.storage.EditStarBoardDriveServerActivity
-import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
 import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
@@ -87,11 +87,8 @@ class NavigationFragment : Fragment(), NavigationItem.Listener, StorageListAdapt
             val sDriveServer = viewModel.starBoardDriveServer.valueCompat
             if (sDriveServer == null) {
                 launchIntent(
-                    EditStarBoardDriveServerActivity::class.createIntent().putArgs(
-                        EditStarBoardDriveServerFragment.Args(
-                            fromWidget = false,
-                            qrcodeLogin = true
-                        )
+                    CloudLoginActivity::class.createIntent().putArgs(
+                        CloudLoginFragment.Args()
                     )
                 )
             } else {

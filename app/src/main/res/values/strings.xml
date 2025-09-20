@@ -843,12 +843,11 @@
     <string name="login_microsoft_account">Continue with Microsoft</string>
     <string name="login_wechat_account">Continue with WeChat</string>
     <string name="message_logout">Are you sure you want to sign out? You will no longer be able to access your cloud files until you log in again.</string>
-    <string name="qrcode_login_scan_tip">Log in to Google Drive or Microsoft OneDrive by scanning the QR code with your mobile phone.</string>
+    <string name="qrcode_login_scan_tip">Please use the camera or browser app to scan the QR code and log in</string>
     <string name="user_agreement_text">I have read and agree to the %1$s and %2$s.</string>
     <string name="user_agreement">User Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="check_agreement_first">Please check the User Agreement</string>
-    <string name="qrcode_login_user_agreement_text">By Logging in with QR code, you agree to the %1$s and %2$s.</string>
     <string name="google_drive">Google Drive</string>
     <string name="one_drive">OneDrive</string>
     <string name="canceling_transfer">Canceling...</string>

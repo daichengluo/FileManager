@@ -9,7 +9,7 @@ import java.util.Hashtable
 
 object QrcodeUtil {
 
-    fun generateQRCodeBitmap(content: String, size: Int = 240): Bitmap {
+    fun generateQRCodeBitmap(content: String, size: Int = 320): Bitmap {
         val hints = Hashtable<EncodeHintType, String>().apply {
             put(EncodeHintType.CHARACTER_SET, "UTF-8")
         }

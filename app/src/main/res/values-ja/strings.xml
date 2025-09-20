@@ -679,12 +679,11 @@
     <string name="login_microsoft_account">Microsoftでログイン</string>
     <string name="login_wechat_account">WeChatでログイン</string>
     <string name="message_logout">ログアウトしてもよろしいですか？ログインし直すまでクラウドファイルにはアクセスできなくなります。</string>
-    <string name="qrcode_login_scan_tip">スマートフォンで QR コードをスキャンして Google Drive または Microsoft OneDrive にログインしてください</string>
+    <string name="qrcode_login_scan_tip">カメラまたはブラウザアプリを使用してQRコードをスキャンしてログインしてください</string>
     <string name="user_agreement_text">%1$sと%2$sに同意しました。</string>
     <string name="user_agreement">利用規約</string>
     <string name="privacy_policy">プライバシーポリシー</string>
     <string name="check_agreement_first">利用規約に同意してください</string>
-    <string name="qrcode_login_user_agreement_text">QRコードでログインすることで、%1$sと%2$sに同意したことになります。</string>
     <string name="google_drive">Google Drive</string>
     <string name="one_drive">Microsoft OneDrive</string>
     <string name="canceling_transfer">キャンセル中...</string>

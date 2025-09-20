@@ -13,12 +13,12 @@ import coil.Coil
 import coil.request.ImageRequest
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.receiver.LauncherLoginWidget
+import com.android.imagic.files.cloud.CloudLoginFragment
+import com.android.imagic.files.cloud.CloudLogoutDialogActivity
+import com.android.imagic.files.cloud.CloudLogoutFragment
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
-import com.android.imagic.files.storage.CloudLogoutDialogActivity
-import com.android.imagic.files.storage.CloudLogoutFragment
-import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.createIntent
@@ -117,10 +117,7 @@ object LoginWidgetUpdater {
             context,
             0,
             WidgetLoginLaunchActivity::class.createIntent().putArgs(
-                EditStarBoardDriveServerFragment.Args(
-                    fromWidget = true,
-                    qrcodeLogin = qrcodeLogin
-                )
+                CloudLoginFragment.Args()
             ),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

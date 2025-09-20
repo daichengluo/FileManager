@@ -1,4 +1,4 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,6 +21,10 @@ import com.android.imagic.files.cloud.gdrive.api.GoogleDriveClient
 import com.android.imagic.files.cloud.onedrive.OneDriveClient
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.StarBoardDriveClient.OkHttpAuthenticatorInterceptor
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ApiOperation
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.NetworkUtil
@@ -38,7 +42,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.time.Clock
 
-class CloudQRCodeLoginViewModel : ViewModel() {
+class QRCodeLoginViewModel : ViewModel() {
 
     private val _qrcodeBitmap = MutableLiveData<Bitmap?>(null)
     val qrcodeBitmap: LiveData<Bitmap?> = _qrcodeBitmap

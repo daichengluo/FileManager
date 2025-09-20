@@ -1,4 +1,4 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -9,6 +9,10 @@ import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.navigation.NavigationFragment
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
+import com.android.imagic.files.storage.StarBoardDriveServer
+import com.android.imagic.files.storage.Storages
 import com.android.imagic.files.util.ParcelableArgs
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs

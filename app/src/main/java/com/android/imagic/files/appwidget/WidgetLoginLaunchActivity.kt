@@ -5,12 +5,12 @@ import android.view.Gravity
 import android.view.View
 import androidx.fragment.app.commit
 import com.android.imagic.files.app.AppActivity
-import com.android.imagic.files.storage.EditStarBoardDriveServerFragment
+import com.android.imagic.files.cloud.CloudLoginFragment
 import com.android.imagic.files.util.args
 import com.android.imagic.files.util.putArgs
 
 class WidgetLoginLaunchActivity : AppActivity() {
-    private val args by args<EditStarBoardDriveServerFragment.Args>()
+    private val args by args<CloudLoginFragment.Args>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class WidgetLoginLaunchActivity : AppActivity() {
         // Calls ensureSubDecor().
         findViewById<View>(android.R.id.content)
         if (savedInstanceState == null) {
-            val fragment = EditStarBoardDriveServerFragment().putArgs(args)
+            val fragment = CloudLoginFragment().putArgs(args)
             supportFragmentManager.commit { add(android.R.id.content, fragment) }
         }
     }

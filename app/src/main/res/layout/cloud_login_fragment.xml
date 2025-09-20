@@ -5,7 +5,6 @@
     android:layout_width="247dp"
     android:layout_height="253dp"
     android:background="@drawable/bg_navigation_login">
-    <!--android:background="@drawable/bg_qrcode_login_fragment"-->
 
     <ImageButton
         android:id="@+id/loginSwitchButton"
@@ -15,8 +14,8 @@
         android:layout_marginTop="3dp"
         android:layout_marginEnd="3dp"
         android:background="@null"
-        android:contentDescription="@string/use_password_login"
-        android:src="@drawable/password_login_method" />
+        android:contentDescription="@string/use_qrcode_login"
+        android:src="@drawable/qrcode_login_method" />
 
     <LinearLayout
         android:id="@+id/userAgreementLayout"
@@ -25,9 +24,8 @@
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="8dp"
-        android:visibility="gone">
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="12dp">
 
         <ImageButton
             android:id="@+id/userAgreementButton"
@@ -49,19 +47,4 @@
             android:textSize="8sp"
             tools:ignore="SmallSp,UnusedAttribute" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/qrcodeUserAgreementText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="start"
-        android:lineHeight="11dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="8dp"
-        android:text="@string/qrcode_login_user_agreement_text"
-        android:textColor="#B3272628"
-        android:textSize="8sp"
-        tools:ignore="SmallSp,UnusedAttribute" />
 </FrameLayout>

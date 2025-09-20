@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.Parcelable
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.AuthInfoBody
+import com.android.imagic.files.cloud.PasswordLoginFragment
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.filelist.CloudPathData
-import com.android.imagic.files.storage.CloudPasswordLoginFragment
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -63,7 +63,7 @@ fun ServerAuthority.toAuthInfoBody(): AuthInfoBody = AuthInfoBody(
     login_type = type.toString(),
     email = email,
     unionid = openId,
-    refresh_token = CloudPasswordLoginFragment.generateNonceStr(32),
+    refresh_token = PasswordLoginFragment.generateNonceStr(32),
     nickname = username,
     headimgurl = avatarUrl ?: ""
 )

@@ -1,4 +1,4 @@
-package com.android.imagic.files.storage
+package com.android.imagic.files.cloud
 
 import android.accounts.Account
 import android.accounts.AccountManager
@@ -10,21 +10,21 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
 import com.android.imagic.files.appwidget.QrcodeLoginStatus
-import com.android.imagic.files.databinding.CloudQrcodeLoginFragmentBinding
+import com.android.imagic.files.databinding.QrcodeLoginFragmentBinding
 import com.android.imagic.files.util.finish
 import com.android.imagic.files.util.viewModels
 
-class CloudQRCodeLoginFragment : Fragment() {
+class QRCodeLoginFragment : Fragment() {
 
-    private val viewModel by viewModels { { CloudQRCodeLoginViewModel() } }
+    private val viewModel by viewModels { { QRCodeLoginViewModel() } }
 
-    private lateinit var binding: CloudQrcodeLoginFragmentBinding
+    private lateinit var binding: QrcodeLoginFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = CloudQrcodeLoginFragmentBinding.inflate(inflater, container, false)
+    ): View = QrcodeLoginFragmentBinding.inflate(inflater, container, false)
         .also { binding = it }
         .root
 
@@ -76,9 +76,5 @@ class CloudQRCodeLoginFragment : Fragment() {
         }
 
         viewModel.generateQrcode(requireContext())
-    }
-
-    companion object {
-        const val TAG = "qrcode"
     }
 }

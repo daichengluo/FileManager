@@ -248,14 +248,14 @@
             android:theme="@style/Theme.Fragment.Dialog" />
 
         <activity
-            android:name="com.android.imagic.files.storage.EditStarBoardDriveServerActivity"
+            android:name="com.android.imagic.files.cloud.CloudLoginActivity"
             android:excludeFromRecents="true"
             android:label="@string/storage_edit_sdrive_server_title_edit"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Fragment.Dialog" />
 
         <activity
-            android:name="com.android.imagic.files.storage.CloudLogoutDialogActivity"
+            android:name="com.android.imagic.files.cloud.CloudLogoutDialogActivity"
             android:excludeFromRecents="true"
             android:label="@string/log_out"
             android:launchMode="singleTask"
@@ -375,30 +375,15 @@
 
         <activity
             android:name="com.android.imagic.files.viewer.image.ImageViewerActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/image_viewer_title"
-            android:theme="@style/Theme.Files.Immersive">
-            <intent-filter tools:ignore="AppLinkUrlError">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Files.Immersive" />
 
         <activity
             android:name="com.android.imagic.files.viewer.video.VideoPlayerActivity"
             android:exported="false"
             android:label="@string/video_player_title"
-            android:theme="@style/Theme.Files.Immersive"
-            tools:ignore="AppLinkUrlError">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="video/*" />
-                <data android:mimeType="audio/*" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Files.Immersive" />
 
         <activity
             android:name="com.microsoft.identity.client.BrowserTabActivity"

@@ -681,12 +681,11 @@
     <string name="login_microsoft_account">使用微软登录</string>
     <string name="login_wechat_account">使用微信登录</string>
     <string name="message_logout">你确定要退出登录吗？退出后将无法访问云端文件，直到你重新登录。</string>
-    <string name="qrcode_login_scan_tip">使用手机扫描二维码登录谷歌 Drive 或者微软 OneDrive</string>
+    <string name="qrcode_login_scan_tip">请使用相机或者浏览器应用扫码登录</string>
     <string name="user_agreement_text">我已阅读并同意%1$s和%2$s。</string>
     <string name="user_agreement">用户协议</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="check_agreement_first">请勾选用户协议</string>
-    <string name="qrcode_login_user_agreement_text">使用扫码登录，表示你同意%1$s和%2$s。</string>
     <string name="google_drive">谷歌云端硬盘</string>
     <string name="one_drive">微软 OneDrive</string>
     <string name="canceling_transfer">取消中...</string>
