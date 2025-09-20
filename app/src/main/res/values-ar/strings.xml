@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">مدير ملفات</string>
-
     <string name="close">غلق</string>
     <string name="copy">نسخ</string>
     <string name="cut">قص</string>
@@ -786,4 +782,111 @@
 
     <string name="about_title">حول</string>
     <string name="about_version_title">الإصدار</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="zero">لا يوجد عناصر</item>
+        <item quantity="one">عنصر واحد</item>
+        <item quantity="two">عنصران</item>
+        <item quantity="few">%1$,d عناصر</item>
+        <item quantity="many">%1$,d عنصر</item>
+        <item quantity="other">%1$,d عنصر</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">الرجاء تسجيل الدخول إلى الحساب</string>
+    <string name="navigation_internal_storage_name">التخزين الداخلي</string>
+    <string name="navigation_quick_access_images">الصور</string>
+    <string name="navigation_quick_access_videos">مقاطع الفيديو</string>
+    <string name="navigation_quick_access_audio">الصوتيات</string>
+    <string name="navigation_quick_access_apk">حزم التثبيت</string>
+    <string name="file_list_select_title_format_new">تم تحديد %1$,d عنصر</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="zero">لا يوجد عناصر للنقل</item>
+        <item quantity="one">نقل عنصر واحد</item>
+        <item quantity="two">نقل عنصرين</item>
+        <item quantity="few">نقل %1$,d عناصر</item>
+        <item quantity="many">نقل %1$,d عنصر</item>
+        <item quantity="other">نقل %1$,d عنصر</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="zero">لا يوجد عناصر للنسخ</item>
+        <item quantity="one">نسخ عنصر واحد</item>
+        <item quantity="two">نسخ عنصرين</item>
+        <item quantity="few">نسخ %1$,d عناصر</item>
+        <item quantity="many">نسخ %1$,d عنصر</item>
+        <item quantity="other">نسخ %1$,d عنصر</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="zero">لا يوجد عناصر للاستخراج</item>
+        <item quantity="one">استخراج عنصر واحد</item>
+        <item quantity="two">استخراج عنصرين</item>
+        <item quantity="few">استخراج %1$,d عناصر</item>
+        <item quantity="many">استخراج %1$,d عنصر</item>
+        <item quantity="other">استخراج %1$,d عنصر</item>
+    </plurals>
+
+    <string name="file_list_action_view_type_list">عرض القائمة</string>
+    <string name="file_list_action_view_type_grid">عرض الشبكة</string>
+    <string name="file_list_action_sort">فرز</string>
+    <string name="file_list_action_exit_app">الخروج من التطبيق</string>
+    <string name="settings_quick_access_title">الوصول السريع</string>
+    <string name="settings_quick_access_summary_empty">الوصول السريع غير مفعّل</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="zero">لا يوجد عناصر قيد النقل</item>
+        <item quantity="one">جارٍ نقل عنصر واحد</item>
+        <item quantity="two">جارٍ نقل عنصرين</item>
+        <item quantity="few">جارٍ نقل %1$,d عناصر</item>
+        <item quantity="many">جارٍ نقل %1$,d عنصر</item>
+        <item quantity="other">جارٍ نقل %1$,d عنصر</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">جارٍ الإلغاء</string>
+    <string name="press_again_exit">اضغط مرة أخرى للخروج من التطبيق</string>
+    <string name="login_expired">انتهت صلاحية تسجيل الدخول، يرجى تسجيل الدخول مجددًا</string>
+    <string name="server_error_occurred">حدث خطأ في الخادم</string>
+    <string name="network_error">خطأ في الشبكة، يرجى المحاولة لاحقًا</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">تسجيل الدخول إلى StarBoard Drive</string>
+    <string name="video_player_title">مشغل الفيديو</string>
+    <string name="cloud_file_download_dialog_message">لا يمكن معاينة هذا الملف من السحابة، هل تريد تنزيله إلى مجلد محلي؟</string>
+    <string name="widget_launcher_login_button_text">تسجيل الدخول</string>
+    <string name="widget_launcher_login_tip_text">يرجى تسجيل الدخول إلى حسابك.</string>
+    <string name="qrcode_login_tip_text">تسجيل الدخول عبر رمز الاستجابة السريعة</string>
+    <string name="use_password_login">تسجيل الدخول باستخدام كلمة المرور</string>
+    <string name="use_qrcode_login">تسجيل الدخول باستخدام رمز الاستجابة السريعة</string>
+    <string name="cloud_file_properties_download_url">رابط التنزيل</string>
+    <string name="logout_cloud_drive_dialog_message">هل أنت متأكد من تسجيل الخروج من الحساب الحالي؟</string>
+    <string name="login_in">تسجيل الدخول</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="login_google_account">تسجيل الدخول باستخدام Google</string>
+    <string name="login_microsoft_account">تسجيل الدخول باستخدام Microsoft</string>
+    <string name="login_wechat_account">تسجيل الدخول باستخدام WeChat</string>
+    <string name="message_logout">هل أنت متأكد أنك تريد تسجيل الخروج؟ بعد تسجيل الخروج لن تتمكن من الوصول إلى ملفات السحابة حتى تقوم بتسجيل الدخول مجددًا.</string>
+    <string name="qrcode_login_scan_tip">استخدم هاتفك لمسح رمز الاستجابة السريعة لتسجيل الدخول إلى Google Drive أو Microsoft OneDrive</string>
+    <string name="user_agreement_text">لقد قرأت ووافقت على %1$s و %2$s.</string>
+    <string name="user_agreement">اتفاقية المستخدم</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="check_agreement_first">يرجى الموافقة على اتفاقية المستخدم</string>
+    <string name="qrcode_login_user_agreement_text">باستخدام تسجيل الدخول عبر رمز الاستجابة السريعة، فإنك توافق على %1$s و %2$s.</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">Microsoft OneDrive</string>
+    <string name="canceling_transfer">جارٍ الإلغاء...</string>
+    <string name="downloading">جارٍ التنزيل...</string>
+    <string name="uploading">جارٍ الرفع...</string>
+    <string name="upload_failed">فشل الرفع</string>
+    <string name="download_failed">فشل التنزيل</string>
+    <string name="upload_completed">اكتمل الرفع</string>
+    <string name="download_completed">اكتمل التنزيل</string>
+    <string name="my_files">ملفاتي</string>
+    <string name="my_drive">سحابي</string>
+    <string name="cannot_extract_to_cloud_drive">لا يمكن استخراج الملف إلى السحابة</string>
+    <string name="login_failed_message">فشل تسجيل الدخول: %1$s</string>
+    <string name="login_failed_retry">فشل تسجيل الدخول، يرجى المحاولة مجددًا</string>
+    <string name="loading_user_data">جارٍ تحميل بيانات المستخدم</string>
+    <string name="file_list_action_split_screen">وضع تقسيم الشاشة</string>
+    <string name="load_user_image_failed">فشل تحميل صورة المستخدم</string>
+    <string name="login_user_cancelled">تم إلغاء تسجيل الدخول، يرجى المحاولة مجددًا</string>
+    <string name="cannot_copy_move_between_cloud_message">نسخ أو نقل الملفات بين خدمات السحابة غير مدعوم حاليًا</string>
 </resources>
