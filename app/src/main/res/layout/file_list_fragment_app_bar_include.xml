@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="5dp"
                 android:minHeight="0dp"
                 app:contentInsetStartWithNavigation="0dp"
                 app:navigationContentDescription="@string/file_list_action_navigate_up"
