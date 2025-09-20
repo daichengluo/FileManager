@@ -149,6 +149,7 @@ import com.android.imagic.files.util.checkSelfPermission
 import com.android.imagic.files.util.copyText
 import com.android.imagic.files.util.create
 import com.android.imagic.files.util.createInstallPackageIntent
+import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.createManageAppAllFilesAccessPermissionIntent
 import com.android.imagic.files.util.createSendStreamIntent
 import com.android.imagic.files.util.createViewIntent
@@ -166,6 +167,7 @@ import com.android.imagic.files.util.isInSplitScreen
 import com.android.imagic.files.util.isOrientationLandscape
 import com.android.imagic.files.util.isPackageAvailable
 import com.android.imagic.files.util.parcelable
+import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.setOnEditorConfirmActionListener
 import com.android.imagic.files.util.showToast
 import com.android.imagic.files.util.startActivitySafe
@@ -1911,7 +1913,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 }
 
             val finalIntent = if (withChooser) {
-                intent.withChooser()
+                intent.withChooser(
+                    OpenFileAsDialogActivity::class.createIntent()
+                        .putArgs(OpenFileAsDialogFragment.Args(path))
+                )
             } else {
                 intent.apply {
                     if (mimeType.isVideo && isPackageAvailable("android.rk.RockVideoPlayer")) {
