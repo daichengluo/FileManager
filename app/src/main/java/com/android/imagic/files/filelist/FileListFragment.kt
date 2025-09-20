@@ -91,7 +91,6 @@ import com.android.imagic.files.file.isApk
 import com.android.imagic.files.file.isImage
 import com.android.imagic.files.file.isMedia
 import com.android.imagic.files.file.isVideo
-import com.android.imagic.files.file.mediaStoreUri
 import com.android.imagic.files.filejob.FileJobService
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_ID
 import com.android.imagic.files.filejob.FileJobService.Companion.FILE_TRANSFER_INDETERMINATE
@@ -1904,13 +1903,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         if (path.isArchivePath) {
             FileJobService.open(path, mimeType, withChooser, requireContext())
         } else {
-            val uri = if (mimeType.isMedia) {
-                path.mediaStoreUri(requireContext()) ?: path.fileProviderUri
-            } else {
-                path.fileProviderUri
-            }
-
-            val intent = uri.createViewIntent(mimeType)
+            val intent = path.fileProviderUri.createViewIntent(mimeType)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 .apply {
                     extraPath = path
