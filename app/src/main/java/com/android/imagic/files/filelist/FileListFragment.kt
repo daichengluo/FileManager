@@ -176,7 +176,6 @@ import com.android.imagic.files.util.takeIfNotEmpty
 import com.android.imagic.files.util.valueCompat
 import com.android.imagic.files.util.viewModels
 import com.android.imagic.files.util.withChooser
-import com.android.imagic.files.viewer.image.ImageViewerActivity
 import com.android.imagic.files.viewer.video.VideoPlayerActivity
 import com.leinardi.android.speeddial.SpeedDialView
 import java8.nio.file.Path
@@ -1245,6 +1244,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 val path = paths.single()
                 data = path.fileProviderUri
                 extraPath = path
+                putExtra("path", path.toString())
             } else {
                 val mimeTypes = pickOptions.mimeTypes.map { it.value }
                 val items = paths.map { ClipData.Item(it.fileProviderUri) }
@@ -1909,7 +1909,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 .apply {
                     extraPath = path
-                    maybeAddImageViewerActivityExtras(this, path, mimeType)
                 }
 
             val finalIntent = if (withChooser) {
@@ -1930,6 +1929,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                             "com.android.imagic.imageviewer",
                             "com.android.imagic.imageviewer.PhotoActivity"
                         )
+                        addImageViewerActivityExtras(this, path, mimeType)
                     }
                 }
             }
@@ -1938,7 +1938,7 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         }
     }
 
-    private fun maybeAddImageViewerActivityExtras(intent: Intent, path: Path, mimeType: MimeType) {
+    private fun addImageViewerActivityExtras(intent: Intent, path: Path, mimeType: MimeType) {
         if (!mimeType.isImage) {
             return
         }
@@ -1952,8 +1952,8 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
         }
         var position = paths.indexOf(path)
-        if (position == -1) {
-            return
+        if (position == -1 && paths.isNotEmpty()) {
+            position = 0
         }
         // HACK: Don't send too many paths to avoid TransactionTooLargeException.
         if (paths.size > IMAGE_VIEWER_ACTIVITY_PATH_LIST_SIZE_MAX) {
@@ -1962,7 +1962,9 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             paths = paths.subList(start, start + IMAGE_VIEWER_ACTIVITY_PATH_LIST_SIZE_MAX)
             position -= start
         }
-        ImageViewerActivity.putExtras(intent, paths, position)
+        intent.putExtra("path", path.toString())
+        intent.putExtra("position", position)
+        intent.putStringArrayListExtra("image_list", ArrayList(paths.map { it.toString() }))
     }
 
     override fun cutFile(file: FileItem) {
