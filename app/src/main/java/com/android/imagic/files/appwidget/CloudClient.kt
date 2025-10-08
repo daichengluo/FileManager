@@ -36,7 +36,8 @@ data class AuthInfoBody(
     val unionid: String,
     val refresh_token: String,
     val nickname: String,
-    val headimgurl: String
+    val headimgurl: String,
+    val automaticid: Int
 )
 
 @Serializable
@@ -106,7 +107,9 @@ class CloudClient(client: OkHttpClient) : CloudAuth {
     override suspend fun doLogin(
         code: String,
         state: String
-    ): ApiOperation<LoginInfo> = safeApiCallHandled { network.doLogin(code, state, 0) }
+    ): ApiOperation<LoginInfo> = safeApiCallHandled {
+        network.doLogin(code = code, state = state, automaticId = 1)
+    }
 
     override suspend fun getUserInfo(body: AuthInfoBody): ApiOperation<LoginInfo> =
         safeApiCallHandled { network.getUserInfo(body) }

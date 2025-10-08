@@ -77,7 +77,8 @@ fun AccessTokenData.toAuthInfoBody(headerImagerUrl: String? = null): AuthInfoBod
     unionid = unionid ?: sub,
     refresh_token = refresh_token ?: "",
     nickname = givenname + familyname,
-    headimgurl = headerImagerUrl ?: picture
+    headimgurl = headerImagerUrl ?: picture,
+    automaticid = 1
 )
 
 object AuthClientImpl : AuthClient {

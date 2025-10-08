@@ -65,5 +65,6 @@ fun ServerAuthority.toAuthInfoBody(): AuthInfoBody = AuthInfoBody(
     unionid = openId,
     refresh_token = PasswordLoginFragment.generateNonceStr(32),
     nickname = username,
-    headimgurl = avatarUrl ?: ""
+    headimgurl = avatarUrl ?: "",
+    automaticid = 1
 )
