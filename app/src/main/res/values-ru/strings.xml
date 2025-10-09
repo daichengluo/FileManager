@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">Диспетчер файлов</string>
-
     <string name="close">Закрыть</string>
     <string name="copy">Копировать</string>
     <string name="cut">Вырезать</string>
@@ -724,4 +720,95 @@
 
     <string name="about_title">О программе</string>
     <string name="about_version_title">Версия</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d элемент</item>
+        <item quantity="few">%1$,d элемента</item>
+        <item quantity="many">%1$,d элементов</item>
+        <item quantity="other">%1$,d элемента</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Войти</string>
+    <string name="navigation_internal_storage_name">Внутренняя память</string>
+    <string name="navigation_quick_access_images">Изображения</string>
+    <string name="navigation_quick_access_videos">Видео</string>
+    <string name="navigation_quick_access_audio">Аудио</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d выбрано</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Перемещение %1$,d элемента</item>
+        <item quantity="few">Перемещение %1$,d элементов</item>
+        <item quantity="many">Перемещение %1$,d элементов</item>
+        <item quantity="other">Перемещение %1$,d элемента</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Копирование %1$,d элемента</item>
+        <item quantity="few">Копирование %1$,d элементов</item>
+        <item quantity="many">Копирование %1$,d элементов</item>
+        <item quantity="other">Копирование %1$,d элемента</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Извлечение %1$,d элемента</item>
+        <item quantity="few">Извлечение %1$,d элементов</item>
+        <item quantity="many">Извлечение %1$,d элементов</item>
+        <item quantity="other">Извлечение %1$,d элемента</item>
+    </plurals>
+    <string name="file_list_action_sort">Сортировать</string>
+    <string name="file_list_action_view_type_list">Список</string>
+    <string name="file_list_action_view_type_grid">Сетка</string>
+    <string name="file_list_action_exit_app">Выйти</string>
+    <string name="settings_quick_access_title">Быстрый доступ</string>
+    <string name="settings_quick_access_summary_empty">Быстрый доступ не включен</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Передача %1$,d элемента</item>
+        <item quantity="few">Передача %1$,d элементов</item>
+        <item quantity="many">Передача %1$,d элементов</item>
+        <item quantity="other">Передача %1$,d элемента</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Отмена</string>
+    <string name="press_again_exit">Нажмите снова, чтобы выйти</string>
+    <string name="login_expired">Срок действия сеанса истёк. Войдите снова</string>
+    <string name="server_error_occurred">Произошла ошибка сервера</string>
+    <string name="network_error">Сетевой сбой. Попробуйте позже</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Войдите в StarBoard Drive</string>
+    <string name="video_player_title">Видеоплеер</string>
+    <string name="cloud_file_download_dialog_message">Этот тип файла не может быть просмотрен. Вы хотите скачать его в локальную папку?</string>
+    <string name="widget_launcher_login_button_text">Войти</string>
+    <string name="widget_launcher_login_tip_text">Пожалуйста, войдите в свой аккаунт</string>
+    <string name="qrcode_login_tip_text">Сканируйте код для входа</string>
+    <string name="use_password_login">Войти с паролем</string>
+    <string name="use_qrcode_login">Войти, сканируя код</string>
+    <string name="cloud_file_properties_download_url">URL для скачивания</string>
+    <string name="logout_cloud_drive_dialog_message">Вы уверены, что хотите выйти?</string>
+    <string name="login_in">Войти</string>
+    <string name="log_out">Выйти</string>
+    <string name="login_google_account">Продолжить с Google</string>
+    <string name="login_microsoft_account">Продолжить с Microsoft</string>
+    <string name="login_wechat_account">Продолжить с WeChat</string>
+    <string name="message_logout">Вы уверены, что хотите выйти? Вы не сможете получить доступ к файлам в облаке до повторного входа.</string>
+    <string name="qrcode_login_scan_tip">Используйте камеру или браузер для сканирования QR-кода и входа</string>
+    <string name="user_agreement_text">Я прочитал и согласен с %1$s и %2$s.</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="check_agreement_first">Пожалуйста, примите Пользовательское соглашение</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Отмена...</string>
+    <string name="downloading">Запуск...</string>
+    <string name="uploading">Загрузка...</string>
+    <string name="upload_failed">Ошибка загрузки</string>
+    <string name="download_failed">Ошибка скачивания</string>
+    <string name="upload_completed">Загрузка завершена</string>
+    <string name="download_completed">Скачивание завершено</string>
+    <string name="my_files">Мои файлы</string>
+    <string name="my_drive">мой-диск</string>
+    <string name="cannot_extract_to_cloud_drive">Невозможно распаковать архив в облако.</string>
+    <string name="login_failed_message">Не удалось войти: %1$s</string>
+    <string name="login_failed_retry">Не удалось войти, попробуйте снова</string>
+    <string name="loading_user_data">Загрузка данных пользователя...</string>
+    <string name="file_list_action_split_screen">Разделённый экран</string>
+    <string name="load_user_image_failed">Не удалось загрузить аватар пользователя</string>
+    <string name="login_user_cancelled">Вход отменён, попробуйте снова</string>
+    <string name="cannot_copy_move_between_cloud_message">Передача файлов между облаками в данный момент не поддерживается</string>
 </resources>

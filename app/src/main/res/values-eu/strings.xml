@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Itxi</string>
     <string name="copy">Kopiatu</string>
     <string name="cut">Moztu</string>
@@ -364,4 +360,92 @@
 
     <string name="about_title">Honi buruz</string>
     <string name="about_version_title">Bertsioa</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d elementu</item>
+        <item quantity="other">%1$,d elementu</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Saioa hasi</string>
+    <string name="navigation_internal_storage_name">Barne biltegiratzea</string>
+    <string name="navigation_quick_access_images">Irudiak</string>
+    <string name="navigation_quick_access_videos">Bideoak</string>
+    <string name="navigation_quick_access_audio">Audioa</string>
+    <string name="navigation_quick_access_apk">APKa</string>
+    <string name="file_list_select_title_format_new">%1$,d hautatua</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">%1$,d elementu mugitzen</item>
+        <item quantity="other">%1$,d elementu mugitzen</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">%1$,d elementu kopiatzen</item>
+        <item quantity="other">%1$,d elementu kopiatzen</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">%1$,d elementu ateratzen</item>
+        <item quantity="other">%1$,d elementu ateratzen</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Ordenatu</string>
+    <string name="file_list_action_view_type_list">Zerrenda ikusi</string>
+    <string name="file_list_action_view_type_grid">Sareta ikusi</string>
+    <string name="file_list_action_exit_app">Irten</string>
+    <string name="settings_quick_access_title">Sarrera azkarra</string>
+    <string name="settings_quick_access_summary_empty">Ez dago sarrera azkarra aktibatuta</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">%1$,d elementu transferitzen</item>
+        <item quantity="other">%1$,d elementu transferitzen</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Bertan behera</string>
+    <string name="press_again_exit">Sakatu berriro irteteko</string>
+    <string name="login_expired">Saioa iraungi da. Mesedez, hasi saioa berriro</string>
+    <string name="server_error_occurred">Zerbitzari akatsa gertatu da</string>
+    <string name="network_error">Sareko arazoa. Saiatu berriro beranduago</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Hasi saioa StarBoard Drive-n</string>
+    <string name="video_player_title">Bideo erreproduzitzailea</string>
+    <string name="cloud_file_download_dialog_message">Fitxategi mota hau ezin da aurreikusi. Deskargatu nahi duzu karpeta lokal batera?</string>
+    <string name="widget_launcher_login_button_text">Saioa hasi</string>
+    <string name="widget_launcher_login_tip_text">Mesedez, hasi saioa zure kontuan.</string>
+    <string name="qrcode_login_tip_text">Eskaneatu kodea saioa hasteko</string>
+    <string name="use_password_login">Pasahitzarekin hasi saioa</string>
+    <string name="use_qrcode_login">Kodea eskaneatuz hasi saioa</string>
+    <string name="cloud_file_properties_download_url">Deskarga URL</string>
+    <string name="logout_cloud_drive_dialog_message">Ziur zaude saioa amaitu nahi duzula?</string>
+    <string name="login_in">Saioa hasi</string>
+    <string name="log_out">Saioa amaitu</string>
+    <string name="login_google_account">Jarraitu Google-rekin</string>
+    <string name="login_microsoft_account">Jarraitu Microsoft-rekin</string>
+    <string name="login_wechat_account">Jarraitu WeChat-ekin</string>
+    <string name="message_logout">Ziur zaude saioa amaitu nahi duzula? Ezin izango dituzu zure hodeiko fitxategiak berriro sartu arte.</string>
+    <string name="qrcode_login_scan_tip">Erabili kamera edo nabigatzailea QR kodea eskaneatzeko eta saioa hasteko</string>
+    <string name="user_agreement_text">Irakurri dut eta ados nago %1$s eta %2$s-rekin.</string>
+    <string name="user_agreement">Erabiltzaile akordioa</string>
+    <string name="privacy_policy">Pribatutasun politika</string>
+    <string name="check_agreement_first">Mesedez, markatu Erabiltzaile akordioa</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Bertan behera...</string>
+    <string name="downloading">Hasieratzen...</string>
+    <string name="uploading">Igotzen...</string>
+    <string name="upload_failed">Igoera huts egin du</string>
+    <string name="download_failed">Deskarga huts egin du</string>
+    <string name="upload_completed">Igoera burutu da</string>
+    <string name="download_completed">Deskarga burutu da</string>
+    <string name="my_files">Nire fitxategiak</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Fitxategia ezin da hodei diskoan atera.</string>
+    <string name="login_failed_message">Saioa hasteak huts egin du: %1$s</string>
+    <string name="login_failed_retry">Saioa hasteak huts egin du, saiatu berriro</string>
+    <string name="loading_user_data">Erabiltzaile datuak kargatzen...</string>
+    <string name="file_list_action_split_screen">Pantaila zatitua</string>
+    <string name="load_user_image_failed">Ezin izan da erabiltzaile avatarra kargatu</string>
+    <string name="login_user_cancelled">Saioa bertan behera geratu da, saiatu berriro</string>
+    <string name="cannot_copy_move_between_cloud_message">Hodeien arteko fitxategi-transferentzia oraindik ez da onartzen</string>
 </resources>

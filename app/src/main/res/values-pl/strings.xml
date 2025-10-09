@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Zamknij</string>
     <string name="copy">Kopiuj</string>
     <string name="cut">Wytnij</string>
@@ -724,4 +720,95 @@
 
     <string name="about_title">O aplikacji</string>
     <string name="about_version_title">Wersja</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d element</item>
+        <item quantity="few">%1$,d elementy</item>
+        <item quantity="many">%1$,d elementów</item>
+        <item quantity="other">%1$,d elementu</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Zaloguj się</string>
+    <string name="navigation_internal_storage_name">Pamięć wewnętrzna</string>
+    <string name="navigation_quick_access_images">Obrazy</string>
+    <string name="navigation_quick_access_videos">Filmy</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">Zaznaczono %1$,d</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Przenoszenie %1$,d elementu</item>
+        <item quantity="few">Przenoszenie %1$,d elementy</item>
+        <item quantity="many">Przenoszenie %1$,d elementów</item>
+        <item quantity="other">Przenoszenie %1$,d elementu</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopiowanie %1$,d elementu</item>
+        <item quantity="few">Kopiowanie %1$,d elementy</item>
+        <item quantity="many">Kopiowanie %1$,d elementów</item>
+        <item quantity="other">Kopiowanie %1$,d elementu</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Rozpakowywanie %1$,d elementu</item>
+        <item quantity="few">Rozpakowywanie %1$,d elementy</item>
+        <item quantity="many">Rozpakowywanie %1$,d elementów</item>
+        <item quantity="other">Rozpakowywanie %1$,d elementu</item>
+    </plurals>
+    <string name="file_list_action_sort">Sortuj</string>
+    <string name="file_list_action_view_type_list">Widok listy</string>
+    <string name="file_list_action_view_type_grid">Widok siatki</string>
+    <string name="file_list_action_exit_app">Wyjdź</string>
+    <string name="settings_quick_access_title">Szybki dostęp</string>
+    <string name="settings_quick_access_summary_empty">Brak włączonego szybkiego dostępu</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Przesyłanie %1$,d elementu</item>
+        <item quantity="few">Przesyłanie %1$,d elementy</item>
+        <item quantity="many">Przesyłanie %1$,d elementów</item>
+        <item quantity="other">Przesyłanie %1$,d elementu</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Anulowanie</string>
+    <string name="press_again_exit">Naciśnij ponownie, aby wyjść</string>
+    <string name="login_expired">Sesja wygasła. Zaloguj się ponownie</string>
+    <string name="server_error_occurred">Wystąpił błąd serwera</string>
+    <string name="network_error">Błąd sieci. Spróbuj ponownie później</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Zaloguj się do StarBoard Drive</string>
+    <string name="video_player_title">Odtwarzacz wideo</string>
+    <string name="cloud_file_download_dialog_message">Nie można podglądać tego typu pliku. Czy chcesz pobrać go do lokalnego folderu?</string>
+    <string name="widget_launcher_login_button_text">Zaloguj się</string>
+    <string name="widget_launcher_login_tip_text">Zaloguj się na swoje konto</string>
+    <string name="qrcode_login_tip_text">Zeskanuj kod, aby się zalogować</string>
+    <string name="use_password_login">Zaloguj się przy użyciu hasła</string>
+    <string name="use_qrcode_login">Zaloguj się, skanując kod</string>
+    <string name="cloud_file_properties_download_url">URL pobierania</string>
+    <string name="logout_cloud_drive_dialog_message">Czy na pewno chcesz się wylogować?</string>
+    <string name="login_in">Zaloguj się</string>
+    <string name="log_out">Wyloguj się</string>
+    <string name="login_google_account">Kontynuuj z Google</string>
+    <string name="login_microsoft_account">Kontynuuj z Microsoft</string>
+    <string name="login_wechat_account">Kontynuuj z WeChat</string>
+    <string name="message_logout">Czy na pewno chcesz się wylogować? Nie będziesz mieć dostępu do plików w chmurze, dopóki ponownie się nie zalogujesz.</string>
+    <string name="qrcode_login_scan_tip">Użyj aparatu lub aplikacji przeglądarki, aby zeskanować kod QR i zalogować się</string>
+    <string name="user_agreement_text">Przeczytałem i akceptuję %1$s i %2$s.</string>
+    <string name="user_agreement">Regulamin użytkownika</string>
+    <string name="privacy_policy">Polityka prywatności</string>
+    <string name="check_agreement_first">Proszę zaakceptować regulamin użytkownika</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Anulowanie...</string>
+    <string name="downloading">Rozpoczynanie...</string>
+    <string name="uploading">Przesyłanie...</string>
+    <string name="upload_failed">Przesyłanie nie powiodło się</string>
+    <string name="download_failed">Pobieranie nie powiodło się</string>
+    <string name="upload_completed">Przesyłanie zakończone</string>
+    <string name="download_completed">Pobieranie zakończone</string>
+    <string name="my_files">Moje pliki</string>
+    <string name="my_drive">moj-dysk</string>
+    <string name="cannot_extract_to_cloud_drive">Nie można rozpakować archiwum do chmury.</string>
+    <string name="login_failed_message">Logowanie nie powiodło się: %1$s</string>
+    <string name="login_failed_retry">Logowanie nie powiodło się, spróbuj ponownie</string>
+    <string name="loading_user_data">Ładowanie danych użytkownika...</string>
+    <string name="file_list_action_split_screen">Podzielony ekran</string>
+    <string name="load_user_image_failed">Nie udało się załadować avatara użytkownika</string>
+    <string name="login_user_cancelled">Logowanie zostało anulowane, spróbuj ponownie</string>
+    <string name="cannot_copy_move_between_cloud_message">Przenoszenie plików między chmurami nie jest obecnie obsługiwane</string>
 </resources>

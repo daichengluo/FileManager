@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">닫기</string>
     <string name="copy">복사</string>
     <string name="cut">잘라내기</string>
@@ -631,4 +627,80 @@
 
     <string name="about_title">정보</string>
     <string name="about_version_title">버전</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="other">%1$,d개 항목</item>
+    </plurals>
+    <string name="navigation_login_account_tip">로그인</string>
+    <string name="navigation_internal_storage_name">내부 저장소</string>
+    <string name="navigation_quick_access_images">이미지</string>
+    <string name="navigation_quick_access_videos">비디오</string>
+    <string name="navigation_quick_access_audio">오디오</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d개 선택됨</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="other">%1$,d개 항목 이동 중</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="other">%1$,d개 항목 복사 중</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="other">%1$,d개 항목 추출 중</item>
+    </plurals>
+    <string name="file_list_action_sort">정렬</string>
+    <string name="file_list_action_view_type_list">목록 보기</string>
+    <string name="file_list_action_view_type_grid">그리드 보기</string>
+    <string name="file_list_action_exit_app">종료</string>
+    <string name="settings_quick_access_title">빠른 접근</string>
+    <string name="settings_quick_access_summary_empty">사용 가능한 빠른 접근 없음</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="other">%1$,d개 항목 전송 중</item>
+    </plurals>
+    <string name="file_transfer_cancelling">취소 중</string>
+    <string name="press_again_exit">한 번 더 눌러 종료</string>
+    <string name="login_expired">로그인이 만료되었습니다. 다시 로그인하세요</string>
+    <string name="server_error_occurred">서버 오류가 발생했습니다</string>
+    <string name="network_error">네트워크 오류. 나중에 다시 시도하세요</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">StarBoard Drive 로그인</string>
+    <string name="video_player_title">비디오 플레이어</string>
+    <string name="cloud_file_download_dialog_message">이 파일 유형은 미리보기가 불가능합니다. 로컬 폴더로 다운로드하시겠습니까?</string>
+    <string name="widget_launcher_login_button_text">로그인</string>
+    <string name="widget_launcher_login_tip_text">계정에 로그인하세요</string>
+    <string name="qrcode_login_tip_text">코드를 스캔하여 로그인</string>
+    <string name="use_password_login">비밀번호로 로그인</string>
+    <string name="use_qrcode_login">코드 스캔으로 로그인</string>
+    <string name="cloud_file_properties_download_url">다운로드 URL</string>
+    <string name="logout_cloud_drive_dialog_message">정말 로그아웃하시겠습니까?</string>
+    <string name="login_in">로그인</string>
+    <string name="log_out">로그아웃</string>
+    <string name="login_google_account">Google로 계속</string>
+    <string name="login_microsoft_account">Microsoft로 계속</string>
+    <string name="login_wechat_account">WeChat으로 계속</string>
+    <string name="message_logout">정말 로그아웃하시겠습니까? 다시 로그인하기 전까지 클라우드 파일에 접근할 수 없습니다.</string>
+    <string name="qrcode_login_scan_tip">카메라나 브라우저 앱을 사용하여 QR 코드를 스캔하고 로그인하세요</string>
+    <string name="user_agreement_text">%1$s 및 %2$s를 읽고 동의했습니다.</string>
+    <string name="user_agreement">사용자 약관</string>
+    <string name="privacy_policy">개인정보 처리방침</string>
+    <string name="check_agreement_first">사용자 약관에 동의하세요</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">취소 중...</string>
+    <string name="downloading">시작 중...</string>
+    <string name="uploading">업로드 중...</string>
+    <string name="upload_failed">업로드 실패</string>
+    <string name="download_failed">다운로드 실패</string>
+    <string name="upload_completed">업로드 완료</string>
+    <string name="download_completed">다운로드 완료</string>
+    <string name="my_files">내 파일</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">클라우드 드라이브로 압축을 풀 수 없습니다.</string>
+    <string name="login_failed_message">로그인 실패: %1$s</string>
+    <string name="login_failed_retry">로그인 실패, 다시 시도하세요</string>
+    <string name="loading_user_data">사용자 데이터 로딩 중...</string>
+    <string name="file_list_action_split_screen">분할 화면</string>
+    <string name="load_user_image_failed">사용자 아바타 로딩 실패</string>
+    <string name="login_user_cancelled">로그인이 취소되었습니다. 다시 시도하세요</string>
+    <string name="cannot_copy_move_between_cloud_message">현재 클라우드 간 파일 전송은 지원되지 않습니다</string>
 </resources>

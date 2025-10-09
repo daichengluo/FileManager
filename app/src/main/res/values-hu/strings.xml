@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Bezárás</string>
     <string name="copy">Másolás</string>
     <string name="cut">Kivágás</string>
@@ -563,4 +559,92 @@
 
     <string name="about_title">Névjegy</string>
     <string name="about_version_title">Verzió</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d elem</item>
+        <item quantity="other">%1$,d elem</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Bejelentkezés</string>
+    <string name="navigation_internal_storage_name">Belső tároló</string>
+    <string name="navigation_quick_access_images">Képek</string>
+    <string name="navigation_quick_access_videos">Videók</string>
+    <string name="navigation_quick_access_audio">Hang</string>
+    <string name="navigation_quick_access_apk">APK-k</string>
+    <string name="file_list_select_title_format_new">%1$,d kiválasztva</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">%1$,d elem áthelyezése</item>
+        <item quantity="other">%1$,d elem áthelyezése</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">%1$,d elem másolása</item>
+        <item quantity="other">%1$,d elem másolása</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">%1$,d elem kibontása</item>
+        <item quantity="other">%1$,d elem kibontása</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Rendezés</string>
+    <string name="file_list_action_view_type_list">Lista nézet</string>
+    <string name="file_list_action_view_type_grid">Rács nézet</string>
+    <string name="file_list_action_exit_app">Kilépés</string>
+    <string name="settings_quick_access_title">Gyors hozzáférés</string>
+    <string name="settings_quick_access_summary_empty">Nincs engedélyezett gyors hozzáférés</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">%1$,d elem átvitele</item>
+        <item quantity="other">%1$,d elem átvitele</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Mégse...</string>
+    <string name="press_again_exit">Nyomja meg újra a kilépéshez</string>
+    <string name="login_expired">A bejelentkezés lejárt. Kérjük, jelentkezzen be újra</string>
+    <string name="server_error_occurred">Szerverhiba történt</string>
+    <string name="network_error">Hálózati hiba. Kérjük, próbálja újra később</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Jelentkezzen be a StarBoard Drive-ba</string>
+    <string name="video_player_title">Videolejátszó</string>
+    <string name="cloud_file_download_dialog_message">Ez a fájltípus nem tekinthető meg. Letölti a helyi mappába?</string>
+    <string name="widget_launcher_login_button_text">Bejelentkezés</string>
+    <string name="widget_launcher_login_tip_text">Kérjük, jelentkezzen be fiókjába.</string>
+    <string name="qrcode_login_tip_text">Olvassa be a kódot a bejelentkezéshez</string>
+    <string name="use_password_login">Jelszóval való bejelentkezés</string>
+    <string name="use_qrcode_login">Kód beolvasásával jelentkezzen be</string>
+    <string name="cloud_file_properties_download_url">Letöltési link</string>
+    <string name="logout_cloud_drive_dialog_message">Biztosan kijelentkezik?</string>
+    <string name="login_in">Bejelentkezés</string>
+    <string name="log_out">Kijelentkezés</string>
+    <string name="login_google_account">Folytatás Google-lal</string>
+    <string name="login_microsoft_account">Folytatás Microsoft-fiókkal</string>
+    <string name="login_wechat_account">Folytatás WeChattel</string>
+    <string name="message_logout">Biztosan kijelentkezik? Nem fér majd hozzá a felhőfájlokhoz, amíg újra be nem jelentkezik.</string>
+    <string name="qrcode_login_scan_tip">Használja a kamerát vagy a böngészőt a QR-kód beolvasásához és a bejelentkezéshez</string>
+    <string name="user_agreement_text">Elolvastam és elfogadom a %1$s és %2$s.</string>
+    <string name="user_agreement">Felhasználói szerződés</string>
+    <string name="privacy_policy">Adatvédelmi irányelvek</string>
+    <string name="check_agreement_first">Kérjük, fogadja el a felhasználói szerződést</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Mégse...</string>
+    <string name="downloading">Indítás...</string>
+    <string name="uploading">Feltöltés...</string>
+    <string name="upload_failed">A feltöltés sikertelen</string>
+    <string name="download_failed">A letöltés sikertelen</string>
+    <string name="upload_completed">Feltöltés befejezve</string>
+    <string name="download_completed">Letöltés befejezve</string>
+    <string name="my_files">Saját fájlok</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Nem lehet kicsomagolni az archívumot a felhőbe.</string>
+    <string name="login_failed_message">A bejelentkezés sikertelen: %1$s</string>
+    <string name="login_failed_retry">A bejelentkezés sikertelen, próbálja újra</string>
+    <string name="loading_user_data">Felhasználói adatok betöltése...</string>
+    <string name="file_list_action_split_screen">Megosztott képernyő</string>
+    <string name="load_user_image_failed">A felhasználói avatar betöltése sikertelen</string>
+    <string name="login_user_cancelled">A bejelentkezés megszakadt, próbálja újra</string>
+    <string name="cannot_copy_move_between_cloud_message">Felhőközi fájlátvitel jelenleg nem támogatott</string>
 </resources>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Tutup</string>
     <string name="copy">Salin</string>
     <string name="cut">Potong</string>
@@ -546,4 +542,88 @@
 
     <string name="about_title">Tentang</string>
     <string name="about_version_title">Versi</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d item</item>
+        <item quantity="other">%1$,d item</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Masuk</string>
+    <string name="navigation_internal_storage_name">Penyimpanan internal</string>
+    <string name="navigation_quick_access_images">Gambar</string>
+    <string name="navigation_quick_access_videos">Video</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d dipilih</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="other">Memindahkan %1$,d item</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="other">Menyalin %1$,d item</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="other">Mengekstrak %1$,d item</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Urutkan</string>
+    <string name="file_list_action_view_type_list">Tampilan daftar</string>
+    <string name="file_list_action_view_type_grid">Tampilan grid</string>
+    <string name="file_list_action_exit_app">Keluar</string>
+    <string name="settings_quick_access_title">Akses cepat</string>
+    <string name="settings_quick_access_summary_empty">Tidak ada akses cepat yang diaktifkan</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="other">Memindahkan %1$,d item</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Membatalkan...</string>
+    <string name="press_again_exit">Tekan lagi untuk keluar</string>
+    <string name="login_expired">Sesi login berakhir. Silakan masuk kembali</string>
+    <string name="server_error_occurred">Terjadi kesalahan server</string>
+    <string name="network_error">Jaringan bermasalah. Silakan coba lagi nanti</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Masuk ke StarBoard Drive</string>
+    <string name="video_player_title">Pemutar video</string>
+    <string name="cloud_file_download_dialog_message">Jenis file ini tidak dapat dipratinjau. Apakah ingin diunduh ke folder lokal?</string>
+    <string name="widget_launcher_login_button_text">Masuk</string>
+    <string name="widget_launcher_login_tip_text">Silakan masuk ke akun Anda.</string>
+    <string name="qrcode_login_tip_text">Pindai kode untuk masuk</string>
+    <string name="use_password_login">Masuk dengan kata sandi</string>
+    <string name="use_qrcode_login">Masuk dengan memindai kode</string>
+    <string name="cloud_file_properties_download_url">Tautan Unduhan</string>
+    <string name="logout_cloud_drive_dialog_message">Apakah Anda yakin ingin keluar?</string>
+    <string name="login_in">Masuk</string>
+    <string name="log_out">Keluar</string>
+    <string name="login_google_account">Lanjut dengan Google</string>
+    <string name="login_microsoft_account">Lanjut dengan Microsoft</string>
+    <string name="login_wechat_account">Lanjut dengan WeChat</string>
+    <string name="message_logout">Apakah Anda yakin ingin keluar? Anda tidak akan dapat mengakses file cloud sampai masuk kembali.</string>
+    <string name="qrcode_login_scan_tip">Gunakan kamera atau aplikasi browser untuk memindai kode QR dan masuk</string>
+    <string name="user_agreement_text">Saya telah membaca dan menyetujui %1$s dan %2$s.</string>
+    <string name="user_agreement">Perjanjian Pengguna</string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="check_agreement_first">Silakan centang Perjanjian Pengguna</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Membatalkan...</string>
+    <string name="downloading">Memulai...</string>
+    <string name="uploading">Mengunggah...</string>
+    <string name="upload_failed">Unggah gagal</string>
+    <string name="download_failed">Unduh gagal</string>
+    <string name="upload_completed">Unggah selesai</string>
+    <string name="download_completed">Unduh selesai</string>
+    <string name="my_files">File saya</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Tidak dapat mengekstrak arsip ke cloud drive.</string>
+    <string name="login_failed_message">Login gagal: %1$s</string>
+    <string name="login_failed_retry">Login gagal, silakan coba lagi</string>
+    <string name="loading_user_data">Memuat data pengguna...</string>
+    <string name="file_list_action_split_screen">Layar terbagi</string>
+    <string name="load_user_image_failed">Gagal memuat avatar pengguna</string>
+    <string name="login_user_cancelled">Login dibatalkan, silakan coba lagi</string>
+    <string name="cannot_copy_move_between_cloud_message">Transfer file antar-cloud belum didukung</string>
 </resources>

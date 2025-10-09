@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">Bestandsbeheerder</string>
-
     <string name="close">Sluiten</string>
     <string name="copy">Kopiëren</string>
     <string name="cut">Knippen</string>
@@ -662,4 +658,85 @@
 
     <string name="about_title">Over</string>
     <string name="about_version_title">Versie</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d item</item>
+        <item quantity="other">%1$,d items</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Inloggen</string>
+    <string name="navigation_internal_storage_name">Interne opslag</string>
+    <string name="navigation_quick_access_images">Afbeeldingen</string>
+    <string name="navigation_quick_access_videos">Video\'s</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APK\'s</string>
+    <string name="file_list_select_title_format_new">%1$,d geselecteerd</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">%1$,d item verplaatsen</item>
+        <item quantity="other">%1$,d items verplaatsen</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">%1$,d item kopiëren</item>
+        <item quantity="other">%1$,d items kopiëren</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">%1$,d item uitpakken</item>
+        <item quantity="other">%1$,d items uitpakken</item>
+    </plurals>
+    <string name="file_list_action_sort">Sorteren</string>
+    <string name="file_list_action_view_type_list">Lijstweergave</string>
+    <string name="file_list_action_view_type_grid">Rasterweergave</string>
+    <string name="file_list_action_exit_app">Afsluiten</string>
+    <string name="settings_quick_access_title">Snelle toegang</string>
+    <string name="settings_quick_access_summary_empty">Geen snelle toegang ingeschakeld</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">%1$,d item wordt overgezet</item>
+        <item quantity="other">%1$,d items worden overgezet</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Annuleren</string>
+    <string name="press_again_exit">Nogmaals drukken om af te sluiten</string>
+    <string name="login_expired">Sessie verlopen. Log opnieuw in</string>
+    <string name="server_error_occurred">Er is een serverfout opgetreden</string>
+    <string name="network_error">Netwerkfout. Probeer later opnieuw</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Log in op StarBoard Drive</string>
+    <string name="video_player_title">Videospeler</string>
+    <string name="cloud_file_download_dialog_message">Dit bestandstype kan niet worden bekeken. Wilt u het downloaden naar een lokale map?</string>
+    <string name="widget_launcher_login_button_text">Inloggen</string>
+    <string name="widget_launcher_login_tip_text">Log in op uw account</string>
+    <string name="qrcode_login_tip_text">Scan de code om in te loggen</string>
+    <string name="use_password_login">Inloggen met wachtwoord</string>
+    <string name="use_qrcode_login">Inloggen door code te scannen</string>
+    <string name="cloud_file_properties_download_url">Download-URL</string>
+    <string name="logout_cloud_drive_dialog_message">Weet u zeker dat u wilt uitloggen?</string>
+    <string name="login_in">Inloggen</string>
+    <string name="log_out">Uitloggen</string>
+    <string name="login_google_account">Doorgaan met Google</string>
+    <string name="login_microsoft_account">Doorgaan met Microsoft</string>
+    <string name="login_wechat_account">Doorgaan met WeChat</string>
+    <string name="message_logout">Weet u zeker dat u wilt uitloggen? U kunt uw cloudbestanden pas weer openen na opnieuw inloggen.</string>
+    <string name="qrcode_login_scan_tip">Gebruik de camera of browser-app om de QR-code te scannen en in te loggen</string>
+    <string name="user_agreement_text">Ik heb de %1$s en %2$s gelezen en ga ermee akkoord.</string>
+    <string name="user_agreement">Gebruikersovereenkomst</string>
+    <string name="privacy_policy">Privacybeleid</string>
+    <string name="check_agreement_first">Accepteer eerst de gebruikersovereenkomst</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Annuleren...</string>
+    <string name="downloading">Bezig met starten...</string>
+    <string name="uploading">Uploaden...</string>
+    <string name="upload_failed">Upload mislukt</string>
+    <string name="download_failed">Download mislukt</string>
+    <string name="upload_completed">Upload voltooid</string>
+    <string name="download_completed">Download voltooid</string>
+    <string name="my_files">Mijn bestanden</string>
+    <string name="my_drive">mijn-schijf</string>
+    <string name="cannot_extract_to_cloud_drive">Kan archief niet uitpakken naar cloudopslag.</string>
+    <string name="login_failed_message">Inloggen mislukt: %1$s</string>
+    <string name="login_failed_retry">Inloggen mislukt, probeer opnieuw</string>
+    <string name="loading_user_data">Gebruikersgegevens laden...</string>
+    <string name="file_list_action_split_screen">Gesplitst scherm</string>
+    <string name="load_user_image_failed">Gebruikersavatar laden mislukt</string>
+    <string name="login_user_cancelled">Inloggen geannuleerd, probeer opnieuw</string>
+    <string name="cannot_copy_move_between_cloud_message">Bestandsoverdracht tussen clouds wordt momenteel niet ondersteund</string>
 </resources>

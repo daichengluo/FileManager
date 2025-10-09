@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">skráastjóri</string>
-
     <string name="close">Loka</string>
     <string name="copy">Afrita</string>
     <string name="cut">Klippa</string>
@@ -662,4 +658,92 @@
 
     <string name="about_title">Um hugbúnaðinn</string>
     <string name="about_version_title">Útgáfa</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d atriði</item>
+        <item quantity="other">%1$,d atriði</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Skrá inn</string>
+    <string name="navigation_internal_storage_name">Innra minni</string>
+    <string name="navigation_quick_access_images">Myndir</string>
+    <string name="navigation_quick_access_videos">Myndbönd</string>
+    <string name="navigation_quick_access_audio">Hljóð</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d valin</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Færa %1$,d atriði</item>
+        <item quantity="other">Færa %1$,d atriði</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Afrita %1$,d atriði</item>
+        <item quantity="other">Afrita %1$,d atriði</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Afþjöppun %1$,d atriði</item>
+        <item quantity="other">Afþjöppun %1$,d atriði</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Raða</string>
+    <string name="file_list_action_view_type_list">Listaútsýni</string>
+    <string name="file_list_action_view_type_grid">Grindútsýni</string>
+    <string name="file_list_action_exit_app">Hætta</string>
+    <string name="settings_quick_access_title">Flýtileið</string>
+    <string name="settings_quick_access_summary_empty">Engin flýtileið virk</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Flytja %1$,d atriði</item>
+        <item quantity="other">Flytja %1$,d atriði</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Hætta við...</string>
+    <string name="press_again_exit">Ýttu aftur til að hætta</string>
+    <string name="login_expired">Innskráning útrunnin. Vinsamlegast skráðu þig inn aftur</string>
+    <string name="server_error_occurred">Villa kom upp á þjón</string>
+    <string name="network_error">Netvandamál. Vinsamlegast reyndu aftur síðar</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Skráðu þig inn á StarBoard Drive</string>
+    <string name="video_player_title">Myndbandsspilari</string>
+    <string name="cloud_file_download_dialog_message">Þennan tegund skráa er ekki hægt að forskoða. Viltu hlaða niður í staðbundinn möppu?</string>
+    <string name="widget_launcher_login_button_text">Skrá inn</string>
+    <string name="widget_launcher_login_tip_text">Vinsamlegast skráðu þig inn á reikninginn þinn.</string>
+    <string name="qrcode_login_tip_text">Skannaðu kóðann til að skrá þig inn</string>
+    <string name="use_password_login">Skrá inn með lykilorði</string>
+    <string name="use_qrcode_login">Skrá inn með því að skanna kóðann</string>
+    <string name="cloud_file_properties_download_url">Hlekkur fyrir niðurhal</string>
+    <string name="logout_cloud_drive_dialog_message">Ertu viss um að þú viljir skrá þig út?</string>
+    <string name="login_in">Skrá inn</string>
+    <string name="log_out">Skrá út</string>
+    <string name="login_google_account">Halda áfram með Google</string>
+    <string name="login_microsoft_account">Halda áfram með Microsoft</string>
+    <string name="login_wechat_account">Halda áfram með WeChat</string>
+    <string name="message_logout">Ertu viss um að þú viljir skrá þig út? Þú munt ekki geta nálgast skýjaskrár þar til þú skráir þig inn aftur.</string>
+    <string name="qrcode_login_scan_tip">Vinsamlegast notaðu myndavél eða vafraforrit til að skanna QR-kóðann og skrá þig inn</string>
+    <string name="user_agreement_text">Ég hef lesið og samþykki %1$s og %2$s.</string>
+    <string name="user_agreement">Notendaskilmálar</string>
+    <string name="privacy_policy">Persónuverndarskýrsla</string>
+    <string name="check_agreement_first">Vinsamlegast merktu við notendaskilmála</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Hætta við...</string>
+    <string name="downloading">Byrjar...</string>
+    <string name="uploading">Hleð inn...</string>
+    <string name="upload_failed">Upphleðsla mistókst</string>
+    <string name="download_failed">Niðurhal mistókst</string>
+    <string name="upload_completed">Upphleðsla lokið</string>
+    <string name="download_completed">Niðurhal lokið</string>
+    <string name="my_files">Skrár mínar</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Ekki er hægt að afþjappa skjalasafnið í skýjadrifið.</string>
+    <string name="login_failed_message">Innskráning mistókst: %1$s</string>
+    <string name="login_failed_retry">Innskráning mistókst, vinsamlegast reyndu aftur</string>
+    <string name="loading_user_data">Hleð inn notendagögnum...</string>
+    <string name="file_list_action_split_screen">Skipt skjár</string>
+    <string name="load_user_image_failed">Mistókst að hlaða inn notendavatni</string>
+    <string name="login_user_cancelled">Innskráning var hætt, vinsamlegast reyndu aftur</string>
+    <string name="cannot_copy_move_between_cloud_message">Yfir-skýjaflutningur er ekki studdur ennþá</string>
 </resources>

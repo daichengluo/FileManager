@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Tanca</string>
     <string name="copy">Copia</string>
     <string name="cut">Retalla</string>
@@ -602,4 +598,85 @@
 
     <string name="about_title">Quant a</string>
     <string name="about_version_title">Versió</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d element</item>
+        <item quantity="other">%1$,d elements</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Inicia sessió</string>
+    <string name="navigation_internal_storage_name">Emmagatzematge intern</string>
+    <string name="navigation_quick_access_images">Imatges</string>
+    <string name="navigation_quick_access_videos">Vídeos</string>
+    <string name="navigation_quick_access_audio">Àudio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">%1$,d seleccionats</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Movent %1$,d element</item>
+        <item quantity="other">Movent %1$,d elements</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Copiant %1$,d element</item>
+        <item quantity="other">Copiant %1$,d elements</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Extraient %1$,d element</item>
+        <item quantity="other">Extraient %1$,d elements</item>
+    </plurals>
+    <string name="file_list_action_sort">Ordena</string>
+    <string name="file_list_action_view_type_list">Vista de llista</string>
+    <string name="file_list_action_view_type_grid">Vista de graella</string>
+    <string name="file_list_action_exit_app">Surt</string>
+    <string name="settings_quick_access_title">Accés ràpid</string>
+    <string name="settings_quick_access_summary_empty">Cap accés ràpid habilitat</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Transferint %1$,d element</item>
+        <item quantity="other">Transferint %1$,d elements</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Cancel·lant</string>
+    <string name="press_again_exit">Prem novament per sortir</string>
+    <string name="login_expired">La sessió ha expirat. Torna a iniciar sessió</string>
+    <string name="server_error_occurred">S\'ha produït un error al servidor</string>
+    <string name="network_error">Anomalia de xarxa. Torna-ho a provar més tard</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Inicia sessió a StarBoard Drive</string>
+    <string name="video_player_title">Reproductor de vídeo</string>
+    <string name="cloud_file_download_dialog_message">Aquest tipus de fitxer no es pot previsualitzar. Vols descarregar-lo a una carpeta local?</string>
+    <string name="widget_launcher_login_button_text">Inicia sessió</string>
+    <string name="widget_launcher_login_tip_text">Si us plau, inicia sessió al teu compte.</string>
+    <string name="qrcode_login_tip_text">Escaneja el codi per iniciar sessió</string>
+    <string name="use_password_login">Inicia sessió amb contrasenya</string>
+    <string name="use_qrcode_login">Inicia sessió escanejant el codi</string>
+    <string name="cloud_file_properties_download_url">URL de descàrrega</string>
+    <string name="logout_cloud_drive_dialog_message">Segur que vols tancar la sessió?</string>
+    <string name="login_in">Inicia sessió</string>
+    <string name="log_out">Tanca sessió</string>
+    <string name="login_google_account">Continua amb Google</string>
+    <string name="login_microsoft_account">Continua amb Microsoft</string>
+    <string name="login_wechat_account">Continua amb WeChat</string>
+    <string name="message_logout">Segur que vols tancar la sessió? No podràs accedir als teus fitxers al núvol fins que tornis a iniciar sessió.</string>
+    <string name="qrcode_login_scan_tip">Utilitza la càmera o l\'aplicació del navegador per escanejar el codi QR i iniciar sessió</string>
+    <string name="user_agreement_text">He llegit i accepto el %1$s i la %2$s.</string>
+    <string name="user_agreement">Acord d\'usuari</string>
+    <string name="privacy_policy">Política de privacitat</string>
+    <string name="check_agreement_first">Si us plau, marca l\'acord d\'usuari</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Cancel·lant...</string>
+    <string name="downloading">Iniciant...</string>
+    <string name="uploading">Pujant...</string>
+    <string name="upload_failed">La pujada ha fallat</string>
+    <string name="download_failed">La descàrrega ha fallat</string>
+    <string name="upload_completed">Pujada completada</string>
+    <string name="download_completed">Descàrrega completada</string>
+    <string name="my_files">Els meus fitxers</string>
+    <string name="my_drive">el-meu-drive</string>
+    <string name="cannot_extract_to_cloud_drive">No es pot extreure l\'arxiu al núvol.</string>
+    <string name="login_failed_message">Error d\'inici de sessió: %1$s</string>
+    <string name="login_failed_retry">Error d\'inici de sessió, torna-ho a provar</string>
+    <string name="loading_user_data">Carregant dades de l\'usuari...</string>
+    <string name="file_list_action_split_screen">Pantalla dividida</string>
+    <string name="load_user_image_failed">Error en carregar l\'avatar de l\'usuari</string>
+    <string name="login_user_cancelled">L\'usuari ha cancel·lat l\'inici de sessió, torna-ho a provar</string>
+    <string name="cannot_copy_move_between_cloud_message">La transferència de fitxers entre núvols no està admesa actualment</string>
 </resources>

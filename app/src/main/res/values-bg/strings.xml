@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Затваряне</string>
     <string name="copy">Копиране</string>
     <string name="cut">Изрязване</string>
@@ -646,4 +642,85 @@
 
     <string name="about_title">Относно</string>
     <string name="about_version_title">Версия</string>
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d елемент</item>
+        <item quantity="other">%1$,d елемента</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Вход</string>
+    <string name="navigation_internal_storage_name">Вътрешна памет</string>
+    <string name="navigation_quick_access_images">Изображения</string>
+    <string name="navigation_quick_access_videos">Видеа</string>
+    <string name="navigation_quick_access_audio">Аудио</string>
+    <string name="navigation_quick_access_apk">APK файлове</string>
+    <string name="file_list_select_title_format_new">%1$,d избрани</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Преместване на %1$,d елемент</item>
+        <item quantity="other">Преместване на %1$,d елемента</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Копиране на %1$,d елемент</item>
+        <item quantity="other">Копиране на %1$,d елемента</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Разархивиране на %1$,d елемент</item>
+        <item quantity="other">Разархивиране на %1$,d елемента</item>
+    </plurals>
+    <string name="file_list_action_sort">Сортиране</string>
+    <string name="file_list_action_view_type_list">Списъчен изглед</string>
+    <string name="file_list_action_view_type_grid">Решетъчен изглед</string>
+    <string name="file_list_action_exit_app">Изход</string>
+    <string name="settings_quick_access_title">Бърз достъп</string>
+    <string name="settings_quick_access_summary_empty">Няма активиран бърз достъп</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Прехвърляне на %1$,d елемент</item>
+        <item quantity="other">Прехвърляне на %1$,d елемента</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Отказване</string>
+    <string name="press_again_exit">Натиснете отново за изход</string>
+    <string name="login_expired">Сесията е изтекла. Моля, влезте отново</string>
+    <string name="server_error_occurred">Възникна грешка в сървъра</string>
+    <string name="network_error">Мрежова аномалия. Опитайте отново по-късно</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Влезте в StarBoard Drive</string>
+    <string name="video_player_title">Видео плейър</string>
+    <string name="cloud_file_download_dialog_message">Този тип файл не може да бъде прегледан. Искате ли да го изтеглите в локална папка?</string>
+    <string name="widget_launcher_login_button_text">Вход</string>
+    <string name="widget_launcher_login_tip_text">Моля, влезте в профила си.</string>
+    <string name="qrcode_login_tip_text">Сканирайте кода, за да влезете</string>
+    <string name="use_password_login">Влезте с парола</string>
+    <string name="use_qrcode_login">Влезте чрез сканиране на кода</string>
+    <string name="cloud_file_properties_download_url">Адрес за изтегляне</string>
+    <string name="logout_cloud_drive_dialog_message">Сигурни ли сте, че искате да излезете?</string>
+    <string name="login_in">Вход</string>
+    <string name="log_out">Изход</string>
+    <string name="login_google_account">Продължете с Google</string>
+    <string name="login_microsoft_account">Продължете с Microsoft</string>
+    <string name="login_wechat_account">Продължете с WeChat</string>
+    <string name="message_logout">Сигурни ли сте, че искате да излезете? Няма да имате достъп до облачните си файлове, докато не влезете отново.</string>
+    <string name="qrcode_login_scan_tip">Моля, използвайте камерата или браузърното приложение, за да сканирате QR кода и да влезете</string>
+    <string name="user_agreement_text">Прочетох и се съгласявам с %1$s и %2$s.</string>
+    <string name="user_agreement">Потребителско споразумение</string>
+    <string name="privacy_policy">Политика за поверителност</string>
+    <string name="check_agreement_first">Моля, приемете потребителското споразумение</string>
+    <string name="google_drive">Google Диск</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Отказване...</string>
+    <string name="downloading">Стартиране...</string>
+    <string name="uploading">Качване...</string>
+    <string name="upload_failed">Качването неуспешно</string>
+    <string name="download_failed">Изтеглянето неуспешно</string>
+    <string name="upload_completed">Качването завърши</string>
+    <string name="download_completed">Изтеглянето завърши</string>
+    <string name="my_files">Моите файлове</string>
+    <string name="my_drive">моят-диск</string>
+    <string name="cannot_extract_to_cloud_drive">Не може да се разархивира в облачното устройство.</string>
+
+    <string name="login_failed_message">Неуспешен вход: %1$s</string>
+    <string name="login_failed_retry">Входът неуспешен, моля опитайте отново</string>
+    <string name="loading_user_data">Зареждане на потребителски данни...</string>
+    <string name="file_list_action_split_screen">Разделен екран</string>
+    <string name="load_user_image_failed">Неуспешно зареждане на аватара</string>
+    <string name="login_user_cancelled">Входът е отменен, моля опитайте отново</string>
+    <string name="cannot_copy_move_between_cloud_message">Кръстосан трансфер на файлове между облаци не се поддържа засега</string>
 </resources>

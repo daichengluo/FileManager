@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Sulje</string>
     <string name="copy">Kopioi</string>
     <string name="cut">Leikkaa</string>
@@ -546,4 +542,92 @@
 
     <string name="about_title">Tietoa</string>
     <string name="about_version_title">Versio</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d kohde</item>
+        <item quantity="other">%1$,d kohdetta</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Kirjaudu sisään</string>
+    <string name="navigation_internal_storage_name">Sisäinen tallennustila</string>
+    <string name="navigation_quick_access_images">Kuvat</string>
+    <string name="navigation_quick_access_videos">Videot</string>
+    <string name="navigation_quick_access_audio">Ääni</string>
+    <string name="navigation_quick_access_apk">Asennustiedostot</string>
+    <string name="file_list_select_title_format_new">%1$,d valittu</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Siirretään %1$,d kohde</item>
+        <item quantity="other">Siirretään %1$,d kohdetta</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopioidaan %1$,d kohde</item>
+        <item quantity="other">Kopioidaan %1$,d kohdetta</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Puretaan %1$,d kohde</item>
+        <item quantity="other">Puretaan %1$,d kohdetta</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Lajittele</string>
+    <string name="file_list_action_view_type_list">Luettelonäkymä</string>
+    <string name="file_list_action_view_type_grid">Ruudukkonäkymä</string>
+    <string name="file_list_action_exit_app">Poistu</string>
+    <string name="settings_quick_access_title">Pikakäyttö</string>
+    <string name="settings_quick_access_summary_empty">Pikakäyttö ei ole käytössä</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Siirretään %1$,d kohde</item>
+        <item quantity="other">Siirretään %1$,d kohdetta</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Peruutetaan</string>
+    <string name="press_again_exit">Paina uudelleen poistuaksesi</string>
+    <string name="login_expired">Kirjautuminen vanhentunut. Kirjaudu uudelleen</string>
+    <string name="server_error_occurred">Palvelinvirhe</string>
+    <string name="network_error">Verkkohäiriö. Yritä myöhemmin uudelleen</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Kirjaudu StarBoard Driveen</string>
+    <string name="video_player_title">Videonsoitin</string>
+    <string name="cloud_file_download_dialog_message">Tätä tiedostotyyppiä ei voi esikatsella. Haluatko ladata sen paikalliseen kansioon?</string>
+    <string name="widget_launcher_login_button_text">Kirjaudu sisään</string>
+    <string name="widget_launcher_login_tip_text">Kirjaudu sisään tilillesi.</string>
+    <string name="qrcode_login_tip_text">Skannaa koodi kirjautuaksesi</string>
+    <string name="use_password_login">Kirjaudu salasanalla</string>
+    <string name="use_qrcode_login">Kirjaudu skannaamalla koodi</string>
+    <string name="cloud_file_properties_download_url">Latauslinkki</string>
+    <string name="logout_cloud_drive_dialog_message">Haluatko varmasti kirjautua ulos?</string>
+    <string name="login_in">Kirjaudu sisään</string>
+    <string name="log_out">Kirjaudu ulos</string>
+    <string name="login_google_account">Jatka Googlella</string>
+    <string name="login_microsoft_account">Jatka Microsoftilla</string>
+    <string name="login_wechat_account">Jatka WeChatilla</string>
+    <string name="message_logout">Haluatko varmasti kirjautua ulos? Et pääse käsiksi pilvitiedostoihisi ennen kuin kirjaudut uudelleen.</string>
+    <string name="qrcode_login_scan_tip">Käytä kameraa tai selainta skannataksesi QR-koodi ja kirjautuaksesi sisään</string>
+    <string name="user_agreement_text">Olen lukenut ja hyväksyn %1$s ja %2$s.</string>
+    <string name="user_agreement">Käyttäjäehtoja</string>
+    <string name="privacy_policy">Tietosuojakäytäntö</string>
+    <string name="check_agreement_first">Ole hyvä ja tarkista käyttäjäehdot</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Peruutetaan...</string>
+    <string name="downloading">Käynnistetään...</string>
+    <string name="uploading">Lähetetään...</string>
+    <string name="upload_failed">Lähetys epäonnistui</string>
+    <string name="download_failed">Lataus epäonnistui</string>
+    <string name="upload_completed">Lähetys valmis</string>
+    <string name="download_completed">Lataus valmis</string>
+    <string name="my_files">Omat tiedostot</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Arkistoa ei voi purkaa pilvitallennustilaan.</string>
+    <string name="login_failed_message">Kirjautuminen epäonnistui: %1$s</string>
+    <string name="login_failed_retry">Kirjautuminen epäonnistui, yritä uudelleen</string>
+    <string name="loading_user_data">Ladataan käyttäjätietoja...</string>
+    <string name="file_list_action_split_screen">Jaettu näyttö</string>
+    <string name="load_user_image_failed">Käyttäjäkuvaa ei voitu ladata</string>
+    <string name="login_user_cancelled">Kirjautuminen peruutettu, yritä uudelleen</string>
+    <string name="cannot_copy_move_between_cloud_message">Pilvitiedostojen välistä siirtoa ei tueta tällä hetkellä</string>
 </resources>

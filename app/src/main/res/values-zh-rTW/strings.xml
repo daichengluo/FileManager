@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">檔案管理員</string>
-
     <string name="close">關閉</string>
     <string name="copy">複製</string>
     <string name="cut">剪下</string>
@@ -632,4 +628,80 @@
 
     <string name="about_title">關於</string>
     <string name="about_version_title">版本</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="other">%1$,d 項</item>
+    </plurals>
+    <string name="navigation_login_account_tip">請登入帳號</string>
+    <string name="navigation_internal_storage_name">內部儲存</string>
+    <string name="navigation_quick_access_images">圖片</string>
+    <string name="navigation_quick_access_videos">影片</string>
+    <string name="navigation_quick_access_audio">音訊</string>
+    <string name="navigation_quick_access_apk">安裝檔</string>
+    <string name="file_list_select_title_format_new">已選擇 %1$,d 項</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="other">移動 %1$,d 項</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="other">複製 %1$,d 項</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="other">解壓 %1$,d 項</item>
+    </plurals>
+    <string name="file_list_action_view_type_list">列表檢視</string>
+    <string name="file_list_action_view_type_grid">方格檢視</string>
+    <string name="file_list_action_sort">排序</string>
+    <string name="file_list_action_exit_app">退出應用程式</string>
+    <string name="settings_quick_access_title">快速存取</string>
+    <string name="settings_quick_access_summary_empty">尚未啟用快速存取</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="other">正在傳輸 %1$,d 項</item>
+    </plurals>
+    <string name="file_transfer_cancelling">正在取消</string>
+    <string name="press_again_exit">再按一次退出應用程式</string>
+    <string name="login_expired">登入已過期，請重新登入</string>
+    <string name="server_error_occurred">發生伺服器錯誤</string>
+    <string name="network_error">網路異常，請稍後重試</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">登入 StarBoard Drive</string>
+    <string name="video_player_title">影片播放器</string>
+    <string name="cloud_file_download_dialog_message">該網盤檔案類型無法預覽，是否下載到本地資料夾？</string>
+    <string name="widget_launcher_login_button_text">登入</string>
+    <string name="widget_launcher_login_tip_text">請登入您的帳號。</string>
+    <string name="qrcode_login_tip_text">掃描登入</string>
+    <string name="use_password_login">使用密碼登入</string>
+    <string name="use_qrcode_login">使用掃碼登入</string>
+    <string name="cloud_file_properties_download_url">下載連結</string>
+    <string name="logout_cloud_drive_dialog_message">確定退出當前帳號嗎？</string>
+    <string name="login_in">登入</string>
+    <string name="log_out">登出</string>
+    <string name="login_google_account">使用 Google 登入</string>
+    <string name="login_microsoft_account">使用 Microsoft 登入</string>
+    <string name="login_wechat_account">使用 WeChat 登入</string>
+    <string name="message_logout">你確定要登出嗎？登出後將無法存取雲端檔案，直到你重新登入。</string>
+    <string name="qrcode_login_scan_tip">請使用相機或瀏覽器應用掃描 QR 碼登入</string>
+    <string name="user_agreement_text">我已閱讀並同意 %1$s 和 %2$s。</string>
+    <string name="user_agreement">使用者協議</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="check_agreement_first">請勾選使用者協議</string>
+    <string name="google_drive">Google 雲端硬碟</string>
+    <string name="one_drive">Microsoft OneDrive</string>
+    <string name="canceling_transfer">取消中...</string>
+    <string name="downloading">下載中...</string>
+    <string name="uploading">上傳中...</string>
+    <string name="upload_failed">上傳失敗</string>
+    <string name="download_failed">下載失敗</string>
+    <string name="upload_completed">上傳完成</string>
+    <string name="download_completed">下載完成</string>
+    <string name="my_files">我的檔案</string>
+    <string name="my_drive">我的雲端硬碟</string>
+    <string name="cannot_extract_to_cloud_drive">無法解壓檔案到網盤中</string>
+    <string name="login_failed_message">登入失敗：%1$s</string>
+    <string name="login_failed_retry">登入失敗，請重試</string>
+    <string name="loading_user_data">正在載入使用者資料</string>
+    <string name="file_list_action_split_screen">分割畫面模式</string>
+    <string name="load_user_image_failed">載入使用者頭像失敗</string>
+    <string name="login_user_cancelled">登入已取消，請重試</string>
+    <string name="cannot_copy_move_between_cloud_message">暫不支援網盤間互傳</string>
 </resources>

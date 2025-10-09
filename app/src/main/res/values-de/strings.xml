@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Schließen</string>
     <string name="copy">Kopieren</string>
     <string name="cut">Ausschneiden</string>
@@ -662,4 +658,87 @@
 
     <string name="about_title">Über</string>
     <string name="about_version_title">Version</string>
+
+    <!--  add new  -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d Element</item>
+        <item quantity="other">%1$,d Elemente</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Bitte anmelden</string>
+    <string name="navigation_internal_storage_name">Interner Speicher</string>
+    <string name="navigation_quick_access_images">Bilder</string>
+    <string name="navigation_quick_access_videos">Videos</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">Ausgewählt %1$,d Elemente</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Verschiebe %1$,d Element</item>
+        <item quantity="other">Verschiebe %1$,d Elemente</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopiere %1$,d Element</item>
+        <item quantity="other">Kopiere %1$,d Elemente</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Entpacke %1$,d Element</item>
+        <item quantity="other">Entpacke %1$,d Elemente</item>
+    </plurals>
+    <string name="file_list_action_view_type_list">Listenansicht</string>
+    <string name="file_list_action_view_type_grid">Rasteransicht</string>
+    <string name="file_list_action_sort">Sortieren</string>
+    <string name="file_list_action_exit_app">App beenden</string>
+    <string name="settings_quick_access_title">Schnellzugriff</string>
+    <string name="settings_quick_access_summary_empty">Kein Schnellzugriff aktiviert</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Übertrage %1$,d Element</item>
+        <item quantity="other">Übertrage %1$,d Elemente</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Abbrechen</string>
+    <string name="press_again_exit">Erneut drücken zum Beenden</string>
+    <string name="login_expired">Login abgelaufen, bitte erneut anmelden</string>
+    <string name="server_error_occurred">Ein Serverfehler ist aufgetreten</string>
+    <string name="network_error">Netzwerkfehler, bitte später erneut versuchen</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Bei StarBoard Drive anmelden</string>
+    <string name="video_player_title">Videoplayer</string>
+    <string name="cloud_file_download_dialog_message">Dieser Dateityp kann nicht angezeigt werden. Möchten Sie ihn lokal herunterladen?</string>
+    <string name="widget_launcher_login_button_text">Anmelden</string>
+    <string name="widget_launcher_login_tip_text">Bitte melden Sie sich an Ihrem Konto an.</string>
+    <string name="qrcode_login_tip_text">QR-Code scannen, um sich anzumelden</string>
+    <string name="use_password_login">Mit Passwort anmelden</string>
+    <string name="use_qrcode_login">Mit QR-Code anmelden</string>
+    <string name="cloud_file_properties_download_url">Download-Link</string>
+    <string name="logout_cloud_drive_dialog_message">Möchten Sie sich wirklich abmelden?</string>
+    <string name="login_in">Anmelden</string>
+    <string name="log_out">Abmelden</string>
+    <string name="login_google_account">Mit Google anmelden</string>
+    <string name="login_microsoft_account">Mit Microsoft anmelden</string>
+    <string name="login_wechat_account">Mit WeChat anmelden</string>
+    <string name="message_logout">Möchten Sie sich wirklich abmelden? Danach können Sie bis zur erneuten Anmeldung nicht auf Ihre Cloud-Dateien zugreifen.</string>
+    <string name="qrcode_login_scan_tip">Bitte verwenden Sie Kamera oder Browser, um den QR-Code zu scannen und sich anzumelden</string>
+    <string name="user_agreement_text">Ich habe %1$s und %2$s gelesen und stimme zu.</string>
+    <string name="user_agreement">Nutzungsvereinbarung</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="check_agreement_first">Bitte stimmen Sie der Nutzungsvereinbarung zu</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Abbruch …</string>
+    <string name="downloading">Herunterladen …</string>
+    <string name="uploading">Hochladen …</string>
+    <string name="upload_failed">Hochladen fehlgeschlagen</string>
+    <string name="download_failed">Download fehlgeschlagen</string>
+    <string name="upload_completed">Hochladen abgeschlossen</string>
+    <string name="download_completed">Download abgeschlossen</string>
+    <string name="my_files">Meine Dateien</string>
+    <string name="my_drive">Mein Cloud-Laufwerk</string>
+    <string name="cannot_extract_to_cloud_drive">Kann Archiv nicht in Cloud-Laufwerk entpacken</string>
+    <string name="login_failed_message">Login fehlgeschlagen: %1$s</string>
+    <string name="login_failed_retry">Login fehlgeschlagen, bitte erneut versuchen</string>
+    <string name="loading_user_data">Benutzerdaten laden …</string>
+    <string name="file_list_action_split_screen">Split-Screen</string>
+    <string name="load_user_image_failed">Benutzeravatar kann nicht geladen werden</string>
+    <string name="login_user_cancelled">Login wurde abgebrochen, bitte erneut versuchen</string>
+    <string name="cannot_copy_move_between_cloud_message">Dateiübertragung zwischen Clouds wird derzeit nicht unterstützt</string>
 </resources>

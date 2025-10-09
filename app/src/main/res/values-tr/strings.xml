@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">Dosya Yöneticisi</string>
-
     <string name="close">Kapat</string>
     <string name="copy">Kopyala</string>
     <string name="cut">Kes</string>
@@ -535,4 +531,85 @@
 
     <string name="about_title">Hakkında</string>
     <string name="about_version_title">Sürüm</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d öğe</item>
+        <item quantity="other">%1$,d öğe</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Giriş yap</string>
+    <string name="navigation_internal_storage_name">Dahili depolama</string>
+    <string name="navigation_quick_access_images">Resimler</string>
+    <string name="navigation_quick_access_videos">Videolar</string>
+    <string name="navigation_quick_access_audio">Ses</string>
+    <string name="navigation_quick_access_apk">APK\'ler</string>
+    <string name="file_list_select_title_format_new">%1$,d seçildi</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">%1$,d öğe taşınıyor</item>
+        <item quantity="other">%1$,d öğe taşınıyor</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">%1$,d öğe kopyalanıyor</item>
+        <item quantity="other">%1$,d öğe kopyalanıyor</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">%1$,d öğe çıkarılıyor</item>
+        <item quantity="other">%1$,d öğe çıkarılıyor</item>
+    </plurals>
+    <string name="file_list_action_sort">Sırala</string>
+    <string name="file_list_action_view_type_list">Liste görünümü</string>
+    <string name="file_list_action_view_type_grid">Grid görünümü</string>
+    <string name="file_list_action_exit_app">Çıkış</string>
+    <string name="settings_quick_access_title">Hızlı erişim</string>
+    <string name="settings_quick_access_summary_empty">Hiçbir hızlı erişim etkin değil</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">%1$,d öğe aktarılıyor</item>
+        <item quantity="other">%1$,d öğe aktarılıyor</item>
+    </plurals>
+    <string name="file_transfer_cancelling">İptal ediliyor</string>
+    <string name="press_again_exit">Çıkmak için tekrar basın</string>
+    <string name="login_expired">Oturum süresi doldu. Lütfen tekrar giriş yapın</string>
+    <string name="server_error_occurred">Sunucu hatası oluştu</string>
+    <string name="network_error">Ağ hatası. Lütfen daha sonra tekrar deneyin</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">StarBoard Drive’a giriş yapın</string>
+    <string name="video_player_title">Video oynatıcı</string>
+    <string name="cloud_file_download_dialog_message">Bu dosya türü önizlenemez. Yerel bir klasöre indirmek ister misiniz?</string>
+    <string name="widget_launcher_login_button_text">Giriş yap</string>
+    <string name="widget_launcher_login_tip_text">Lütfen hesabınıza giriş yapın</string>
+    <string name="qrcode_login_tip_text">Giriş yapmak için kodu tarayın</string>
+    <string name="use_password_login">Şifre ile giriş yap</string>
+    <string name="use_qrcode_login">Kodu tarayarak giriş yap</string>
+    <string name="cloud_file_properties_download_url">İndirme URL\'si</string>
+    <string name="logout_cloud_drive_dialog_message">Çıkmak istediğinizden emin misiniz?</string>
+    <string name="login_in">Giriş yap</string>
+    <string name="log_out">Çıkış yap</string>
+    <string name="login_google_account">Google ile devam et</string>
+    <string name="login_microsoft_account">Microsoft ile devam et</string>
+    <string name="login_wechat_account">WeChat ile devam et</string>
+    <string name="message_logout">Çıkmak istediğinizden emin misiniz? Tekrar giriş yapana kadar bulut dosyalarınıza erişemeyeceksiniz.</string>
+    <string name="qrcode_login_scan_tip">QR kodunu taramak ve giriş yapmak için kamera veya tarayıcı uygulamasını kullanın</string>
+    <string name="user_agreement_text">%1$s ve %2$s okudum ve kabul ediyorum.</string>
+    <string name="user_agreement">Kullanıcı Sözleşmesi</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="check_agreement_first">Lütfen Kullanıcı Sözleşmesini kabul edin</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">İptal ediliyor...</string>
+    <string name="downloading">Başlatılıyor...</string>
+    <string name="uploading">Yükleniyor...</string>
+    <string name="upload_failed">Yükleme başarısız</string>
+    <string name="download_failed">İndirme başarısız</string>
+    <string name="upload_completed">Yükleme tamamlandı</string>
+    <string name="download_completed">İndirme tamamlandı</string>
+    <string name="my_files">Dosyalarım</string>
+    <string name="my_drive">benim-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Arşiv bulut sürücüsüne çıkarılamıyor.</string>
+    <string name="login_failed_message">Giriş başarısız: %1$s</string>
+    <string name="login_failed_retry">Giriş başarısız, lütfen tekrar deneyin</string>
+    <string name="loading_user_data">Kullanıcı verileri yükleniyor...</string>
+    <string name="file_list_action_split_screen">Bölünmüş ekran</string>
+    <string name="load_user_image_failed">Kullanıcı avatarı yüklenemedi</string>
+    <string name="login_user_cancelled">Giriş iptal edildi, lütfen tekrar deneyin</string>
+    <string name="cannot_copy_move_between_cloud_message">Bulutlar arası dosya aktarımı şu anda desteklenmiyor</string>
 </resources>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Zavřít</string>
     <string name="copy">Kopírovat</string>
     <string name="cut">Vyjmout</string>
@@ -696,4 +692,97 @@
 
     <string name="about_title">O aplikaci</string>
     <string name="about_version_title">Verze</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d položka</item>
+        <item quantity="few">%1$,d položky</item>
+        <item quantity="many">%1$,d položek</item>
+        <item quantity="other">%1$,d položky</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Přihlásit se</string>
+    <string name="navigation_internal_storage_name">Interní úložiště</string>
+    <string name="navigation_quick_access_images">Obrázky</string>
+    <string name="navigation_quick_access_videos">Videa</string>
+    <string name="navigation_quick_access_audio">Zvuk</string>
+    <string name="navigation_quick_access_apk">APKy</string>
+    <string name="file_list_select_title_format_new">%1$,d vybráno</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Přesouvá se %1$,d položka</item>
+        <item quantity="few">Přesouvá se %1$,d položky</item>
+        <item quantity="many">Přesouvá se %1$,d položek</item>
+        <item quantity="other">Přesouvá se %1$,d položky</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopíruje se %1$,d položka</item>
+        <item quantity="few">Kopíruje se %1$,d položky</item>
+        <item quantity="many">Kopíruje se %1$,d položek</item>
+        <item quantity="other">Kopíruje se %1$,d položky</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Rozbaluje se %1$,d položka</item>
+        <item quantity="few">Rozbaluje se %1$,d položky</item>
+        <item quantity="many">Rozbaluje se %1$,d položek</item>
+        <item quantity="other">Rozbaluje se %1$,d položky</item>
+    </plurals>
+    <string name="file_list_action_sort">Seřadit</string>
+    <string name="file_list_action_view_type_list">Zobrazení seznamu</string>
+    <string name="file_list_action_view_type_grid">Mřížkové zobrazení</string>
+    <string name="file_list_action_exit_app">Ukončit</string>
+    <string name="settings_quick_access_title">Rychlý přístup</string>
+    <string name="settings_quick_access_summary_empty">Není povolen žádný rychlý přístup</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Přenáší se %1$,d položka</item>
+        <item quantity="few">Přenáší se %1$,d položky</item>
+        <item quantity="many">Přenáší se %1$,d položek</item>
+        <item quantity="other">Přenáší se %1$,d položky</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Ruší se</string>
+    <string name="press_again_exit">Stiskněte znovu pro ukončení</string>
+    <string name="login_expired">Přihlášení vypršelo. Přihlaste se znovu</string>
+    <string name="server_error_occurred">Došlo k chybě serveru</string>
+    <string name="network_error">Chyba sítě. Zkuste to prosím později</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Přihlásit se ke StarBoard Drive</string>
+    <string name="video_player_title">Přehrávač videa</string>
+    <string name="cloud_file_download_dialog_message">Tento typ souboru nelze zobrazit. Chcete jej stáhnout do místní složky?</string>
+    <string name="widget_launcher_login_button_text">Přihlásit se</string>
+    <string name="widget_launcher_login_tip_text">Přihlaste se ke svému účtu.</string>
+    <string name="qrcode_login_tip_text">Naskenujte kód pro přihlášení</string>
+    <string name="use_password_login">Přihlásit se pomocí hesla</string>
+    <string name="use_qrcode_login">Přihlásit se naskenováním kódu</string>
+    <string name="cloud_file_properties_download_url">Adresa ke stažení</string>
+    <string name="logout_cloud_drive_dialog_message">Opravdu se chcete odhlásit?</string>
+    <string name="login_in">Přihlásit se</string>
+    <string name="log_out">Odhlásit se</string>
+    <string name="login_google_account">Pokračovat přes Google</string>
+    <string name="login_microsoft_account">Pokračovat přes Microsoft</string>
+    <string name="login_wechat_account">Pokračovat přes WeChat</string>
+    <string name="message_logout">Opravdu se chcete odhlásit? Nebudete mít přístup ke svým souborům v cloudu, dokud se znovu nepřihlásíte.</string>
+    <string name="qrcode_login_scan_tip">Použijte fotoaparát nebo aplikaci prohlížeče ke skenování QR kódu a přihlášení</string>
+    <string name="user_agreement_text">Přečetl(a) jsem si a souhlasím s %1$s a %2$s.</string>
+    <string name="user_agreement">Uživatelská smlouva</string>
+    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="check_agreement_first">Nejprve zaškrtněte uživatelskou smlouvu</string>
+    <string name="google_drive">Google Disk</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Ruší se...</string>
+    <string name="downloading">Spouštění...</string>
+    <string name="uploading">Nahrávání...</string>
+    <string name="upload_failed">Nahrávání selhalo</string>
+    <string name="download_failed">Stahování selhalo</string>
+    <string name="upload_completed">Nahrávání dokončeno</string>
+    <string name="download_completed">Stahování dokončeno</string>
+    <string name="my_files">Moje soubory</string>
+    <string name="my_drive">můj-disk</string>
+    <string name="cannot_extract_to_cloud_drive">Nelze rozbalit archiv do cloudového úložiště.</string>
+    <string name="login_failed_message">Přihlášení selhalo: %1$s</string>
+    <string name="login_failed_retry">Přihlášení selhalo, zkuste to znovu</string>
+    <string name="loading_user_data">Načítání uživatelských dat...</string>
+    <string name="file_list_action_split_screen">Rozdělená obrazovka</string>
+    <string name="load_user_image_failed">Nepodařilo se načíst avatar uživatele</string>
+    <string name="login_user_cancelled">Přihlášení bylo zrušeno, zkuste to znovu</string>
+    <string name="cannot_copy_move_between_cloud_message">Přenos souborů mezi cloudy není momentálně podporován</string>
 </resources>

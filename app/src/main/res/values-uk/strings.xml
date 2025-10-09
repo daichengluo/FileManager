@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Закрити</string>
     <string name="copy">Копіювати</string>
     <string name="cut">Вирізати</string>
@@ -724,4 +720,95 @@
 
     <string name="about_title">Про застосунок</string>
     <string name="about_version_title">Версія</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d елемент</item>
+        <item quantity="few">%1$,d елементи</item>
+        <item quantity="many">%1$,d елементів</item>
+        <item quantity="other">%1$,d елемента</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Увійти</string>
+    <string name="navigation_internal_storage_name">Внутрішня пам’ять</string>
+    <string name="navigation_quick_access_images">Зображення</string>
+    <string name="navigation_quick_access_videos">Відео</string>
+    <string name="navigation_quick_access_audio">Аудіо</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d обрано</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Переміщення %1$,d елемента</item>
+        <item quantity="few">Переміщення %1$,d елементів</item>
+        <item quantity="many">Переміщення %1$,d елементів</item>
+        <item quantity="other">Переміщення %1$,d елемента</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Копіювання %1$,d елемента</item>
+        <item quantity="few">Копіювання %1$,d елементів</item>
+        <item quantity="many">Копіювання %1$,d елементів</item>
+        <item quantity="other">Копіювання %1$,d елемента</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Розпакування %1$,d елемента</item>
+        <item quantity="few">Розпакування %1$,d елементів</item>
+        <item quantity="many">Розпакування %1$,d елементів</item>
+        <item quantity="other">Розпакування %1$,d елемента</item>
+    </plurals>
+    <string name="file_list_action_sort">Сортувати</string>
+    <string name="file_list_action_view_type_list">Список</string>
+    <string name="file_list_action_view_type_grid">Сітка</string>
+    <string name="file_list_action_exit_app">Вийти</string>
+    <string name="settings_quick_access_title">Швидкий доступ</string>
+    <string name="settings_quick_access_summary_empty">Швидкий доступ не активовано</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Передача %1$,d елемента</item>
+        <item quantity="few">Передача %1$,d елементів</item>
+        <item quantity="many">Передача %1$,d елементів</item>
+        <item quantity="other">Передача %1$,d елемента</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Скасовується</string>
+    <string name="press_again_exit">Натисніть ще раз, щоб вийти</string>
+    <string name="login_expired">Сесія закінчилася. Будь ласка, увійдіть знову</string>
+    <string name="server_error_occurred">Сталася помилка сервера</string>
+    <string name="network_error">Помилка мережі. Спробуйте пізніше</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Увійдіть у StarBoard Drive</string>
+    <string name="video_player_title">Відеопрогравач</string>
+    <string name="cloud_file_download_dialog_message">Цей тип файлу не можна переглянути. Бажаєте завантажити його у локальну папку?</string>
+    <string name="widget_launcher_login_button_text">Увійти</string>
+    <string name="widget_launcher_login_tip_text">Будь ласка, увійдіть у свій акаунт</string>
+    <string name="qrcode_login_tip_text">Скануйте код для входу</string>
+    <string name="use_password_login">Увійти за допомогою пароля</string>
+    <string name="use_qrcode_login">Увійти, скануючи код</string>
+    <string name="cloud_file_properties_download_url">URL для завантаження</string>
+    <string name="logout_cloud_drive_dialog_message">Ви впевнені, що хочете вийти?</string>
+    <string name="login_in">Увійти</string>
+    <string name="log_out">Вийти</string>
+    <string name="login_google_account">Продовжити з Google</string>
+    <string name="login_microsoft_account">Продовжити з Microsoft</string>
+    <string name="login_wechat_account">Продовжити з WeChat</string>
+    <string name="message_logout">Ви впевнені, що хочете вийти? Ви не зможете отримати доступ до файлів у хмарі, поки знову не увійдете.</string>
+    <string name="qrcode_login_scan_tip">Використайте камеру або браузер для сканування QR-коду та входу</string>
+    <string name="user_agreement_text">Я прочитав і погоджуюсь з %1$s та %2$s.</string>
+    <string name="user_agreement">Угода користувача</string>
+    <string name="privacy_policy">Політика конфіденційності</string>
+    <string name="check_agreement_first">Будь ласка, прийміть Угоду користувача</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Скасовується...</string>
+    <string name="downloading">Початок...</string>
+    <string name="uploading">Завантаження...</string>
+    <string name="upload_failed">Помилка завантаження</string>
+    <string name="download_failed">Помилка завантаження</string>
+    <string name="upload_completed">Завантаження завершено</string>
+    <string name="download_completed">Завантаження завершено</string>
+    <string name="my_files">Мої файли</string>
+    <string name="my_drive">мій-диск</string>
+    <string name="cannot_extract_to_cloud_drive">Неможливо розпакувати архів у хмару.</string>
+    <string name="login_failed_message">Не вдалося увійти: %1$s</string>
+    <string name="login_failed_retry">Не вдалося увійти, спробуйте ще раз</string>
+    <string name="loading_user_data">Завантаження даних користувача...</string>
+    <string name="file_list_action_split_screen">Розділений екран</string>
+    <string name="load_user_image_failed">Не вдалося завантажити аватар користувача</string>
+    <string name="login_user_cancelled">Вхід скасовано, спробуйте ще раз</string>
+    <string name="cannot_copy_move_between_cloud_message">Передача файлів між хмарами наразі не підтримується</string>
 </resources>

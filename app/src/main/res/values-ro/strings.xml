@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Închide</string>
     <string name="copy">Copiază</string>
     <string name="cut">Decupează</string>
@@ -601,4 +597,90 @@
 
     <string name="about_title">Despre</string>
     <string name="about_version_title">Versiune</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d element</item>
+        <item quantity="few">%1$,d elemente</item>
+        <item quantity="other">%1$,d elemente</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Conectare</string>
+    <string name="navigation_internal_storage_name">Stocare internă</string>
+    <string name="navigation_quick_access_images">Imagini</string>
+    <string name="navigation_quick_access_videos">Videoclipuri</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APK-uri</string>
+    <string name="file_list_select_title_format_new">%1$,d selectat(e)</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Mut %1$,d element</item>
+        <item quantity="few">Mut %1$,d elemente</item>
+        <item quantity="other">Mut %1$,d elemente</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Copiez %1$,d element</item>
+        <item quantity="few">Copiez %1$,d elemente</item>
+        <item quantity="other">Copiez %1$,d elemente</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Extrage %1$,d element</item>
+        <item quantity="few">Extrage %1$,d elemente</item>
+        <item quantity="other">Extrage %1$,d elemente</item>
+    </plurals>
+    <string name="file_list_action_sort">Sortează</string>
+    <string name="file_list_action_view_type_list">Vizualizare listă</string>
+    <string name="file_list_action_view_type_grid">Vizualizare grilă</string>
+    <string name="file_list_action_exit_app">Ieșire</string>
+    <string name="settings_quick_access_title">Acces rapid</string>
+    <string name="settings_quick_access_summary_empty">Nu există acces rapid activat</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Se transferă %1$,d element</item>
+        <item quantity="few">Se transferă %1$,d elemente</item>
+        <item quantity="other">Se transferă %1$,d elemente</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Se anulează</string>
+    <string name="press_again_exit">Apasă din nou pentru a ieși</string>
+    <string name="login_expired">Sesiunea a expirat. Vă rugăm să vă conectați din nou</string>
+    <string name="server_error_occurred">A apărut o eroare a serverului</string>
+    <string name="network_error">Eroare de rețea. Vă rugăm să încercați mai târziu</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Conectați-vă la StarBoard Drive</string>
+    <string name="video_player_title">Player video</string>
+    <string name="cloud_file_download_dialog_message">Acest tip de fișier nu poate fi previzualizat. Doriți să îl descărcați într-un folder local?</string>
+    <string name="widget_launcher_login_button_text">Conectare</string>
+    <string name="widget_launcher_login_tip_text">Vă rugăm să vă conectați la contul dvs.</string>
+    <string name="qrcode_login_tip_text">Scanați codul pentru a vă conecta</string>
+    <string name="use_password_login">Conectați-vă cu parolă</string>
+    <string name="use_qrcode_login">Conectați-vă scanând codul</string>
+    <string name="cloud_file_properties_download_url">URL descărcare</string>
+    <string name="logout_cloud_drive_dialog_message">Sigur doriți să vă deconectați?</string>
+    <string name="login_in">Conectare</string>
+    <string name="log_out">Deconectare</string>
+    <string name="login_google_account">Continuă cu Google</string>
+    <string name="login_microsoft_account">Continuă cu Microsoft</string>
+    <string name="login_wechat_account">Continuă cu WeChat</string>
+    <string name="message_logout">Sigur doriți să vă deconectați? Nu veți mai putea accesa fișierele din cloud până nu vă conectați din nou.</string>
+    <string name="qrcode_login_scan_tip">Folosiți camera sau aplicația browser pentru a scana codul QR și a vă conecta</string>
+    <string name="user_agreement_text">Am citit și sunt de acord cu %1$s și %2$s.</string>
+    <string name="user_agreement">Acord utilizator</string>
+    <string name="privacy_policy">Politica de confidențialitate</string>
+    <string name="check_agreement_first">Vă rugăm să acceptați Acordul utilizatorului</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Se anulează...</string>
+    <string name="downloading">Se inițiază...</string>
+    <string name="uploading">Se încarcă...</string>
+    <string name="upload_failed">Încărcarea a eșuat</string>
+    <string name="download_failed">Descărcarea a eșuat</string>
+    <string name="upload_completed">Încărcare finalizată</string>
+    <string name="download_completed">Descărcare finalizată</string>
+    <string name="my_files">Fișierele mele</string>
+    <string name="my_drive">unitatea-mea</string>
+    <string name="cannot_extract_to_cloud_drive">Nu se poate extrage arhiva în cloud.</string>
+    <string name="login_failed_message">Autentificare eșuată: %1$s</string>
+    <string name="login_failed_retry">Autentificare eșuată, încercați din nou</string>
+    <string name="loading_user_data">Se încarcă datele utilizatorului...</string>
+    <string name="file_list_action_split_screen">Ecran împărțit</string>
+    <string name="load_user_image_failed">Încărcarea avatarului utilizatorului a eșuat</string>
+    <string name="login_user_cancelled">Autentificarea a fost anulată, încercați din nou</string>
+    <string name="cannot_copy_move_between_cloud_message">Transferul de fișiere între cloud-uri nu este suportat momentan</string>
 </resources>

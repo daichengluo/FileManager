@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Đóng</string>
     <string name="copy">Sao chép</string>
     <string name="cut">Cắt</string>
@@ -525,4 +521,80 @@
 
     <string name="about_title">Giới thiệu</string>
     <string name="about_version_title">Phiên bản</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="other">%1$,d mục</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Đăng nhập</string>
+    <string name="navigation_internal_storage_name">Bộ nhớ trong</string>
+    <string name="navigation_quick_access_images">Hình ảnh</string>
+    <string name="navigation_quick_access_videos">Video</string>
+    <string name="navigation_quick_access_audio">Âm thanh</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d đã chọn</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="other">Đang di chuyển %1$,d mục</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="other">Đang sao chép %1$,d mục</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="other">Đang giải nén %1$,d mục</item>
+    </plurals>
+    <string name="file_list_action_sort">Sắp xếp</string>
+    <string name="file_list_action_view_type_list">Dạng danh sách</string>
+    <string name="file_list_action_view_type_grid">Dạng lưới</string>
+    <string name="file_list_action_exit_app">Thoát</string>
+    <string name="settings_quick_access_title">Truy cập nhanh</string>
+    <string name="settings_quick_access_summary_empty">Chưa bật truy cập nhanh</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="other">Đang chuyển %1$,d mục</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Đang hủy</string>
+    <string name="press_again_exit">Nhấn lần nữa để thoát</string>
+    <string name="login_expired">Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại</string>
+    <string name="server_error_occurred">Đã xảy ra lỗi máy chủ</string>
+    <string name="network_error">Lỗi mạng. Vui lòng thử lại sau</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Đăng nhập StarBoard Drive</string>
+    <string name="video_player_title">Trình phát video</string>
+    <string name="cloud_file_download_dialog_message">Loại tệp này không thể xem trước. Bạn có muốn tải về thư mục cục bộ không?</string>
+    <string name="widget_launcher_login_button_text">Đăng nhập</string>
+    <string name="widget_launcher_login_tip_text">Vui lòng đăng nhập vào tài khoản của bạn</string>
+    <string name="qrcode_login_tip_text">Quét mã để đăng nhập</string>
+    <string name="use_password_login">Đăng nhập bằng mật khẩu</string>
+    <string name="use_qrcode_login">Đăng nhập bằng cách quét mã</string>
+    <string name="cloud_file_properties_download_url">URL tải xuống</string>
+    <string name="logout_cloud_drive_dialog_message">Bạn có chắc muốn đăng xuất không?</string>
+    <string name="login_in">Đăng nhập</string>
+    <string name="log_out">Đăng xuất</string>
+    <string name="login_google_account">Tiếp tục với Google</string>
+    <string name="login_microsoft_account">Tiếp tục với Microsoft</string>
+    <string name="login_wechat_account">Tiếp tục với WeChat</string>
+    <string name="message_logout">Bạn có chắc muốn đăng xuất? Bạn sẽ không thể truy cập các tệp đám mây cho đến khi đăng nhập lại.</string>
+    <string name="qrcode_login_scan_tip">Vui lòng sử dụng ứng dụng camera hoặc trình duyệt để quét mã QR và đăng nhập</string>
+    <string name="user_agreement_text">Tôi đã đọc và đồng ý với %1$s và %2$s.</string>
+    <string name="user_agreement">Thỏa thuận người dùng</string>
+    <string name="privacy_policy">Chính sách quyền riêng tư</string>
+    <string name="check_agreement_first">Vui lòng chấp nhận Thỏa thuận người dùng</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Đang hủy...</string>
+    <string name="downloading">Đang bắt đầu...</string>
+    <string name="uploading">Đang tải lên...</string>
+    <string name="upload_failed">Tải lên thất bại</string>
+    <string name="download_failed">Tải xuống thất bại</string>
+    <string name="upload_completed">Tải lên hoàn tất</string>
+    <string name="download_completed">Tải xuống hoàn tất</string>
+    <string name="my_files">Tệp của tôi</string>
+    <string name="my_drive">ổ-đĩa-của-tôi</string>
+    <string name="cannot_extract_to_cloud_drive">Không thể giải nén vào đám mây.</string>
+    <string name="login_failed_message">Đăng nhập thất bại: %1$s</string>
+    <string name="login_failed_retry">Đăng nhập thất bại, vui lòng thử lại</string>
+    <string name="loading_user_data">Đang tải dữ liệu người dùng...</string>
+    <string name="file_list_action_split_screen">Chia màn hình</string>
+    <string name="load_user_image_failed">Không thể tải ảnh đại diện người dùng</string>
+    <string name="login_user_cancelled">Đăng nhập bị hủy, vui lòng thử lại</string>
+    <string name="cannot_copy_move_between_cloud_message">Hiện không hỗ trợ chuyển tệp giữa các đám mây</string>
 </resources>

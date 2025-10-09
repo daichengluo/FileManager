@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Fechar</string>
     <string name="copy">Copiar</string>
     <string name="cut">Cortar</string>
@@ -631,4 +627,85 @@
 
     <string name="about_title">Acerca</string>
     <string name="about_version_title">Versão</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d item</item>
+        <item quantity="other">%1$,d itens</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Iniciar sessão</string>
+    <string name="navigation_internal_storage_name">Armazenamento interno</string>
+    <string name="navigation_quick_access_images">Imagens</string>
+    <string name="navigation_quick_access_videos">Vídeos</string>
+    <string name="navigation_quick_access_audio">Áudio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">%1$,d selecionado(s)</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">A mover %1$,d item</item>
+        <item quantity="other">A mover %1$,d itens</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">A copiar %1$,d item</item>
+        <item quantity="other">A copiar %1$,d itens</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">A extrair %1$,d item</item>
+        <item quantity="other">A extrair %1$,d itens</item>
+    </plurals>
+    <string name="file_list_action_sort">Ordenar</string>
+    <string name="file_list_action_view_type_list">Vista de lista</string>
+    <string name="file_list_action_view_type_grid">Vista de grelha</string>
+    <string name="file_list_action_exit_app">Sair</string>
+    <string name="settings_quick_access_title">Acesso rápido</string>
+    <string name="settings_quick_access_summary_empty">Nenhum acesso rápido ativado</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">A transferir %1$,d item</item>
+        <item quantity="other">A transferir %1$,d itens</item>
+    </plurals>
+    <string name="file_transfer_cancelling">A cancelar</string>
+    <string name="press_again_exit">Pressione novamente para sair</string>
+    <string name="login_expired">Sessão expirada. Por favor, inicie sessão novamente</string>
+    <string name="server_error_occurred">Ocorreu um erro no servidor</string>
+    <string name="network_error">Erro de rede. Por favor, tente mais tarde</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Inicie sessão no StarBoard Drive</string>
+    <string name="video_player_title">Leitor de vídeo</string>
+    <string name="cloud_file_download_dialog_message">Este tipo de ficheiro não pode ser pré-visualizado. Deseja transferi-lo para uma pasta local?</string>
+    <string name="widget_launcher_login_button_text">Iniciar sessão</string>
+    <string name="widget_launcher_login_tip_text">Por favor, inicie sessão na sua conta</string>
+    <string name="qrcode_login_tip_text">Digitalize o código para iniciar sessão</string>
+    <string name="use_password_login">Iniciar sessão com palavra-passe</string>
+    <string name="use_qrcode_login">Iniciar sessão digitalizando o código</string>
+    <string name="cloud_file_properties_download_url">URL de transferência</string>
+    <string name="logout_cloud_drive_dialog_message">Tem a certeza de que pretende sair?</string>
+    <string name="login_in">Iniciar sessão</string>
+    <string name="log_out">Terminar sessão</string>
+    <string name="login_google_account">Continuar com Google</string>
+    <string name="login_microsoft_account">Continuar com Microsoft</string>
+    <string name="login_wechat_account">Continuar com WeChat</string>
+    <string name="message_logout">Tem a certeza de que pretende sair? Não poderá aceder aos ficheiros na cloud até iniciar sessão novamente.</string>
+    <string name="qrcode_login_scan_tip">Utilize a câmara ou a aplicação de navegador para digitalizar o código QR e iniciar sessão</string>
+    <string name="user_agreement_text">Li e concordo com %1$s e %2$s.</string>
+    <string name="user_agreement">Termos de Utilização</string>
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="check_agreement_first">Por favor, aceite os Termos de Utilização</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">A cancelar...</string>
+    <string name="downloading">A iniciar...</string>
+    <string name="uploading">A carregar...</string>
+    <string name="upload_failed">Falha no carregamento</string>
+    <string name="download_failed">Falha na transferência</string>
+    <string name="upload_completed">Carregamento concluído</string>
+    <string name="download_completed">Transferência concluída</string>
+    <string name="my_files">Os meus ficheiros</string>
+    <string name="my_drive">o-meu-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Não é possível extrair o ficheiro para a cloud.</string>
+    <string name="login_failed_message">Falha no início de sessão: %1$s</string>
+    <string name="login_failed_retry">Falha no início de sessão, por favor tente novamente</string>
+    <string name="loading_user_data">A carregar dados do utilizador...</string>
+    <string name="file_list_action_split_screen">Ecrã dividido</string>
+    <string name="load_user_image_failed">Falha ao carregar avatar do utilizador</string>
+    <string name="login_user_cancelled">Início de sessão cancelado, por favor tente novamente</string>
+    <string name="cannot_copy_move_between_cloud_message">Transferência de ficheiros entre clouds não é suportada de momento</string>
 </resources>

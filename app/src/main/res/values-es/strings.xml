@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Cerrar</string>
     <string name="copy">Copiar</string>
     <string name="cut">Cortar</string>
@@ -693,4 +689,92 @@
 
     <string name="about_title">Información</string>
     <string name="about_version_title">Versión</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d elemento</item>
+        <item quantity="other">%1$,d elementos</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Iniciar sesión</string>
+    <string name="navigation_internal_storage_name">Almacenamiento interno</string>
+    <string name="navigation_quick_access_images">Imágenes</string>
+    <string name="navigation_quick_access_videos">Videos</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">%1$,d seleccionado(s)</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Moviendo %1$,d elemento</item>
+        <item quantity="other">Moviendo %1$,d elementos</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Copiando %1$,d elemento</item>
+        <item quantity="other">Copiando %1$,d elementos</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Extrayendo %1$,d elemento</item>
+        <item quantity="other">Extrayendo %1$,d elementos</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Ordenar</string>
+    <string name="file_list_action_view_type_list">Vista de lista</string>
+    <string name="file_list_action_view_type_grid">Vista de cuadrícula</string>
+    <string name="file_list_action_exit_app">Salir</string>
+    <string name="settings_quick_access_title">Acceso rápido</string>
+    <string name="settings_quick_access_summary_empty">No hay acceso rápido habilitado</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Transfiriendo %1$,d elemento</item>
+        <item quantity="other">Transfiriendo %1$,d elementos</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Cancelando</string>
+    <string name="press_again_exit">Presione de nuevo para salir</string>
+    <string name="login_expired">Sesión expirada. Por favor, inicie sesión nuevamente</string>
+    <string name="server_error_occurred">Ocurrió un error del servidor</string>
+    <string name="network_error">Anomalía de red. Intente nuevamente más tarde</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Iniciar sesión en StarBoard Drive</string>
+    <string name="video_player_title">Reproductor de video</string>
+    <string name="cloud_file_download_dialog_message">Este tipo de archivo no se puede previsualizar. ¿Desea descargarlo a una carpeta local?</string>
+    <string name="widget_launcher_login_button_text">Iniciar sesión</string>
+    <string name="widget_launcher_login_tip_text">Por favor, inicie sesión en su cuenta.</string>
+    <string name="qrcode_login_tip_text">Escanee el código para iniciar sesión</string>
+    <string name="use_password_login">Iniciar sesión con contraseña</string>
+    <string name="use_qrcode_login">Iniciar sesión escaneando el código</string>
+    <string name="cloud_file_properties_download_url">URL de descarga</string>
+    <string name="logout_cloud_drive_dialog_message">¿Está seguro de que desea cerrar sesión?</string>
+    <string name="login_in">Iniciar sesión</string>
+    <string name="log_out">Cerrar sesión</string>
+    <string name="login_google_account">Continuar con Google</string>
+    <string name="login_microsoft_account">Continuar con Microsoft</string>
+    <string name="login_wechat_account">Continuar con WeChat</string>
+    <string name="message_logout">¿Está seguro de que desea cerrar sesión? No podrá acceder a sus archivos en la nube hasta que vuelva a iniciar sesión.</string>
+    <string name="qrcode_login_scan_tip">Utilice la cámara o el navegador para escanear el código QR e iniciar sesión</string>
+    <string name="user_agreement_text">He leído y acepto los %1$s y %2$s.</string>
+    <string name="user_agreement">Acuerdo de usuario</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="check_agreement_first">Por favor, marque el Acuerdo de usuario</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Cancelando...</string>
+    <string name="downloading">Iniciando descarga...</string>
+    <string name="uploading">Subiendo...</string>
+    <string name="upload_failed">La subida falló</string>
+    <string name="download_failed">La descarga falló</string>
+    <string name="upload_completed">Subida completada</string>
+    <string name="download_completed">Descarga completada</string>
+    <string name="my_files">Mis archivos</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">No se puede extraer el archivo al disco en la nube.</string>
+    <string name="login_failed_message">Error de inicio de sesión: %1$s</string>
+    <string name="login_failed_retry">Error de inicio de sesión, intente nuevamente</string>
+    <string name="loading_user_data">Cargando datos del usuario...</string>
+    <string name="file_list_action_split_screen">Pantalla dividida</string>
+    <string name="load_user_image_failed">No se pudo cargar el avatar del usuario</string>
+    <string name="login_user_cancelled">El inicio de sesión fue cancelado, intente nuevamente</string>
+    <string name="cannot_copy_move_between_cloud_message">La transferencia de archivos entre nubes no se admite por ahora</string>
 </resources>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">Failų tvarkyklė</string>
-
     <string name="close">Uždaryti</string>
     <string name="copy">Kopijuoti</string>
     <string name="cut">Iškirpti</string>
@@ -621,4 +617,95 @@
 
     <string name="about_title">Apie</string>
     <string name="about_version_title">Versija</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d elementas</item>
+        <item quantity="few">%1$,d elementai</item>
+        <item quantity="many">%1$,d elementų</item>
+        <item quantity="other">%1$,d elemento</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Prisijungti</string>
+    <string name="navigation_internal_storage_name">Vidinė atmintis</string>
+    <string name="navigation_quick_access_images">Paveikslėliai</string>
+    <string name="navigation_quick_access_videos">Vaizdo įrašai</string>
+    <string name="navigation_quick_access_audio">Garsas</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">Pažymėta %1$,d</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Perkeliama %1$,d elemento</item>
+        <item quantity="few">Perkeliami %1$,d elementai</item>
+        <item quantity="many">Perkelta %1$,d elementų</item>
+        <item quantity="other">Perkeliama %1$,d elemento</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopijuojamas %1$,d elementas</item>
+        <item quantity="few">Kopijuojami %1$,d elementai</item>
+        <item quantity="many">Kopijuota %1$,d elementų</item>
+        <item quantity="other">Kopijuojamas %1$,d elemento</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Išskleidžiamas %1$,d elementas</item>
+        <item quantity="few">Išskleidžiami %1$,d elementai</item>
+        <item quantity="many">Išskleista %1$,d elementų</item>
+        <item quantity="other">Išskleidžiamas %1$,d elemento</item>
+    </plurals>
+    <string name="file_list_action_sort">Rūšiuoti</string>
+    <string name="file_list_action_view_type_list">Sąrašo rodinys</string>
+    <string name="file_list_action_view_type_grid">Tinklelio rodinys</string>
+    <string name="file_list_action_exit_app">Išeiti</string>
+    <string name="settings_quick_access_title">Greita prieiga</string>
+    <string name="settings_quick_access_summary_empty">Greita prieiga neįjungta</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Perkeliama %1$,d elemento</item>
+        <item quantity="few">Perkeliami %1$,d elementai</item>
+        <item quantity="many">Perkelta %1$,d elementų</item>
+        <item quantity="other">Perkeliama %1$,d elemento</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Atšaukiama</string>
+    <string name="press_again_exit">Dar kartą paspauskite, kad išeitumėte</string>
+    <string name="login_expired">Prisijungimas pasibaigė. Prisijunkite dar kartą</string>
+    <string name="server_error_occurred">Įvyko serverio klaida</string>
+    <string name="network_error">Tinklų klaida. Bandykite vėliau</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Prisijunkite prie StarBoard Drive</string>
+    <string name="video_player_title">Vaizdo grotuvas</string>
+    <string name="cloud_file_download_dialog_message">Šio tipo failo negalima peržiūrėti. Ar norite atsisiųsti jį į vietinį aplanką?</string>
+    <string name="widget_launcher_login_button_text">Prisijungti</string>
+    <string name="widget_launcher_login_tip_text">Prisijunkite prie savo paskyros</string>
+    <string name="qrcode_login_tip_text">Nuskaitykite kodą, kad prisijungtumėte</string>
+    <string name="use_password_login">Prisijungti su slaptažodžiu</string>
+    <string name="use_qrcode_login">Prisijungti nuskaitydami kodą</string>
+    <string name="cloud_file_properties_download_url">Atsisiuntimo URL</string>
+    <string name="logout_cloud_drive_dialog_message">Ar tikrai norite atsijungti?</string>
+    <string name="login_in">Prisijungti</string>
+    <string name="log_out">Atsijungti</string>
+    <string name="login_google_account">Tęsti su Google</string>
+    <string name="login_microsoft_account">Tęsti su Microsoft</string>
+    <string name="login_wechat_account">Tęsti su WeChat</string>
+    <string name="message_logout">Ar tikrai norite atsijungti? Iki prisijungimo vėl negalėsite pasiekti debesies failų.</string>
+    <string name="qrcode_login_scan_tip">Naudokite kamerą arba naršyklę QR kodo nuskaitymui ir prisijungimui</string>
+    <string name="user_agreement_text">Perskaičiau ir sutinku su %1$s ir %2$s.</string>
+    <string name="user_agreement">Naudotojo sutartis</string>
+    <string name="privacy_policy">Privatumo politika</string>
+    <string name="check_agreement_first">Prašome patikrinti Naudotojo sutartį</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Atšaukiama...</string>
+    <string name="downloading">Pradedama...</string>
+    <string name="uploading">Įkeliama...</string>
+    <string name="upload_failed">Įkėlimas nepavyko</string>
+    <string name="download_failed">Atsisiuntimas nepavyko</string>
+    <string name="upload_completed">Įkėlimas baigtas</string>
+    <string name="download_completed">Atsisiuntimas baigtas</string>
+    <string name="my_files">Mano failai</string>
+    <string name="my_drive">mano-diskas</string>
+    <string name="cannot_extract_to_cloud_drive">Negalima išskleisti archyvo į debesies diską.</string>
+    <string name="login_failed_message">Prisijungimas nepavyko: %1$s</string>
+    <string name="login_failed_retry">Prisijungimas nepavyko, bandykite dar kartą</string>
+    <string name="loading_user_data">Kraunami naudotojo duomenys...</string>
+    <string name="file_list_action_split_screen">Padalintas ekranas</string>
+    <string name="load_user_image_failed">Nepavyko įkelti naudotojo avataro</string>
+    <string name="login_user_cancelled">Prisijungimas atšauktas, bandykite dar kartą</string>
+    <string name="cannot_copy_move_between_cloud_message">Dabartiniu metu debesų tarpinių failų perkėlimas nepalaikomas</string>
 </resources>

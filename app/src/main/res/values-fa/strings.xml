@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
-
     <string name="app_name">مدیر فایل</string>
-
     <string name="close">بستن</string>
     <string name="copy">رونوشت</string>
     <string name="cut">برش</string>
@@ -554,4 +550,92 @@
 
     <string name="about_title">درباره</string>
     <string name="about_version_title">نگارش</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d مورد</item>
+        <item quantity="other">%1$,d مورد</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">ورود</string>
+    <string name="navigation_internal_storage_name">ذخیره‌سازی داخلی</string>
+    <string name="navigation_quick_access_images">تصاویر</string>
+    <string name="navigation_quick_access_videos">ویدیوها</string>
+    <string name="navigation_quick_access_audio">صدا</string>
+    <string name="navigation_quick_access_apk">فایل‌های نصب</string>
+    <string name="file_list_select_title_format_new">%1$,d انتخاب شده</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">در حال جابجایی %1$,d مورد</item>
+        <item quantity="other">در حال جابجایی %1$,d مورد</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">در حال کپی %1$,d مورد</item>
+        <item quantity="other">در حال کپی %1$,d مورد</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">در حال استخراج %1$,d مورد</item>
+        <item quantity="other">در حال استخراج %1$,d مورد</item>
+    </plurals>
+
+    <string name="file_list_action_sort">مرتب‌سازی</string>
+    <string name="file_list_action_view_type_list">نمای لیست</string>
+    <string name="file_list_action_view_type_grid">نمای شبکه‌ای</string>
+    <string name="file_list_action_exit_app">خروج</string>
+    <string name="settings_quick_access_title">دسترسی سریع</string>
+    <string name="settings_quick_access_summary_empty">دسترسی سریع فعال نشده است</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">در حال انتقال %1$,d مورد</item>
+        <item quantity="other">در حال انتقال %1$,d مورد</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">لغو در حال انجام است</string>
+    <string name="press_again_exit">برای خروج دوباره فشار دهید</string>
+    <string name="login_expired">ورود منقضی شده است. لطفاً دوباره وارد شوید</string>
+    <string name="server_error_occurred">خطای سرور رخ داد</string>
+    <string name="network_error">مشکل شبکه. لطفاً بعداً دوباره تلاش کنید</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">ورود به StarBoard Drive</string>
+    <string name="video_player_title">پخش‌کننده ویدیو</string>
+    <string name="cloud_file_download_dialog_message">این نوع فایل قابل پیش‌نمایش نیست. می‌خواهید آن را در پوشه محلی دانلود کنید؟</string>
+    <string name="widget_launcher_login_button_text">ورود</string>
+    <string name="widget_launcher_login_tip_text">لطفاً وارد حساب خود شوید.</string>
+    <string name="qrcode_login_tip_text">برای ورود، کد را اسکن کنید</string>
+    <string name="use_password_login">ورود با رمز عبور</string>
+    <string name="use_qrcode_login">ورود با اسکن کد</string>
+    <string name="cloud_file_properties_download_url">لینک دانلود</string>
+    <string name="logout_cloud_drive_dialog_message">آیا مطمئن هستید که می‌خواهید خارج شوید؟</string>
+    <string name="login_in">ورود</string>
+    <string name="log_out">خروج</string>
+    <string name="login_google_account">ادامه با گوگل</string>
+    <string name="login_microsoft_account">ادامه با مایکروسافت</string>
+    <string name="login_wechat_account">ادامه با وی‌چت</string>
+    <string name="message_logout">آیا مطمئن هستید که می‌خواهید خارج شوید؟ تا زمانی که دوباره وارد نشوید، به فایل‌های ابری خود دسترسی نخواهید داشت.</string>
+    <string name="qrcode_login_scan_tip">لطفاً از دوربین یا مرورگر برای اسکن کد QR و ورود استفاده کنید</string>
+    <string name="user_agreement_text">من خوانده‌ام و با %1$s و %2$s موافقم.</string>
+    <string name="user_agreement">توافقنامه کاربر</string>
+    <string name="privacy_policy">سیاست حفظ حریم خصوصی</string>
+    <string name="check_agreement_first">لطفاً توافقنامه کاربر را بررسی کنید</string>
+    <string name="google_drive">گوگل درایو</string>
+    <string name="one_drive">وان‌درایو</string>
+    <string name="canceling_transfer">در حال لغو...</string>
+    <string name="downloading">در حال شروع...</string>
+    <string name="uploading">در حال بارگذاری...</string>
+    <string name="upload_failed">بارگذاری ناموفق بود</string>
+    <string name="download_failed">دانلود ناموفق بود</string>
+    <string name="upload_completed">بارگذاری کامل شد</string>
+    <string name="download_completed">دانلود کامل شد</string>
+    <string name="my_files">فایل‌های من</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">نمی‌توان فایل را در درایو ابری استخراج کرد.</string>
+    <string name="login_failed_message">ورود ناموفق بود: %1$s</string>
+    <string name="login_failed_retry">ورود ناموفق بود، لطفاً دوباره تلاش کنید</string>
+    <string name="loading_user_data">در حال بارگذاری اطلاعات کاربر...</string>
+    <string name="file_list_action_split_screen">نمای تقسیم شده</string>
+    <string name="load_user_image_failed">بارگذاری آواتار کاربر ناموفق بود</string>
+    <string name="login_user_cancelled">ورود لغو شد، لطفاً دوباره تلاش کنید</string>
+    <string name="cannot_copy_move_between_cloud_message">انتقال فایل بین ابری در حال حاضر پشتیبانی نمی‌شود</string>
 </resources>

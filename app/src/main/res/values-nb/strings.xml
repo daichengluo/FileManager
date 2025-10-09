@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">Filbehandler</string>
-
     <string name="close">Lukk</string>
     <string name="copy">Kopiér</string>
     <string name="cut">Klipp ut</string>
@@ -662,4 +658,85 @@
 
     <string name="about_title">Om appen</string>
     <string name="about_version_title">Versjon</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d element</item>
+        <item quantity="other">%1$,d elementer</item>
+    </plurals>
+    <string name="navigation_login_account_tip">Logg inn</string>
+    <string name="navigation_internal_storage_name">Intern lagring</string>
+    <string name="navigation_quick_access_images">Bilder</string>
+    <string name="navigation_quick_access_videos">Videoer</string>
+    <string name="navigation_quick_access_audio">Lyd</string>
+    <string name="navigation_quick_access_apk">APK</string>
+    <string name="file_list_select_title_format_new">%1$,d valgt</string>
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Flytter %1$,d element</item>
+        <item quantity="other">Flytter %1$,d elementer</item>
+    </plurals>
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Kopierer %1$,d element</item>
+        <item quantity="other">Kopierer %1$,d elementer</item>
+    </plurals>
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Pakker ut %1$,d element</item>
+        <item quantity="other">Pakker ut %1$,d elementer</item>
+    </plurals>
+    <string name="file_list_action_sort">Sorter</string>
+    <string name="file_list_action_view_type_list">Listevisning</string>
+    <string name="file_list_action_view_type_grid">Rutenettvisning</string>
+    <string name="file_list_action_exit_app">Avslutt</string>
+    <string name="settings_quick_access_title">Hurtigtilgang</string>
+    <string name="settings_quick_access_summary_empty">Ingen hurtigtilgang aktivert</string>
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Overfører %1$,d element</item>
+        <item quantity="other">Overfører %1$,d elementer</item>
+    </plurals>
+    <string name="file_transfer_cancelling">Avbryter</string>
+    <string name="press_again_exit">Trykk igjen for å avslutte</string>
+    <string name="login_expired">Innloggingen er utløpt. Vennligst logg inn igjen</string>
+    <string name="server_error_occurred">En serverfeil oppsto</string>
+    <string name="network_error">Nettverksfeil. Prøv igjen senere</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Logg inn på StarBoard Drive</string>
+    <string name="video_player_title">Videospiller</string>
+    <string name="cloud_file_download_dialog_message">Denne filtypen kan ikke forhåndsvises. Vil du laste den ned til en lokal mappe?</string>
+    <string name="widget_launcher_login_button_text">Logg inn</string>
+    <string name="widget_launcher_login_tip_text">Vennligst logg inn på kontoen din</string>
+    <string name="qrcode_login_tip_text">Skann koden for å logge inn</string>
+    <string name="use_password_login">Logg inn med passord</string>
+    <string name="use_qrcode_login">Logg inn ved å skanne koden</string>
+    <string name="cloud_file_properties_download_url">Nedlastings-URL</string>
+    <string name="logout_cloud_drive_dialog_message">Er du sikker på at du vil logge ut?</string>
+    <string name="login_in">Logg inn</string>
+    <string name="log_out">Logg ut</string>
+    <string name="login_google_account">Fortsett med Google</string>
+    <string name="login_microsoft_account">Fortsett med Microsoft</string>
+    <string name="login_wechat_account">Fortsett med WeChat</string>
+    <string name="message_logout">Er du sikker på at du vil logge ut? Du vil ikke kunne få tilgang til skylagringsfilene dine før du logger inn igjen.</string>
+    <string name="qrcode_login_scan_tip">Bruk kameraet eller nettleserappen til å skanne QR-koden og logge inn</string>
+    <string name="user_agreement_text">Jeg har lest og godtar %1$s og %2$s.</string>
+    <string name="user_agreement">Brukeravtale</string>
+    <string name="privacy_policy">Personvern</string>
+    <string name="check_agreement_first">Vennligst godkjenn brukeravtalen</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Avbryter...</string>
+    <string name="downloading">Starter...</string>
+    <string name="uploading">Laster opp...</string>
+    <string name="upload_failed">Opplasting mislyktes</string>
+    <string name="download_failed">Nedlasting mislyktes</string>
+    <string name="upload_completed">Opplasting fullført</string>
+    <string name="download_completed">Nedlasting fullført</string>
+    <string name="my_files">Mine filer</string>
+    <string name="my_drive">min-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Kan ikke pakke ut arkivet til skylagringen.</string>
+    <string name="login_failed_message">Innlogging mislyktes: %1$s</string>
+    <string name="login_failed_retry">Innlogging mislyktes, prøv igjen</string>
+    <string name="loading_user_data">Laster brukerdata...</string>
+    <string name="file_list_action_split_screen">Delt skjerm</string>
+    <string name="load_user_image_failed">Kunne ikke laste brukeravatar</string>
+    <string name="login_user_cancelled">Innlogging ble avbrutt, prøv igjen</string>
+    <string name="cannot_copy_move_between_cloud_message">Filoverføring mellom skyer støttes ikke for øyeblikket</string>
 </resources>

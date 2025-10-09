@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <string name="app_name">Διαχείριση Αρχείων</string>
-
     <string name="close">Κλείσιμο</string>
     <string name="copy">Αντιγραφή</string>
     <string name="cut">Αποκοπή</string>
@@ -662,4 +658,92 @@
 
     <string name="about_title">Σχετικά</string>
     <string name="about_version_title">Έκδοση</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d στοιχείο</item>
+        <item quantity="other">%1$,d στοιχεία</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Σύνδεση</string>
+    <string name="navigation_internal_storage_name">Εσωτερική αποθήκευση</string>
+    <string name="navigation_quick_access_images">Εικόνες</string>
+    <string name="navigation_quick_access_videos">Βίντεο</string>
+    <string name="navigation_quick_access_audio">Ήχος</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">Επιλέχθηκαν %1$,d</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Μεταφέρεται %1$,d στοιχείο</item>
+        <item quantity="other">Μεταφέρονται %1$,d στοιχεία</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Αντιγράφεται %1$,d στοιχείο</item>
+        <item quantity="other">Αντιγράφονται %1$,d στοιχεία</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Αποσυμπιέζεται %1$,d στοιχείο</item>
+        <item quantity="other">Αποσυμπιέζονται %1$,d στοιχεία</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Ταξινόμηση</string>
+    <string name="file_list_action_view_type_list">Προβολή λίστας</string>
+    <string name="file_list_action_view_type_grid">Πλέγμα</string>
+    <string name="file_list_action_exit_app">Έξοδος</string>
+    <string name="settings_quick_access_title">Γρήγορη πρόσβαση</string>
+    <string name="settings_quick_access_summary_empty">Δεν έχει ενεργοποιηθεί γρήγορη πρόσβαση</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Μεταφέρεται %1$,d στοιχείο</item>
+        <item quantity="other">Μεταφέρονται %1$,d στοιχεία</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Ακύρωση</string>
+    <string name="press_again_exit">Πατήστε ξανά για έξοδο</string>
+    <string name="login_expired">Η σύνδεση έχει λήξει. Συνδεθείτε ξανά</string>
+    <string name="server_error_occurred">Σφάλμα διακομιστή</string>
+    <string name="network_error">Αποτυχία δικτύου. Δοκιμάστε ξανά αργότερα</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Σύνδεση στο StarBoard Drive</string>
+    <string name="video_player_title">Πρόγραμμα αναπαραγωγής βίντεο</string>
+    <string name="cloud_file_download_dialog_message">Αυτός ο τύπος αρχείου δεν μπορεί να προεπισκοπηθεί. Θέλετε να τον κατεβάσετε σε τοπικό φάκελο;</string>
+    <string name="widget_launcher_login_button_text">Σύνδεση</string>
+    <string name="widget_launcher_login_tip_text">Συνδεθείτε στο λογαριασμό σας.</string>
+    <string name="qrcode_login_tip_text">Σαρώστε τον κωδικό για να συνδεθείτε</string>
+    <string name="use_password_login">Σύνδεση με κωδικό</string>
+    <string name="use_qrcode_login">Σύνδεση με σάρωση κωδικού</string>
+    <string name="cloud_file_properties_download_url">Σύνδεσμος λήψης</string>
+    <string name="logout_cloud_drive_dialog_message">Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;</string>
+    <string name="login_in">Σύνδεση</string>
+    <string name="log_out">Αποσύνδεση</string>
+    <string name="login_google_account">Συνέχεια με Google</string>
+    <string name="login_microsoft_account">Συνέχεια με Microsoft</string>
+    <string name="login_wechat_account">Συνέχεια με WeChat</string>
+    <string name="message_logout">Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε; Δεν θα μπορείτε να αποκτήσετε πρόσβαση στα αρχεία cloud μέχρι να συνδεθείτε ξανά.</string>
+    <string name="qrcode_login_scan_tip">Χρησιμοποιήστε την κάμερα ή τον περιηγητή για να σαρώσετε τον κωδικό QR και να συνδεθείτε</string>
+    <string name="user_agreement_text">Έχω διαβάσει και συμφωνώ με τους %1$s και %2$s.</string>
+    <string name="user_agreement">Όροι Χρήσης</string>
+    <string name="privacy_policy">Πολιτική Απορρήτου</string>
+    <string name="check_agreement_first">Ελέγξτε πρώτα τους Όρους Χρήσης</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Ακύρωση...</string>
+    <string name="downloading">Έναρξη λήψης...</string>
+    <string name="uploading">Μεταφόρτωση...</string>
+    <string name="upload_failed">Η μεταφόρτωση απέτυχε</string>
+    <string name="download_failed">Η λήψη απέτυχε</string>
+    <string name="upload_completed">Η μεταφόρτωση ολοκληρώθηκε</string>
+    <string name="download_completed">Η λήψη ολοκληρώθηκε</string>
+    <string name="my_files">Τα αρχεία μου</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Δεν είναι δυνατή η εξαγωγή του αρχείου στο cloud drive.</string>
+    <string name="login_failed_message">Η σύνδεση απέτυχε: %1$s</string>
+    <string name="login_failed_retry">Η σύνδεση απέτυχε, δοκιμάστε ξανά</string>
+    <string name="loading_user_data">Φόρτωση δεδομένων χρήστη...</string>
+    <string name="file_list_action_split_screen">Διαχωρισμένη οθόνη</string>
+    <string name="load_user_image_failed">Απέτυχε η φόρτωση του avatar χρήστη</string>
+    <string name="login_user_cancelled">Η σύνδεση ακυρώθηκε, δοκιμάστε ξανά</string>
+    <string name="cannot_copy_move_between_cloud_message">Η μεταφορά αρχείων μεταξύ cloud δεν υποστηρίζεται προς το παρόν</string>
 </resources>

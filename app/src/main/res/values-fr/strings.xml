@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity,MissingQuantity">
-
     <string name="app_name">File Manager</string>
-
     <string name="close">Fermer</string>
     <string name="copy">Copier</string>
     <string name="cut">Couper</string>
@@ -693,4 +689,92 @@
 
     <string name="about_title">A propos</string>
     <string name="about_version_title">Version</string>
+
+    <!-- Add new -->
+    <plurals name="file_item_file_count_format">
+        <item quantity="one">%1$,d élément</item>
+        <item quantity="other">%1$,d éléments</item>
+    </plurals>
+
+    <string name="navigation_login_account_tip">Se connecter</string>
+    <string name="navigation_internal_storage_name">Stockage interne</string>
+    <string name="navigation_quick_access_images">Images</string>
+    <string name="navigation_quick_access_videos">Vidéos</string>
+    <string name="navigation_quick_access_audio">Audio</string>
+    <string name="navigation_quick_access_apk">APKs</string>
+    <string name="file_list_select_title_format_new">%1$,d sélectionné</string>
+
+    <plurals name="file_list_paste_move_title_format_new">
+        <item quantity="one">Déplacement de %1$,d élément</item>
+        <item quantity="other">Déplacement de %1$,d éléments</item>
+    </plurals>
+
+    <plurals name="file_list_paste_copy_title_format_new">
+        <item quantity="one">Copie de %1$,d élément</item>
+        <item quantity="other">Copie de %1$,d éléments</item>
+    </plurals>
+
+    <plurals name="file_list_paste_extract_title_format_new">
+        <item quantity="one">Extraction de %1$,d élément</item>
+        <item quantity="other">Extraction de %1$,d éléments</item>
+    </plurals>
+
+    <string name="file_list_action_sort">Trier</string>
+    <string name="file_list_action_view_type_list">Vue en liste</string>
+    <string name="file_list_action_view_type_grid">Vue en grille</string>
+    <string name="file_list_action_exit_app">Quitter</string>
+    <string name="settings_quick_access_title">Accès rapide</string>
+    <string name="settings_quick_access_summary_empty">Aucun accès rapide activé</string>
+
+    <plurals name="file_transferring_title_format">
+        <item quantity="one">Transfert de %1$,d élément</item>
+        <item quantity="other">Transfert de %1$,d éléments</item>
+    </plurals>
+
+    <string name="file_transfer_cancelling">Annulation</string>
+    <string name="press_again_exit">Appuyez de nouveau pour quitter</string>
+    <string name="login_expired">Session expirée. Veuillez vous reconnecter</string>
+    <string name="server_error_occurred">Une erreur serveur est survenue</string>
+    <string name="network_error">Problème réseau. Veuillez réessayer plus tard</string>
+    <string name="starboard_drive">StarBoard Drive</string>
+    <string name="storage_add_storage_sdrive_server">Connectez-vous à StarBoard Drive</string>
+    <string name="video_player_title">Lecteur vidéo</string>
+    <string name="cloud_file_download_dialog_message">Ce type de fichier ne peut pas être prévisualisé. Voulez-vous le télécharger dans un dossier local ?</string>
+    <string name="widget_launcher_login_button_text">Se connecter</string>
+    <string name="widget_launcher_login_tip_text">Veuillez vous connecter à votre compte.</string>
+    <string name="qrcode_login_tip_text">Scannez le code pour vous connecter</string>
+    <string name="use_password_login">Se connecter avec un mot de passe</string>
+    <string name="use_qrcode_login">Se connecter en scannant le code</string>
+    <string name="cloud_file_properties_download_url">Lien de téléchargement</string>
+    <string name="logout_cloud_drive_dialog_message">Voulez-vous vraiment vous déconnecter ?</string>
+    <string name="login_in">Se connecter</string>
+    <string name="log_out">Se déconnecter</string>
+    <string name="login_google_account">Continuer avec Google</string>
+    <string name="login_microsoft_account">Continuer avec Microsoft</string>
+    <string name="login_wechat_account">Continuer avec WeChat</string>
+    <string name="message_logout">Voulez-vous vraiment vous déconnecter ? Vous ne pourrez plus accéder à vos fichiers cloud tant que vous ne vous reconnecterez pas.</string>
+    <string name="qrcode_login_scan_tip">Utilisez l\'appareil photo ou le navigateur pour scanner le code QR et vous connecter</string>
+    <string name="user_agreement_text">J\'ai lu et j\'accepte les %1$s et %2$s.</string>
+    <string name="user_agreement">Conditions d\'utilisation</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="check_agreement_first">Veuillez accepter les conditions d\'utilisation</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="one_drive">OneDrive</string>
+    <string name="canceling_transfer">Annulation...</string>
+    <string name="downloading">Démarrage...</string>
+    <string name="uploading">Téléversement...</string>
+    <string name="upload_failed">Échec du téléversement</string>
+    <string name="download_failed">Échec du téléchargement</string>
+    <string name="upload_completed">Téléversement terminé</string>
+    <string name="download_completed">Téléchargement terminé</string>
+    <string name="my_files">Mes fichiers</string>
+    <string name="my_drive">my-drive</string>
+    <string name="cannot_extract_to_cloud_drive">Impossible d\'extraire l\'archive vers le cloud.</string>
+    <string name="login_failed_message">Échec de la connexion : %1$s</string>
+    <string name="login_failed_retry">Échec de la connexion, veuillez réessayer</string>
+    <string name="loading_user_data">Chargement des données utilisateur...</string>
+    <string name="file_list_action_split_screen">Écran partagé</string>
+    <string name="load_user_image_failed">Échec du chargement de l\'avatar utilisateur</string>
+    <string name="login_user_cancelled">Connexion annulée, veuillez réessayer</string>
+    <string name="cannot_copy_move_between_cloud_message">Le transfert entre clouds n\'est pas supporté pour le moment</string>
 </resources>
