@@ -888,4 +888,10 @@
     <string name="load_user_image_failed">فشل تحميل صورة المستخدم</string>
     <string name="login_user_cancelled">تم إلغاء تسجيل الدخول، يرجى المحاولة مجددًا</string>
     <string name="cannot_copy_move_between_cloud_message">نسخ أو نقل الملفات بين خدمات السحابة غير مدعوم حاليًا</string>
+    <string name="wechat_scan_login">تسجيل الدخول باستخدام رمز QR من WeChat</string>
+    <string name="scanned_successfully">تم المسح بنجاح</string>
+    <string name="wechat_tap_allow_tip">اضغط على "السماح" لتسجيل الدخول</string>
+    <string name="back">رجوع</string>
+    <string name="loading_failed">فشل التحميل، حاول مرة أخرى</string>
+    <string name="login_has_been_canceled">تم إلغاء تسجيل الدخول، حاول مرة أخرى</string>
 </resources>

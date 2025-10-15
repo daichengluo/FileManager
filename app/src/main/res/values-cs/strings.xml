@@ -785,4 +785,10 @@
     <string name="load_user_image_failed">Nepodařilo se načíst avatar uživatele</string>
     <string name="login_user_cancelled">Přihlášení bylo zrušeno, zkuste to znovu</string>
     <string name="cannot_copy_move_between_cloud_message">Přenos souborů mezi cloudy není momentálně podporován</string>
+    <string name="wechat_scan_login">Přihlásit se pomocí QR kódu WeChat</string>
+    <string name="scanned_successfully">Skenování úspěšné</string>
+    <string name="wechat_tap_allow_tip">Klepněte na „Povolit“ pro přihlášení</string>
+    <string name="back">Zpět</string>
+    <string name="loading_failed">Načítání selhalo, zkuste to znovu</string>
+    <string name="login_has_been_canceled">Přihlášení bylo zrušeno, zkuste to znovu</string>
 </resources>

@@ -770,4 +770,10 @@
     <string name="load_user_image_failed">Impossibile caricare avatar utente</string>
     <string name="login_user_cancelled">Login annullato, riprova</string>
     <string name="cannot_copy_move_between_cloud_message">Il trasferimento tra cloud non è supportato al momento</string>
+    <string name="wechat_scan_login">Accedi con il codice QR di WeChat</string>
+    <string name="scanned_successfully">Scansione riuscita</string>
+    <string name="wechat_tap_allow_tip">Tocca “Consenti” per accedere</string>
+    <string name="back">Indietro</string>
+    <string name="loading_failed">Caricamento non riuscito, riprova</string>
+    <string name="login_has_been_canceled">Accesso annullato, riprova</string>
 </resources>

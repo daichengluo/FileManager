@@ -705,4 +705,10 @@
     <string name="load_user_image_failed">加载用户头像失败</string>
     <string name="login_user_cancelled">登录已取消，请重试</string>
     <string name="cannot_copy_move_between_cloud_message">暂不支持网盘间互传</string>
+    <string name="wechat_scan_login">使用微信扫码登录</string>
+    <string name="scanned_successfully">扫描成功</string>
+    <string name="wechat_tap_allow_tip">点击“允许”后即可登录</string>
+    <string name="back">返回</string>
+    <string name="loading_failed">加载失败，请重试</string>
+    <string name="login_has_been_canceled">登录已取消，请重试</string>
 </resources>

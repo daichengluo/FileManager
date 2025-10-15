@@ -723,4 +723,10 @@
     <string name="load_user_image_failed">Неуспешно зареждане на аватара</string>
     <string name="login_user_cancelled">Входът е отменен, моля опитайте отново</string>
     <string name="cannot_copy_move_between_cloud_message">Кръстосан трансфер на файлове между облаци не се поддържа засега</string>
+    <string name="wechat_scan_login">Вход с QR код от WeChat</string>
+    <string name="scanned_successfully">Сканирането е успешно</string>
+    <string name="wechat_tap_allow_tip">Докоснете „Разреши“, за да влезете</string>
+    <string name="back">Назад</string>
+    <string name="loading_failed">Зареждането неуспешно, опитайте отново</string>
+    <string name="login_has_been_canceled">Входът е отменен, опитайте отново</string>
 </resources>

@@ -647,4 +647,10 @@
     <string name="load_user_image_failed">A felhasználói avatar betöltése sikertelen</string>
     <string name="login_user_cancelled">A bejelentkezés megszakadt, próbálja újra</string>
     <string name="cannot_copy_move_between_cloud_message">Felhőközi fájlátvitel jelenleg nem támogatott</string>
+    <string name="wechat_scan_login">Bejelentkezés WeChat QR-kóddal</string>
+    <string name="scanned_successfully">Sikeres beolvasás</string>
+    <string name="wechat_tap_allow_tip">Koppints az „Engedélyezés” gombra a bejelentkezéshez</string>
+    <string name="back">Vissza</string>
+    <string name="loading_failed">Betöltés sikertelen, próbáld újra</string>
+    <string name="login_has_been_canceled">Bejelentkezés megszakítva, próbáld újra</string>
 </resources>

@@ -746,4 +746,10 @@
     <string name="load_user_image_failed">Απέτυχε η φόρτωση του avatar χρήστη</string>
     <string name="login_user_cancelled">Η σύνδεση ακυρώθηκε, δοκιμάστε ξανά</string>
     <string name="cannot_copy_move_between_cloud_message">Η μεταφορά αρχείων μεταξύ cloud δεν υποστηρίζεται προς το παρόν</string>
+    <string name="wechat_scan_login">Σύνδεση με κωδικό QR WeChat</string>
+    <string name="scanned_successfully">Επιτυχής σάρωση</string>
+    <string name="wechat_tap_allow_tip">Πατήστε «Να επιτρέπεται» για να συνδεθείτε</string>
+    <string name="back">Πίσω</string>
+    <string name="loading_failed">Η φόρτωση απέτυχε, δοκιμάστε ξανά</string>
+    <string name="login_has_been_canceled">Η σύνδεση ακυρώθηκε, δοκιμάστε ξανά</string>
 </resources>

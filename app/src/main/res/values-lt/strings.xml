@@ -708,4 +708,10 @@
     <string name="load_user_image_failed">Nepavyko įkelti naudotojo avataro</string>
     <string name="login_user_cancelled">Prisijungimas atšauktas, bandykite dar kartą</string>
     <string name="cannot_copy_move_between_cloud_message">Dabartiniu metu debesų tarpinių failų perkėlimas nepalaikomas</string>
+    <string name="wechat_scan_login">Prisijunkite naudodami WeChat QR kodą</string>
+    <string name="scanned_successfully">Skenavimas sėkmingas</string>
+    <string name="wechat_tap_allow_tip">Palieskite „Leisti“, kad prisijungtumėte</string>
+    <string name="back">Atgal</string>
+    <string name="loading_failed">Įkėlimas nepavyko, bandykite dar kartą</string>
+    <string name="login_has_been_canceled">Prisijungimas atšauktas, bandykite dar kartą</string>
 </resources>

@@ -626,4 +626,10 @@
     <string name="load_user_image_failed">Gagal memuat avatar pengguna</string>
     <string name="login_user_cancelled">Login dibatalkan, silakan coba lagi</string>
     <string name="cannot_copy_move_between_cloud_message">Transfer file antar-cloud belum didukung</string>
+    <string name="wechat_scan_login">Masuk dengan kode QR WeChat</string>
+    <string name="scanned_successfully">Pindai berhasil</string>
+    <string name="wechat_tap_allow_tip">Ketuk “Izinkan” untuk masuk</string>
+    <string name="back">Kembali</string>
+    <string name="loading_failed">Gagal memuat, coba lagi</string>
+    <string name="login_has_been_canceled">Login dibatalkan, coba lagi</string>
 </resources>

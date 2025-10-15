@@ -739,4 +739,10 @@
     <string name="load_user_image_failed">Kunne ikke laste brukeravatar</string>
     <string name="login_user_cancelled">Innlogging ble avbrutt, prøv igjen</string>
     <string name="cannot_copy_move_between_cloud_message">Filoverføring mellom skyer støttes ikke for øyeblikket</string>
+    <string name="wechat_scan_login">Logg inn med WeChat QR-kode</string>
+    <string name="scanned_successfully">Skanning vellykket</string>
+    <string name="wechat_tap_allow_tip">Trykk “Tillat” for å logge inn</string>
+    <string name="back">Tilbake</string>
+    <string name="loading_failed">Kunne ikke laste, prøv igjen</string>
+    <string name="login_has_been_canceled">Innlogging avbrutt, prøv igjen</string>
 </resources>

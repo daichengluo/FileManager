@@ -704,4 +704,10 @@
     <string name="load_user_image_failed">載入使用者頭像失敗</string>
     <string name="login_user_cancelled">登入已取消，請重試</string>
     <string name="cannot_copy_move_between_cloud_message">暫不支援網盤間互傳</string>
+    <string name="wechat_scan_login">使用 WeChat 掃描登入</string>
+    <string name="scanned_successfully">掃描成功</string>
+    <string name="wechat_tap_allow_tip">點擊「允許」後即可登入</string>
+    <string name="back">返回</string>
+    <string name="loading_failed">載入失敗，請重試</string>
+    <string name="login_has_been_canceled">登入已取消，請重試</string>
 </resources>

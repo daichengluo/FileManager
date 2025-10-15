@@ -683,4 +683,10 @@
     <string name="load_user_image_failed">Încărcarea avatarului utilizatorului a eșuat</string>
     <string name="login_user_cancelled">Autentificarea a fost anulată, încercați din nou</string>
     <string name="cannot_copy_move_between_cloud_message">Transferul de fișiere între cloud-uri nu este suportat momentan</string>
+    <string name="wechat_scan_login">Autentificare cu codul QR WeChat</string>
+    <string name="scanned_successfully">Scanare reușită</string>
+    <string name="wechat_tap_allow_tip">Atinge „Permite” pentru a te autentifica</string>
+    <string name="back">Înapoi</string>
+    <string name="loading_failed">Încărcare eșuată, încearcă din nou</string>
+    <string name="login_has_been_canceled">Autentificarea a fost anulată, încearcă din nou</string>
 </resources>

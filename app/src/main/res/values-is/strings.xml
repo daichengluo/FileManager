@@ -746,4 +746,10 @@
     <string name="load_user_image_failed">Mistókst að hlaða inn notendavatni</string>
     <string name="login_user_cancelled">Innskráning var hætt, vinsamlegast reyndu aftur</string>
     <string name="cannot_copy_move_between_cloud_message">Yfir-skýjaflutningur er ekki studdur ennþá</string>
+    <string name="wechat_scan_login">Skráðu þig inn með WeChat QR-kóða</string>
+    <string name="scanned_successfully">Skönnun tókst</string>
+    <string name="wechat_tap_allow_tip">Pikkaðu á „Leyfa“ til að skrá þig inn</string>
+    <string name="back">Til baka</string>
+    <string name="loading_failed">Hleðsla mistókst, reyndu aftur</string>
+    <string name="login_has_been_canceled">Innskráning var hætt við, reyndu aftur</string>
 </resources>

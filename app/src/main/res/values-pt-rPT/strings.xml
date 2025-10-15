@@ -708,4 +708,10 @@
     <string name="load_user_image_failed">Falha ao carregar avatar do utilizador</string>
     <string name="login_user_cancelled">Início de sessão cancelado, por favor tente novamente</string>
     <string name="cannot_copy_move_between_cloud_message">Transferência de ficheiros entre clouds não é suportada de momento</string>
+    <string name="wechat_scan_login">Iniciar sessão com o código QR do WeChat</string>
+    <string name="scanned_successfully">Leitura concluída com sucesso</string>
+    <string name="wechat_tap_allow_tip">Toque em “Permitir” para iniciar sessão</string>
+    <string name="back">Voltar</string>
+    <string name="loading_failed">Falha ao carregar, tente novamente</string>
+    <string name="login_has_been_canceled">Sessão cancelada, tente novamente</string>
 </resources>

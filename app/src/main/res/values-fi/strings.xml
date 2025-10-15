@@ -630,4 +630,10 @@
     <string name="load_user_image_failed">Käyttäjäkuvaa ei voitu ladata</string>
     <string name="login_user_cancelled">Kirjautuminen peruutettu, yritä uudelleen</string>
     <string name="cannot_copy_move_between_cloud_message">Pilvitiedostojen välistä siirtoa ei tueta tällä hetkellä</string>
+    <string name="wechat_scan_login">Kirjaudu sisään WeChat QR-koodilla</string>
+    <string name="scanned_successfully">Skannaus onnistui</string>
+    <string name="wechat_tap_allow_tip">Napauta ”Salli” kirjautuaksesi sisään</string>
+    <string name="back">Takaisin</string>
+    <string name="loading_failed">Lataus epäonnistui, yritä uudelleen</string>
+    <string name="login_has_been_canceled">Kirjautuminen peruutettu, yritä uudelleen</string>
 </resources>

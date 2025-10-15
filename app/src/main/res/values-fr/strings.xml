@@ -777,4 +777,10 @@
     <string name="load_user_image_failed">Échec du chargement de l\'avatar utilisateur</string>
     <string name="login_user_cancelled">Connexion annulée, veuillez réessayer</string>
     <string name="cannot_copy_move_between_cloud_message">Le transfert entre clouds n\'est pas supporté pour le moment</string>
+    <string name="wechat_scan_login">Se connecter avec le QR code WeChat</string>
+    <string name="scanned_successfully">Analyse réussie</string>
+    <string name="wechat_tap_allow_tip">Appuyez sur « Autoriser » pour vous connecter</string>
+    <string name="back">Retour</string>
+    <string name="loading_failed">Échec du chargement, veuillez réessayer</string>
+    <string name="login_has_been_canceled">Connexion annulée, veuillez réessayer</string>
 </resources>

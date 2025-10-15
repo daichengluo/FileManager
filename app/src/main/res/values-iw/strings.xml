@@ -813,4 +813,10 @@
     <string name="load_user_image_failed">טעינת תמונת המשתמש נכשלה</string>
     <string name="login_user_cancelled">התחברות בוטלה, נסה שוב</string>
     <string name="cannot_copy_move_between_cloud_message">העברה בין עננים אינה נתמכת כרגע</string>
+    <string name="wechat_scan_login">התחבר באמצעות קוד QR של WeChat</string>
+    <string name="scanned_successfully">נסרק בהצלחה</string>
+    <string name="wechat_tap_allow_tip">הקש על "אפשר" כדי להתחבר</string>
+    <string name="back">חזרה</string>
+    <string name="loading_failed">טעינה נכשלה, נסה שוב</string>
+    <string name="login_has_been_canceled">ההתחברות בוטלה, נסה שוב</string>
 </resources>

@@ -811,4 +811,10 @@
     <string name="load_user_image_failed">Nie udało się załadować avatara użytkownika</string>
     <string name="login_user_cancelled">Logowanie zostało anulowane, spróbuj ponownie</string>
     <string name="cannot_copy_move_between_cloud_message">Przenoszenie plików między chmurami nie jest obecnie obsługiwane</string>
+    <string name="wechat_scan_login">Zaloguj się za pomocą kodu QR WeChat</string>
+    <string name="scanned_successfully">Skanowanie zakończone sukcesem</string>
+    <string name="wechat_tap_allow_tip">Dotknij „Zezwól”, aby się zalogować</string>
+    <string name="back">Wstecz</string>
+    <string name="loading_failed">Nie udało się załadować, spróbuj ponownie</string>
+    <string name="login_has_been_canceled">Logowanie anulowane, spróbuj ponownie</string>
 </resources>

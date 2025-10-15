@@ -41,21 +41,7 @@ class CloudLoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val fm = childFragmentManager
-
-        if (fm.findFragmentById(R.id.fragmentContainer) == null) {
-            val password = fm.findFragmentByTag(CloudLoginMethod.Password.toString())
-                ?: PasswordLoginFragment()
-            val qrcode = fm.findFragmentByTag(CloudLoginMethod.QRCode.toString())
-                ?: QRCodeLoginFragment()
-
-            fm.commit {
-                add(R.id.fragmentContainer, password, CloudLoginMethod.Password.toString())
-                add(R.id.fragmentContainer, qrcode, CloudLoginMethod.QRCode.toString())
-                hide(qrcode)
-                show(password)
-            }
-        }
+        showLoginFragment(CloudLoginMethod.Password)
 
         binding.fragmentContainer.setBackgroundResource(
             if (args.fromWidget) {
@@ -74,34 +60,7 @@ class CloudLoginFragment : Fragment() {
 
         viewModel.currentLoginMethodLiveData.observe(viewLifecycleOwner) { currentMethod ->
 
-            val password = fm.findFragmentByTag(CloudLoginMethod.Password.toString())
-            val qrcode = fm.findFragmentByTag(CloudLoginMethod.QRCode.toString())
-
-            when (currentMethod) {
-                CloudLoginMethod.QRCode -> {
-                    fm.commit {
-                        password?.let { hide(it) }
-                        qrcode?.let { show(it) }
-                    }
-
-                    binding.userAgreementLayout.isVisible = false
-                    binding.loginSwitchButton.setImageResource(R.drawable.password_login_method)
-                    binding.loginSwitchButton.contentDescription =
-                        getString(R.string.use_password_login)
-                }
-
-                CloudLoginMethod.Password -> {
-                    fm.commit {
-                        qrcode?.let { hide(it) }
-                        password?.let { show(it) }
-                    }
-
-                    binding.userAgreementLayout.isVisible = true
-                    binding.loginSwitchButton.setImageResource(R.drawable.qrcode_login_method)
-                    binding.loginSwitchButton.contentDescription =
-                        getString(R.string.use_qrcode_login)
-                }
-            }
+            showLoginFragment(currentMethod)
         }
 
         binding.loginSwitchButton.setOnClickListener {
@@ -173,6 +132,49 @@ class CloudLoginFragment : Fragment() {
         binding.userAgreementText.text = spannable
         binding.userAgreementText.movementMethod = LinkMovementMethod.getInstance()
         binding.userAgreementText.highlightColor = Color.TRANSPARENT
+    }
+
+    fun showLoginFragment(method: CloudLoginMethod) {
+        val fm = childFragmentManager
+        fm.commit {
+            fm.fragments.forEach { hide(it) }
+
+            val tag = method.toString()
+            val fragment = fm.findFragmentByTag(tag) ?: when (method) {
+                CloudLoginMethod.Password -> PasswordLoginFragment()
+                CloudLoginMethod.QRCode -> QRCodeLoginFragment()
+                CloudLoginMethod.WeChat -> WeChatLoginFragment()
+            }
+
+            if (!fragment.isAdded) {
+                add(R.id.fragmentContainer, fragment, tag)
+            } else {
+                show(fragment)
+            }
+        }
+
+        when (method) {
+            CloudLoginMethod.QRCode -> {
+                binding.userAgreementLayout.isVisible = false
+                binding.loginSwitchButton.isVisible = true
+                binding.loginSwitchButton.setImageResource(R.drawable.password_login_method)
+                binding.loginSwitchButton.contentDescription =
+                    getString(R.string.use_password_login)
+            }
+
+            CloudLoginMethod.Password -> {
+                binding.userAgreementLayout.isVisible = true
+                binding.loginSwitchButton.isVisible = true
+                binding.loginSwitchButton.setImageResource(R.drawable.qrcode_login_method)
+                binding.loginSwitchButton.contentDescription =
+                    getString(R.string.use_qrcode_login)
+            }
+
+            CloudLoginMethod.WeChat -> {
+                binding.userAgreementLayout.isVisible = false
+                binding.loginSwitchButton.isVisible = false
+            }
+        }
     }
 
     @Parcelize

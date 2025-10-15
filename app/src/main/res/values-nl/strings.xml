@@ -739,4 +739,10 @@
     <string name="load_user_image_failed">Gebruikersavatar laden mislukt</string>
     <string name="login_user_cancelled">Inloggen geannuleerd, probeer opnieuw</string>
     <string name="cannot_copy_move_between_cloud_message">Bestandsoverdracht tussen clouds wordt momenteel niet ondersteund</string>
+    <string name="wechat_scan_login">Inloggen met WeChat QR-code</string>
+    <string name="scanned_successfully">Succesvol gescand</string>
+    <string name="wechat_tap_allow_tip">Tik op “Toestaan” om in te loggen</string>
+    <string name="back">Terug</string>
+    <string name="loading_failed">Laden mislukt, probeer opnieuw</string>
+    <string name="login_has_been_canceled">Inloggen geannuleerd, probeer opnieuw</string>
 </resources>

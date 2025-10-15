@@ -679,4 +679,10 @@
     <string name="load_user_image_failed">Error en carregar l\'avatar de l\'usuari</string>
     <string name="login_user_cancelled">L\'usuari ha cancel·lat l\'inici de sessió, torna-ho a provar</string>
     <string name="cannot_copy_move_between_cloud_message">La transferència de fitxers entre núvols no està admesa actualment</string>
+    <string name="wechat_scan_login">Inicia sessió amb el codi QR de WeChat</string>
+    <string name="scanned_successfully">Escaneig completat amb èxit</string>
+    <string name="wechat_tap_allow_tip">Toca “Permetre” per iniciar sessió</string>
+    <string name="back">Enrere</string>
+    <string name="loading_failed">Error en carregar, torna-ho a provar</string>
+    <string name="login_has_been_canceled">L\'inici de sessió s\'ha cancel·lat, torna-ho a provar</string>
 </resources>

@@ -741,4 +741,10 @@
     <string name="load_user_image_failed">Benutzeravatar kann nicht geladen werden</string>
     <string name="login_user_cancelled">Login wurde abgebrochen, bitte erneut versuchen</string>
     <string name="cannot_copy_move_between_cloud_message">Dateiübertragung zwischen Clouds wird derzeit nicht unterstützt</string>
+    <string name="wechat_scan_login">Mit WeChat QR-Code anmelden</string>
+    <string name="scanned_successfully">Erfolgreich gescannt</string>
+    <string name="wechat_tap_allow_tip">Tippe auf „Zulassen“, um dich anzumelden</string>
+    <string name="back">Zurück</string>
+    <string name="loading_failed">Laden fehlgeschlagen, bitte versuche es erneut</string>
+    <string name="login_has_been_canceled">Anmeldung abgebrochen, bitte erneut versuchen</string>
 </resources>

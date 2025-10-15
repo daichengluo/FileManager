@@ -612,4 +612,10 @@
     <string name="load_user_image_failed">Kullanıcı avatarı yüklenemedi</string>
     <string name="login_user_cancelled">Giriş iptal edildi, lütfen tekrar deneyin</string>
     <string name="cannot_copy_move_between_cloud_message">Bulutlar arası dosya aktarımı şu anda desteklenmiyor</string>
+    <string name="wechat_scan_login">WeChat QR kodu ile giriş yap</string>
+    <string name="scanned_successfully">Tarama başarılı</string>
+    <string name="wechat_tap_allow_tip">Giriş yapmak için “İzin Ver”e dokunun</string>
+    <string name="back">Geri</string>
+    <string name="loading_failed">Yükleme başarısız, tekrar deneyin</string>
+    <string name="login_has_been_canceled">Giriş iptal edildi, tekrar deneyin</string>
 </resources>

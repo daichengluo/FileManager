@@ -23,10 +23,8 @@ class CloudLoginViewModel : ViewModel() {
     }
 
     fun switchLoginMethod() {
-        val method = when (currentLoginMethod) {
-            CloudLoginMethod.QRCode -> CloudLoginMethod.Password
-            CloudLoginMethod.Password -> CloudLoginMethod.QRCode
-        }
-        _currentLoginMethodLiveData.value = method
+        _currentLoginMethodLiveData.value = if (currentLoginMethod == CloudLoginMethod.Password) {
+            CloudLoginMethod.QRCode
+        } else CloudLoginMethod.Password
     }
 }

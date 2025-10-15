@@ -94,6 +94,7 @@ class PasswordLoginFragment : Fragment() {
                 showToast(R.string.check_agreement_first)
                 return@setOnClickListener
             }
+            (parentFragment as? CloudLoginFragment)?.showLoginFragment(CloudLoginMethod.WeChat)
         }
     }
 

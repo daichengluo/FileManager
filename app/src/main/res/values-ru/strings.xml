@@ -811,4 +811,10 @@
     <string name="load_user_image_failed">Не удалось загрузить аватар пользователя</string>
     <string name="login_user_cancelled">Вход отменён, попробуйте снова</string>
     <string name="cannot_copy_move_between_cloud_message">Передача файлов между облаками в данный момент не поддерживается</string>
+    <string name="wechat_scan_login">Войти с помощью QR-кода WeChat</string>
+    <string name="scanned_successfully">Сканирование успешно</string>
+    <string name="wechat_tap_allow_tip">Нажмите «Разрешить», чтобы войти</string>
+    <string name="back">Назад</string>
+    <string name="loading_failed">Ошибка загрузки, попробуйте снова</string>
+    <string name="login_has_been_canceled">Вход отменён, попробуйте снова</string>
 </resources>

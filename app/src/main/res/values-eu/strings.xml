@@ -448,4 +448,10 @@
     <string name="load_user_image_failed">Ezin izan da erabiltzaile avatarra kargatu</string>
     <string name="login_user_cancelled">Saioa bertan behera geratu da, saiatu berriro</string>
     <string name="cannot_copy_move_between_cloud_message">Hodeien arteko fitxategi-transferentzia oraindik ez da onartzen</string>
+    <string name="wechat_scan_login">Hasi saioa WeChat QR kodearekin</string>
+    <string name="scanned_successfully">Eskaneatzea arrakastatsua</string>
+    <string name="wechat_tap_allow_tip">Sakatu “Baimendu” saioa hasteko</string>
+    <string name="back">Atzera</string>
+    <string name="loading_failed">Kargatzeak huts egin du, saiatu berriro</string>
+    <string name="login_has_been_canceled">Saioa bertan behera utzi da, saiatu berriro</string>
 </resources>

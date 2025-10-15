@@ -703,4 +703,10 @@
     <string name="load_user_image_failed">ユーザーのアイコンの読み込みに失敗しました</string>
     <string name="login_user_cancelled">ログインがキャンセルされました。再試行してください</string>
     <string name="cannot_copy_move_between_cloud_message">現在、クラウド間のファイル転送はサポートされていません</string>
+    <string name="wechat_scan_login">WeChat QRコードでログイン</string>
+    <string name="scanned_successfully">スキャン成功</string>
+    <string name="wechat_tap_allow_tip">「許可」をタップしてログインします</string>
+    <string name="back">戻る</string>
+    <string name="loading_failed">読み込みに失敗しました。再試行してください</string>
+    <string name="login_has_been_canceled">ログインがキャンセルされました。再試行してください</string>
 </resources>

@@ -597,4 +597,10 @@
     <string name="load_user_image_failed">Không thể tải ảnh đại diện người dùng</string>
     <string name="login_user_cancelled">Đăng nhập bị hủy, vui lòng thử lại</string>
     <string name="cannot_copy_move_between_cloud_message">Hiện không hỗ trợ chuyển tệp giữa các đám mây</string>
+    <string name="wechat_scan_login">Đăng nhập bằng mã QR WeChat</string>
+    <string name="scanned_successfully">Quét thành công</string>
+    <string name="wechat_tap_allow_tip">Nhấn “Cho phép” để đăng nhập</string>
+    <string name="back">Quay lại</string>
+    <string name="loading_failed">Tải thất bại, vui lòng thử lại</string>
+    <string name="login_has_been_canceled">Đăng nhập đã bị hủy, vui lòng thử lại</string>
 </resources>

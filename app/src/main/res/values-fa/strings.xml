@@ -638,4 +638,10 @@
     <string name="load_user_image_failed">بارگذاری آواتار کاربر ناموفق بود</string>
     <string name="login_user_cancelled">ورود لغو شد، لطفاً دوباره تلاش کنید</string>
     <string name="cannot_copy_move_between_cloud_message">انتقال فایل بین ابری در حال حاضر پشتیبانی نمی‌شود</string>
+    <string name="wechat_scan_login">ورود با کد QR وی‌چت</string>
+    <string name="scanned_successfully">اسکن با موفقیت انجام شد</string>
+    <string name="wechat_tap_allow_tip">برای ورود روی «اجازه دادن» بزنید</string>
+    <string name="back">بازگشت</string>
+    <string name="loading_failed">بارگذاری ناموفق بود، دوباره تلاش کنید</string>
+    <string name="login_has_been_canceled">ورود لغو شد، دوباره تلاش کنید</string>
 </resources>

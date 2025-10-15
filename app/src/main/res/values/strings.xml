@@ -870,4 +870,10 @@
     <string name="load_user_image_failed">Failed to load user avatar</string>
     <string name="login_user_cancelled">Login was cancelled, please try again</string>
     <string name="cannot_copy_move_between_cloud_message">Cross-cloud file transfer is not supported for now</string>
+    <string name="wechat_scan_login">Log in with WeChat</string>
+    <string name="scanned_successfully">Scanned successfully</string>
+    <string name="wechat_tap_allow_tip">Tap \"Allow\" in WeChat to log in</string>
+    <string name="back">Back</string>
+    <string name="loading_failed">Loading failed, please try again</string>
+    <string name="login_has_been_canceled">Login has been cancelled, please try again.</string>
 </resources>
