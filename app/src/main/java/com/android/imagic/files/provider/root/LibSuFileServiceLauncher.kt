@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.android.imagic.files.provider.remote.IRemoteFileService
 import com.android.imagic.files.provider.remote.RemoteFileServiceInterface
 import com.android.imagic.files.provider.remote.RemoteFileSystemException
 import com.android.imagic.files.util.createIntent
@@ -46,7 +47,7 @@ object LibSuFileServiceLauncher {
         }
 
     @Throws(RemoteFileSystemException::class)
-    fun launchService(): com.android.imagic.files.provider.remote.IRemoteFileService {
+    fun launchService(): IRemoteFileService {
         synchronized(lock) {
             // libsu won't call back when su isn't available.
             if (!isSuAvailable()) {
@@ -78,10 +79,9 @@ object LibSuFileServiceLauncher {
                                         name: ComponentName,
                                         service: IBinder
                                     ) {
-                                        val serviceInterface =
-                                            com.android.imagic.files.provider.remote.IRemoteFileService.Stub.asInterface(
-                                                service
-                                            )
+                                        val serviceInterface = IRemoteFileService.Stub.asInterface(
+                                            service
+                                        )
                                         continuation.resume(serviceInterface)
                                     }
 
