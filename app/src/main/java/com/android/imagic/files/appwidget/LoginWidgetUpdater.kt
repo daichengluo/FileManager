@@ -21,6 +21,8 @@ import com.android.imagic.files.cloud.CloudLogoutFragment
 import com.android.imagic.files.file.asFileSize
 import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
+import com.android.imagic.files.storage.GoogleDriveServer
+import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.Constants
 import com.android.imagic.files.util.NetworkUtil
@@ -35,7 +37,9 @@ import java.time.Clock
 
 object LoginWidgetUpdater {
 
-    const val EXTRA_CLOUD_AUTHORITY = "extra_cloud_authority"
+    const val EXTRA_STARBOARD_AUTHORITY = "extra_starboard_authority"
+    const val EXTRA_ONEDRIVE_AUTHORITY = "extra_onedrive_authority"
+    const val EXTRA_GOOGLE_DRIVE_AUTHORITY = "extra_google_drive_authority"
 
     fun updateWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -50,13 +54,16 @@ object LoginWidgetUpdater {
         appWidgetIds: IntArray
     ) {
         val storages = Settings.STORAGES.valueCompat.toList()
-        val starBoardDriveServers = storages.filter { it is StarBoardDriveServer }
+        val starBoardDriveServers = storages.filterIsInstance<StarBoardDriveServer>()
+        val googleDriveServers = storages.filterIsInstance<GoogleDriveServer>()
+        val oneDriveServers = storages.filterIsInstance<OneDriveServer>()
         val isLogin = starBoardDriveServers.isNotEmpty()
 
-        val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login).apply {
-            setOnClickPendingIntent(R.id.widgetLoginButton, getActivityPendingIntent(context, true))
-            setOnClickPendingIntent(R.id.refreshQRCode, getActivityPendingIntent(context, false))
-        }
+        val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login)
+        remoteViews.setOnClickPendingIntent(
+            R.id.widgetLoginButton,
+            getActivityPendingIntent(context)
+        )
 
         remoteViews.setViewVisibility(
             R.id.needLoginLayout,
@@ -64,15 +71,18 @@ object LoginWidgetUpdater {
         )
         remoteViews.setViewVisibility(
             R.id.loginSuccessLayout,
-            if (!isLogin) View.GONE else View.VISIBLE
+            if (isLogin) View.VISIBLE else View.GONE
         )
 
-        val refreshQRCodeIntent = Intent(context, RefreshQRCodeReceiver::class.java).apply {
+        val refreshQRCodeIntent = Intent(
+            context,
+            RefreshQRCodeReceiver::class.java
+        ).apply {
             action = RefreshQRCodeReceiver.ACTION_REFRESH_QRCODE
         }
         val refreshQRCodePendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            1,
             refreshQRCodeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -83,41 +93,103 @@ object LoginWidgetUpdater {
         }
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
 
+        oneDriveServers.firstOrNull()?.let { server ->
+            val authority = server.authority
+
+            remoteViews.setImageViewResource(R.id.thirdDriveIcon, R.drawable.widget_microsoft_icon)
+            remoteViews.setTextViewText(
+                R.id.thirdDriveName,
+                context.getString(R.string.one_drive)
+            )
+            val intent = Intent(context, FileListActivity::class.java).apply {
+                putExtra(EXTRA_ONEDRIVE_AUTHORITY, authority)
+            }
+            val pendingIntent = PendingIntent.getActivity(
+                context, authority.hashCode(), intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val progress = (authority.usedSpace / authority.totalSpace).toInt()
+            Log.d("chengluo", "updateWidgets oneDrive setProgressbar progress: $progress")
+            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 100, progress, false)
+
+            val usedSpace = authority.usedSpace
+            val totalSpace = authority.totalSpace
+            val usedSpaceString = usedSpace.asFileSize().formatHumanReadable(context)
+            val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+            val spaceText = "$usedSpaceString / $totalSpaceString"
+            remoteViews.setTextViewText(R.id.thirdDriveSpaceText, spaceText)
+            remoteViews.setOnClickPendingIntent(R.id.thirdDriveLayout, pendingIntent)
+            remoteViews.setViewVisibility(R.id.thirdDriveLayout, View.VISIBLE)
+        }
+
+        googleDriveServers.firstOrNull()?.let { server ->
+            val authority = server.authority
+
+            remoteViews.setImageViewResource(R.id.thirdDriveIcon, R.drawable.widget_google_icon)
+            remoteViews.setTextViewText(
+                R.id.thirdDriveName,
+                context.getString(R.string.google_drive)
+            )
+            val intent = Intent(context, FileListActivity::class.java).apply {
+                putExtra(EXTRA_GOOGLE_DRIVE_AUTHORITY, authority)
+            }
+            val pendingIntent = PendingIntent.getActivity(
+                context, authority.hashCode(), intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val progress = (authority.usedSpace / authority.totalSpace).toInt()
+            Log.d("chengluo", "updateWidgets googleDrive setProgressbar progress: $progress")
+            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 100, progress, false)
+
+            val usedSpace = authority.usedSpace
+            val totalSpace = authority.totalSpace
+            val usedSpaceString = usedSpace.asFileSize().formatHumanReadable(context)
+            val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
+            val spaceText = "$usedSpaceString / $totalSpaceString"
+            Log.d(
+                "chengluo",
+                "updateWidgets googleDrive usedSpaceString: $usedSpaceString totalSpaceString: $totalSpaceString"
+            )
+            remoteViews.setTextViewText(R.id.thirdDriveSpaceText, spaceText)
+            remoteViews.setOnClickPendingIntent(R.id.thirdDriveLayout, pendingIntent)
+            remoteViews.setViewVisibility(R.id.thirdDriveLayout, View.VISIBLE)
+        }
+
         starBoardDriveServers.firstOrNull()?.let { server ->
-            val starBoardDriveServer = server as StarBoardDriveServer
-            val authority = starBoardDriveServer.authority
+            val authority = server.authority
             remoteViews.setTextViewText(R.id.usernameText, authority.username)
 
-            val goToCloudListIntent = Intent(context, FileListActivity::class.java).apply {
-                putExtra(EXTRA_CLOUD_AUTHORITY, authority)
+            val intent = Intent(context, FileListActivity::class.java).apply {
+                putExtra(EXTRA_STARBOARD_AUTHORITY, authority)
             }
-            val goToCloudListPendingIntent = PendingIntent.getActivity(
-                context, 0, goToCloudListIntent,
+            val pendingIntent = PendingIntent.getActivity(
+                context, authority.hashCode(), intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             val logoutIntent = CloudLogoutDialogActivity::class.createIntent()
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .putArgs(CloudLogoutFragment.Args(starBoardDriveServer))
+                .putArgs(CloudLogoutFragment.Args(server))
             val logoutPendingIntent = PendingIntent.getActivity(
-                context, 0, logoutIntent,
+                context, 2, logoutIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            remoteViews.setOnClickPendingIntent(R.id.gotToDriveButton, goToCloudListPendingIntent)
+            remoteViews.setOnClickPendingIntent(R.id.gotToDriveButton, pendingIntent)
+            remoteViews.setOnClickPendingIntent(R.id.starBoardDriveLayout, pendingIntent)
             remoteViews.setOnClickPendingIntent(R.id.logoutButton, logoutPendingIntent)
 
             val max = authority.totalSpace.toInt()
             val used = authority.usedSpace.toInt()
             Log.d("chengluo", "updateWidgets setProgressbar max: $max used: $used")
-            remoteViews.setProgressBar(R.id.progressbar, max, used, false)
+            remoteViews.setProgressBar(R.id.starBoardDriveProgressbar, max, used, false)
 
             val usedSpace = authority.usedSpace * 1024
             val totalSpace = authority.totalSpace * 1024
             val usedSpaceString = usedSpace.asFileSize().formatHumanReadable(context)
             val totalSpaceString = totalSpace.asFileSize().formatHumanReadable(context)
             val spaceText = "$usedSpaceString / $totalSpaceString"
-            remoteViews.setTextViewText(R.id.storageSpaceText, spaceText)
-
-            appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
+            remoteViews.setTextViewText(R.id.starBoardDriveSpaceText, spaceText)
 
             if (authority.headerImageUrl != null && authority.headerImageUrl != Constants.MS_GRAPH_PHOTO) {
                 loadUserHeaderImage(
@@ -129,9 +201,11 @@ object LoginWidgetUpdater {
                 )
             }
         }
+
+        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
     }
 
-    private fun getActivityPendingIntent(context: Context, qrcodeLogin: Boolean): PendingIntent =
+    private fun getActivityPendingIntent(context: Context): PendingIntent =
         PendingIntent.getActivity(
             context,
             0,

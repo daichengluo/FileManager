@@ -61,7 +61,9 @@ import com.android.imagic.files.R
 import com.android.imagic.files.app.application
 import com.android.imagic.files.app.clipboardManager
 import com.android.imagic.files.appwidget.LoginWidgetUpdater
-import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_CLOUD_AUTHORITY
+import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_GOOGLE_DRIVE_AUTHORITY
+import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_ONEDRIVE_AUTHORITY
+import com.android.imagic.files.appwidget.LoginWidgetUpdater.EXTRA_STARBOARD_AUTHORITY
 import com.android.imagic.files.cloud.CloudFileItem
 import com.android.imagic.files.cloud.sdrive.client.Authority
 import com.android.imagic.files.cloud.sdrive.client.exception.LoginExpiredException
@@ -583,8 +585,14 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             if (pickOptions != null) {
                 viewModel.pickOptions = pickOptions
             }
-            intent.parcelable<Authority>(EXTRA_CLOUD_AUTHORITY)?.let {
+            intent.parcelable<Authority>(EXTRA_STARBOARD_AUTHORITY)?.let {
                 setFileModeState(FileModeState.StarBoardDrive(it))
+            }
+            intent.parcelable<ServerAuthority>(EXTRA_ONEDRIVE_AUTHORITY)?.let {
+                setFileModeState(FileModeState.OneDrive(it))
+            }
+            intent.parcelable<ServerAuthority>(EXTRA_GOOGLE_DRIVE_AUTHORITY)?.let {
+                setFileModeState(FileModeState.GoogleDrive(it))
             }
         }
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
