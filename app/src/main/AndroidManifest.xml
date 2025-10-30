@@ -483,6 +483,10 @@
         <receiver
             android:name="com.android.imagic.files.appwidget.receiver.RefreshQRCodeReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.android.imagic.files.REFRESH_QRCODE" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
