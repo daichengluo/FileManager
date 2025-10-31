@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -210,7 +210,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -258,33 +258,51 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/qrCodeImage"
+            <FrameLayout
                 android:layout_width="59dp"
-                android:layout_height="59dp"
-                android:layout_marginTop="24dp"
-                android:contentDescription="@null"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                tools:ignore="UnusedAttribute" />
+                android:layout_height="59dp">
 
-            <ProgressBar
-                android:id="@+id/qrCodeProgressBar"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:indeterminate="true"
-                android:indeterminateTint="#999999"
-                android:indeterminateTintMode="src_in" />
+                <ImageView
+                    android:id="@+id/qrCodeImage"
+                    android:layout_width="59dp"
+                    android:layout_height="59dp"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
 
-            <ImageButton
-                android:id="@+id/refreshQRCode"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:foreground="@drawable/fg_widget_launcher_login_action_button"
-                android:src="@drawable/icon_refresh_qrcode"
-                android:visibility="gone" />
+                <ProgressBar
+                    android:id="@+id/qrCodeProgressBar"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:indeterminateTint="#999999"
+                    android:indeterminateTintMode="src_in" />
+
+                <FrameLayout
+                    android:id="@+id/refreshQRCodeLayout"
+                    android:layout_width="59dp"
+                    android:layout_height="59dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/qrCodeCover"
+                        android:layout_width="59dp"
+                        android:layout_height="59dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/widget_qrcode_cover" />
+
+                    <ImageButton
+                        android:id="@+id/refreshQRCode"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:contentDescription="@null"
+                        android:foreground="@drawable/fg_widget_refresh_qrcode_button"
+                        android:src="@drawable/icon_refresh_qrcode" />
+                </FrameLayout>
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

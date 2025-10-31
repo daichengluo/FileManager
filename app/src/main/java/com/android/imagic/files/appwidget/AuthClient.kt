@@ -47,7 +47,7 @@ fun AccessTokenData.toServerAuthority(): ServerAuthority {
 
     val username = if (givenname == null) {
         familyname
-    } else "$givenname $familyname"
+    } else "$familyname $givenname"
     return ServerAuthority(
         openId = unionid ?: sub,
         userId = id,
@@ -67,7 +67,7 @@ fun AccessTokenData.toAuthority(): Authority = Authority(
     openId = unionid ?: sub,
     accessToken = access_token,
     userId = id,
-    username = givenname + familyname,
+    username = familyname + givenname,
     headerImageUrl = picture
 )
 
@@ -76,7 +76,7 @@ fun AccessTokenData.toAuthInfoBody(headerImagerUrl: String? = null): AuthInfoBod
     email = email,
     unionid = unionid ?: sub,
     refresh_token = refresh_token ?: "",
-    nickname = givenname + familyname,
+    nickname = familyname + givenname,
     headimgurl = headerImagerUrl ?: picture,
     automaticid = 1
 )

@@ -1,15 +1,18 @@
 package com.android.imagic.files.appwidget
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.graphics.drawable.toBitmap
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import coil.Coil
 import coil.request.ImageRequest
 import com.android.imagic.files.R
@@ -25,17 +28,18 @@ import com.android.imagic.files.storage.GoogleDriveServer
 import com.android.imagic.files.storage.OneDriveServer
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.Constants
-import com.android.imagic.files.util.NetworkUtil
-import com.android.imagic.files.util.QrcodeUtil
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.valueCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.Clock
 
 object LoginWidgetUpdater {
+
+    var bitmap: Bitmap? = null
+
+    var needRefresh: Boolean = false
 
     const val EXTRA_STARBOARD_AUTHORITY = "extra_starboard_authority"
     const val EXTRA_ONEDRIVE_AUTHORITY = "extra_onedrive_authority"
@@ -89,11 +93,31 @@ object LoginWidgetUpdater {
         remoteViews.setOnClickPendingIntent(R.id.refreshQRCode, refreshQRCodePendingIntent)
 
         if (!isLogin) {
-            loadQRCodeImage(remoteViews, context, appWidgetManager, appWidgetIds)
+            if (bitmap == null) {
+                WorkManager
+                    .getInstance(context)
+                    .enqueueUniqueWork(
+                        "qrcode_login",
+                        ExistingWorkPolicy.KEEP,
+                        OneTimeWorkRequestBuilder<QRCodeLoginWorker>().build()
+                    )
+                remoteViews.setViewVisibility(R.id.qrCodeImage, View.GONE)
+                remoteViews.setViewVisibility(R.id.refreshQRCodeLayout, View.GONE)
+                remoteViews.setViewVisibility(R.id.qrCodeProgressBar, View.VISIBLE)
+            } else {
+                remoteViews.setViewVisibility(R.id.qrCodeProgressBar, View.GONE)
+                remoteViews.setViewVisibility(R.id.refreshQRCodeLayout, View.GONE)
+                remoteViews.setImageViewBitmap(R.id.qrCodeImage, bitmap)
+                remoteViews.setViewVisibility(R.id.qrCodeImage, View.VISIBLE)
+            }
         }
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
+        if (needRefresh) {
+            remoteViews.setViewVisibility(R.id.qrCodeProgressBar, View.GONE)
+            remoteViews.setViewVisibility(R.id.refreshQRCodeLayout, View.VISIBLE)
+        }
 
         oneDriveServers.firstOrNull()?.let { server ->
+            Log.d("chengluo", "updateWidgets oneDrive")
             val authority = server.authority
 
             remoteViews.setImageViewResource(R.id.thirdDriveIcon, R.drawable.widget_microsoft_icon)
@@ -109,9 +133,14 @@ object LoginWidgetUpdater {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val progress = (authority.usedSpace / authority.totalSpace).toInt()
+            val total = authority.totalSpace.toDouble()
+            val used = authority.usedSpace.toDouble()
+
+            val progress = if (total > 0) {
+                ((used / total) * 10000).toInt().coerceIn(0, 10000)
+            } else 0
             Log.d("chengluo", "updateWidgets oneDrive setProgressbar progress: $progress")
-            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 100, progress, false)
+            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 10000, progress, false)
 
             val usedSpace = authority.usedSpace
             val totalSpace = authority.totalSpace
@@ -124,6 +153,7 @@ object LoginWidgetUpdater {
         }
 
         googleDriveServers.firstOrNull()?.let { server ->
+            Log.d("chengluo", "updateWidgets googleDrive")
             val authority = server.authority
 
             remoteViews.setImageViewResource(R.id.thirdDriveIcon, R.drawable.widget_google_icon)
@@ -139,9 +169,14 @@ object LoginWidgetUpdater {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val progress = (authority.usedSpace / authority.totalSpace).toInt()
+            val total = authority.totalSpace.toDouble()
+            val used = authority.usedSpace.toDouble()
+
+            val progress = if (total > 0) {
+                ((used / total) * 10000).toInt().coerceIn(0, 10000)
+            } else 0
             Log.d("chengluo", "updateWidgets googleDrive setProgressbar progress: $progress")
-            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 100, progress, false)
+            remoteViews.setProgressBar(R.id.thirdDriveProgressbar, 10000, progress, false)
 
             val usedSpace = authority.usedSpace
             val totalSpace = authority.totalSpace
@@ -179,10 +214,14 @@ object LoginWidgetUpdater {
             remoteViews.setOnClickPendingIntent(R.id.starBoardDriveLayout, pendingIntent)
             remoteViews.setOnClickPendingIntent(R.id.logoutButton, logoutPendingIntent)
 
-            val max = authority.totalSpace.toInt()
-            val used = authority.usedSpace.toInt()
-            Log.d("chengluo", "updateWidgets setProgressbar max: $max used: $used")
-            remoteViews.setProgressBar(R.id.starBoardDriveProgressbar, max, used, false)
+            val total = authority.totalSpace.toDouble()
+            val used = authority.usedSpace.toDouble()
+
+            val progress = if (total > 0) {
+                ((used / total) * 10000).toInt().coerceIn(0, 10000)
+            } else 0
+            Log.d("chengluo", "updateWidgets setProgressbar progress: $progress")
+            remoteViews.setProgressBar(R.id.starBoardDriveProgressbar, 10000, progress, false)
 
             val usedSpace = authority.usedSpace * 1024
             val totalSpace = authority.totalSpace * 1024
@@ -235,38 +274,5 @@ object LoginWidgetUpdater {
             remoteViews.setImageViewBitmap(R.id.userHeaderImage, bitmap)
         }
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
-    }
-
-    private fun loadQRCodeImage(
-        remoteViews: RemoteViews,
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) = CoroutineScope(Dispatchers.IO).launch {
-        val deviceId = NetworkUtil.getMacAddress() ?: getAndroidId(context)
-        val state = generateRandomString()
-        val timestamp = Clock.systemUTC().instant().epochSecond.toString()
-        val content =
-            "https://wboard.starboard-online.com/Long.html?Mac=$deviceId&state=$state&timeStamp=$timestamp"
-        Log.d("chengluo", "loadQRCodeImage generateQrcode: $content")
-        val bitmap = QrcodeUtil.generateQRCodeBitmap(content, 176)
-        remoteViews.setImageViewBitmap(R.id.qrCodeImage, bitmap)
-        remoteViews.setViewVisibility(R.id.qrCodeImage, View.VISIBLE)
-        remoteViews.setViewVisibility(R.id.refreshQRCode, View.VISIBLE)
-        remoteViews.setViewVisibility(R.id.qrCodeProgressBar, View.GONE)
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
-    }
-
-    @SuppressLint("HardwareIds")
-    private fun getAndroidId(context: Context) = android.provider.Settings.Secure.getString(
-        context.contentResolver,
-        android.provider.Settings.Secure.ANDROID_ID
-    )
-
-    private fun generateRandomString(length: Int = 12): String {
-        val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
     }
 }
