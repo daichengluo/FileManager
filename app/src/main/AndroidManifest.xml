@@ -479,10 +479,5 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launcher_login" />
         </receiver>
-
-        <receiver
-            android:name="com.android.imagic.files.appwidget.receiver.RefreshQRCodeReceiver"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 </manifest>

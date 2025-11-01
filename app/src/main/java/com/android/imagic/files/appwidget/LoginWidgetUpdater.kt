@@ -1,6 +1,5 @@
 package com.android.imagic.files.appwidget
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -14,7 +13,6 @@ import coil.Coil
 import coil.request.ImageRequest
 import com.android.imagic.files.R
 import com.android.imagic.files.appwidget.receiver.LauncherLoginWidget
-import com.android.imagic.files.appwidget.receiver.RefreshQRCodeReceiver
 import com.android.imagic.files.cloud.CloudLoginFragment
 import com.android.imagic.files.cloud.CloudLogoutDialogActivity
 import com.android.imagic.files.cloud.CloudLogoutFragment
@@ -23,15 +21,12 @@ import com.android.imagic.files.filelist.FileListActivity
 import com.android.imagic.files.settings.Settings
 import com.android.imagic.files.storage.StarBoardDriveServer
 import com.android.imagic.files.util.Constants
-import com.android.imagic.files.util.NetworkUtil
-import com.android.imagic.files.util.QrcodeUtil
 import com.android.imagic.files.util.createIntent
 import com.android.imagic.files.util.putArgs
 import com.android.imagic.files.util.valueCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.Clock
 
 object LoginWidgetUpdater {
 
@@ -55,7 +50,7 @@ object LoginWidgetUpdater {
 
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_launcher_login).apply {
             setOnClickPendingIntent(R.id.widgetLoginButton, getActivityPendingIntent(context, true))
-            setOnClickPendingIntent(R.id.refreshQRCode, getActivityPendingIntent(context, false))
+            setOnClickPendingIntent(R.id.loginActonButton, getActivityPendingIntent(context, false))
         }
 
         remoteViews.setViewVisibility(
@@ -67,20 +62,6 @@ object LoginWidgetUpdater {
             if (!isLogin) View.GONE else View.VISIBLE
         )
 
-        val refreshQRCodeIntent = Intent(context, RefreshQRCodeReceiver::class.java).apply {
-            action = RefreshQRCodeReceiver.ACTION_REFRESH_QRCODE
-        }
-        val refreshQRCodePendingIntent = PendingIntent.getBroadcast(
-            context,
-            0,
-            refreshQRCodeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        remoteViews.setOnClickPendingIntent(R.id.refreshQRCode, refreshQRCodePendingIntent)
-
-        if (!isLogin) {
-            loadQRCodeImage(remoteViews, context, appWidgetManager, appWidgetIds)
-        }
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
 
         starBoardDriveServers.firstOrNull()?.let { server ->
@@ -161,38 +142,5 @@ object LoginWidgetUpdater {
             remoteViews.setImageViewBitmap(R.id.userHeaderImage, bitmap)
         }
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
-    }
-
-    private fun loadQRCodeImage(
-        remoteViews: RemoteViews,
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) = CoroutineScope(Dispatchers.IO).launch {
-        val deviceId = NetworkUtil.getMacAddress() ?: getAndroidId(context)
-        val state = generateRandomString()
-        val timestamp = Clock.systemUTC().instant().epochSecond.toString()
-        val content =
-            "https://wboard.starboard-online.com/Long.html?Mac=$deviceId&state=$state&timeStamp=$timestamp"
-        Log.d("chengluo", "loadQRCodeImage generateQrcode: $content")
-        val bitmap = QrcodeUtil.generateQRCodeBitmap(content, 176)
-        remoteViews.setImageViewBitmap(R.id.qrCodeImage, bitmap)
-        remoteViews.setViewVisibility(R.id.qrCodeImage, View.VISIBLE)
-        remoteViews.setViewVisibility(R.id.refreshQRCode, View.VISIBLE)
-        remoteViews.setViewVisibility(R.id.qrCodeProgressBar, View.GONE)
-        appWidgetManager.updateAppWidget(appWidgetIds, remoteViews)
-    }
-
-    @SuppressLint("HardwareIds")
-    private fun getAndroidId(context: Context) = android.provider.Settings.Secure.getString(
-        context.contentResolver,
-        android.provider.Settings.Secure.ANDROID_ID
-    )
-
-    private fun generateRandomString(length: Int = 12): String {
-        val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
     }
 }
