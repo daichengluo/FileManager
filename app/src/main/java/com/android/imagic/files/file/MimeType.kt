@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @JvmInline
 value class MimeType(val value: String) : Parcelable {
     val type: String
-        get() = value.substring(0, value.indexOf('/'))
+        get() = value.substringBefore('/')
 
     val subtype: String
         get() {

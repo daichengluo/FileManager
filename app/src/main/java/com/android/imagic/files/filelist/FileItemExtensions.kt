@@ -41,6 +41,9 @@ fun FileItem.getMimeTypeName(context: Context): String {
     return mimeType.getName(extension, context)
 }
 
+val FileItem.isIwbFile: Boolean
+    get() = extension == "iwb"
+
 val FileItem.isArchiveFile: Boolean
     get() = path.isArchiveFile(mimeType)
 

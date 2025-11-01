@@ -1856,6 +1856,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             }
             return
         }
+        if (file.isIwbFile) {
+            openIwb(file)
+            return
+        }
         if (file.mimeType.isApk) {
             openApk(file)
             return
@@ -1865,6 +1869,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
             return
         }
         openFileWithIntent(file, false)
+    }
+
+    private fun openIwb(file: FileItem) {
+        Intent(Intent.ACTION_VIEW).apply {
+            setClassName(
+                "com.example.androidwhiteboard",
+                "com.example.androidwhiteboard.MainActivity"
+            )
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+            putExtra("iwbpath", file.path.toString())
+        }.also { startActivitySafe(it) }
     }
 
     private fun openApk(file: FileItem) {

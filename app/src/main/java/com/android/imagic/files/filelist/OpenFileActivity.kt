@@ -60,6 +60,14 @@ class OpenFileActivity : AppActivity() {
                             "com.android.imagic.imageviewer.PhotoActivity"
                         )
                     }
+                    if (path.toString().endsWith(".iwb", true)) {
+                        setClassName(
+                            "com.example.androidwhiteboard",
+                            "com.example.androidwhiteboard.MainActivity"
+                        )
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                        putExtra("iwbpath", path.toString())
+                    }
                 }
             startActivitySafe(intent)
         }
