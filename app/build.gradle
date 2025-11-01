@@ -16,8 +16,8 @@ android {
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
         targetSdk 34
-        versionCode 1140
-        versionName 'V1.1.4-20251031'
+        versionCode 1150
+        versionName 'V1.1.5-20251101'
         resValue 'string', 'app_version', versionName + ' (' + versionCode + ')'
         buildConfigField 'String', 'FILE_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".file_provider"'
         buildConfigField 'String', 'AUTH_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".auth_provider"'
