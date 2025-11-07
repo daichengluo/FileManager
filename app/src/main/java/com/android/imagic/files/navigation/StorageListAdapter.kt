@@ -148,14 +148,13 @@ class StorageListAdapter(
                     }
 
                     DragEvent.ACTION_DROP -> {
-                        val storageItem = item
-                        if (storageItem is PathItem) {
+                        if (item is PathItem) {
                             dragDropListener.dropToLocal(item.path)
                             return@setOnDragListener true
                         }
-                        if (storageItem is StarBoardDriveItem) {
+                        if (item is StarBoardDriveItem) {
                             Log.d("chengluo", "ACTION_DROP: StarBoardDriveItem")
-                            val storage = storageItem.storage
+                            val storage = item.storage
                             val authority = storage.authority
                             dragDropListener.dropToStarBoardDrive(
                                 authority.getRootPath(view.context),
@@ -163,9 +162,9 @@ class StorageListAdapter(
                             )
                             return@setOnDragListener true
                         }
-                        if (storageItem is GoogleDriveItem) {
+                        if (item is GoogleDriveItem) {
                             Log.d("chengluo", "ACTION_DROP: GoogleDriveItem")
-                            val storage = storageItem.storage
+                            val storage = item.storage
                             val authority = storage.authority
                             dragDropListener.dropToGoogleDrive(
                                 authority.getRootPath(view.context),
@@ -173,9 +172,9 @@ class StorageListAdapter(
                             )
                             return@setOnDragListener true
                         }
-                        if (storageItem is OneDriveItem) {
+                        if (item is OneDriveItem) {
                             Log.d("chengluo", "ACTION_DROP: OneDriveItem")
-                            val storage = storageItem.storage
+                            val storage = item.storage
                             val authority = storage.authority
                             dragDropListener.dropToOneDrive(
                                 authority.getRootPath(view.context),
